@@ -1,0 +1,8 @@
+parse formatting codes
+deal with inline us/metric
+convert dates
+validate structure
+
+load into mongo
+
+build app
