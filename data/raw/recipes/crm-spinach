@@ -1,0 +1,54 @@
+.ig
+Path: decwrl!recipes
+From: faigin@sdcrdcf (Daniel P. Faigin)
+Newsgroups: mod.recipes
+Subject: RECIPE: Creamed spinach
+Message-ID: <5433@decwrl.DEC.COM>
+Date: 19 Sep 86 03:28:03 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: System Development Corp., Santa Monica, California
+Lines: 41
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1986 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE CRM-SPINACH V "21 May 86" 1986
+.RZ "CREAMED SPINACH" "Creamed spinach with sour cream"
+This is a recipe for a version of creamed spinach that we found
+that uses sour cream instead of milk. We have tried it
+and it is quite good.
+.IH "Serves 6"
+.IG "20 oz" "spinach," "600 g"
+chopped. This can either be fresh spinach or frozen chopped
+spinach.
+.IG "\(12\-1 cup" "sour cream" "1\-2 dl"
+.IG "1\-2 Tbsp" "prepared horseradish" "15\-30 ml"
+.PH
+.SK 1
+Clean, trim, and chop spinach, and cook in a dry, covered
+saucepan over a medium heat until the spinach is wilted.
+If you are using frozen spinach, cook to thaw and evaporate all
+water, then proceed.
+.SK 2
+Stir in sour cream and horseradish.
+.SK 3
+Serve hot.
+.SH RATING
+.I Difficulty:
+easy.
+.I Time:
+10 minutes.
+.I Precision:
+no need to measure.
+.WR
+Daniel Faigin and Karen Davis
+System Development Corporation, Santa Monica, California
+{akgua allegra ihnp4 hplabs sdcsvax trwrb cbosgd}!sdcrdcf!faigin  
+sdcrdcf!faigin@LOCUS.UCLA.EDU

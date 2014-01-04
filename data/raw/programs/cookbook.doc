@@ -1,0 +1,179 @@
+COOKBOOK(1)         UNIX Programmer's Manual          COOKBOOK(1)
+
+NAME
+     cookbook: rckeep, rckeepnew, rcbook.t, rcbook.n, rctypeset,
+     rcnroff - Store and print the alt.gourmand USENET Cookbook
+
+SYNOPSIS
+     rckeep < filename    copies a recipe to your keep directory
+     s |rckeep  (same thing, from a news-reading program.)
+     rckeepnew [ directory ]   finds and keeps new recipes
+     rcbook.t [ -t ] [ -m ] [ -M ] [ -f ]     typesets a cookbook
+     from kept recipes
+     rcbook.n [ -m ] [ -M ]    nroffs a cookbook from kept
+     recipes
+     rctypeset [ -m ] [ -M ] [ -f ]      typesets one recipe from
+     std input
+     rcnroff [ -m ] [ -M ]     nroffs one recipe from std input
+     rcnew.t [ -m ] [ -M ] [ -f ]   typesets new kept recipes
+     rcnew.n [ -m ] [ -M ]     nroffs new kept recipes
+
+DESCRIPTION
+     The USENET Cookbook is an online database distributed in the
+     alt.gourmand  newsgroup. This software makes it easy for you
+     to clip recipes that interest you, to store them in your own
+     directory,  and  to make printed cookbooks from those stored
+     recipes.
+
+SAVING RECIPES ONE AT A TIME
+     Read the news with your favorite news  reading  program.  If
+     you  don't  have  a  favorite, try rn. When you see a recipe
+     that interests you, type
+          s |rckeep
+     The ``s'' command means ``save'';  the  vertical  bar  means
+     ``save  into  a  program''. rckeep is the program that keeps
+     recipes.  It  will  save  recipes  into  a  directory  named
+     Recipes,  and  it  will  create that directory for you if it
+     does not currently exist. If you would like recipes saved in
+     some other place, you can type
+          s |rckeep PartyRecipes
+          s |rckeep ~/PartyRecipes
+          s |rckeep /usr/local/lib/Recipes
+     and so forth.
+
+SAVING NEW RECIPES AUTOMATICALLY
+     If you don't want to take the time and trouble to run rckeep
+     on  every  recipe,  you can run rckeepnew from time to time.
+     When rckeepnew is run, it  looks  in  the  netnews  spooling
+     directory to find the files that hold the articles that hold
+     the recipes, and automatically runs  rckeep  on  every  file
+     that  contains  a recipe and that has arrived since the last
+     time you ran rckeepnew. Like rckeep, rckeepnew can be  given
+     the name of a directory to use as the keep directory:
+        rckeepnew
+     or
+
+        rckeepnew /usr/local/lib/Recipes
+     and so forth.
+
+HOW RECIPES ARE STORED
+     Every  recipe  is  given  a  code  word  by  the  editor  of
+     alt.gourmand.  That  code word is contained in the first few
+     lines of the article body. The rckeep and rckeepnew programs
+     use  that  code  word as a file name in your keep directory.
+     For example,  if  you  are  saving  a  recipe  whose  1-line
+     description is
+          PHEASANT-PERRY - Pheasant for Thanksgiving
+     it will be saved in your keep directory under  the  filename
+     ``pheasant-perry''.   These  filenames  are  forced to lower
+     case by rckeep.
+
+MAKING A COOKBOOK
+     To typeset a cookbook, just type
+          rcbook.t
+     and all of the  recipes  in  your  keep  directory  will  be
+     typeset  in alphabetical order, with an index, introduction,
+     and title page added. They will come out either  in  English
+     units  (cups  and  teaspoons)  or in metric units (grams and
+     deciliters) depending on how the alt.gourmand  software  has
+     been  installed at your site. If you want to print the cook-
+     book in cups and spoons  regardless  of  what  the  software
+     installer did, then type
+        rcbook.t -M
+     and if you want  to  print  the  cookbook  in  metric  units
+     regardless of what the software installer did, then type
+        rcbook.t -m
+     If you don't have a typesetter or  if  you  don't  have  the
+     troff(1)  program,  then  use  ``rcbook.n'' instead; it uses
+     nroff(1). and sends the results of the formatting  to  stan-
+     dard  output.  It  supports  the same -m and -M options that
+     rcbook.t does.
+
+     If you have more than  one  keep  directory,  for  specialty
+     cookbooks  of  different types, you can give rcbook a direc-
+     tory name as an argument, e.g.:
+        rcbook.t /usr/local/lib/Recipes
+
+     You can capture the output of rcbook.t in a  file  by  using
+     the ``-t'' option:
+        rcbook.t -t > FormattedFile
+
+PRINTING ONE RECIPE
+     The program rctypeset typesets one recipe, from its standard
+     input.  It is able to discard news and mail headers from the
+     beginning of the recipe; you may use rctypeset on a  netnews
+     message  in  the form that it is stored in a spooling direc-
+     tory, or you may use it directly from  a  news-reading  pro-
+     gram. rctypeset supports the metric (-m) and non-metric (-M)
+
+     options explained above.
+
+     The program rcnroff performs the same function as rctypeset,
+     except  that it formats to standard output instead of to the
+     typesetter.
+
+PRINTING NEW RECIPES
+     It is a nuisance to keep track of  which  recipes  you  have
+     printed  and which you have not. It is expensive and slow to
+     print the entire cookbook every  time  a  few  more  recipes
+     arrive.  The  rcnew.t program works very much like rcbook.t,
+     except that it typesets only those  recipes  that  were  put
+     into the keep directory after the last time you ran rcnew.t.
+     It produces a complete new index, though. It uses the  crea-
+     tion  time  of  the  file INDEX in your current directory to
+     determine the last time  you  created  an  index,  which  is
+     presumably  the  last  time  you  ran  rcbook.t  or rcnew.t.
+     rcnew.t supports the metric (-m) and non-metric (-M) options
+     explained above.
+
+     The program rcnew.n does the same thing as  rcnew.t,  except
+     that  it  formats  to  standard  output  instead  of  to the
+     typesetter.
+
+THE INDEX
+     The cookbook index is a ``permuted index''. This means  that
+     each  recipe  is  indexed  by every major word in its title.
+     Some people seem to find this format jarring, and more  than
+     one  person  has  filed  a bug report upon seeing the index,
+     certain that the output that it produces cannot possibly  be
+     correct.
+
+     Since your notebook of recipes  will  grow  each  week,  the
+     pages cannot have numbers. Instead, the pages are identified
+     by the code name for each recipe, with the expectation  that
+     you  will  keep  your notebook in alphabetical order by this
+     name.
+
+SPECIAL CHARACTERS
+     Troff has a number of special characters, such  as  such  as
+     typeset fractions (``1/2'' for 1/2), which are not available
+     on some brands of typesetters and laser  printers.  If  your
+     typesetter  handles  those  characters incorrectly, then you
+     should add the ``-f'' option  to  rcbook.t,  rctypeset,  and
+     rcnew.t.  The  ``-f''  option  causes the recipe software to
+     translate those special characters into standard ASCII char-
+     acters before printing.
+
+COPYRIGHT
+     The entire USENET cookbook is copyrighted by the USENET Com-
+     munity  Trust.  The  purpose of this copyright is to prevent
+     commercial use of the material. The USENET  Community  Trust
+
+     permits  any noncommercial use of the contents of the recipe
+     database, and forbids any commercial use.
+
+FILES
+     /usr/spool/news/alt/gourmand  USENET recipe directory
+     $HOME/Recipes                 Your  keep  directory   (saved
+     recipes)
+     $HOME/Recipes/.keepnew        Record of when rckeepnew  last
+     run
+     INDEX                         Record of when rcnew last run
+     /usr/local/bin/rc*            The recipe software
+
+SEE ALSO
+     recipes(5), rn(1)
+
+AUTHOR
+     Brian K. Reid, DEC Western Research Laboratory
+

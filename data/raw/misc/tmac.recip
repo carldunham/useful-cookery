@@ -1,0 +1,74 @@
+'	# Recipe Heading
+.de RH
+.TH \\$2 "\\$3" "\\$4" "mod.recipes" "USENET Cookbook"
+.ds ]H \\$2
+..
+.de RZ
+.SH \\s14\\$1
+\\*(]H \- \\$2
+.PP
+..
+' 	# Ingredient
+.de IG
+.TP 10
+\&\\$1
+.I \\$2
+..
+'	# Step
+.\"	# Temperature value  -- JDH
+.de TE
+.ds =2
+.if \\n($>2 .ds =2 \\$3
+.ie n .ds =1 \\$1 deg. F
+.el .ds =1 \\$1\(deF
+.ie n .if \\n(.$>1 .if \\nM .ds =1 \\$2 deg. C
+.el .if \\n(.$>1 .if \\nM .ds =1 \\$2\(deC
+\\*(=1\\*(=2
+..
+
+.de SK
+.IP "(\\$1)" 5n
+..
+'	# Ingredient header
+.de IH
+.SH INGREDIENTS (\\$1)
+.PD 0
+..
+'	# Procedure header
+.de PH
+.PD
+.SH PROCEDURE
+.RS 5
+..
+'	# Notes
+.de NX
+.PD
+.SH NOTES
+..
+'	# Wrapup
+.de WR
+.RE 5
+.PD
+.SH CONTRIBUTOR
+.nf
+..
+.\" these macros courtesy of Bernie Cosell and Matt Bishop
+.de CS  \" do the fancy "go into cs mode right" guy
+.   ie \\n(.z .cs \\$1 \\$2 \\$3
+.   el              \!.CS \\$1 \\$2 \\$3
+..
+.
+.de FW \" Go into fixed-width mode: put both italic and bold fonts in it
+.   CS B 21 \\(.s
+.   CS I 21 \\(.s
+.   ss 24
+.   lg 0
+..
+.
+.de Fw \" Leave fixed-width mode
+.   CS B
+.   CS I
+.   ss 12
+.   lg 1
+..
+.so /usr/lib/tmac/tmac.an

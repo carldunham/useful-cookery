@@ -1,0 +1,67 @@
+.ig
+Path: decwrl!recipes
+From: nlm@attunix.uucp (Nancy Mintz)
+Newsgroups: mod.recipes
+Subject: RECIPE: Pecan wild rice pilaf
+Message-ID: <8315@decwrl.DEC.COM>
+Date: 27 Feb 87 08:47:27 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: Unix System Dev., ATT-IS, Summit, New Jersey, USA
+Lines: 54
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1987 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE PECAN-WILDRICE V "26 Dec 86" 1987
+.RZ "PECAN WILD RICE PILAF" "Wheat and wild rice pilaf with pecans"
+I originally got this recipe from the Sunday magazine of the local paper,
+I served it last year for Christmas dinner, and it's very good.
+.IH "serves 8"
+.IG "4 cups" "chicken broth" "1 liter"
+.IG "1 cup" "wild rice," "150 g"
+rinsed well
+.IG "1\(34 cups" "wheat pilaf" "300 g"
+.IG "1 cup" "pecan halves" "100 g"
+.IG "1 cup" "dried currants" "150 g"
+.IG "1 bunch" "scallions,"
+thinly sliced
+.IG "\(12 cup" "Italian parsley," "20 g"
+chopped
+.IG "\(12 cup" "fresh mint leaves," "30 g"
+chopped
+.IG "" "grated zest of 2 oranges"
+.IG "2 Tbsp" "olive oil" "30 ml"
+.IG "1 Tbsp" "orange juice" "15 ml"
+.IG "" "freshly ground black pepper"
+.PH
+.SK 1
+In a medium saucepan, bring broth to a boil.
+Add wild rice to boiling broth.  Bring back to a boil, reduce heat to 
+medium-low and cook, covered, for 50 minutes or until rice is tender.
+Do not overcook.  Remove to a large bowl.
+.SK 2
+While the rice is cooking, in another saucepan bring
+.AB "2\(14 cups" "5 dl"
+water to a boil.  Stir in the pilaf, cover and bring back to a boil.
+Reduce heat to low and simmer 15 minutes, or until pilaf is tender.  Remove
+from heat, let rest 15 minutes, and add to the (cooked) wild rice.
+.SK 3
+Add remaining ingredients and toss well.  Serve at room temperature.
+.SH RATING
+.I Difficulty:
+easy.
+.I Time:
+1 hour cooking, 1 hour cooling.
+.I Precision:
+approximate measurement OK.
+.WR
+Nancy Mintz
+UNIX System Development Lab, AT&T\-IS, Summit, NJ
+ihnp4!attunix!nlm

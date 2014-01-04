@@ -1,0 +1,13 @@
+#! /bin/sh
+# This program is part of the novice alt.gourmand installation procedure.
+# Please read the file "Novice".
+trap "rm -f mod.rec.$$" 0 1 2 3 15
+echo $$ > mod.rec.$$
+if test -f $HOME/mod.rec.$$
+then
+    cat Novice.step3a
+else
+    echo Installing ...
+    cp $*
+    cat Novice.step3b
+fi

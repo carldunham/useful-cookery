@@ -1,0 +1,68 @@
+.ig
+Path: decwrl!recipes
+From: gh@utai (Graeme Hirst)
+Newsgroups: mod.recipes
+Subject: RECIPE: Dinkum savoury steak
+Message-ID: <4939@decwrl.DEC.COM>
+Date: 22 Aug 86 08:27:54 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: University of Toronto  Computer Science Department
+Lines: 55
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1986 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE HERB-STEAK-1 M "19 May 86" 1986
+.RZ "SAVOURY STEAK" "An Australian herbed meat dish"
+Adapted from \fIThe Australian and New Zealand Countrywoman's Cookbook\fP
+by Carol Odell.
+.IH "About 4 or 5 servings"
+.IG "2 lb" "steak" "1 kg"
+.IG "2" "onions,"
+finely chopped.
+.IG "2 tsp" "brown sugar" "10 ml"
+.IG "2 tsp" "salt" "10 ml"
+.IG "\(12 tsp" "pepper" "2.5 ml"
+.IG "pinch" "cayenne"
+.IG "2 tsp" "mixed herbs," "10 ml"
+including thyme, sage, and oregano.
+.IG  "2 tsp" "chopped capers" "10 ml"
+.IG "1/3 cup" "ketchup" "80 ml"
+(or tomato sauce, in the Australian sense, if you can get it)
+.IG "2 tsp" "Worcestershire sauce" "10 ml"
+.IG "1/3 cup" "vinegar" "80 ml"
+.PH
+.SK 1
+Trim the steak, and cut into pieces.
+.SK 2
+Place in an ovenproof dish, and cover with the chopped onion.
+.SK 3
+Blend other ingredients together, and pour over.  (The chopped onion holds
+some of the liquid.)
+.SK 4
+Cover and refrigerate for at least two hours.
+.SK 5
+Bake, covered with foil or ovenproof lid, at
+.TE 350 175
+for 50 to 60 minutes.
+.NX
+Adjust the flavourings according to your taste; in particular, you may wish to
+reduce the vinegar.
+.SH RATING
+.I Difficulty:
+easy.
+.I Time:
+5 minutes preparation, 2 hours marinating, 1 hour cooking.
+.I Precision:
+approximate measurement OK.
+.WR		
+Graeme Hirst (An expatriate Australian)
+University of Toronto  Computer Science Department
+utcsri!utai!gh  /  gh.toronto@csnet-relay

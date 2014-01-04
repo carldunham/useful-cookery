@@ -1,0 +1,72 @@
+.ig
+Path: decwrl!recipes
+From: bob@basser.oz (Bob Kummerfeld)
+Newsgroups: mod.recipes
+Subject: RECIPE: Pumpkin scones
+Message-ID: <3609@decwrl.DEC.COM>
+Date: 13 Jun 86 03:39:56 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: Dept of Comp Sci, Uni of Sydney, Australia
+Lines: 59
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1986 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE PUMPKIN-SCONES D "22 May 86" 1986
+.RZ "PUMPKIN SCONES" "Pumpkin scones"
+Scones (pronounced with a short `o', rhymes with `Fonz') are a popular 
+accompaniment to afternoon tea. They are often served with jam and whipped
+cream. In this variation the scones are flavoured with pumpkin. It
+is not a typical scone recipe.
+.PP
+Pumpkin scones can be eaten in place of bread with a meal.
+This recipe was made famous by the wife of the Premier of Queensland.
+.IH "Serves 4\-6"
+.IG "1 Tbsp" "butter" "15 g"
+.IG "\(12 cup" "sugar" "100 g"
+.IG "1" "egg"
+.IG "1 cup" "cold mashed cooked pumpkin" "250 ml"
+.IG "2 cups" "self raising flour" "200 g"
+.IG "1/8 tsp" "salt" "0.5 ml"
+.PH
+.SK 1
+Grease a scone tray or baking tray.
+.SK 2
+Cream together the butter and sugar until light and fluffy.
+.SK 3
+Add egg and beat well.
+.SK 4
+Add pumpkin, flour and salt and fold in by hand.
+Knead lightly and cut into 
+.AB "1\-inch" "3cm"
+squares.
+.SK 5
+Place close together on the scone tray and bake at 
+.TE 425 220
+until well risen and golden on top (about 15 minutes).
+.NX
+To an Australian, a pumpkin is a large round, squat, green or blue-green
+vegetable that is orange on the inside. There are many varieties, all of
+species \fICucurbita maxima\fR. In North America a good substitute is
+acorn squash (\fICucurbita pepo\fR); elsewhere a butternut squash
+(\fICaryoka nuciferum\fR) would be a fair substitute.
+.PP
+Serve hot, with butter.
+.SH RATING
+.I Difficulty:
+easy.
+.I Time:
+15 minutes preparation, 15 minutes baking.
+.I Precision:
+approximate measurement OK.
+.WR
+bob@basser.oz (Bob Kummerfeld)
+Dept of Computer Science,
+University of Sydney, Australia.

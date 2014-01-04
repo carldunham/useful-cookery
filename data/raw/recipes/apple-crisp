@@ -1,0 +1,64 @@
+.ig
+Path: decwrl!recipes
+From: nlm@attunix (Nancy Mintz)
+Newsgroups: mod.recipes
+Subject: RECIPE: Apple crisp
+Message-ID: <8051@decwrl.DEC.COM>
+Date: 13 Feb 87 06:20:04 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: UNIX System Dev. Lab, AT&T-IS, Summit, New Jersey, USA
+Lines: 51
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1987 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE APPLE-CRISP D "26 Dec 86" 1987
+.RZ "APPLE CRISP" "Easy baked apple dessert"
+I got this recipe from Marsha Foregger.  It's very easy and makes
+a yummy dessert.
+.IH "serves 6 to 8"
+.IG "5\- 6 cups" "apple slices" "1 kg"
+.IG "\(34 cup" "sugar" "150 g"
+.IG "1 cup" "flour" "100 g"
+.IG "1 tsp" "baking powder" "5 ml"
+.IG "\(34 tsp" "salt" "4 ml"
+.IG "1" "egg"
+.IG "1/3 cup" "solid shortening" "70 g"
+(e.g. Crisco)
+.IG "\(12 tsp" "cinnamon" "2.5 ml"
+.PH
+.SK 1
+Preheat the oven to
+.TE 350 175 .
+.SK 2
+Fill a greased baking dish (approximately
+.AB "6\(mu10 inches" "13\(mu22 cm" )
+with the apple slices.
+.SK 3
+Mix together with fork until crumbly the sugar, flour, baking powder, salt
+and egg.  Sprinkle over apples.
+.SK 4
+Melt the shortening, cool slightly and pour over apple-flour mixture.
+Sprinkle with cinnamon.  Bake 30\-40 minutes at
+.TE 350 175 .
+Serve with vanilla ice cream.
+.NX
+I usually sprinkle some raisins and walnut halves in among the apple slices.
+.SH RATING
+.I Difficulty:
+easy.
+.I Time:
+10 minutes preparation, 40 minutes baking.
+.I Precision:
+measure the ingredents.
+.WR
+Nancy Mintz
+UNIX System Development Lab, AT&T-IS, Summit, New Jersey, USA
+ihnp4!attunix!nlm

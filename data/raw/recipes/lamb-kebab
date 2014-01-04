@@ -1,0 +1,74 @@
+.ig
+Path: decwrl!recipes
+From: nlm@attunix (Nancy Mintz)
+Newsgroups: mod.recipes
+Subject: RECIPE: Lamb shish kebab
+Message-ID: <6621@decwrl.DEC.COM>
+Date: 28 Nov 86 04:33:39 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: UNIX System Dev. Lab, Summit, New Jersey, USA
+Lines: 61
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1986 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+
+..
+.RH MOD.RECIPES-SOURCE LAMB-KEBAB M "7 Aug 86" 1986
+.RZ "LAMB SHISH KEBAB" "Spicy grilled lamb on a skewer"
+This is a fairly spicy lamb shish kebab. Serve it with cucumber yogurt sauce.
+.IH "serves 4"
+.SH		MARINADE
+.IG "1 tsp" "garlic" "5 ml"
+(finely chopped)
+.IG "2 tsp" "fresh ginger" "10 ml"
+(finely chopped)
+.IG "2 Tbsp" "lemon juice" "30 ml"
+.IG "\(14 cup" "peanut or vegetable oil" "60 ml"
+.IG "\(12 tsp" "ground turmeric" "2.5 ml"
+.IG "\(12 tsp" "ground coriander" "2.5 ml"
+.IG "\(12 tsp" "ground cumin" "2.5 ml"
+.IG "1/8 tsp" "cayenne" "0.5 ml"
+(or to taste)
+.IG "1 Tbsp" "grated onion" "30 ml"
+.SH		KEBABS
+.IG "24 cubes" "lean lamb"
+.AB "(approx. 2 lbs)" "(approx. 1 kg)"
+.IG "2" "medium onions,"
+cut into large chunks.
+.IG "2" "green peppers,"
+cut into large chunks
+.IG "2" "tomatoes,"
+cut into large chunks
+.PH
+.SK 1
+Mix all marinade ingredients in a large bowl.  Add lamb cubes
+and  marinate for 1 hour.
+.SK 2
+Preheat broiler or light the barbecue.
+.SK 3
+Divide the meat and vegetables evenly into 4 parts, and skewer the pieces on
+4 skewers.
+Place 4 to 5 inches from flame.  Grill, turning to cook evenly, for
+approximately 10 minutes.
+.NX
+Serve with rice and cucumber\-yogurt sauce (see recipe 
+.IB CUCUMBER-SAUCE (SL)
+)
+.SH RATING
+.I Difficulty:
+easy.
+.I Time:
+5 minutes preparation, 1 hour marinating, 10 minutes cooking.
+.I Precision:
+approximate measurement OK.
+.WR
+Nancy Mintz
+UNIX System Development Lab, AT&T-IS, Summit, New Jersey, USA
+ihnp4!attunix!nlm

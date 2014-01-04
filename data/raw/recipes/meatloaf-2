@@ -1,0 +1,61 @@
+.ig
+Path: decwrl!recipes
+From: marcum@sun.com (Alan M. Marcum)
+Newsgroups: mod.recipes
+Subject: RECIPE: Meat loaf recipe
+Message-ID: <4942@decwrl.DEC.COM>
+Date: 22 Aug 86 08:30:16 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: Sun Microsystems, Mountain View, California
+Lines: 48
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1986 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE MEATLOAF-2 M "23 May 86" 1986
+.RZ "MOM'S MEATLOAF" "A nice, simple meatloaf"
+This is the meatloaf my mother makes.  Where she got the recipe, who
+knows? Probably from \fIher\fR mother....   I think it's
+the best meatloaf in the world (and I'm sure you think \fIyour\fR 
+meatloaf is the best!).
+.IH "Serves 6"
+.IG "1 cup" "bread crumbs" "120 g"
+.IG "\(34 cup" "minced onion" "150 g"
+.IG "\(14 tsp" "garlic powder" "1 ml"
+.IG "2" "eggs"
+(slightly beaten)
+.IG "2 lbs" "ground meat" "1 kg"
+(I often use a combination of beef and lamb)
+.IG "2 Tbsp" "horseradish" "30 ml"
+.IG "pinch" "salt" "0.5 ml"
+.IG "\(14 cup" "milk or water" "60 ml"
+.IG "1 Tbsp" "dry mustard" "15 ml"
+.IG "\(34 cup" "catsup" "200 ml"
+.PH
+.SK 1
+Combine all ingredients except for
+.AB "\(12 cup" "150 ml"
+of the catsup.  Place into a loaf pan, or shape into a loaf on a baking
+sheet.  Spread the reserved catsup on top of the loaf.
+.SK 2
+Bake at
+.TE 400 200
+for 40 minutes.
+.SH RATING
+.I Difficulty:
+easy.
+.I Time:
+10 minutes preparation, 45 minutes cooking and cooling.
+.I Precision:
+approximate measurement OK.
+.WR
+Alan M. Marcum
+Sun Microsystems, Mountain View, California
+sun!nescorna!marcum

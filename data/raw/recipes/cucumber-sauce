@@ -1,0 +1,54 @@
+.ig
+Path: decwrl!recipes
+From: nlm@attunix (Nancy Mintz)
+Newsgroups: mod.recipes
+Subject: RECIPE: Cucumber yogurt sauce
+Message-ID: <6617@decwrl.DEC.COM>
+Date: 28 Nov 86 04:31:54 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: AT&T UNIX System Dev. Lab, Summit, New Jersey, USA
+Lines: 41
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1986 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE CUCUMBER-SAUCE SL "7 Aug 86" 1986
+.RZ "CUCUMBER YOGURT SAUCE" "A mideast-style sauce with cucumbers and yogurt"
+This recipe came originally from the local paper, years ago.
+They liked it with lamb.
+.IH "serves 4"
+.IG "\(34 lb" "cucumber" "350 g"
+(coarsely grated)
+.IG "\(34 tsp" "whole cumin seeds" "4 ml"
+.IG "2 tsp" "hot green chilis" "10 ml"
+(seeded & chopped) (optional)
+.IG "1 cup" "plain yogurt" "250 ml"
+.IG "1 tsp" "vegetable oil" "5 ml"
+.IG "\(12 tsp" "garlic" "2.5 ml"
+(finely chopped)
+.IG "" "salt"
+(to taste) (optional)
+.PH
+.SK 1
+Toast cumin seeds in small heavy skillet until browned.
+Do not burn.  When they start to crackle, remove from heat, shaking skillet.
+.SK 2
+Combine all ingredients.  Blend well and chill.
+.SH RATING
+.I Difficulty:
+easy.
+.I Time:
+5 minutes preparation, 1 hour chilling.
+.I Precision:
+approximate measurement OK.
+.WR
+Nancy Mintz
+UNIX System Development Lab, AT&T-IS, Summit, New Jersey, USA
+ihnp4!attunix!nlm

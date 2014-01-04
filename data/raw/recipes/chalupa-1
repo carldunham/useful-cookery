@@ -1,0 +1,77 @@
+.ig
+Path: decwrl!recipes
+From: jeff@rtech (Jeff Lichtman)
+Newsgroups: mod.recipes
+Subject: RECIPE: Chalupa
+Message-ID: <8473@decwrl.DEC.COM>
+Date: 6 Mar 87 04:13:25 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: Relational Technology Inc, Alameda CA
+Lines: 64
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1987 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE CHALUPA-1 M "13 Mar 86" 1987
+.RZ "CHALUPA" "A Mexican meat and bean dish, similar to chili"
+I got this recipe from
+.I
+A Primer on Bean Cookery
+by the
+.I
+California Dry Bean Advisory Board.
+While not a true chili,
+chalupa is a Mexican-American favorite for a hearty lunch or supper.
+It may be made ahead and reheated,
+and it freezes well.
+.IH "Serves 8"
+.IG "1 lb" "pinto beans" "500 g"
+.IG "3 lb" "pork roast" "1.5 kg"
+.IG "7 cups" "water" "18 dl"
+.IG "\(12 cup" "onion," "75 g"
+chopped
+.IG "2 cloves" "garlic,"
+minced
+.IG "1 Tbsp" "salt" "15 ml"
+.IG "2 Tbsp" "chili powder" "30 ml"
+.IG "1 Tbsp" "cumin" "15 ml"
+.IG "1 tsp" "oregano" "5 ml"
+.IG "4 oz" "chopped green chili peppers" "100 g"
+(one can).
+.PH
+.SK 1
+Put all ingredients in a dutch oven,
+an electric crockery cooker,
+or a heavy kettle.
+.SK 2
+Cover and simmer about 5 hours,
+or until the roast falls apart and the beans are done.
+.SK 3
+Uncover and cook about \(12 hour,
+until the desired thickness is achieved.
+.NX
+Chili powder is a mixture of spices,
+consisting mainly of ground dried chili peppers.
+This recipe may be served with corn chips and condiments
+(including chopped tomato, chopped avocado,
+chopped onion, shredded lettuce,
+grated cheddar cheese,
+and hot sauce).
+.SH RATING
+.I Difficulty:
+Easy.
+.I Time:
+5 minutes preparation, 5\-6 hours cooking.
+.I Precision:
+no need to measure.
+.WR
+Jeff Lichtman
+Relational Technology, Inc.
+{amdahl, sun}!rtech!jeff	{ucbvax, decvax}!mtxinu!rtech!jeff

@@ -1,0 +1,87 @@
+.ig
+Path: decwrl!recipes
+From: faigin@sdcrdcf (Daniel P. Faigin)
+Newsgroups: mod.recipes
+Subject: RECIPE: Peanut sauce
+Message-ID: <6271@decwrl.DEC.COM>
+Date: 7 Nov 86 05:34:56 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: System Development Corp., Santa Monica, Calif., USA
+Lines: 74
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1986 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE PEANUT-SAUCE-1 M "21 May 86" 1986
+.RZ "SPICY PEANUT SAUCE" "A spicy peanut sauce for chicken, tempeh, or tofu"
+
+My wife and I got this recipe from the back of a package of
+Tempeh. We have successfully used it with chicken chunks also; in
+fact, we prefer it that way.
+.IH "Serves 3 or 4"
+.IG "1 Tbsp" "garlic powder" "15 ml"
+.IG "1 Tbsp" "onion powder" "15 ml"
+.IG "2 cups" "water" "500 ml"
+.IG "1 Tbsp" "oil" "15 ml"
+.IG "\(14 cup" "onion," "40 g"
+diced
+.IG "2 Tbsp" "chili pepper," "30 ml"
+ground. [see notes]
+.IG "5 Tbsp" "peanut butter" "60 g"
+.IG "1 Tbsp" "soy sauce" "15 ml"
+.sp
+.SM "Choose One:"
+.sp
+.IG "8 oz" "soy and rice tempeh," "250 g"
+cut into 
+.AB "\(14-inch" "\(12-cm"
+cubes
+.IG "2\-3" "boneless chicken breasts,"
+cut into
+.AB "\(14-inch" "\(12-cm"
+cubes
+.IG "1 lb" "tofu" "500 g"
+cut into
+.AB "\(14-inch" "\(12-cm"
+cubes.
+.PH
+.SK 1
+Combine the garlic powder, onion powder, water, and
+(tempeh/chicken/tofu) in a saucepan,
+and bring to a boil.
+Cover and simmer for 5 minutes.
+Remove the (tempeh/chicken/tofu).
+Drain and save the cooking liquid.
+.SK 2
+Heat the oil in the saucepan and saut\z\(aae the onion and chili until
+soft.
+.SK 3
+Mix in the cooking liquid, peanut butter, and soy sauce.
+Bring to a boil.
+.SK 4
+Add the (tempeh/chicken/tofu) and mix until coated with sauce.
+.SK 5
+Serve over hot noodles or rice.
+.NX
+This recipe, if made as suggested, can be very spicy. We normally
+cut the amount of chili powder by half, although that is personal
+preference. Experiment with it.
+.SH RATING
+.I Difficulty:
+easy.
+.I Time:
+10 minutes.
+.I Precision:
+approximate measurement OK.
+.WR
+Daniel Faigin and Karen Davis
+System Development Corporation (A Burroughs Company)
+{akgua allegra ihnp4 hplabs sdcsvax trwrb cbosgd}!sdcrdcf!faigin  
+sdcrdcf!faigin@LOCUS.UCLA.EDU

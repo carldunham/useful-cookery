@@ -1,0 +1,15 @@
+This file is for people who know how to cook but who don't know how to
+program, and who find that they are unable to get the help of a programmer in
+getting the alt.gourmand software installed.
+
+The novice installation is set up as a series of steps; at the end of each
+you will be told what to do next.
+
+To begin, type this command:
+	Novice.start
+Make sure you put the capital N at the beginning of it. If it doesn't work,
+try typing this command:
+	chmod 755 Novice.*
+and then try
+	Novice.start
+a second time. If it still doesn't work, then you gotta get help.

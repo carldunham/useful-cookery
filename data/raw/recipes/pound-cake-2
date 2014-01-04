@@ -1,0 +1,70 @@
+.ig
+Path: decwrl!recipes
+From: jeff@rtech.uucp (Jeff Lichtman)
+Newsgroups: mod.recipes
+Subject: RECIPE: Cream cheese pound cake
+Message-ID: <9355@decwrl.DEC.COM>
+Date: 17 Apr 87 05:42:31 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: Relational Technology, Inc., Alameda, California, USA
+Lines: 57
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1987 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE POUND-CAKE-2 C "6 Feb 87" 1987
+.RZ "CREAM CHEESE POUND CAKE" "A pound cake made with cream cheese"
+I got this recipe from Annette Hall at Computer System Resources, in
+Georgia. (annette@gacsr.UUCP). She posted it to net.cooks, claiming that
+it's the best pound cake you'll ever taste. She's right!
+.IH "One large cake"
+.IG "\(34 lb" "butter" "350 g"
+.IG "3 cups" "granulated sugar" "600 g"
+.IG "\(12 lb" "cream cheese" "220 g"
+.IG "6" "eggs"
+(large)
+.IG "3 cups" "cake flour" "270 g"
+sifted
+.IG "\(14 tsp" "salt" "1 ml"
+.IG "1\(12 tsp" "almond extract" "7.5 ml"
+.IG "1 tsp" "vanilla extract" "5 ml"
+.PH
+.SK 1
+Pre-heat oven to
+.TE 325 160 .
+.SK 2
+Cream the butter, sugar, and cheese together until the mixture is light and
+fluffy.
+.SK 3
+Add salt, vanilla, and almond extract. Beat well.
+.SK 4
+Add eggs, one at a time, blending well after each.
+.SK 5
+Stir in flour. Don't be vigorous;
+mix it just enough to incorporate the flour.
+.SK 6
+Spoon into a greased tube pan.
+Bake in preheated oven for 1\(12 hours.
+.SK 7
+Cool for 15\-20 minutes, then invert the cake onto a serving dish
+and remove the tube pan.
+If you wait too long, it will stick.
+.NX
+.SH RATING
+.I Difficulty:
+easy
+.I Time:
+about 2 hours and 15 minutes
+.I Precision:
+measure carefully.
+.WR
+Jeff Lichtman
+Relational Technology, Inc., Alameda, California, USA
+{amdahl,sun}!rtech!jeff	{ucbvax,decvax}!mtxinu!rtech!jeff

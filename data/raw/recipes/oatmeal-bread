@@ -1,0 +1,88 @@
+.ig
+From: hsd@uvacs (Harry S. Delugach)
+Newsgroups: mod.recipes
+Subject: RECIPE: Oatmeal Honey Bread
+Date: 14 Feb 86 06:13:08 GMT
+Organization: University of Virginia, Computer Science Dept.
+Approved: reid@glacier.ARPA
+
+
+	      Copyright (C) 1986 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE OATMEAL-BREAD B "31 Jan 86" 1986
+.RZ "OATMEAL HONEY BREAD" "A yeast bread for people who like oatmeal"
+.IH "makes 2 loaves"
+.IG "2 cups" "uncooked oatmeal" "160 g"
+e.g., Quaker's Old Fashioned Oatmeal
+.IG "2/3 cup" "honey" "160 ml"
+.IG "2 Tbsp" "salt" "30 ml"
+.IG "3 Tbsp" "butter" "50 ml"
+.IG "1 cup" "boiling water" "250 ml"
+.IG "2 pkgs" "active dry yeast" "14 g"
+.IG "1 cup" "lukewarm water" "250 ml"
+.IG "2/3 cup" "milk" "160 ml"
+.IG "5\-6 cups" "unbleached flour" "500\-600 g"
+(may substitute up to
+.AB "2 cups" "200 g"
+whole wheat)
+.IG "" "oil"
+.PH
+.SK 1
+Put the oatmeal, honey, salt and butter in a large mixing bowl.
+Add boiling water and mix together. Let stand for 45 minutes, stirring
+occasionally.
+.SK 2
+Following the yeast package directions, add the yeast to lukewarm water,
+and let it soften for about 5 minutes. Add the yeast mixture to 
+the oats and honey mixture.
+Mix in the milk and stir well.
+.SK 3
+Stir in the flour, 
+.AB "\(12 cup" "50 g"
+at a time. When the dough is too stiff to stir, pour it out onto
+a well-floured surface, and knead it
+firmly, adding a little flour if necessary.
+Knead it until the dough is smooth and elastic (about 6\-8 minutes).
+Form the dough into a ball. 
+Place the dough into a large greased bowl,
+coating the entire ball of dough.
+.SK 4
+Cover with a damp cloth, and place in a warm, cozy, humid place.
+(I put it in a cool oven, with a small saucepan of hot tap water
+sitting on the bottom of the oven.)
+Let rise for about 1\(12 hours, or until the dough has doubled in bulk.
+.SK 5
+Punch down the dough, and split in half. Spread the dough
+into two greased loaf pans, coating the dough as before, and
+cover with a damp cloth, 
+and let rise for about an hour in a warm, cozy, humid place.
+.SK 6
+Bake at 350\(deF for 35-40 minutes, or until loaves sound hollow when tapped.
+Cool on a bread rack for about ten minutes.
+.NX
+Kneading is difficult to describe in words, but many cookbooks have pictures.
+The idea is to exercise the dough and work some more flour into it.
+Bread freezes very well; give it an hour or so to thaw,
+then heat it up at 350\(deF for about ten minutes.
+.PP
+Instant and quick-cooking oatmeal is not satisfactory in this recipe.
+Besides the ubiquitous Quaker oats, you can use any commercial rolled oats
+or steel-cut oats. If you use the steel-cut oats, then soak for 1 hour
+in step 1.
+.SH RATING
+.I Difficulty:
+easy if you already know how to knead dough, moderate otherwise.
+.I Time:
+30 minutes preparation, 4\(12 hours waiting time.
+.I Precision:
+All amounts (including times) are approximate.
+.WR
+Harry S. Delugach
+University of Virginia, Dept. of Computer Science, Charlottesville, VA
+cbosgd!uvacs!hsd  or decvax!mcnc!ncsu!uvacs!hsd

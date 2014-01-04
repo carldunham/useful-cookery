@@ -1,0 +1,59 @@
+# alt.gourmand software Makefile for USG systems.
+# To install, edit the following variables, then type "make install"
+#
+# Where are the object files for the recipe software kept?
+OBJDIR=/usr/local/bin
+
+# Where are the man pages to be put?
+MAN1DIR=/usr/man/man1
+MAN5DIR=/usr/man/man5
+
+# Where is a temporary directory (e.g. /tmp or /usr/tmp) that will have
+# enough space to hold the entire cookbook. It could require several
+# megabytes someday.
+TEMPDIR=/tmp
+
+# Where is the news spooling directory? Note: if your system is running a
+# version of news earlier than B2.10, or some software besides news, you will
+# have to edit the file "rckeepnew.X" and tell it the name of the directory
+# that holds alt.gourmand articles.
+NEWSDIR=/usr/spool/news
+
+# What is the default "keep" directory. If you want a per-person keep
+# directory, put $$HOME/something; if you want a systemwide keep directory
+# (to save disk space), then put an absolute pathname here.
+DEFDIR=$$HOME/Recipes
+
+# What PATH do you want used inside the shell scripts? At the very least,
+# it must contain $OBJDIR
+DEFPATH=:$(OBJDIR):/usr/bin:/bin:
+
+# What version of TRoff works best at your site, and with what options does it
+# do its best job on the Unix manual pages macros?
+DEFTROFF=troff -man
+
+# What is your favorite pager and what are its options?
+DEFPAGER=pg
+
+# Do you want recipes to come out in metric units (as opposed to English
+# units)? If you think that tablespoons and cups are the right thing to have
+# in recipes, then leave this set to "0". If you think that milliliters and
+# grams are the right thing to have in recipes, then change to "1"
+METRIC=0
+
+############################################################################
+
+OBJECTS=rcbook.t rcbook.n rcextract rcindex rckeep rcnroff rcshow rctypeset \
+	rcintro rckeepnew rcnew.t rcnew.n
+
+configure: Makefile 
+	sh configure.sh USG '$(OBJDIR)' '$(NEWSDIR)' '$(DEFDIR)' '$(DEFPATH)' \
+		'$(DEFTROFF)' '$(DEFPAGER)' '$(METRIC)' '$(TEMPDIR)'
+
+clean:
+	rm -f $(OBJECTS) *.n.X rcnroff.X *.tmp
+
+install:
+	cp $(OBJECTS) $(OBJDIR)
+	cp cookbook.1 $(MAN1DIR)
+	cp recipes.5 $(MAN5DIR)

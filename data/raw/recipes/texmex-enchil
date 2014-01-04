@@ -1,0 +1,133 @@
+.ig
+Path: decwrl!recipes
+From: pam@cepu (Pam McGarvey)
+Newsgroups: mod.recipes
+Subject: RECIPE: Tex-Mex enchiladas
+Message-ID: <7425@decwrl.DEC.COM>
+Date: 9 Jan 87 04:46:20 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: UCLA Comprehensive Epilepsy Project, Los Angeles, Calif., USA
+Lines: 120
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1987 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+  This recipe uses a macro feature that was not present in early versions of
+  mod.recipes, namely an argument to the "PROCEDURE" header. The version of
+  the macros that is needed to process this recipe has been distributed since
+  July 1987, so I feel it is now in order to start using it. Those of you who
+  are using old or customized versions of the recipe macros should pick up
+  that change if you want this recipe. 
+	  Brian Reid, Editor.
+  
+..
+.RH MOD.RECIPES-SOURCE TEXMEX-ENCHIL M "22 Dec 83" 1987
+.RZ "TEX-MEX STYLE ENCHILADAS" "Central Texas style Mexican enchiladas"
+We cook beef enchiladas in two ways\(emthe traditional rolled enchilada
+and the easier-to-cook New Mexico stacked style.  Both procedures are given.
+Also, we used to cook the enchilada sauce/chili from scratch but more
+recently began using a shortcut with canned Old El Paso brand enchilada
+sauce, since it is not only faster (20 minutes vs. 4+ hours) but also has
+a very authentic spice combination.
+.IH "Serves 6\-8"
+.IG "2 lb" "extra lean ground beef" "1 kg"
+(as little fat as possible)
+.IG "2" "medium onions,"
+chopped
+.IG "4 Tbsp" "flour" "25 g"
+.IG "2\(12 cups" "enchilada sauce" "600 ml"
+(2 standard cans)
+.IG "1 lb" "sharp cheddar cheese," "500 g"
+grated
+.PH "(SAUCE AND FILLING)"
+.SK 1
+Brown ground beef and 1 chopped onion in a large skillet.
+There should be enough fat in the beef to eliminate any need for extra oil
+and also to saut\z\(aae the onions at the same time.
+While you are browning the beef
+(it should be completely cooked with no pink or red color left), be sure to
+break it up so that it is granular in texture, as opposed to chunky, when
+completely browned.  Onions should be limp and translucent but not brown.
+.SK 2
+Add about 4 Tbsp of flour and saut\z\(aae until flour is completely
+incorporated into the meat mixture.  
+.SK 3
+Add the enchilada sauce. Heat
+over low heat.  If the mixture is too thick, add a little water.  The
+consistency should be that of a thick gravy, but not soupy.
+Simmer over low heat for 20\-30 minutes. 
+.PH "(ROLLED ENCHILADAS)"
+.SK 1
+Rolled enchiladas are tougher to assemble, but more authentic.
+Have ready a large baking pan\(emwe always use an oblong Pyrex pan.
+.SK 2
+One at a time, dip each tortilla in the enchilada sauce just enough to coat
+and slightly soften.
+.SK 3
+Lay the tortilla flat in the baking pan, spoon about
+.AB "3 Tbsp" "50 ml"
+of the enchilada sauce in a line down the middle, top with about
+.AB "1 tsp" "5 ml"
+chopped onion and about
+.AB "3 Tbsp" "50 ml"
+of grated cheese.
+.SK 4
+Roll the tortilla tightly into a 
+cylinder \fIwith the seam on the bottom\fR, and position against the bottom
+edge of the baking pan. Repeat until the pan is full. This can get tricky (but
+it is possible) as the pan gets full.  Assembling the enchilada outside of
+the pan is usually a messy disaster.  Depending on the size of the pan
+and how tightly each enchilada is rolled, you can get 8\-12 enchiladas in a
+pan.  This recipe should make about 16\-24 enchiladas.
+.SK 5
+Spoon enchilada sauce over the assembled
+enchiladas to thinly cover.  Sprinkle generously
+with grated cheese. Bake at
+.TE 425 220
+for 20 minutes.
+.PH "(STACKED ENCHILADAS)"
+.SK 1
+This is the New Mexico style. It is much easier to assemble.
+Have plates ready.  One at a time, submerge each tortilla in the enchilada
+sauce (which should be cooking on low heat during this process) and cook
+until limp but not falling apart\(emthis may take a little practice to
+gauge the time. 
+.SK 2
+Remove the tortilla from the sauce and place flat on a
+plate.  Spoon a little sauce, including meat, over the tortilla, add
+.AB "1 Tbsp" "15 ml"
+chopped onion and about
+.AB "4 Tbsp" "50 ml"
+grated cheese.
+.SK 3
+Repeat the process untill
+you have a stack of 3\-4 tortillas on a plate, depending on the appetite of
+the person who will eat them.
+Top the last tortilla with a generous amount of sauce and cheese. 
+Serve immediately.
+.NX
+The fundamental difference between these two styles is the method used to cook
+the tortillas.  In the rolled style, the sauce is cooked into the tortilla
+through the baking process.  In the stacked style, the tortilla is cooked
+directly in the sauce.  Only the appearance differs\(emthe taste is the
+same with either style.
+.PP
+I always use Old El Paso canned enchilada sauce, though it is possible to
+make your own.
+.SH RATING
+.I Difficulty:
+moderate.
+.I Time:
+1 hour.
+.I Precision:
+approximate measurement OK.
+.WR
+Pamela McGarvey
+UCLA Comprehensive Epilepsy Program
+{ihnp4!sdcrdcf,ucbvax!ucla-cs,hao}!cepu!pam

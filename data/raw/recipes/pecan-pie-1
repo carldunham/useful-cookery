@@ -1,0 +1,63 @@
+.ig
+Path: decwrl!recipes
+From: ecl@mtgzy (Evelyn C. Leeper)
+Newsgroups: mod.recipes
+Subject: RECIPE: Pecan Pie
+Message-ID: <7763@decwrl.DEC.COM>
+Date: 23 Jan 87 04:48:42 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: AT&T Information Systems, Holmdel, New Jersey, USA
+Lines: 50
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1987 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE PECAN-PIE-1 D "1 Dec 86" 1987
+.RZ "PECAN PIE" "The traditional recipe for pecan pie"
+.IH "makes 1 pie"
+.IG "3" "eggs,"
+beaten
+.IG "1 cup" "dark corn syrup" "235 ml"
+.IG "1 cup" "sugar" "190 g"
+.IG "2 Tbsp" "butter" "30 g"
+.IG "1 tsp" "vanilla extract" "5 ml"
+.IG "1\(12 cups" "pecans" "180 g"
+.IG "1" "unbaked pastry shell"
+.PH
+.SK 1
+Preheat oven to
+.TE 375 190 .
+.SK 2
+Blend eggs, corn syrup, sugar, butter, and vanilla together.
+.SK 3
+Add pecans.
+.SK 4
+Bake at
+.TE 375 190
+for 10 minutes, then lower the temperature to
+.TE 350 175
+and bake for another 45 minutes or so (until a knife
+inserted halfway between the edge and the center comes out clean.
+.SK 5
+Remove and let cool.
+.NX
+If you use pecan halves it will look nicer than pecan pieces, but be more
+difficult to cut.
+.SH RATING
+.I Difficulty:
+easy.
+.I Time:
+10 minutes preparation, 1 hour cooking.
+.I Precision:
+measure the ingredients.
+.WR
+Evelyn C. Leeper
+AT&T Information Systems, Holmdel, New Jersey, USA
+ihnp4!mtgzy!ecl

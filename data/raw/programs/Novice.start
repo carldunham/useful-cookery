@@ -1,0 +1,14 @@
+#! /bin/sh
+# This script is used to begin the Novice installation procedure. Please read
+# file "Novice" for instructions. Pay no attention to the man behind the
+# curtain.
+#
+###########################################################################
+sed -e "s|XXDEFPATH|$PATH|" \
+    -e "/###/d" \
+    -e '/##=/a\
+# This version of the alt.gourmand Makefile is for people who are not really\
+# programmers, and who cannot get other help. Edit the file to answer the 4\
+# questions  below, and then type "make configure".\
+' -e '/##=/d' Novice.makefile > Makefile
+cat Novice.step1

@@ -1,0 +1,152 @@
+.ig
+Path: decwrl!recipes
+From: schwartz@uw-wally (Michael F. Schwartz)
+Newsgroups: mod.recipes
+Subject: RECIPE: Challah
+Message-ID: <8479@decwrl.DEC.COM>
+Date: 6 Mar 87 04:17:05 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: University of Washington, Seattle, Washington, USA
+Lines: 139
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1987 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+
+..
+.RH MOD.RECIPES-SOURCE CHALLAH-2 B "8 Dec 86" 1987
+.RZ "CHALLAH II" "Braided egg bread"
+Challah (pronounced ``hallah'') is a type of braided egg bread
+traditionally eaten on the Jewish Sabbath.  It is eaten by tearing off
+hunks rather than by cutting with a knife.
+.PP
+I got this recipe from a housemate a couple of years ago; I don't know its
+origins before that, but it has become one of my favorite recipes, and one
+with which I have experimented a good deal. I've tried several other challah
+recipes, but find I like this one the best.
+.IH "2 Large Loaves"
+.SH		DOUGH
+.IG "\(12 oz" "active dry yeast" "15 g"
+(2 packages)
+.IG "2 cups" "warm water" "5 dl"
+.IG "4 tsp" "salt" "20 ml"
+.IG "\(12 cup" "granulated sugar" "100 g"
+.IG "\(34 cup" "vegetable oil" "15 cl"
+(or up to
+.AB "\(14 cup" "1 dl"
+more, to taste)
+.IG "3" "large eggs"
+.IG "9\-10 cups" "all-purpose flour" "1 kg"
+.SH		GLAZE
+.IG "1" "large egg"
+.IG "" "sesame or poppy seeds"
+.PH
+.SK 1
+Mix yeast in warm water. Let sit 5 minutes.
+.SK 2
+In a large bowl combine salt, sugar, eggs, and oil.
+.SK 3
+Add yeast mixture.
+.SK 4
+Slowly add flour, stirring until not too sticky.  When the dough becomes too
+thick to stir, turn it out onto a floured board and knead, adding flour as
+necessary. Scrape the working surface with a plastic dough spatula from time
+to time, to keep a dry skin from forming on it.  You may find that you need
+more flour, but don't add too much more, or the dough will become heavy.
+Knead until the dough is smooth and elastic (about 10 minutes).
+.SK 5
+Form dough into a ball and place in a lightly oiled large bowl, turning to
+coat the dough with oil. A ceramic bowl is best. Cover the bowl with a clean
+cloth and leave in a warm, draft-free place to rise for 1\(12 hours, or
+until doubled in bulk.
+.SK 6
+After the dough has risen, punch it down and divide it into 6 balls.
+Let the dough balls sit for 5 minutes, covered.
+.SK 7
+Keeping dough balls covered while working, remove a ball and roll it between
+your hands (or on working surface) into a cord about
+.AB "1 inch" "2.5 cm"
+wide by
+.AB "20 inches" "50 cm"
+long.  The dough is quite elastic, making it nicely workable, yet also
+tending to make it shrink back slightly after being lengthened. I find it
+best to lengthen it in a series of passes. Form 3 cords this way, and then
+start from the middle and braid them into a single loaf. Tuck the ends
+under.  It's a little harder to figure out how to start braiding from the
+middle, but the loaves come out more even and attractive that way.  Don't
+pull the cords while braiding. Place the loaf on a lightly oiled baking
+sheet, and cover it with a cloth while you form the other loaf.  Keep the
+loaves well apart on the baking sheet, since they will expand a lot.
+.SK 8
+Cover the loaves and place again into a warm, draft-free place to rise
+for 45\-60 minutes.
+.SK 9
+After the loaves have risen, gently brush the tops with beaten egg using a
+soft brush, and then sprinkle with the seeds.
+.SK 10
+Bake at
+.TE 350 175
+for 30 minutes, or until golden brown.
+.NX
+The variation in oil makes quite a difference in the moisture
+of the bread: If you use the larger quantity, the bread comes out
+very nice and moist, but when it cools it becomes somewhat oily.
+.PP
+The amounts of sugar and oil may sound high, but try it this way once
+before cutting back. I have tried other recipes that use less, and they
+don't taste nearly as good.
+.PP
+Here's the fun part: variations.  Because this dough is so workable,
+you can form it many different ways, limited only by your imagination;
+I once made a whole collection of different shapes and sizes, for a
+festive dinner party.  Some of the variations I have tried include:
+.IP -
+Forming the braided loaf into a wreath-like loop (and joining
+the individual ends)
+.IP -
+Braiding 5 ways instead of 3
+.IP -
+Braiding 3 braided loaves into a recursive loaf (this actually
+didn't turn out very well: it ended up looking knotty, rather
+than intricate, and being somewhat tough)
+.IP -
+Baking a small loaf on top of a larger loaf (traditional)
+.IP -
+Varying the loaf sizes. One time I made individual-sized loaves, so
+that everyone could have their own loaf at dinner.  Another time, I
+divided the dough into 2 halves, set one aside, and made a loaf
+out of the other half.  Then, I divided the remaining piece into 2
+halves, and continued the process until I had an array of loaves, each
+half the size of the previous.  I managed to get 9 loaves by doing
+this, the smallest of which was about
+.AB "\(14 inch" ".6 cm"
+by
+.AB "2 inches" "5 cm."
+.IP -
+Varying the length-to-width proportions; traditionally, challah loaves
+are quite wide relative to their length.  I find that shorter, wider
+loaves are doughier (and thus tastier), but longer loaves look more
+elegant.
+.IP -
+Adding extra ingredients, such as raisins and/or nuts.
+.SH RATING
+.I Difficulty:
+moderate.
+.I Time:
+30 minutes dough preparation,
+1\(12 hours first rising,
+1 hour loaf forming,
+1 hour second rising,
+30 minutes baking. Total: 4\(12 hours.
+.I Precision:
+Approximate measurement OK.
+.WR
+Mike Schwartz
+University of Washington, Computer Science, Seattle, Washington, USA
+ihnp4!uw-beaver!schwartz	schwartz@cs.washington.edu

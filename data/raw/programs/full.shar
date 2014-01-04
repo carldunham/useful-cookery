@@ -1,0 +1,2298 @@
+#! /bin/sh
+# This is a shell archive, meaning:
+# 1. Remove everything above the #! /bin/sh line.
+# 2. Save the resulting text in a file.
+# 3. Unpack the file by typing "sh filename", where "filename" is the
+#    name of your file. It will create these files in your current
+#    directory:
+#	 README
+#	 Makefile.bsd
+#	 Makefile.sysv
+#	 Novice
+#	 Novice.install
+#	 Novice.makefile
+#	 Novice.start
+#	 Novice.step1
+#	 Novice.step2
+#	 Novice.step3a
+#	 Novice.step3b
+#	 cookbook.1.X
+#	 rcbook.t.X
+#	 rcextract.X
+#	 rcindex.X
+#	 rcintro.X
+#	 rckeep.X
+#	 rckeepnew.X
+#	 rcnew.t.X
+#	 rcshow.X
+#	 rctypeset.X
+#	 recipes.5.X
+#	 cookbook.doc
+#	 intro.doc
+#	 recipes.doc
+#	 configure.sh
+#	 tmac.recip
+ 
+echo extracting README
+cat > README << '18731!alt.gourmand!'
+This is the distribution of programs that work with alt.gourmand files, to make
+the USENET cookbook.
+
+	If you are not a programmer, but want to use this
+	software, and can't enlist the help of a
+	programmer, please read the file "Novice". It
+	contains simplified instructions, and can lead
+	you through the installation procedure even if
+	you have never installed software before.
+
+	Ignore the rest of this file if you decide to use
+	the Novice instructions.
+
+To install the recipe software at your site, copy either Makefile.bsd or
+Makefile.sysv over to be named "Makefile", then edit it per the instructions
+in the beginning. If you are running any non-BSD Unix, such as Sys III or
+Venix, then you want to use Makefile.sysv even though you don't have sysv.
+
+If you have the "less" program, you will probably want to use it instead of
+"more".
+
+You may find that the best version of troff at your site is called "ptroff"
+or "dtroff" or "itroff" or "qtroff" or whatever--the first letter tends to
+correspond to the manufacturer of the machine for which that troff is
+targeted.
+
+Once you have edited your Makefile, type
+	make configure
+This will produce configured executable versions of the cookbook software in
+your current directory. Once you have satisfied yourself that it is not a
+trojan horse, type
+	make install
+which will copy the executable programs to the directory you have chosen for
+them (we put them in /usr/local/bin) and copy the manual pages to
+/usr/man/man1 and /usr/man/man5. You needn't be root to install, you only
+need to be a user who has write permission in the bin and man directories.
+
+Once you've done that, go read the man pages, then go play with "rn" and have
+fun printing cookbooks. This will also work with readnews; I don't know from
+notesfiles, and I have never tried it with vnews or yarn or any of those
+other programs.
+
+Here are the program names and what they do:
+
+rcbook.t	make a cookbook with troff
+rcnew.t		make a cookbook update with troff
+rcextract	extract a recipe from a news article (called by rctypeset)
+rcindex		produce an index of saved recipes (called by rcbook)
+rcintro		generate the introduction to the cookbook (called by rcbook)
+rckeep		keep a recipe
+rckeepnew	keep all new recipes (new since last rckeepnew run)
+rcnroff		run one recipe through nroff
+rcshow		show one recipe on the screen
+rctypeset	run one recipe through troff
+rcbook.n	nroff version of rcbook.t
+rcnew.n		nroff version of rcnew.t
+
+The troff and nroff macros use the manual macros /usr/lib/tmac/tmac.an as a
+subroutine. If your site has changed those manual page macros significantly
+from the original AT&T or Berkeley distribution, then things might not work.
+In particular, the macros distributed by DEC with Ultrix are not
+compatible (they assume the wrong paper size).
+
+	Brian Reid
+	DEC Western Research Laboratory
+	Palo Alto, California
+	{ucbvax,decvax,sun,pyramid,hplabs,ames}!decwrl!reid
+		-or-	reid@decwrl.DEC.COM
+18731!alt.gourmand!
+echo extracting Makefile.bsd
+cat > Makefile.bsd << '18731!alt.gourmand!'
+# alt.gourmand software Makefile for USG systems.
+# To install, edit the following variables, then type "make install"
+#
+# Where are the object files for the recipe software kept?
+OBJDIR=/usr/local/bin
+
+# Where are the man pages to be put?
+MAN1DIR=/usr/man/man1
+MAN5DIR=/usr/man/man5
+
+# Where is a temporary directory (e.g. /tmp or /usr/tmp) that will have
+# enough space to hold the entire cookbook. It could require several
+# megabytes someday.
+TEMPDIR=/tmp
+
+# Where is the news spooling directory? Note: if your system is running a
+# version of news earlier than B2.10, or some software besides news, you will
+# have to edit the file "rckeepnew.X" and tell it the name of the directory
+# that holds alt.gourmand articles.
+NEWSDIR=/usr/spool/news
+
+# What is the default "keep" directory. If you want a per-person keep
+# directory, put $$HOME/something; if you want a systemwide keep directory
+# (to save disk space), then put an absolute pathname here.
+DEFDIR=$$HOME/Recipes
+
+# What PATH do you want used inside the shell scripts? At the very least,
+# it must contain $OBJDIR
+DEFPATH=:$(OBJDIR):/usr/ucb:/usr/bin:/bin:
+
+# What version of TRoff works best at your site, and with what options does it
+# do its best job on the Unix manual pages macros?
+DEFTROFF=troff -man
+
+# What is your favorite pager and what are its options?
+DEFPAGER=more -s
+
+# Do you want recipes to come out in Metric units (as opposed to English
+# units)? If you think that tablespoons and cups are the right thing to have
+# in recipes, then leave this set to "0". If you think that milliliters and
+# grams are the right thing to have in recipes, then change to "1"
+METRIC=0
+
+##
+##########################################################################
+
+OBJECTS=rcbook.t rcbook.n rcextract rcindex rckeep rcnroff rcshow rctypeset \
+	rcintro rckeepnew rcnew.t rcnew.n
+
+configure: Makefile 
+	sh configure.sh BSD '$(OBJDIR)' '$(NEWSDIR)' '$(DEFDIR)' '$(DEFPATH)' \
+		'$(DEFTROFF)' '$(DEFPAGER)' '$(METRIC)' '$(TEMPDIR)'
+
+clean:
+	rm -f $(OBJECTS) *.n.X rcnroff.X *.tmp
+
+install:
+	cp $(OBJECTS) $(OBJDIR)
+	cp cookbook.1 $(MAN1DIR)
+	cp recipes.5 $(MAN5DIR)
+18731!alt.gourmand!
+echo extracting Makefile.sysv
+cat > Makefile.sysv << '18731!alt.gourmand!'
+# alt.gourmand software Makefile for USG systems.
+# To install, edit the following variables, then type "make install"
+#
+# Where are the object files for the recipe software kept?
+OBJDIR=/usr/local/bin
+
+# Where are the man pages to be put?
+MAN1DIR=/usr/man/man1
+MAN5DIR=/usr/man/man5
+
+# Where is a temporary directory (e.g. /tmp or /usr/tmp) that will have
+# enough space to hold the entire cookbook. It could require several
+# megabytes someday.
+TEMPDIR=/tmp
+
+# Where is the news spooling directory? Note: if your system is running a
+# version of news earlier than B2.10, or some software besides news, you will
+# have to edit the file "rckeepnew.X" and tell it the name of the directory
+# that holds alt.gourmand articles.
+NEWSDIR=/usr/spool/news
+
+# What is the default "keep" directory. If you want a per-person keep
+# directory, put $$HOME/something; if you want a systemwide keep directory
+# (to save disk space), then put an absolute pathname here.
+DEFDIR=$$HOME/Recipes
+
+# What PATH do you want used inside the shell scripts? At the very least,
+# it must contain $OBJDIR
+DEFPATH=:$(OBJDIR):/usr/bin:/bin:
+
+# What version of TRoff works best at your site, and with what options does it
+# do its best job on the Unix manual pages macros?
+DEFTROFF=troff -man
+
+# What is your favorite pager and what are its options?
+DEFPAGER=pg
+
+# Do you want recipes to come out in metric units (as opposed to English
+# units)? If you think that tablespoons and cups are the right thing to have
+# in recipes, then leave this set to "0". If you think that milliliters and
+# grams are the right thing to have in recipes, then change to "1"
+METRIC=0
+
+############################################################################
+
+OBJECTS=rcbook.t rcbook.n rcextract rcindex rckeep rcnroff rcshow rctypeset \
+	rcintro rckeepnew rcnew.t rcnew.n
+
+configure: Makefile 
+	sh configure.sh USG '$(OBJDIR)' '$(NEWSDIR)' '$(DEFDIR)' '$(DEFPATH)' \
+		'$(DEFTROFF)' '$(DEFPAGER)' '$(METRIC)' '$(TEMPDIR)'
+
+clean:
+	rm -f $(OBJECTS) *.n.X rcnroff.X *.tmp
+
+install:
+	cp $(OBJECTS) $(OBJDIR)
+	cp cookbook.1 $(MAN1DIR)
+	cp recipes.5 $(MAN5DIR)
+18731!alt.gourmand!
+echo extracting Novice
+cat > Novice << '18731!alt.gourmand!'
+This file is for people who know how to cook but who don't know how to
+program, and who find that they are unable to get the help of a programmer in
+getting the alt.gourmand software installed.
+
+The novice installation is set up as a series of steps; at the end of each
+you will be told what to do next.
+
+To begin, type this command:
+	Novice.start
+Make sure you put the capital N at the beginning of it. If it doesn't work,
+try typing this command:
+	chmod 755 Novice.*
+and then try
+	Novice.start
+a second time. If it still doesn't work, then you gotta get help.
+18731!alt.gourmand!
+echo extracting Novice.install
+cat > Novice.install << '18731!alt.gourmand!'
+#! /bin/sh
+# This program is part of the novice alt.gourmand installation procedure.
+# Please read the file "Novice".
+trap "rm -f mod.rec.$$" 0 1 2 3 15
+echo $$ > mod.rec.$$
+if test -f $HOME/mod.rec.$$
+then
+    cat Novice.step3a
+else
+    echo Installing ...
+    cp $*
+    cat Novice.step3b
+fi
+18731!alt.gourmand!
+echo extracting Novice.makefile
+cat > Novice.makefile << '18731!alt.gourmand!'
+### This file is used as part of the Novice installation procedure. Please
+### read file "Novice".
+##=
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# (1) Where is the news spooling directory? If you don't have any idea, then
+# leave this line alone--this is the best guess. If you get this wrong,
+# all of the programs will still work, though they may give strange error
+# messages at times.
+
+NEWSDIR=/usr/spool/news
+
+# (2) What version of troff works best at your site? Change the word "troff" 
+# to the name of your version, if it is different.
+#
+# If you don't know, then try one of these guesses:
+# If you have an Apple LaserWriter, your best guess is "ptroff"
+# If you have an Imagen printer, your best guess is "itroff"
+# If you have a QMS or Talaris printer, your best guess is "qtroff"
+# Otherwise try just "troff", or ask for help.
+# If you get this wrong, you will be able to save recipes but you won't be
+# able to typeset them or print them out.
+
+MYTROFF=troff
+
+# (3) What is your favorite pager and what are its options? If you don't have
+# any idea, then leave this line alone. If you have a "pg" program, then edit
+# the word "cat" into "pg" below. If you have a "more" program, then edit the
+# word "cat" into "more". Even if you get this completely wrong, almost
+# everything will still work.
+
+DEFPAGER=cat
+
+# (4) Do you want the recipes to come out in metric units or English units?
+# If you think that recipes should use teaspoons and cups, then leave the
+# METRIC=0 line alone. If you think that recipes should use grams and
+# milliliters, then edit this line to say METRIC=1
+
+METRIC=0
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# You should not have to change anything below this line, but you are
+# welcome to make changes if you think you know what you are doing.
+
+TEMPDIR=/tmp
+DEFTROFF=$(MYTROFF) -man
+DEFDIR=$$HOME/Recipes
+OBJDIR=$$HOME
+DEFPATH=:$(OBJDIR):XXDEFPATH
+OBJECTS=rcbook.t rcbook.n rcextract rcindex rckeep rcnroff rcshow rctypeset \
+	rcintro
+
+configure: Makefile 
+	@sh configure.sh XXX '$(OBJDIR)' '$(NEWSDIR)' '$(DEFDIR)' \
+	 	'$(DEFPATH)' '$(DEFTROFF)' '$(DEFPAGER)' '$(METRIC)' \
+		'$(TEMPDIR)'
+	@cat Novice.step2
+
+install:
+	@Novice.install $(OBJECTS) $(OBJDIR)
+18731!alt.gourmand!
+echo extracting Novice.start
+cat > Novice.start << '18731!alt.gourmand!'
+#! /bin/sh
+# This script is used to begin the Novice installation procedure. Please read
+# file "Novice" for instructions. Pay no attention to the man behind the
+# curtain.
+#
+###########################################################################
+sed -e "s|XXDEFPATH|$PATH|" \
+    -e "/###/d" \
+    -e '/##=/a\
+# This version of the alt.gourmand Makefile is for people who are not really\
+# programmers, and who cannot get other help. Edit the file to answer the 4\
+# questions  below, and then type "make configure".\
+' -e '/##=/d' Novice.makefile > Makefile
+cat Novice.step1
+18731!alt.gourmand!
+echo extracting Novice.step1
+cat > Novice.step1 << '18731!alt.gourmand!'
+
+OK, your Makefile is now created. Using your favorite text editor, edit it to
+try to answer the 4 questions at the beginning. If you can't answer them,
+don't give up--the system will still work to a certain extent without the
+answers.
+
+Once you have finished editing the Makefile, type this:
+
+	make configure
+18731!alt.gourmand!
+echo extracting Novice.step2
+cat > Novice.step2 << '18731!alt.gourmand!'
+
+OK, the mod.recipe software and documentation are now all "configured". That
+means that they have been updated to reflect the details of your installation.
+What you need to do next is to "install" them, which means to copy them to
+your home directory where you can execute them while reading news. To do
+that, type this:
+
+	make install
+18731!alt.gourmand!
+echo extracting Novice.step3a
+cat > Novice.step3a << '18731!alt.gourmand!'
+
+Because you have been working in your home directory, the software is already
+installed there. We're done! Go read the files "cookbook.doc" and
+"recipes.doc" for further instructions on how to use alt.gourmand (They are
+now in your home directory)
+
+		-- Brian Reid
+18731!alt.gourmand!
+echo extracting Novice.step3b
+cat > Novice.step3b << '18731!alt.gourmand!'
+
+You're done. The programs are all installed. Go read the files "cookbook.doc"
+and "recipes.doc" for instructions. Happy recipe collecting!
+
+		-- Brian Reid
+18731!alt.gourmand!
+echo extracting cookbook.1.X
+cat > cookbook.1.X << '18731!alt.gourmand!'
+.TH COOKBOOK 1 "12 Sep 87" "USENET Cookbook"
+.SH NAME
+cookbook: rckeep, rckeepnew, rcbook.t, rcbook.n, rctypeset, rcnroff \- Store and print the alt.gourmand USENET Cookbook
+.SH SYNOPSIS
+.na
+.if t .ta 2.5i
+.B rckeep < filename	
+copies a recipe to your keep directory
+.br
+.B s\ |rckeep	
+(same thing, from a news-reading program.)
+.br
+.B rckeepnew [ directory ]	
+finds and keeps new recipes
+.br
+\fBrcbook.t [ \-t ] [ \-m ] [ \-M ] [ \-f ]	\fR
+typesets a cookbook from kept recipes
+.br
+\fBrcbook.n [ \-m ] [ \-M ]	\fR
+nroffs a cookbook from kept recipes
+.br
+\fBrctypeset [ \-m ] [ \-M ] [ \-f ]	\fR
+typesets one recipe from std input
+.br
+\fBrcnroff [ \-m ] [ \-M ]	\fR
+nroffs one recipe from std input
+.br
+\fBrcnew.t [ \-m ] [ \-M ] [ \-f ]	\fR
+typesets new kept recipes
+.br
+\fBrcnew.n [ \-m ] [ \-M ]	\fR
+nroffs new kept recipes
+.ad
+.\" This next line supposedly sets default tabs
+.DT
+.SH DESCRIPTION
+The USENET Cookbook is an online database distributed in the 
+.B alt.gourmand
+newsgroup. This software makes it easy for you to clip recipes that interest
+you, to store them in your own directory, and to make printed cookbooks from
+those stored recipes.
+.SH SAVING RECIPES ONE AT A TIME
+.PP
+Read the news with your favorite news reading program. If you don't have a
+favorite, try 
+.B rn.
+When you see a recipe that interests you, type
+.br
+.B 	s |rckeep
+.br
+The ``s'' command means ``save''; the vertical bar means ``save into a
+program''. 
+.B rckeep
+is the program that keeps recipes. It will save recipes into a directory
+named Recipes, and it will create that directory for you if it does not
+currently exist. If you would like recipes saved in some other place, you can
+type
+.br
+.B 	s |rckeep PartyRecipes
+.br
+.B 	s |rckeep ~/PartyRecipes
+.br
+.B 	s |rckeep /usr/local/lib/Recipes
+.br
+and so forth.
+.SH SAVING NEW RECIPES AUTOMATICALLY
+If you don't want to take the time and trouble to run \fBrckeep\fR on every
+recipe, you can run \fBrckeepnew\fR from time to time. When \fBrckeepnew\fR
+is run, it looks in the netnews spooling directory to find the files that
+hold the articles that hold the recipes, and automatically runs \fBrckeep\fR
+on every file that contains a recipe and that has arrived since the last time
+you ran \fBrckeepnew\fR. Like \fBrckeep\fR, \fBrckeepnew\fR can be given the
+name of a directory to use as the keep directory:
+.br
+.B	rckeepnew
+.br
+or
+.br
+.B	rckeepnew /usr/local/lib/Recipes
+.br
+and so forth.
+.SH HOW RECIPES ARE STORED
+Every recipe is given a code word by the editor of alt.gourmand. That code
+word is contained in the first few lines of the article body. The 
+.B rckeep
+and
+.B rckeepnew
+programs use that code word as a file name in your keep directory. For
+example, if you are saving a recipe whose 1-line description is
+.br
+.B 	PHEASANT-PERRY \- Pheasant for Thanksgiving
+.br
+it will be saved in your keep directory under the filename ``pheasant-perry''.
+These filenames are forced to lower case by
+.B rckeep.
+.SH MAKING A COOKBOOK
+To typeset a cookbook, just type
+.br
+.B 	rcbook.t
+.br
+and all of the recipes in your keep directory will be typeset in alphabetical
+order, with an index, introduction, and title page added. They will come out
+either in English units (cups and teaspoons) or in metric units (grams and
+deciliters) depending on how the alt.gourmand software has been installed at
+your site. If you want to print the cookbook in cups and spoons regardless of
+what the software installer did, then type
+.br
+.B	rcbook.t  \-M
+.br
+and if you want to print the cookbook in metric units regardless of what the
+software installer did, then type
+.br
+.B	rcbook.t  \-m
+.br
+If you don't have a
+typesetter or if you don't have the
+.B troff(1)
+program, then use ``\fBrcbook.n\fR'' instead; it uses 
+.B nroff(1).
+and sends the results of the formatting to standard output. It supports the
+same \-m and \-M options that \fBrcbook.t\fR does.
+.PP
+If you have more than one keep directory, for specialty cookbooks of
+different types, you can give rcbook a directory name as an argument, e.g.:
+.br
+.B	rcbook.t /usr/local/lib/Recipes
+.PP
+You can capture the output of \fBrcbook.t\fR in a file by using the ``\-t''
+option:
+.br
+.B	rcbook.t \-t > FormattedFile
+.SH PRINTING ONE RECIPE
+The program \fBrctypeset\fR typesets one recipe, from its standard input.
+It is able to discard news and mail headers from the beginning of the
+recipe; you may use \fBrctypeset\fR on a netnews message in the form that it
+is stored in a spooling directory, or you may use it directly from a
+news-reading program. \fBrctypeset\fR supports the metric (\-m) and
+non-metric (\-M) options explained above.
+.PP
+The program \fBrcnroff\fR performs the same function as \fBrctypeset\fR,
+except that it formats to standard output instead of to the typesetter.
+.SH PRINTING NEW RECIPES
+It is a nuisance to keep track of which recipes you have printed and which
+you have not. It is expensive and slow to print the entire cookbook every time
+a few more recipes arrive. The \fBrcnew.t\fR program works very much like
+\fBrcbook.t\fR, except that it typesets only those recipes that were put
+into the keep directory after the last time you ran \fBrcnew.t\fR. It
+produces a complete new index, though. It uses the creation time of the file
+INDEX in your current directory to determine the last time you created an
+index, which is presumably the last time you ran \fBrcbook.t\fR or
+\fBrcnew.t\fR. \fBrcnew.t\fR supports the metric (\-m) and non-metric (\-M)
+options explained above.
+.PP
+The program \fRrcnew.n\fR does the same thing as \fRrcnew.t\fR, except that
+it formats to standard output instead of to the typesetter.
+.SH THE INDEX
+The cookbook index is a ``permuted index''. This means that each recipe is
+indexed by every major word in its title. Some people seem to find this
+format jarring, and more than one person has filed a bug report upon seeing
+the index, certain that the output that it produces cannot possibly be
+correct.
+.PP
+Since your notebook of recipes will grow each week, the pages cannot have
+numbers. Instead, the pages are identified by the code name for each recipe,
+with the expectation that you will keep your notebook in alphabetical order
+by this name.
+.SH SPECIAL CHARACTERS
+Troff has a number of special characters, such as such as
+typeset fractions (``\(12'' for 1/2), which are not available on some brands
+of typesetters and laser printers. If your typesetter handles those
+characters incorrectly, then you should add the ``\-f'' option to rcbook.t,
+rctypeset, and rcnew.t. The ``\-f'' option causes the recipe software to
+translate those special characters into standard ASCII characters before
+printing.
+.SH COPYRIGHT
+The entire USENET cookbook is copyrighted by the USENET Community Trust. The
+purpose of this copyright is to prevent commercial use of the material. The
+USENET Community Trust permits any noncommercial use of the contents of the
+recipe database, and forbids any commercial use.
+.SH FILES
+.ta 3i
+NEWSDIR/alt/gourmand	USENET recipe directory
+.br
+DEFDIR	Your keep directory (saved recipes)
+.br
+DEFDIR/.keepnew	Record of when rckeepnew last run
+.br
+INDEX	Record of when rcnew last run
+.br
+OBJDIR/rc*	The recipe software
+.SH SEE ALSO
+recipes(5), rn(1)
+.SH AUTHOR
+Brian K. Reid, DEC Western Research Laboratory
+18731!alt.gourmand!
+echo extracting rcbook.t.X
+cat > rcbook.t.X << '18731!alt.gourmand!'
+#! /bin/sh
+# rcbook.t - make a cookbook with nroff or the typesetter
+#   linked to rcbook.n
+#
+# Brian Reid, November 1985
+# Copyright (C) USENET Community Trust
+#
+# Modified by:  David Messer, Febuary 1987
+#
+TROFF="nroff -man"
+FRACTIONS=0
+RCINDEX="-w 56"
+case $0 in
+	*.t)	TROFF="DEFTROFF"
+		FRACTIONS=1
+		RCINDEX=-t
+		;;
+	esac
+PATH=DEFPATH
+export PATH
+TMAC=TEMPDIR/tmac.$$
+INDEX=TEMPDIR/Index.$$
+ENDEX=TEMPDIR/Endex.$$
+RECIPES=TEMPDIR/Recipes.$$
+trap "rm -f TEMPDIR/*.$$; exit" 0 1 2 3 15
+TFLAG=
+FRACTIONS=1
+METFLAG="-rMMETRIC"
+KEEPDIR=DEFDIR
+while [ $# -gt 0 ];
+do
+    case $1 in
+	    -t) TFLAG="$1";;
+	    -m) METFLAG="-rM1";;
+	    -M) METFLAG="-rM0";;
+	    -f) FRACTIONS=0;;
+	    -*) echo $0: Unknown option $1 1>&2 ; exit 1;;
+	    "") KEEPDIR=DEFDIR;;
+	    *) KEEPDIR=$1;;
+    esac
+    shift
+done
+if [ ! -d $KEEPDIR ]; then
+	echo Your keep directory $KEEPDIR does not seem to exist. 1>&2
+	exit 1
+fi;
+echo Typesetting cookbook from files in $KEEPDIR 1>&2
+rcindex $RCINDEX $KEEPDIR
+cat > $TMAC << 'tmac.recip'
+TMAC.RECIP
+tmac.recip
+set `date`
+#  Thu Mar 27 22:56:49 PST 1986
+YEAR="$6"
+YR=`expr $YEAR - 1900`
+TODAY="$3 $2 $YR"
+sed -e "s/DATE/$TODAY/g" -e "s/YEAR/$YEAR/g" > $INDEX << 'Index'
+.RH MOD.RECIPES-SOURCE INDEX Recipes "DATE" YEAR
+.ll 6.5i
+.nf
+.br
+.de XX
+.tr ~ 
+.ta 2.4iR 2.6i 5.3i
+.ie !"\\$2""	\\$1~~~~~\\$2	\\$3~~~~~~\\$4	\\$5
+.el	\\$1	\\$3~~~~~~\\$4	\\$5
+..
+.ps 8
+.vs 10p
+Index
+cat > $ENDEX << 'Endex'
+.vs
+Endex
+rcintro > Introduction
+(
+	cd $KEEPDIR
+	case $FRACTIONS in
+	  1) cat [a-z]* > $RECIPES;;
+	  *) cat [a-z]* |\
+		 sed -e 's/\([0-9a-zA-Z]\)\(\\([1-3]\)/\1 \2/g' \
+			 -e 's|\\(12|1/2|' -e 's|\\(14|1/4|' -e 's|\\(34|3/4|' \
+			 -e 's|``|"|'     -e "s|''|\"|" > $RECIPES;;
+	esac
+)
+cat $TMAC Introduction $INDEX INDEX $ENDEX $RECIPES | $TROFF $METFLAG $TFLAG - >Cookbook
+echo Cookbook created 1>&2
+18731!alt.gourmand!
+echo extracting rcextract.X
+cat > rcextract.X << '18731!alt.gourmand!'
+#! /bin/sh
+# rcextract - extract article from alt.gourmand
+#
+# This shell script extracts the portion of an alt.gourmand
+# article that is supposed to be fed into xroff. It strips off the
+# article header and any signature, and sends the resulting text to stdout.
+#
+# Brian Reid, November 1985
+# Paul Pomes, March 1986: updated to work with notesfiles
+#
+# Copyright (C) 1986, USENET Community Trust
+
+PATH=DEFPATH
+export PATH
+TMPFILE=/tmp/xart.$$
+trap "rm -f $TMPFILE; exit" 0 1 2 3 15
+cat > $TMPFILE << 'extractor.awk'
+BEGIN {Seen = 0}
+/^\.RH MOD\.RECIPES/ {Seen = 1}
+/^-- *$/ {Seen = 0}
+/^\/\* End of text from/ {Seen = 0}
+Seen == 1 {print $0}
+extractor.awk
+awk -f $TMPFILE
+18731!alt.gourmand!
+echo extracting rcindex.X
+cat > rcindex.X << '18731!alt.gourmand!'
+#! /bin/sh
+# rcindex - produce index of recipes
+#
+# usage:
+#   rcindex  [ -options ] [ keepdir ]
+#
+# This shell script produces an index of all recipes in a keep directory.
+# That index is an nroff/troff document that will be used as a part
+# of the book produced from that directory.
+#
+# If you don't specify a keep directory, it will use DEFDIR, which
+# is as good a place as any.
+#
+# Brian Reid, November 1985
+#	v2, June 1986
+# Copyright (C) 1986, USENET Community Trust
+#
+PATH=DEFPATH
+export PATH
+BADWDS=TEMPDIR/rcindex.$$
+PUNCHR=TEMPDIR/rcipunc.$$
+trap "rm -f TEMPDIR/*.$$; exit" 0 1 2 3 15
+while [ $# -gt 1 ];
+do
+    case $1 in
+	    -*) OPTIONS="$OPTIONS $1";;
+	    *) OPTIONS="$OPTIONS $1";;
+    esac
+    shift
+done
+case $1 in
+	"") KEEPDIR=DEFDIR;;
+	*) KEEPDIR=$1;;
+esac
+if [ ! -d $KEEPDIR ]; then
+	echo rcindex: Your keep directory $KEEPDIR does not seem to exist.
+	exit 1
+fi;
+cat > $PUNCHR << 'endflag'
+()/.,
+endflag
+tr ' ' '\12' << 'endflag' | sort -u > $BADWDS
+& - a about addictive after against all also amazingly an and
+another any are as at back basic be because been before being best-ever
+between both but by came can center classic cloying come con cook
+cooked cooking could countries day decadent delicate delicious did
+dinner dish dishes do down each earthy easy-to-make even extremely fattening
+filling first flavor flavorful food for from get go good great had has have
+he hearty her here him his hot how i if in incredible into intoxicating is
+it its just know large last life light like little long luscious made
+make makes man many may me men might more most mr much must my never
+new no not now of off old on one only or other our out over own people
+picture-perfect prizewinning recipe recipes refreshing rich right said
+same see she should since smothered so some state still succulent such
+take than that the their them then there these they thick this those
+three through time to too two ultimate under universe up us used very
+was way we well were what when where which while who will with
+wonderful work world would year years you your
+endflag
+DIR=`pwd`
+cd $KEEPDIR
+grep \^.RZ [a-z]* |\
+  sed -e 's/\: *.RZ //' |\
+  awk -F\" '{print $1,$4}' |\
+  ptx -f -r -i $BADWDS -b $PUNCHR $OPTIONS |\
+  sed -e 's/^\.xx/.XX/' > $DIR/INDEX
+18731!alt.gourmand!
+echo extracting rcintro.X
+cat > rcintro.X << '18731!alt.gourmand!'
+#! /bin/sh
+# Copyright (C) 1985,1986,1987 USENET Community Trust
+#
+cat << 'YumYumEatemup'
+.if '\n(mo'1' .ds MM January
+.if '\n(mo'2' .ds MM February
+.if '\n(mo'3' .ds MM March
+.if '\n(mo'4' .ds MM April
+.if '\n(mo'5' .ds MM May
+.if '\n(mo'6' .ds MM June
+.if '\n(mo'7' .ds MM July
+.if '\n(mo'8' .ds MM August
+.if '\n(mo'9' .ds MM September
+.if '\n(mo'10' .ds MM October
+.if '\n(mo'11' .ds MM November
+.if '\n(mo'12' .ds MM December
+.nr SV \n(.v
+.nr SP \n(.s
+.nr SL \n(.l
+.nr SI \n(.i
+.sp 2i
+.ps 24
+.vs 30p
+.ft B
+.ce 2
+THE USENET COOKBOOK
+(Recipes and food lore from the global village)
+.sp 0.5i
+.ps 16
+.vs 18p
+.ft R
+.ie t .in +1.5i
+.el .in 6
+.if t .ll -1.5i
+A collection by the readers of
+USENET, from the newsgroup \fIalt.gourmand\fR.
+.br
+.sp 0.5i
+.ps 10
+.vs 11p
+.ce 3
+Edited by Brian K. Reid
+Palo Alto, California, U.S.A.
+decwrl!reid   reid@decwrl.dec.com
+.sp 1i
+.ps 12
+.vs 14p
+.ce 2
+Printed \n(dy \*(MM 19\n(yr
+.sp 1i
+.ie n Copyright (C) 19\n(yr USENET Community Trust
+.el Copyright \(co 19\n(yr USENET Community Trust
+.sp 12p
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice, title, and publication
+date appear, and notice is given that copying is by permission of
+the USENET Community Trust.
+.vs \n(SVu
+.ps \n(SPu
+.ll \n(SLu
+.in \n(SIu
+.RH MOD.RECIPES-SOURCE INTRODUCTION M "27 Jun 1986" 1986
+\fIThe new electronic interdependence recreates the world in the image of a
+global village.\fR
+.ti 2i
+\(emMarshall McLuhan, 1967
+.br
+.SH INTRODUCTION
+This is a community cookbook, from an invisible worldwide electronic
+community. Like all community cookbooks, it has the favorite recipes
+of the members of the community, suitably edited and organized. \fIThe USENET
+Cookbook\fR is a collection of the favorite recipes of USENET readers
+worldwide.
+.SH USENET
+USENET is the network by which Unix computer users talk to each other. It is
+a worldwide net, made from computer-to-computer telephone links, linking some
+500,000 people at 7,000 sites in 30 countries. Besides serving an obvious
+technical and scientific purpose, USENET is also a medium for linking
+worldwide social groups of people who share common interests. 
+As an experiment
+in interactive electronic publication, some members of USENET decided
+in 1985 to make a cookbook of favorites from their ``global village''. 
+Brian Reid of DEC Western Research in Palo Alto, California, organized the
+venture and wrote much of the requisite software.
+.PP
+.ie t \{The \fIUSENET Cookbook\fR is a database and not just a book.
+The paper copy that you
+are holding was printed from a copy of the online database at some USENET
+site, but even as you are reading it, new recipes are being added to that
+database. \}
+.el \{The \fIUSENET Cookbook\fR is an online database distributed with the
+intention that it be published as a book. \}
+The \fIUSENET Cookbook\fR is distributed with software that enables every user to
+make his own customized edition of it, leaving out the recipes that
+he has no interest in, and perhaps adding a few of his own that he hasn't
+yet submitted to the network. There will be many different versions and
+editions of it, all with the same title, and all copyrighted. Every user can
+choose whether to print the recipes in imperial units (cups and
+spoons) or in metric units.
+.SH DISTRIBUTION
+The \fIUSENET Cookbook\fR is distributed in the newsgroup named \fIalt.gourmand\fR.
+It is a ``moderated'' newsgroup, which means that everything published in it
+must be approved by the moderator (editor). Readers submit recipes
+electronically by mailing them to the editor. He edits for style, form, and
+content, and performs conversion to or from metric units if necessary. The
+finished recipes are published in weekly batches, which are sent from Palo
+Alto every Thursday.
+.SH PROCEDURE
+To participate, you will need to get \fIalt.gourmand\fR at your site. A
+package of software for using it is posted from time to time into
+\fIalt.gourmand\fR. Get that software and install it on your machine; it will
+enable you to save recipes easily and to print cookbooks from them.
+.PP
+To submit a recipe to the \fIUSENET Cookbook\fR, mail its text to the
+newsgroup moderator, \fI{sun,pyramid,ucbvax,decvax,ames,hplabs}!decwrl!recipes\fR (uucp) or
+\fIrecipes@decwrl.DEC.COM\fR (internet). The news software at most
+sites will do this automatically if you try to post to \fIalt.gourmand\fR.
+.PP
+It's important that you tell us where you got the recipe from. It's ok if you
+cribbed it from a book or magazine or newspaper, but if you copy the words
+that you found there, you have probably violated a copyright. Copyright law
+is complex, and only a lawyer can reliably advise you on whether or not you
+are violating it, but in general if you rewrite a recipe, in your own words,
+even if you don't change the formula, then you are not infringing the
+copyright by submitting that recipe to the network. The copyright is on the
+words that explain the recipe, and not the recipe itself.
+.SH COPYRIGHT
+The entire \fIUSENET Cookbook\fR is copyright by the USENET Community Trust, which
+is a California organization formed for the purpose of holding the copyright.
+The purpose of this copyright is to prevent commercialization of the
+Cookbook. Read the copyright notice on the title page.
+YumYumEatemup
+18731!alt.gourmand!
+echo extracting rckeep.X
+cat > rckeep.X << '18731!alt.gourmand!'
+#! /bin/sh
+# rckeep - keep a recipe by adding it to a keep directory
+#
+# usage:
+#   rckeep [ keepdir ]  [ filename ]
+#
+# This program lets you snatch recipes out of newsgroups and store them in
+# a "keep" directory. They are stored in a file name that matches the 
+# recipe id, which is found in the .RH command in the recipe.
+#
+# If you don't specify a keep directory, it will use DEFDIR which
+# is as good a place as any. You can use ~/ to stand for $HOME/ if you want.
+#
+# Brian Reid, November 1985
+# Copyright (C) 1986, USENET Community Trust
+#
+PATH=DEFPATH
+export PATH
+TEMPFILE=/tmp/rckeep.$$
+case $1 in
+	"") KEEPDIR=DEFDIR;;
+	~/*) KEEPDIR=$HOME/`expr $1 : '~/\(.*\)'`;;
+	~*) echo Sorry, I cannot process ~ notation, except for ~/...;
+	       exit 1;;
+	*) KEEPDIR=$1;;
+esac
+if [ ! -d $KEEPDIR ]; then
+	echo Creating new keep directory $KEEPDIR;
+	mkdir $KEEPDIR;
+fi;
+case $2 in
+	"") rcextract > $TEMPFILE;;
+	*) rcextract < $2 > $TEMPFILE;;
+esac
+# the [A-Z] in tr arg below is for compatibility with SysV
+IDLINE=`awk '{print $2,$3; exit;}' < $TEMPFILE | tr "[A-Z]" "[a-z]" `
+case $IDLINE in
+    "") echo This is not an alt.gourmand datafile. I do not know what to do with it.
+	exit 1;;
+esac
+set $IDLINE
+KEEPNAME=$2
+FILETYPE=$1
+case $FILETYPE in
+    mod.recipes-source) if [ -f $KEEPDIR/$KEEPNAME ]; then
+	echo Overwriting previous version of `basename $KEEPNAME`:
+	ls -l $KEEPDIR/$KEEPNAME
+	fi
+	mv $TEMPFILE $KEEPDIR/$KEEPNAME
+	echo Saving $KEEPDIR/$KEEPNAME;;
+    *) echo This is not an alt.gourmand datafile. I do not know what to do with it.;
+       exit 1;;
+esac
+18731!alt.gourmand!
+echo extracting rckeepnew.X
+cat > rckeepnew.X << '18731!alt.gourmand!'
+#! /bin/sh
+# rckeepnew - keep all recipes that arrived since the last time this
+#	      program was run.
+#
+# usage:
+#   rckeepnew [ keepdir ]
+#
+# This program looks in the USENET spooling directory and finds all files
+# that contain recipes and that were created since the last time it was run.
+# For each such file, it runs the program "rckeep". The record of the last
+# time the program was run is kept as the creation date of the file
+# ".keepnew" in your keep directory.
+#
+# Brian Reid, March 1986
+# Copyright (C) 1986, USENET Community Trust
+#
+PATH=DEFPATH
+export PATH
+
+# if you are not running B news, you will need to edit the following line to
+# tell it the name of the directory in which alt.gourmand articles are stored.
+RECIPEDIR=NEWSDIR/alt/gourmand
+export RECIPEDIR
+
+KEEPDIR=${1-DEFDIR}
+if [ ! -d $RECIPEDIR ]
+then
+    echo rckeepnew: Cannot find ${RECIPEDIR}. 
+    exit 1
+fi
+cd $RECIPEDIR
+if [ ! -d $KEEPDIR ]
+then
+    echo rckeepnew: Directory $KEEPDIR does not exist. I will try to create it.
+    echo mkdir $KEEPDIR
+    if mkdir $KEEPDIR
+    then
+	echo rckeepnew: mkdir succeeded. Continuing.
+    else
+	echo rckeepnew: mkdir failed. Cannot continue.
+	exit 1
+    fi
+fi
+
+# Find the files that have changed 
+for j in `if test -f $KEEPDIR/.keepnew
+then
+    find . -newer $KEEPDIR/.keepnew -exec grep -l "^Subject: RECIPE:" {} \;
+else
+    grep -l "^Subject: RECIPE:" *
+fi`
+# run rckeep on each of the changed files
+do
+    rckeep $KEEPDIR < $j
+done
+# update the date-time flag
+touch $KEEPDIR/.keepnew
+echo Date-and-time flag in $KEEPDIR updated.
+18731!alt.gourmand!
+echo extracting rcnew.t.X
+cat > rcnew.t.X << '18731!alt.gourmand!'
+#! /bin/sh
+# rcnew.t - make new cookbook pages with nroff or the typesetter
+#   linked to rcnew.n
+#
+# Spencer Thomas, January 1986
+# after rcbook.t by Brian Reid, November 1985
+#
+# Modifed by:  David Messer, Febuary 1987
+#
+TROFF="nroff -man"
+FRACTIONS=0
+RCINDEX="-w 56"
+case $0 in
+	*.t)	TROFF="DEFTROFF"
+		FRACTIONS=1
+		RCINDEX=-t
+		;;
+	esac
+PATH=DEFPATH
+export PATH
+TMAC=TEMPDIR/tmac.$$
+INDEX=TEMPDIR/Index.$$
+ENDEX=TEMPDIR/Endex.$$
+RECIPES=TEMPDIR/Recipes.$$
+trap "rm -f TEMPDIR/*.$$; exit" 0 1 2 3 15
+TFLAG=
+FRACTIONS=1
+METFLAG="-rMMETRIC"
+KEEPDIR=DEFDIR
+while [ $# -gt 0 ];
+do
+    case $1 in
+	    -t) TFLAG="$1";;
+	    -m) METFLAG="-rM1";;
+	    -M) METFLAG="-rM0";;
+	    -f) FRACTIONS=0;;
+	    -*) echo $0: Unknown option $1 1>&2 ; exit;;
+	    "") KEEPDIR=DEFDIR;;
+	    *) KEEPDIR=$1;;
+    esac
+    shift
+done
+if [ ! -d $KEEPDIR ]; then
+	echo rcnew: Your keep directory $KEEPDIR does not seem to exist. 1>&2
+	exit 1
+fi;
+# if Index.keep exists, then a previous rcnew bombed.  Use the old one.
+if [ ! -f Index.keep ]; then
+	mv INDEX Index.keep
+fi;
+echo Typesetting cookbook update 1>&2
+echo from files newer than \
+    `ls -l Index.keep | awk '/./ {printf("%s %s %s", $5, $6, $7);}'` 1>&2
+echo in $KEEPDIR 1>&2
+rcindex $RCINDEX $KEEPDIR
+cat > $TMAC << 'tmac.recip'
+TMAC.RECIP
+tmac.recip
+set `date`
+#  Thu Mar 27 22:56:49 PST 1986
+YEAR="$6"
+YR=`expr $YEAR - 1900`
+TODAY="$3 $2 $YR"
+sed -e "s/DATE/$TODAY/g" -e "s/YEAR/$YEAR/g" > $INDEX << 'Index'
+.RH MOD.RECIPES-SOURCE INDEX Recipes "DATE" YEAR
+.ll 6.5i
+.nf
+.br
+.de XX
+.tr ~ 
+.ta 2.4iR 2.6i 5.3i
+.ie !"\\$2""	\\$1~~~~~\\$2	\\$3 \\$4	\\$5
+.el	\\$1	\\$3 \\$4	\\$5
+..
+.ps 8
+.vs 10p
+Index
+cat > $ENDEX << 'Endex'
+.vs
+Endex
+# This next kludge (using file $RECIPES) is because some versions of troff
+# can take only a very small number of argument files.
+cat `find $KEEPDIR -name '[a-z]*' -newer Index.keep -print | grep '^./[^/]*$' | sort` > $RECIPES
+case $FRACTIONS in
+  1) cat $INDEX INDEX $ENDEX $RECIPES;;
+  *) cat $INDEX INDEX $ENDEX $RECIPES |\
+	 sed -e 's/\([0-9a-zA-Z]\)\(\\([1-3]\)/\1 \2/g' \
+	     -e 's|\\(12|1/2|' -e 's|\\(14|1/4|' -e 's|\\(34|3/4|' \
+	     -e 's|``|"|'     -e "s|''|\"|" ;;
+esac | \
+$TROFF $METFLAG $TFLAG $TMAC - > Update
+echo Update created 2>&1
+rm Index.keep
+18731!alt.gourmand!
+echo extracting rcshow.X
+cat > rcshow.X << '18731!alt.gourmand!'
+#! /bin/sh
+# rcshow - show a recipe
+#
+# This shell script extracts a recipe from an alt.gourmand netnews article and 
+# nroffs it for display on the screen. This differs slightly from "rcnroff"
+# in that it is not page-oriented. Actually, this program is almost too slow
+# to use, because it has to run nroff every time.
+#
+# Brian Reid, November 1985
+# Copyright (C) 1986, USENET Community Trust
+#
+# If you don't have "less", you will want to 
+# add "ul" to the pipeline to get the underlines right.
+
+TROFF="nroff -man"
+PAGER="DEFPAGER"
+
+PATH=DEFPATH
+export PATH
+TMPFILE=/tmp/xart.$$
+TMAC=/tmp/tmac.$$
+trap "rm -f $TMPFILE $TMAC; exit" 0 1 2 3 15
+METFLAG="-rMMETRIC"
+
+cat > $TMPFILE << 'extractor.awk'
+BEGIN {Seen = 0}
+/^\.RH MOD\.RECIPES/ {Seen = 1}
+/^-- *$/ {Seen = 0}
+Seen == 1 {print $0}
+extractor.awk
+cat > $TMAC << 'tmac.recip'
+TMAC.RECIP
+tmac.recip
+awk -f $TMPFILE |\
+  sed -e 's/\([0-9a-zA-Z]\)\(\\([1-3]\)/\1 \2/g' \
+	 -e 's|\\(12|1/2|' -e 's|\\(14|1/4|' -e 's|\\(34|3/4|' \
+	 -e 's|``|"|'      -e "s|''|\"|" |\
+  $TROFF $METFLAG  $TMAC - | $PAGER
+# if you don't have "less", you will probably want to change the above line
+# into $TROFF $TMAC - | ul | $PAGER
+18731!alt.gourmand!
+echo extracting rctypeset.X
+cat > rctypeset.X << '18731!alt.gourmand!'
+#! /bin/sh
+# rctypeset - typeset a recipe
+#
+# This shell script extracts a recipe from an alt.gourmand netnews article and 
+# typesets it with troff. It first strips all communication headers
+# (such as netnews or mail or notesfile headers) from the front and back
+# of the recipe.
+#
+# Brian Reid, November 1985
+# Copyright (C) 1986, USENET Community Trust
+#
+TROFF="DEFTROFF"
+PATH=DEFPATH
+export PATH
+TMPFILE=/tmp/xart.$$
+FRACTIONS=1
+TMAC=/tmp/tmac.$$
+METFLAG="-rMMETRIC"
+VERBATIM=0
+
+trap "rm -f $TMPFILE $TMAC; exit" 0 1 2 3 15
+while [ $# -gt 0 ];
+do
+    case $1 in
+	    -t) TFLAG="$1";;
+	    -v) VERBATIM=1;;
+	    -m) METFLAG="-rM1";;
+	    -M) METFLAG="-rM0";;
+	    -f) FRACTIONS=0;;
+	    -*) echo $0: Unknown option $1 1>&2 ; exit;;
+    esac
+    shift
+done
+
+cat > $TMPFILE << 'extractor.awk'
+BEGIN {Seen = 0}
+/^\.RH MOD\.RECIPES/ {Seen = 1}
+/^-- *$/ {Seen = 0}
+/^\/\* End of text from/ {Seen = 0}
+Seen == 1 {print $0}
+extractor.awk
+
+cat > $TMAC << 'tmac.recip'
+TMAC.RECIP
+tmac.recip
+case $FRACTIONS in
+  1) cat ;;
+  *) sed -e 's/\([0-9a-zA-Z]\)\(\\([1-3]\)/\1 \2/g' \
+	 -e 's|\\(12|1/2|' -e 's|\\(14|1/4|' -e 's|\\(34|3/4|' \
+	 -e 's|``|"|'      -e "s|''|\"|" ;;
+esac |
+  case $VERBATIM in
+      0) awk -f $TMPFILE;;
+      1) awk '{print}';;
+  esac |\
+  $TROFF $TFLAG $METFLAG $TMAC -
+18731!alt.gourmand!
+echo extracting recipes.5.X
+cat > recipes.5.X << '18731!alt.gourmand!'
+.TH RECIPES 5 "28 Jun 87" "USENET Cookbook"
+.SH NAME
+recipes \- USENET Cookbook (alt.gourmand) format and submitting procedure.
+.SH SYNOPSIS
+Mail your recipe to recipes@decwrl.dec.com. Try not to plagiarize.
+If you want to put in your own troff commands, use the Unix manual macros.
+.SH DESCRIPTION
+Alt.gourmand is a ``moderated newsgroup''. This means that you mail your
+submissions to the moderator, and he distributes them.
+The moderator's mailbox is
+.br
+	decwrl!recipes,
+.br
+if you believe in that kind of address, or
+.br
+	{decvax,ucbvax,sun,pyramid,hplabs,ames}!decwrl!recipes
+.br
+if you believe in the other kind of address. The addresses
+.br
+	recipes@decwrl.DEC.COM
+.br
+	decwrl.dec.com!recipes
+.br
+also work, if your computer knows how to mail to them (many don't).
+.PP
+If your netnews administrator has set things up properly and if you are
+running the right news software, you can just post to alt.gourmand as you
+would any other group, but your posting will be mailed to the moderator
+insted of being placed directly in the newsgroup.
+.SH HOW TO FORMAT A RECIPE
+Every recipe that goes out will be formatted with a small set of troff
+commands. If you don't know any troff, then just send the text of your
+recipe. If you can do the formatting yourself, then please do! That will
+save the editor a lot of time, and your recipe will go out sooner.  Some
+hints for how to do it are in a later section of this document.  If you
+don't know about xroff/troff/nroff but you do want to be helpful, then you
+can help a lot by doing these things:
+.PP
+.IP "(1)" 5
+Put your recipe in the standard sequence.
+.IP "(2)" 5
+Don't put any tab characters (^I) in the file if you can possibly avoid it.
+They do strange things on typesetters.
+.IP "(3)" 5
+If you are a troff wizard, please don't use any of that wizardry in these
+recipes. If you stick to the set of commands used in the Unix manual macros
+(see \fIman(7)\fR), and the set of commands that are part of the USENET
+Cookbook package (see following section), then things should work OK. 
+.br
+There are plenty of places in troff where you can get away with not
+using quotes around macro arguments. Please use quotes, even when they are
+redundant, such as in ``.IG "1" "onion"''  This is because the indexing and
+cross-referencing programs expect to find the quotes, even though troff can
+work without them.
+.RE
+.SH HOW TO WRITE A RECIPE
+Please try to put your recipe in the standard sequence. Different cookbooks
+use different standards. This is the sequence that the \fIUSENET Cookbook\fR
+uses.
+.RS
+.IP (a) 5
+Title and 1-line description. The 1-line description will be used to index
+the recipe, so make it as descriptive as possible. Avoid words like
+``delicious'' or ``yummy''. We expect all of these recipes to be delicious.
+.IP (b) 5
+Introductory commentary, explaining (if possible) where you got
+the recipe from and what you like about it. If you got the recipe from a
+cookbook, give the title and author of that cookbook.
+.IP (c) 5
+List of ingredients, using ``Tbsp'', ``tsp'', ``cup'', ``oz'', and ``lb''
+for English units, or ``ml'', ``cl'', ``dl'', ``l'', ``g'', and ``kg'' for metric
+units. Stay away from ``pint'', ``quart'', and ``gallon'', because they have
+different meanings in different countries. Do not use 1-letter abbreviations
+for US measures: don't use "c" for "cup" or "T" for "Tbsp". An ``oz'' is a
+fluid ounce or an avoirdupois ounce depending on context.
+The ingredients should be listed in the order they will
+be used. Don't capitalize ingredient names unless they are proper nouns. 
+Avoid terms like ``1 box'' or ``1 can'' or ``1 package'', because packaging
+conventions vary widely from place to place. If you must say ``1 can of
+soup'', then at least tell me how big you think a can of soup is.
+.IP (d) 5
+Numbered sequence of recipe steps. Be very careful to mention every
+ingredient somewhere. The most common mistake made in recipes is to omit one
+or more ingredients from the procedure steps. (The second-most-common mistake
+is to leave an ingredient out of the ingredient list).
+.IP (e) 5
+Notes (if any). Comments on how you like to make it, ingredient
+availability, comments about specific brands, etc.
+.IP (f) 5
+Your ``signature''. This should include your name and net address, the
+organization that you are a part of, and the name of the city it is in.
+.RE
+.SH COPYRIGHT NOTES
+Tell us where you got the recipe from. It's ok if you cribbed it from a book
+or magazine or newspaper, but if you copy exactly the words that you found
+there, there might be a problem with copyright violation. The copyright of a
+recipe is not on the formula, but on the words. If you have copied the words
+out of a copyrighted cookbook, then you are infringing its copyright.
+.PP
+While the main purpose of the USENET cookbook is to let us all make our own
+custom cookbooks, we can't ignore the reality of the copyright law. Surely
+you have noticed that every modern book says ``\fINo part of this publication
+may be reproduced, stored in a retrieval system, or transmitted, in any form
+or by any means, electronic, ..., or otherwise without the prior written
+permission of the publisher.\fR''
+.PP
+Copyright law is complex, and only a lawyer who specializes in copyright
+can reliably advise you on whether or not you are violating it, but in
+general if you rewrite a recipe, in your own words, even if you don't change
+the formula, then you are not infringing the copyright by submitting that
+recipe to the network. The copyright is on the words that explain the recipe,
+and on the title of the recipe, not the formula itself.
+.PP
+The USENET Cookbook itself is copyrighted. Every recipe is sent out with a
+copyright notice, and the macros that print the cookbooks add a copyright
+notice to the bottom of each page. The purpose of this is to prevent
+unauthorized commercial use of the USENET Cookbook.
+.SH DO YOUR OWN FORMATTING
+If you put formatting commands in the recipes that you submit, they will go
+out more quickly, since the cookbook editor won't have to put them in.
+.PP
+The basic principle is to use as few commands as possible, and in general to
+use only commands that are defined in the manual macros or the recipe macro
+package. Various processing programs search through these files and look for
+string matches on things like ``.IG'' and ``.RZ''.
+Print out a few of the recipe source files from NEWSDIR/alt/gourmand,
+and then use OBJDIR/rctypeset
+or OBJDIR/rcnroff to produce 
+formatted versions of them. Have that at hand when you are formatting
+your recipe. You can test your formatting by using rctypeset or rcnroff on
+your draft versions before you submit the recipe.
+.PP
+A ``skeleton'' recipe follows. .RH is the recipe header command; it must be
+the first line of each recipe and it must have 4 arguments. 
+``RECIPE-ID'' is the file name under which the recipe will be stored. Normally
+the editor chooses the recipe id, but you can put a suggestion there if you
+like. It must be 14 characters or less, and must not duplicate any previous
+or pending recipe id. The ``?'' is a ``what kind of recipe'' code from the
+code table below.
+.PP
+.nf
+.ta 3i
+.RS 4
+\&.RH MOD.RECIPES-SOURCE RECIPE-ID ? "22 Dec 83" 
+\&.RZ "RECIPE TITLE IN CAPITALS" "One-line description of it"
+Introductory comments; use .PP between paragraphs.
+\&.IH "4 cups"	\(<- Ingredients Header
+\&.IG "1/2 cup" "butter"	\(<- Ingredient (please use quotes)
+\&.IG "1" "onion"
+(medium to large, chopped fine. Don't try to use instant onion
+in this recipe)
+\&.PH	\(<- Procedure header
+\&.SK 1	\(<- Procedure step
+Boil the water.	\(<- Text for that step
+\&.SK 2	\(<- and so forth.
+\&.NX	\(<- Notes header
+Notes (commentary) goes here; use .PP to separate paragraphs.
+\&.WR	\(<- Wrapup
+Signature information goes here. As a minimum you should list your name,
+network address, organization (company, university, etc.), and the city you
+live or work in.
+.RE 4
+.fi
+Remember that when you post to a moderated newsgroup, the news software
+usually forgets to include your .signature file, so you should be sure to
+include it manually. If it manages to get there twice, I will remove the
+extra copy.
+.PP
+You can also use the following -man macros; see \fIman(7)\fR for the complete
+list.
+.nf
+.RS 4
+.ta 3i
+\&.I "italic words"
+\&.B "boldface words"
+\&.SM "small words"
+\&.PP	\(<- paragraph break
+\&.PD <distance>	\(<- paragraph distance
+\&.IP "indented paragraph".
+\&.RS	\(<- relative start: move things to the right
+\&.RE	\(<- relative end: move things left again
+.RE 4
+.fi
+You can also use these nroff/troff commands:
+\\fI,
+\\fB,
+\\fR,
+\&.if, 
+\&.ds,
+\&.br,
+\&.nf,
+\&.fi,
+and .ta
+.SH MET\&RIC OR INTUITIVE MEASUREMENT?
+Most countries in the world use metric measurements for their recipes. The
+U.S. defiantly uses a system that they call ``the English system of
+measurement,'' teaspoons and cups. The English never used that system,
+though\(emthey used a similar system, with spoons and cups of a different
+size, and they called it the Imperial system. Every attempt to convert U.S.
+cooks to the metric system has failed. Most Americans have never even seen a
+metric recipe, and virtually no American cook owns a kitchen scale or metric
+measuring spoons.
+.PP
+But alt.gourmand is international in scope, and we want the recipes to be
+accessible to everyone. Therefore the recipes that are posted all have a
+dual measurement system in them, both English and metric. When a cookbook
+page is printed, a troff/nroff option determines whether or not it will be
+printed with English units or metric units.
+.PP
+The dual-system measurement scheme is accomplished by having both sets of
+values stored in the body of the recipe, and having the software select one
+or the other when the recipe is printed. This means that somebody has
+converted the recipe to both sets of units, and has edited in both sets of
+measurements.
+.PP
+There are four places in a recipe where the system of measurement matters:
+the ingredient list, commentary about ingredients, references to ingredients
+in the text, and references to temperature in the text. There is a
+troff/nroff command for each one of those situations.
+Because alt.gourmand originated in the U.S., the U.S. (``English'')
+measurement system is always given first in all of these commands.
+.RS
+\fBIngredient header.\fR  The ``.IH'' command takes two arguments. The first
+is the English-unit specification of how much the recipe produces, and the
+second (if present) is the metric specification of the same thing.
+.PP
+\fBIngredient list.\fR  The ``.IG'' command takes an optional third
+argument, which is the metric description of the quantity of the ingredient.
+For counts\(em3 onions, 2 eggs\(emthe metric description will be the same
+and you can leave it off.
+.PP
+\fBReferences to ingredients.\fR  In the text you might want to say
+something like ``set aside \(12 Tbsp of the ginger'' or ``reserve 100 ml of
+the sauce''. For that purpose there is a macro ``.AB'', that takes two
+arguments and prints one or the other, but never both. 
+.PP
+\fBReferences to temperature.\fR  The U.S. uses Fahrenheit degrees; nearly
+everyone else uses Celsius or Centigrade. Troff can print a ``degree'' sign,
+but nroff cannot. To solve these two problems simultaneously, there is a
+``.TE'' macro, for indicating temperature. It takes two numeric arguments,
+the first a Fahrenheit temperature and the second a Celsius temperature. 
+.RE
+In case the .AB or .TE expression needs to be the end of a sentence, the
+macro can take a third argument, which is the punctuation character at
+the end of the sentence. For example, you would type
+.nf
+.RS 4
+Then add butter
+\&.AB "1 Tbsp" "30 g"
+at a time. Lick the spoon to use the last
+\&.AB "tablespoon" "few grams" .
+.fi
+.PP
+Here is the example of the previous section, updated to include
+international multi-unit arguments to all of the macro calls:
+.nf
+.ta 3i
+.RS 4
+\&.RH MOD.RECIPES-SOURCE RECIPE-ID ? "22 Dec 83" 
+\&.RZ "RECIPE TITLE IN CAPITALS" "One-line description of it"
+Introductory comments; use .PP between paragraphs.
+\&.IH "4 cups" "1 liter"	\(<- Ingredients Header
+\&.IG "1/2 cup" "butter" "100 g"	\(<- Ingredient (please use quotes)
+(or use a mixture of
+\&.AB "1/4 cup" "50 g"	\(<- In-text reference to two systems
+of margarine and
+\&.AB "1/4 cup" "50 g"
+of butter.
+\&.IG "1" "onion"	\(<- No need for 2 systems here
+(medium to large, chopped fine. Don't try to use instant onion
+in this recipe)
+\&.PH	\(<- Procedure header
+\&.SK 1	\(<- Procedure step
+Preheat the oven to	\(<- Text for that step
+\&.TE 350 175	\(<- Dual-system temperature
+before soaking the rice.
+Boil the water.
+\&.SK 2	\(<- and so forth.
+\&.NX	\(<- Notes header
+Notes (commentary) goes here; use .PP to separate paragraphs.
+\&.WR	\(<- Wrapup
+Signature information goes here. As a minimum you should list your name,
+network address, organization (company, university, etc.), and the city 
+and country you live or work in.
+.RE 4
+.fi
+.SH CONVERTING RECIPES TO/FROM MET\&RIC
+Don't try to convert a recipe to metric units unless you have some
+experience cooking with metric, and don't try to convert a recipe to English
+units unless you have some experience cooking with them. Submit your recipe
+in the units that you are comfortable with, and let the alt.gourmand editor
+do the conversion for you. It's not just a simple matter of unit conversion,
+because most ingredients are specified by weight in metric recipes and
+by volume in English recipes.
+.SH CATEGORY CODES
+.nf
+.ta .4i 1i 3i 3.6i
+	M	Main dish	SL	Salad
+	A	Appetizer or snack	SP	Soup
+	B	Bread/pasta	D	Dessert
+	L	Beverage (Liquid)	V	Vegetable dish
+	C	Cookie or cake	O	Other
+	S	Sauce
+.fi
+The suffix ``V'' on any category means that it is vegetarian; for example, a
+vegetarian main dish recipe would be marked ``MV''.
+.SH SEE ALSO
+cookbook(1), rn(1)
+.SH AUTHOR
+Brian Reid, DEC Western Research Laboratory
+18731!alt.gourmand!
+echo extracting cookbook.doc
+cat > cookbook.doc << '18731!alt.gourmand!'
+COOKBOOK(1)         UNIX Programmer's Manual          COOKBOOK(1)
+
+NAME
+     cookbook: rckeep, rckeepnew, rcbook.t, rcbook.n, rctypeset,
+     rcnroff - Store and print the alt.gourmand USENET Cookbook
+
+SYNOPSIS
+     rckeep < filename    copies a recipe to your keep directory
+     s |rckeep  (same thing, from a news-reading program.)
+     rckeepnew [ directory ]   finds and keeps new recipes
+     rcbook.t [ -t ] [ -m ] [ -M ] [ -f ]     typesets a cookbook
+     from kept recipes
+     rcbook.n [ -m ] [ -M ]    nroffs a cookbook from kept
+     recipes
+     rctypeset [ -m ] [ -M ] [ -f ]      typesets one recipe from
+     std input
+     rcnroff [ -m ] [ -M ]     nroffs one recipe from std input
+     rcnew.t [ -m ] [ -M ] [ -f ]   typesets new kept recipes
+     rcnew.n [ -m ] [ -M ]     nroffs new kept recipes
+
+DESCRIPTION
+     The USENET Cookbook is an online database distributed in the
+     alt.gourmand  newsgroup. This software makes it easy for you
+     to clip recipes that interest you, to store them in your own
+     directory,  and  to make printed cookbooks from those stored
+     recipes.
+
+SAVING RECIPES ONE AT A TIME
+     Read the news with your favorite news  reading  program.  If
+     you  don't  have  a  favorite, try rn. When you see a recipe
+     that interests you, type
+          s |rckeep
+     The ``s'' command means ``save'';  the  vertical  bar  means
+     ``save  into  a  program''. rckeep is the program that keeps
+     recipes.  It  will  save  recipes  into  a  directory  named
+     Recipes,  and  it  will  create that directory for you if it
+     does not currently exist. If you would like recipes saved in
+     some other place, you can type
+          s |rckeep PartyRecipes
+          s |rckeep ~/PartyRecipes
+          s |rckeep /usr/local/lib/Recipes
+     and so forth.
+
+SAVING NEW RECIPES AUTOMATICALLY
+     If you don't want to take the time and trouble to run rckeep
+     on  every  recipe,  you can run rckeepnew from time to time.
+     When rckeepnew is run, it  looks  in  the  netnews  spooling
+     directory to find the files that hold the articles that hold
+     the recipes, and automatically runs  rckeep  on  every  file
+     that  contains  a recipe and that has arrived since the last
+     time you ran rckeepnew. Like rckeep, rckeepnew can be  given
+     the name of a directory to use as the keep directory:
+        rckeepnew
+     or
+
+        rckeepnew /usr/local/lib/Recipes
+     and so forth.
+
+HOW RECIPES ARE STORED
+     Every  recipe  is  given  a  code  word  by  the  editor  of
+     alt.gourmand.  That  code word is contained in the first few
+     lines of the article body. The rckeep and rckeepnew programs
+     use  that  code  word as a file name in your keep directory.
+     For example,  if  you  are  saving  a  recipe  whose  1-line
+     description is
+          PHEASANT-PERRY - Pheasant for Thanksgiving
+     it will be saved in your keep directory under  the  filename
+     ``pheasant-perry''.   These  filenames  are  forced to lower
+     case by rckeep.
+
+MAKING A COOKBOOK
+     To typeset a cookbook, just type
+          rcbook.t
+     and all of the  recipes  in  your  keep  directory  will  be
+     typeset  in alphabetical order, with an index, introduction,
+     and title page added. They will come out either  in  English
+     units  (cups  and  teaspoons)  or in metric units (grams and
+     deciliters) depending on how the alt.gourmand  software  has
+     been  installed at your site. If you want to print the cook-
+     book in cups and spoons  regardless  of  what  the  software
+     installer did, then type
+        rcbook.t -M
+     and if you want  to  print  the  cookbook  in  metric  units
+     regardless of what the software installer did, then type
+        rcbook.t -m
+     If you don't have a typesetter or  if  you  don't  have  the
+     troff(1)  program,  then  use  ``rcbook.n'' instead; it uses
+     nroff(1). and sends the results of the formatting  to  stan-
+     dard  output.  It  supports  the same -m and -M options that
+     rcbook.t does.
+
+     If you have more than  one  keep  directory,  for  specialty
+     cookbooks  of  different types, you can give rcbook a direc-
+     tory name as an argument, e.g.:
+        rcbook.t /usr/local/lib/Recipes
+
+     You can capture the output of rcbook.t in a  file  by  using
+     the ``-t'' option:
+        rcbook.t -t > FormattedFile
+
+PRINTING ONE RECIPE
+     The program rctypeset typesets one recipe, from its standard
+     input.  It is able to discard news and mail headers from the
+     beginning of the recipe; you may use rctypeset on a  netnews
+     message  in  the form that it is stored in a spooling direc-
+     tory, or you may use it directly from  a  news-reading  pro-
+     gram. rctypeset supports the metric (-m) and non-metric (-M)
+
+     options explained above.
+
+     The program rcnroff performs the same function as rctypeset,
+     except  that it formats to standard output instead of to the
+     typesetter.
+
+PRINTING NEW RECIPES
+     It is a nuisance to keep track of  which  recipes  you  have
+     printed  and which you have not. It is expensive and slow to
+     print the entire cookbook every  time  a  few  more  recipes
+     arrive.  The  rcnew.t program works very much like rcbook.t,
+     except that it typesets only those  recipes  that  were  put
+     into the keep directory after the last time you ran rcnew.t.
+     It produces a complete new index, though. It uses the  crea-
+     tion  time  of  the  file INDEX in your current directory to
+     determine the last time  you  created  an  index,  which  is
+     presumably  the  last  time  you  ran  rcbook.t  or rcnew.t.
+     rcnew.t supports the metric (-m) and non-metric (-M) options
+     explained above.
+
+     The program rcnew.n does the same thing as  rcnew.t,  except
+     that  it  formats  to  standard  output  instead  of  to the
+     typesetter.
+
+THE INDEX
+     The cookbook index is a ``permuted index''. This means  that
+     each  recipe  is  indexed  by every major word in its title.
+     Some people seem to find this format jarring, and more  than
+     one  person  has  filed  a bug report upon seeing the index,
+     certain that the output that it produces cannot possibly  be
+     correct.
+
+     Since your notebook of recipes  will  grow  each  week,  the
+     pages cannot have numbers. Instead, the pages are identified
+     by the code name for each recipe, with the expectation  that
+     you  will  keep  your notebook in alphabetical order by this
+     name.
+
+SPECIAL CHARACTERS
+     Troff has a number of special characters, such  as  such  as
+     typeset fractions (``1/2'' for 1/2), which are not available
+     on some brands of typesetters and laser  printers.  If  your
+     typesetter  handles  those  characters incorrectly, then you
+     should add the ``-f'' option  to  rcbook.t,  rctypeset,  and
+     rcnew.t.  The  ``-f''  option  causes the recipe software to
+     translate those special characters into standard ASCII char-
+     acters before printing.
+
+COPYRIGHT
+     The entire USENET cookbook is copyrighted by the USENET Com-
+     munity  Trust.  The  purpose of this copyright is to prevent
+     commercial use of the material. The USENET  Community  Trust
+
+     permits  any noncommercial use of the contents of the recipe
+     database, and forbids any commercial use.
+
+FILES
+     /usr/spool/news/alt/gourmand  USENET recipe directory
+     $HOME/Recipes                 Your  keep  directory   (saved
+     recipes)
+     $HOME/Recipes/.keepnew        Record of when rckeepnew  last
+     run
+     INDEX                         Record of when rcnew last run
+     /usr/local/bin/rc*            The recipe software
+
+SEE ALSO
+     recipes(5), rn(1)
+
+AUTHOR
+     Brian K. Reid, DEC Western Research Laboratory
+
+18731!alt.gourmand!
+echo extracting intro.doc
+cat > intro.doc << '18731!alt.gourmand!'
+INTRODUCTION(M)          USENET Cookbook          INTRODUCTION(M)
+
+     The new electronic interdependence recreates the world in
+     the image of a global village.
+                    -Marshall McLuhan, 1967
+
+INTRODUCTION
+     This is a community cookbook, from an invisible worldwide
+     electronic community. Like all community cookbooks, it has
+     the favorite recipes of the members of the community, suit-
+     ably edited and organized. The USENET Cookbook is a collec-
+     tion of the favorite recipes of USENET readers worldwide.
+
+USENET
+     USENET is the network by which Unix computer users talk to
+     each other. It is a worldwide net, made from computer-to-
+     computer telephone links, linking some 200,000 people at
+     7,000 sites in 30 countries. Besides serving an obvious
+     technical and scientific purpose, USENET is also a medium
+     for linking worldwide social groups of people who share com-
+     mon interests. As an experiment in interactive electronic
+     publication, the members of USENET decided in 1985 to make a
+     cookbook of favorites from their "global village". Brian
+     Reid of DEC Western Research in Palo Alto, California,
+     organized the venture and wrote much of the requisite
+     software.
+
+     The USENET Cookbook is an online database distributed with
+     the intention that it be published as a book.  The USENET
+     Cookbook is distributed with software that enables every
+     user to make his own customized edition of it, leaving out
+     the recipes that he has no interest in, and perhaps adding a
+     few of his own that he hasn't yet submitted to the network.
+     There will be many different versions and editions of it,
+     all with the same title, and all copyrighted. Every user can
+     choose whether to print the recipes in imperial units (cups
+     and spoons) or in metric units.
+
+DISTRIBUTION
+     The USENET Cookbook is distributed in the newsgroup named
+     alt.gourmand.  It is a "moderated" newsgroup, which means
+     that everything published in it must be approved by the
+     moderator (editor). Readers submit recipes electronically by
+     mailing them to the editor. He edits for style, form, and
+     content, and performs conversion to or from metric units if
+     necessary. The finished recipes are published in weekly
+     batches, which are sent from Palo Alto every Thursday.
+
+PROCEDURE
+     To participate, you will need to get lt.gourmand at your
+     site. A package of software for using it is posted from time
+     to time into lt.gourmand. Get that software and install it
+     on your machine; it will enable you to save recipes easily
+     and to print cookbooks from them.
+
+     To submit a recipe to the USENET Cookbook, mail its text to
+     the newsgroup moderator,
+     FI{sun,pyramid,ihnp4,ucbvax,decvax,allegra}!decwrl!recipes
+     (uucp) or recipes@decwrl.DEC.COM (internet). The news
+     software at most sites will do this automatically if you try
+     to post to alt.gourmand.
+
+     It's important that you tell us where you got the recipe
+     from. It's ok if you cribbed it from a book or magazine or
+     newspaper, but if you copy the words that you found there,
+     you have probably violated a copyright. Copyright law is
+     complex, and only a lawyer can reliably advise you on
+     whether or not you are violating it, but in general if you
+     rewrite a recipe, in your own words, even if you don't
+     change the formula, then you are not infringing the copy-
+     right by submitting that recipe to the network. The copy-
+     right is on the words that explain the recipe, and not the
+     recipe itself.
+
+COPYRIGHT
+     The entire USENET Cookbook is copyright by the USENET Com-
+     munity Trust, which is a California organization formed for
+     the purpose of holding the copyright.  The purpose of this
+     copyright is to prevent commercialization of the Cookbook.
+     Read the copyright notice on the title page.
+
+18731!alt.gourmand!
+echo extracting recipes.doc
+cat > recipes.doc << '18731!alt.gourmand!'
+RECIPES(5)          UNIX Programmer's Manual           RECIPES(5)
+
+NAME
+     recipes - USENET Cookbook (alt.gourmand) format and submit-
+     ting procedure.
+
+SYNOPSIS
+     Mail your recipe to recipes@decwrl.dec.com. Try not to pla-
+     giarize.  If you want to put in your own troff commands, use
+     the Unix manual macros.
+
+DESCRIPTION
+     Alt.gourmand is a ``moderated newsgroup''. This means that
+     you mail your submissions to the moderator, and he distri-
+     butes them.  The moderator's mailbox is
+          decwrl!recipes,
+     if you believe in that kind of address, or
+          {decvax,ucbvax,sun,pyramid,hplabs,ames}!decwrl!recipes
+     if you believe in the other kind of address. The addresses
+          recipes@decwrl.DEC.COM
+          decwrl.dec.com!recipes
+     also work, if your computer knows how to mail to them (many
+     don't).
+
+     If your netnews administrator has set things up properly and
+     if you are running the right news software, you can just
+     post to alt.gourmand as you would any other group, but your
+     posting will be mailed to the moderator insted of being
+     placed directly in the newsgroup.
+
+HOW TO FORMAT A RECIPE
+     Every recipe that goes out will be formatted with a small
+     set of troff commands. If you don't know any troff, then
+     just send the text of your recipe. If you can do the format-
+     ting yourself, then please do! That will save the editor a
+     lot of time, and your recipe will go out sooner.  Some hints
+     for how to do it are in a later section of this document.
+     If you don't know about xroff/troff/nroff but you do want to
+     be helpful, then you can help a lot by doing these things:
+
+     (1)  Put your recipe in the standard sequence.
+
+     (2)  Don't put any tab characters (^I) in the file if you
+          can possibly avoid it.  They do strange things on
+          typesetters.
+
+     (3)  If you are a troff wizard, please don't use any of that
+          wizardry in these recipes. If you stick to the set of
+          commands used in the Unix manual macros (see man(7)),
+          and the set of commands that are part of the USENET
+          Cookbook package (see following section), then things
+          should work OK.
+          There are plenty of places in troff where you can get
+          away with not using quotes around macro arguments.
+
+          Please use quotes, even when they are redundant, such
+          as in ``.IG "1" "onion"''  This is because the indexing
+          and cross-referencing programs expect to find the
+          quotes, even though troff can work without them.
+
+HOW TO WRITE A RECIPE
+     Please try to put your recipe in the standard sequence. Dif-
+     ferent cookbooks use different standards. This is the
+     sequence that the USENET Cookbook uses.
+
+          (a)  Title and 1-line description. The 1-line descrip-
+               tion will be used to index the recipe, so make it
+               as descriptive as possible. Avoid words like
+               ``delicious'' or ``yummy''. We expect all of these
+               recipes to be delicious.
+
+          (b)  Introductory commentary, explaining (if possible)
+               where you got the recipe from and what you like
+               about it. If you got the recipe from a cookbook,
+               give the title and author of that cookbook.
+
+          (c)  List of ingredients, using ``Tbsp'', ``tsp'',
+               ``cup'', ``oz'', and ``lb'' for English units, or
+               ``ml'', ``cl'', ``dl'', ``l'', ``g'', and ``kg''
+               for metric units. Stay away from ``pint'',
+               ``quart'', and ``gallon'', because they have dif-
+               ferent meanings in different countries. Do not use
+               1-letter abbreviations for US measures: don't use
+               "c" for "cup" or "T" for "Tbsp". An ``oz'' is a
+               fluid ounce or an avoirdupois ounce depending on
+               context.  The ingredients should be listed in the
+               order they will be used. Don't capitalize
+               ingredient names unless they are proper nouns.
+               Avoid terms like ``1 box'' or ``1 can'' or ``1
+               package'', because packaging conventions vary
+               widely from place to place. If you must say ``1
+               can of soup'', then at least tell me how big you
+               think a can of soup is.
+
+          (d)  Numbered sequence of recipe steps. Be very careful
+               to mention every ingredient somewhere. The most
+               common mistake made in recipes is to omit one or
+               more ingredients from the procedure steps. (The
+               second-most-common mistake is to leave an
+               ingredient out of the ingredient list).
+
+          (e)  Notes (if any). Comments on how you like to make
+               it, ingredient availability, comments about
+               specific brands, etc.
+
+          (f)  Your ``signature''. This should include your name
+               and net address, the organization that you are a
+
+               part of, and the name of the city it is in.
+
+COPYRIGHT NOTES
+     Tell us where you got the recipe from. It's ok if you
+     cribbed it from a book or magazine or newspaper, but if you
+     copy exactly the words that you found there, there might be
+     a problem with copyright violation. The copyright of a
+     recipe is not on the formula, but on the words. If you have
+     copied the words out of a copyrighted cookbook, then you are
+     infringing its copyright.
+
+     While the main purpose of the USENET cookbook is to let us
+     all make our own custom cookbooks, we can't ignore the real-
+     ity of the copyright law. Surely you have noticed that every
+     modern book says ``No part of this publication may be repro-
+     duced, stored in a retrieval system, or transmitted, in any
+     form or by any means, electronic, ..., or otherwise without
+     the prior written permission of the publisher.''
+
+     Copyright law is complex, and only a lawyer who specializes
+     in copyright can reliably advise you on whether or not you
+     are violating it, but in general if you rewrite a recipe, in
+     your own words, even if you don't change the formula, then
+     you are not infringing the copyright by submitting that
+     recipe to the network. The copyright is on the words that
+     explain the recipe, and on the title of the recipe, not the
+     formula itself.
+
+     The USENET Cookbook itself is copyrighted. Every recipe is
+     sent out with a copyright notice, and the macros that print
+     the cookbooks add a copyright notice to the bottom of each
+     page. The purpose of this is to prevent unauthorized commer-
+     cial use of the USENET Cookbook.
+
+DO YOUR OWN FORMATTING
+     If you put formatting commands in the recipes that you sub-
+     mit, they will go out more quickly, since the cookbook edi-
+     tor won't have to put them in.
+
+     The basic principle is to use as few commands as possible,
+     and in general to use only commands that are defined in the
+     manual macros or the recipe macro package. Various process-
+     ing programs search through these files and look for string
+     matches on things like ``.IG'' and ``.RZ''.  Print out a few
+     of the recipe source files from
+     /usr/spool/news/alt/gourmand, and then use
+     /usr/local/bin/rctypeset or /usr/local/bin/rcnroff to pro-
+     duce formatted versions of them. Have that at hand when you
+     are formatting your recipe. You can test your formatting by
+     using rctypeset or rcnroff on your draft versions before you
+     submit the recipe.
+
+     A ``skeleton'' recipe follows. .RH is the recipe header com-
+     mand; it must be the first line of each recipe and it must
+     have 4 arguments. ``RECIPE-ID'' is the file name under which
+     the recipe will be stored. Normally the editor chooses the
+     recipe id, but you can put a suggestion there if you like.
+     It must be 14 characters or less, and must not duplicate any
+     previous or pending recipe id. The ``?'' is a ``what kind of
+     recipe'' code from the code table below.
+
+         .RH MOD.RECIPES-SOURCE RECIPE-ID ? "22 Dec 83"
+         .RZ "RECIPE TITLE IN CAPITALS" "One-line description of it"
+         Introductory comments; use .PP between paragraphs.
+         .IH "4 cups"                  <- Ingredients Header
+         .IG "1/2 cup" "butter"        <- Ingredient (please use quotes)
+         .IG "1" "onion"
+         (medium to large, chopped fine. Don't try to use instant onion
+         in this recipe)
+         .PH                           <- Procedure header
+         .SK 1                         <- Procedure step
+         Boil the water.               <- Text for that step
+         .SK 2                         <- and so forth.
+         .NX                           <- Notes header
+         Notes (commentary) goes here; use .PP to separate paragraphs.
+         .WR                           <- Wrapup
+         Signature information goes here. As a minimum you should list your name,
+         network address, organization (company, university, etc.), and the city you
+         live or work in.
+     Remember that when you post to a moderated newsgroup, the
+     news software usually forgets to include your .signature
+     file, so you should be sure to include it manually. If it
+     manages to get there twice, I will remove the extra copy.
+
+     You can also use the following -man macros; see man(7) for
+     the complete list.
+         .I "italic words"
+         .B "boldface words"
+         .SM "small words"
+         .PP                           <- paragraph break
+         .PD <distance>                <- paragraph distance
+         .IP "indented paragraph".
+         .RS                           <- relative start: move things to the right
+         .RE                           <- relative end: move things left again
+     You can also use these nroff/troff commands: \fI, \fB, \fR,
+     .if, .ds, .br, .nf, .fi, and .ta
+
+METRIC OR INTUITIVE MEASUREMENT?
+     Most countries in the world use metric measurements for
+     their recipes. The U.S. defiantly uses a system that they
+     call ``the English system of measurement,'' teaspoons and
+     cups. The English never used that system, though-they used a
+     similar system, with spoons and cups of a different size,
+     and they called it the Imperial system. Every attempt to
+
+     convert U.S.  cooks to the metric system has failed. Most
+     Americans have never even seen a metric recipe, and virtu-
+     ally no American cook owns a kitchen scale or metric measur-
+     ing spoons.
+
+     But alt.gourmand is international in scope, and we want the
+     recipes to be accessible to everyone. Therefore the recipes
+     that are posted all have a dual measurement system in them,
+     both English and metric. When a cookbook page is printed, a
+     troff/nroff option determines whether or not it will be
+     printed with English units or metric units.
+
+     The dual-system measurement scheme is accomplished by having
+     both sets of values stored in the body of the recipe, and
+     having the software select one or the other when the recipe
+     is printed. This means that somebody has converted the
+     recipe to both sets of units, and has edited in both sets of
+     measurements.
+
+     There are four places in a recipe where the system of meas-
+     urement matters: the ingredient list, commentary about
+     ingredients, references to ingredients in the text, and
+     references to temperature in the text. There is a
+     troff/nroff command for each one of those situations.
+     Because alt.gourmand originated in the U.S., the U.S.
+     (``English'') measurement system is always given first in
+     all of these commands.
+          Ingredient header.  The ``.IH'' command takes two argu-
+          ments. The first is the English-unit specification of
+          how much the recipe produces, and the second (if
+          present) is the metric specification of the same thing.
+
+          Ingredient list.  The ``.IG'' command takes an optional
+          third argument, which is the metric description of the
+          quantity of the ingredient.  For counts-3 onions, 2
+          eggs-the metric description will be the same and you
+          can leave it off.
+
+          References to ingredients.  In the text you might want
+          to say something like ``set aside 1/2 Tbsp of the
+          ginger'' or ``reserve 100 ml of the sauce''. For that
+          purpose there is a macro ``.AB'', that takes two argu-
+          ments and prints one or the other, but never both.
+
+          References to temperature.  The U.S. uses Fahrenheit
+          degrees; nearly everyone else uses Celsius or Cen-
+          tigrade. Troff can print a ``degree'' sign, but nroff
+          cannot. To solve these two problems simultaneously,
+          there is a ``.TE'' macro, for indicating temperature.
+          It takes two numeric arguments, the first a Fahrenheit
+          temperature and the second a Celsius temperature.
+     In case the .AB or .TE expression needs to be the end of a
+
+     sentence, the macro can take a third argument, which is the
+     punctuation character at the end of the sentence. For exam-
+     ple, you would type
+         Then add butter
+         .AB "1 Tbsp" "30 g"
+         at a time. Lick the spoon to use the last
+         .AB "tablespoon" "few grams" .
+
+         Here is the example of the previous section, updated to
+         include international multi-unit arguments to all of the
+         macro calls:
+             .RH MOD.RECIPES-SOURCE RECIPE-ID ? "22 Dec 83"
+             .RZ "RECIPE TITLE IN CAPITALS" "One-line description of it"
+             Introductory comments; use .PP between paragraphs.
+             .IH "4 cups" "1 liter"        <- Ingredients Header
+             .IG "1/2 cup" "butter" "100 g"<- Ingredient (please use quotes)
+             (or use a mixture of
+             .AB "1/4 cup" "50 g"          <- In-text reference to two systems
+             of margarine and
+             .AB "1/4 cup" "50 g"
+             of butter.
+             .IG "1" "onion"               <- No need for 2 systems here
+             (medium to large, chopped fine. Don't try to use instant onion
+             in this recipe)
+             .PH                           <- Procedure header
+             .SK 1                         <- Procedure step
+             Preheat the oven to           <- Text for that step
+             .TE 350 175                   <- Dual-system temperature
+             before soaking the rice.
+             Boil the water.
+             .SK 2                         <- and so forth.
+             .NX                           <- Notes header
+             Notes (commentary) goes here; use .PP to separate paragraphs.
+             .WR                           <- Wrapup
+             Signature information goes here. As a minimum you should list your name,
+             network address, organization (company, university, etc.), and the city
+             and country you live or work in.
+
+CONVERTING RECIPES TO/FROM METRIC
+     Don't try to convert a recipe to metric units unless you
+     have some experience cooking with metric, and don't try to
+     convert a recipe to English units unless you have some
+     experience cooking with them. Submit your recipe in the
+     units that you are comfortable with, and let the
+     alt.gourmand editor do the conversion for you. It's not just
+     a simple matter of unit conversion, because most ingredients
+     are specified by weight in metric recipes and by volume in
+     English recipes.
+
+CATEGORY CODES
+         M     Main dish           SL    Salad
+         A     Appetizer or snack  SP    Soup
+
+         B     Bread/pasta         D     Dessert
+         L     Beverage (Liquid)   V     Vegetable dish
+         C     Cookie or cake      O     Other
+         S     Sauce
+     The suffix ``V'' on any category means that it is
+     vegetarian; for example, a vegetarian main dish recipe would
+     be marked ``MV''.
+
+SEE ALSO
+     cookbook(1), rn(1)
+
+AUTHOR
+     Brian Reid, DEC Western Research Laboratory
+
+18731!alt.gourmand!
+echo extracting configure.sh
+cat > configure.sh << '18731!alt.gourmand!'
+#! /bin/sh 
+# Script to configure and install the other shell scripts for alt.gourmand
+#	Brian Reid, December 1985
+#	v2	    April 1986
+#	v3	    June  1986
+#	v3.1	    Oct   1987
+#
+SYSTYPE="$1"
+OBJDIR="$2"
+NEWSDIR="$3"
+DEFDIR="$4"
+DEFPATH="$5"
+DEFTROFF="$6"
+DEFPAGER="$7"
+METRIC="$8"
+TEMPDIR="$9"
+
+case $SYSTYPE in
+    XXX) if [ -d /usr/ucb ]
+	 then
+	     SYSTYPE="BSD"
+	 else
+	     SYSTYPE="USG"
+	 fi;;
+esac;
+
+
+# make rcnroff.X from rctypeset.X
+sed -e "s+DEFTROFF+nroff -man+" \
+    -e "s+typesets it with troff+formats it with nroff+" \
+    -e 's+^FRACTIONS=1$+FRACTIONS=0+' \
+    -e "/-t)/d" \
+    -e '/^\$TROFF/s+$+ > Update.nr+' \
+    -e 's/$TFLAG//g' \
+    < rctypeset.X > rcnroff.X
+
+# Make a tmac file tuned to rthe type of system we are on, and strip comments.
+sed -e "/^@@@$SYSTYPE/s/^@@@$SYSTYPE//" \
+    -e '/^@@@/d' \
+    < tmac.recip | grep -v '^\.\\"' > tmac.tmp
+
+# now configure the executable programs
+for i in *.X
+do
+    j=`basename $i .X`
+    echo Processing $i into $j
+    sed -e "s+OBJDIR+$OBJDIR+g" \
+        -e "s+NEWSDIR+$NEWSDIR+g" \
+        -e "s+TEMPDIR+$TEMPDIR+g" \
+	-e "s+DEFDIR+$DEFDIR+g" \
+	-e "s+DEFPATH+$DEFPATH+g" \
+	-e "s+DEFPAGER+$DEFPAGER+g" \
+	-e "s+METRIC+$METRIC+g" \
+	-e '/^TMAC.RECIP$/r tmac.tmp' \
+	-e '/^TMAC.RECIP$/d' \
+	-e "s+DEFTROFF+$DEFTROFF+g" < $i > $j
+    chmod 755 $j
+done
+rm -f rcbook.n; ln rcbook.t rcbook.n
+rm -f rcnew.n; ln rcnew.t rcnew.n
+18731!alt.gourmand!
+echo extracting tmac.recip
+cat > tmac.recip << '18731!alt.gourmand!'
+.\" Macro package Copyright (C) 1986 USENET Community Trust
+.\" tmac.recip version 3, June 1986
+.\"
+.\"	# Recipe Heading
+.de RH
+.ie '\\$5'' .ds YR 1985
+.el .ds YR \\$5
+.ie n .ds YC Copyright \\*(YR USENET
+.el .ds YC Copyright \(co \\*(YR USENET Community Trust
+@@@USG.ie n .TH \\$2 "\\$3" "\\$4" "USENET Cookbook"
+@@@USG.el .TH \\$2 "\\$3" "alt.gourmand \\$4" "USENET Cookbook"
+@@@BSD.ie n .TH \\$2 "\\$3" "\\$4" " " "USENET Cookbook"
+@@@BSD.el .TH \\$2 "\\$3" "alt.gourmand \\$4" " " "USENET Cookbook"
+.ds ]H \\$2
+..
+.de RZ
+.SH \\s14\\$1
+.rs
+.ie n .sp 1
+.el   .sp 6p
+\\*(]H \- \\$2
+.fi
+.PP
+..
+.\"	# Ingredient
+.de IG
+.ds =1 \\$1
+.ds =2 \\$2
+.if \\n(.$>2 .if  \\nM .ds =1 \\$3
+.TP 10
+\&\\*(=1
+.I \\*(=2
+..
+.\"	# Step
+.de SK
+.IP "(\\$1)" 5n
+..
+.\"	# Ingredient header
+.de IH
+.ds =1 \\$1
+.if \\n(.$>1 .if \\nM .ds =1 \\$2
+.SH INGREDIENTS (\\*(=1)
+.fi
+.PD 0
+..
+.\"	# Procedure header
+.de PH
+.PD
+.ie '\\$1'' .SH PROCEDURE
+.el .SH PROCEDURE \\$1
+.RS 5
+..
+.\"	# Temperature value
+.de TE
+.ds =2
+.if \\n($>2 .ds =2 \\$3
+.ie n .ds =1 \\$1 deg. F
+.el .ds =1 \\$1\(deF
+.ie n .if \\n(.$>1 .if \\nM .ds =1 \\$2 deg. C
+.el .if \\n(.$>1 .if \\nM .ds =1 \\$2\(deC
+\\*(=1\\*(=2
+..
+.\"	# inline value selector
+.de AB
+.ds =1 \\$1
+.if \\nM .ds =1 \\$2
+.ds =2
+.if \\n($>2 .ds =2 \\$3
+\\*(=1\\*(=2
+..
+.\"	# Notes
+.de NX
+.PD
+.SH NOTES
+..
+.\"	# Wrapup
+.de WR
+.RE 5
+.PD
+.SH CONTRIBUTOR
+.nf
+..
+.\" these CS macros courtesy of Bernie Cosell and Matt Bishop
+.de CS  \" do the fancy "go into cs mode right" guy
+.   ie \\n(.z .cs \\$1 \\$2 \\$3
+.   el              \!.CS \\$1 \\$2 \\$3
+..
+.de FW \" Go into fixed-width mode: put both italic and bold fonts in it
+.   CS B 21 \\(.s
+.   CS I 21 \\(.s
+.   ss 24
+.   lg 0
+..
+.de Fw \" Leave fixed-width mode
+.   CS B
+.   CS I
+.   ss 12
+.   lg 1
+..
+18731!alt.gourmand!

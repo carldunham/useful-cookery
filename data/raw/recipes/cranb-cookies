@@ -1,0 +1,71 @@
+.ig
+Path: decwrl!recipes
+From: glassman@src.dec.com (Lucille Glassman)
+Newsgroups: alt.gourmand
+Subject: RECIPE: Moist cranberry-apple cookies
+Message-ID: <12007@decwrl.DEC.COM>
+Date: 30 Oct 87 06:16:43 GMT
+Sender: recipes@decwrl.DEC.COM
+Distribution: alt
+Organization: DEC Systems Research Center, Palo Alto, Calif., USA
+Lines: 57
+Approved: reid@decwrl.dec.com
+
+
+	      Copyright (C) 1987 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE CRANB-COOKIES D "25 Jul 87" 1987
+.RZ "CRANBERY-APPLE COOKIES" "Moist cookies with cranberries, apples, and cinnamon"
+Many years ago one of my brothers complained to me that he didn't like
+cookies much, that they were always too dry and pasty. I came up with this
+recipe for him. He still doesn't like cookies, but the recipe has made its
+way to various other people to become a favorite.
+.IH "Makes 4 dozen"
+.IG "\(12 cup" "butter" "120 g"
+.IG "1 cup" "brown sugar" "200 g"
+.IG "\(34 cup" "sugar" "150 g"
+.IG "1" "egg"
+.IG "\(14 cup" "milk" "60 ml"
+.IG "2 cups" "flour" "200 g"
+.IG "1 tsp" "baking powder" "5 ml"
+.IG "1 tsp" "cinnamon" "5 ml"
+.IG "\(12 tsp" "salt" "2.5 ml"
+.IG "1 tsp" "grated orange rind" "5 ml"
+.IG "1\(12 cups" "apples," "250 g"
+pared and chopped
+.IG "1 cup" "cranberries," "100 g"
+chopped
+.PH
+.SK 1
+Preheat oven to
+.TE 375 190 .
+.SK 2
+Cream butter and sugars; beat in egg and milk.
+.SK 3
+Sift together flour, baking powder, cinnamon, and salt.
+Stir into butter mixture until well-blended.
+.SK 4
+Stir in orange rind, apple, and cranberries. drop onto baking
+sheets.
+.SK 5
+Bake for 12-15 minutes at
+.TE 375 190 .
+.NX
+Don't store these in a cookie jar: they will get too mushy.
+.SH RATING
+.I Difficulty:
+easy.
+.I Time:
+15 minutes preparation, 15 minutes baking.
+.I Precision:
+measure the ingredients.
+.WR
+Lucille Glassman
+DEC Systems Research Center, Palo Alto, California, USA
+glassman@src.dec.com	{decvax,ucbvax,cbosgd,ihnp4}!decwrl!glassman

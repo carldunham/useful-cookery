@@ -1,0 +1,77 @@
+.ig
+Path: decwrl!recipes
+From: aviva@excelan.uucp (Aviva Garrett)
+Newsgroups: alt.gourmand
+Subject: RECIPE: Chocolate layer cake
+Message-ID: <14150@decwrl.DEC.COM>
+Date: 23 Jul 88 09:44:14 GMT
+Sender: recipes@decwrl.DEC.COM
+Distribution: alt
+Organization: Excelan, Inc., San Jose, California, USA
+Lines: 63
+Approved: reid@decwrl.dec.com
+
+
+	      Copyright (C) 1988 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+The recipes are for chocolate layer cake (which, with my
+chocolate mousse as frosting, was our wedding cake) 
+and shortbread cookies.
+
+
+..
+.RH MOD.RECIPES-SOURCE CHOC-CAKE-5 D "16 Oct 87" 1988
+.RZ "CHOCOLATE LAYER CAKE" "A moist 2-layer chocolate layer cake"
+This was our wedding cake.
+.IH "serves 8"
+.IG "1 \(14 cup" "sugar" "250 g"
+.IG "\(12 cup" "cocoa" "55 g"
+.IG "\(12 cup" "boiling water" "120 ml"
+.IG "\(12 cup" "shortening" "120 g"
+.IG "2" "eggs"
+.IG "2 tsp" "vanilla" "10 ml"
+.IG "2 cups" "sifted cake flour" "200 g"
+.IG "1 tsp" "baking soda" "5 ml"
+.IG "2/3 cup" "buttermilk" "150 ml"
+.PH          
+.SK 1       
+Preheat oven to
+.TE 350 175 .
+Combine
+.AB "\(12 cup" "100 g"
+sugar with cocoa and boiling water, and cook over a low heat,
+stirring constantly, until the mixture is glossy. Cool.
+.SK 2
+Cream the shortening and eggs with the remaining sugar.
+Add the cocoa mixture and the vanilla.
+.SK 3
+Add the dry ingredients and the buttermilk alternately.
+.SK 4
+Bake in 2 greased layer pans at 
+.TE 350 175
+for 30-35 minutes.
+.SK 5
+Frost the cake with your favorite frosting (see note below).
+.NX            
+For the frosting on our wedding cake, we used the chocolate mousse filling
+described in MOUSSE-CHOC-1.
+.PP
+You can also make this as a single-layer cake.
+Just bake it a few minutes longer, as it is thicker.
+.SH RATING
+.I Difficulty:
+easy.
+.I Time:
+30 minutes preparation, 1 hour baking and cooling and frosting.
+.I Precision:
+measure the ingredients.
+.WR                         
+Aviva Garrett
+Santa Cruz, CA
+Excelan, Inc., San Jose, California, USA
+{sun,3comvax}!excelan!aviva

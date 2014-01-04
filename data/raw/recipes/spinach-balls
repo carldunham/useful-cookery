@@ -1,0 +1,73 @@
+.ig
+Path: decwrl!recipes
+From: roche@rochester.arpa (Jim Roche)
+Newsgroups: mod.recipes
+Subject: RECIPE: Spinach balls
+Message-ID: <9363@decwrl.DEC.COM>
+Date: 17 Apr 87 05:53:04 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: University of Rochester, Rochester, New York, USA
+Lines: 60
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1987 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE SPINACH-BALLS V "12 Dec 86" 1987
+.RZ "HERBED SPINACH BALLS" "A delicious appetizer or vegetable dish"
+I learned this recipe from my mother. I think she originally found it
+in the Troy (NY) \fITimes Record\fR.
+.IH "Serves 12\-20"
+.IG "20 oz" "frozen spinach," "500 g"
+chopped
+.IG "2 cups" "herb stuffing mix" "250 g"
+.IG "\(34 cup" "parmesan cheese," "150 g"
+grated
+.IG "1 tsp" "garlic," "5 ml"
+finely minced
+.IG "1" "medium onion,"
+finely chopped
+.IG "3" "eggs,"
+beaten
+.IG "\(14 lb" "butter," "120 g"
+melted
+.PH
+.SK 1
+Preheat oven to
+.TE 350 175 .
+Thaw spinach and remove excess liquid.
+.SK 2
+Add remaining ingredients (stuffing mix, parmesan cheese, garlic, onion,
+eggs, and butter) and mix well.
+.SK 3
+Form the mixture into small balls and place on a baking sheet.
+.SK 4
+Bake for 15 minutes at
+.TE 350 175 .
+.NX
+These can be made up ahead of time and frozen. If frozen, increase cooking time
+by 10\-15 minutes.
+.PP
+Herb stuffing mix is a commercial preparation of bread crumbs and herbs and
+seasonsings that is packaged for stuffing a turkey or chicken. You can make
+your own using recipe BREAD-STUFF-1 if you like.
+.PP
+This recipe makes about 80 appetizer-size balls, or about 40 larger balls
+to use as a vegetable dish at a meal.
+.SH RATING
+.I Difficulty:
+easy.
+.I Time:
+20 minutes preparation. 15\-30 minutes baking.
+.I Precision:
+Approximate measurement ok.
+.WR
+Jim Roche
+University of Rochester, Computer Science Dept., Rochester, New York, USA
+roche@cs.rochester.edu		rochester!roche

@@ -1,0 +1,69 @@
+.ig
+Path: decwrl!recipes
+From: ara@liuda.uucp (Anders Rantila)
+Newsgroups: mod.recipes
+Subject: RECIPE:
+Message-ID: <8592@decwrl.DEC.COM>
+Date: 13 Mar 87 04:13:59 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: Dept of Comp and Info Science, Univ of Linkoping, Sweden
+Lines: 56
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1987 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE LEMON-PIE D "20 Jan 87" 1987
+.RZ "FRENCH LEMON PIE" "A French dessert cake"
+My girlfriend got this recipe when she lived in Paris three years ago. In
+French it is called \fITarte au citron\fR.
+.IH "One pie"
+.SH		PIE CRUST
+.IG "\(34 cup" "wheat flour" "200 ml"
+.IG "\(14 lb" "butter" "100 g"
+.IG "2 Tbsp" "water" "30 ml"
+.SH		FILLING
+.IG "1" "lemon"
+.IG "4 Tbsp" "butter" "60 g"
+.IG "1" "egg"
+.IG "\(12 cup" "sugar" "150 ml"
+.PH 
+.SK 1
+Preheat the oven to
+.TE 425 225 .
+.SK 2
+Make crust: Mix flour and butter in a food processor. Add water and
+form a dough. Press into a pie pan.
+.SK 3
+Make filling: Grate the lemon peel. Press the juice out of the lemon.
+.SK 4
+Melt the butter.
+.SK 5
+Beat the egg with sugar, the melted butter, lemon juice and lemon
+peel.
+.SK 6
+Pour the filling into the pie crust.
+.SK 7
+Bake in oven for about 30 minutes at
+.TE 425 225 .
+.SK 8
+Let the pie cool down.
+.NX
+If you don't have a food processor, you can use your hands instead.
+.SH RATING
+.I Difficulty:
+Easy to moderate.
+.I Time:
+50 minutes.
+.I Precision:
+Measure the ingredients.
+.WR
+Anders Rantila 
+CS Dept, Univ of Linkoping, Sweden
+seismo!mcvax!enea!liuida!ara

@@ -1,0 +1,9 @@
+
+OK, your Makefile is now created. Using your favorite text editor, edit it to
+try to answer the 4 questions at the beginning. If you can't answer them,
+don't give up--the system will still work to a certain extent without the
+answers.
+
+Once you have finished editing the Makefile, type this:
+
+	make configure

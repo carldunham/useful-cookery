@@ -1,0 +1,71 @@
+.ig
+Relay-Version: version B 2.10.3 4.3bsd-beta 6/6/85; site decwrl.DEC.COM
+Posting-Version: version B 2.10.3 4.3bsd-beta 6/6/85; site decwrl.DEC.COM
+Path: decwrl!reid
+From: curran@dec-euclid (Karen Curran)
+Newsgroups: mod.recipes
+Subject: RECIPE: Chocolate brown sugar cookies
+Message-ID: <2286@decwrl.DEC.COM>
+Date: 11 Apr 86 05:30:52 GMT
+Date-Received: 11 Apr 86 05:30:52 GMT
+Sender: reid@decwrl.DEC.COM
+Organization: Digital Equipment Corp, Massachusetts
+Lines: 55
+Approved: reid@glacier.ARPA
+
+
+	      Copyright (C) 1986 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE CHOC-CHIP-3 D "30 Jun 85" 1986
+.RZ "CHOCOLATE BROWN SUGAR COOKIES" "Chocolate chip cookies with honey and brown sugar"
+.IH "Makes about 3 dozen"
+.IG "\(12 cup" "brown sugar" "100 g"
+.IG "\(12 lb" "butter" "250 g"
+.IG "1/3 cup" "honey" "80 ml"
+.IG "1" "large egg"
+.IG "\(12 tsp" "vanilla extract" "2 ml"
+.IG "1.1 cups" "flour" "110 g"
+(glass measuring cup filled to the top)
+.IG "\(12 tsp" "baking soda" "2.5 ml"
+.IG "1 cup" "chocolate chips" "350 g"
+.PH
+.SK 1
+Preheat oven to
+.TE 375 190 .
+Cream together the butter and the brown sugar, add
+egg and vanilla. Mix well. Add honey.
+.SK 2
+Measure flour and baking soda (I usually just mix the soda in
+with the flour.)
+.SK 3
+Add flour and soda to batter a little at a time, and mix.
+.SK 4
+Add chocolate chips.
+.SK 5
+Drop by spoonfuls onto 
+an ungreased cookie sheet and bake for 5-8 minutes at
+.TE 375 190 .
+.NX
+For those of you who like your cookies warm!
+I always make up only enough to eat, and store the batter in the
+fridge.
+.PP
+You can substitute margarine for the butter if you want.
+.SH RATING
+.I Difficulty:
+easy, though creaming butter and sugar without a food processor is tedious.
+.I Time:
+10 minutes preparation, 10 minutes cooking and cooling.
+.I Precision:
+measure the ingredients.
+.WR
+Karen Curran
+Digital Equipment Corporation
+decwrl!rhea!euclid!curran curran@euclid.DEC
+(EUCLID::CURRAN on DEC VMS systems)

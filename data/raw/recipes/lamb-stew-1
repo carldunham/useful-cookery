@@ -1,0 +1,88 @@
+.ig
+Path: decwrl!reid
+From: nlm@attunix (Nancy Mintz)
+Newsgroups: mod.recipes
+Subject: RECIPE: Lamb stew
+Message-ID: <6360@decwrl.DEC.COM>
+Date: 13 Nov 86 06:48:49 GMT
+Sender: reid@decwrl.DEC.COM
+Organization: AT&T UNIX Lab, Summit, New Jersey, USA
+Lines: 75
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1986 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE LAMB-STEW-1 M "13 Aug 86" 1986
+.RZ "MARGO'S LAMB STEW" "Fragrant lamb stew"
+This recipe comes from Margo Kaiser, with whom I used to work.
+It's a delicious stew, spiced fragrantly but not hot. It's one of my
+favorites.  It's also very easy. The most tedious work is trimming the lamb,
+and you can get the butcher to take care of that.
+.PP
+The spice mixture is my attempt to re-create Margo's ``secret spice''
+(she didn't offer \fIthat\fR recipe).  Feel free to try your own variations.
+If you hit on one that you feel is particularly good, please let me know
+about it.
+.IH "serves 6 to 8"
+.IG "3 Tbsp" "olive oil" "50 ml"
+.IG "1" "large onion"
+(thinly sliced)
+.IG "4" "garlic cloves,"
+minced
+.IG "3 lbs" "lamb," "1.5 kg"
+cut into stew-sized cubes, and carefully trimmed of fat.
+.IG "4 lbs" "cooked tomatoes" "1.5 kg"
+(2 large cans)
+.IG "3" "bay leaves"
+.IG "" "lemon juice"
+.IG "1 Tbsp" "Hungarian paprika" "15 ml"
+.IG "1 tsp" "celery salt" "5 ml"
+.IG "\(12 tsp" "ground cumin" "2.5 ml"
+.IG "1/8 tsp" "cayenne" "0.5 ml"
+.IG "dash" "allspice" "0.5 ml"
+.IG "dash" "cinnamon" "0.5 ml"
+.IG "1 \(12 lbs" "fresh green beans," "700 g"
+washed and trimmed
+.PH
+.SK 1
+In a stewpot, saut\z\(aae onion in olive oil on medium-low heat until golden
+brown. Add garlic in the last 2\-3 minutes.
+.SK 2
+Add lamb cubes and saut\z\(aae until brown.
+.SK 3
+Add tomatoes, and simmer until meat is tender.
+Keep an eye on the liquid; add water or red wine if it becomes dry.
+.SK 4
+Add bay leaves, lemon juice and spices.
+Simmer on low heat for at least 2 hours.
+.SK 5
+About \(12 hour before pronouncing it done, add the green beans.
+.SK 6
+Serve with plain yogurt and pita bread.
+.NX
+I prefer to cook through step 4, refrigerate overnight, and then finish
+cooking the next evening.  This greatly enhances the flavor.  When you
+take the stew from the refrigerator, skim any lamb fat that has
+congealed on the top before continuing.
+.PP
+I find that many butchers don't understand that I want good quality
+meat in stews.  I get better quality, more carefully trimmed meat by telling
+them that I want lamb cubes cut for shish kebab.
+.SH RATING
+.I Difficulty:
+easy.
+.I Time:
+20 minutes preparation, several hours cooking.
+.I Precision:
+measure the spices.
+.WR
+Nancy Mintz
+UNIX System Development Lab, AT&T-IS, Summit, New Jersey, USA
+ihnp4!attunix!nlm

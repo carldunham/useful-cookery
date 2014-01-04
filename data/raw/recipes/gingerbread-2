@@ -1,0 +1,73 @@
+.ig
+Path: decwrl!reid
+From: jon@msunix (Jonathan Hue)
+Newsgroups: mod.recipes
+Subject: RECIPE: extravagant gingerbread
+Message-ID: <2870@decwrl.DEC.COM>
+Date: 9 May 86 06:15:50 GMT
+Sender: reid@decwrl.DEC.COM
+Organization: Lockheed Missiles and Space, Sunnyvale, CA
+Lines: 60
+Approved: reid@glacier.ARPA
+
+
+	      Copyright (C) 1986 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+
+..
+.RH MOD.RECIPES-SOURCE GINGERBREAD-2 D "5 Mar 86" 1986
+.RZ "GINGERBREAD" "Best-ever gingerbread"
+This moist gingerbread is a good recipe for the holidays or any other time.
+This recipe was originally published in \fISunset\fR magazine before I was
+born.
+.IH "serves 12"
+.IG "1 cup" "white sugar" "200 g"
+.IG "\(14 tsp" "salt" "1 ml"
+.IG "1 tsp" "ginger" "5 ml"
+.IG "\(12 tsp" "cinnamon" "2.5 ml"
+.IG "\(12 tsp" "powdered cloves" "2.5 ml"
+.IG "1 cup" "vegetable oil" "250 ml"
+.IG "1 cup" "light molasses" "250 ml"
+.IG "2 tsp" "baking soda" "10 ml"
+(That's baking \fIsoda\fR, not baking powder)
+.IG "1 cup" "boiling water" "250 ml"
+.IG "2 \(12 cups" "all-purpose flour," "250 g"
+unsifted
+.IG "2" "eggs,"
+well beaten
+.PH
+.SK 1
+Mix the sugar, salt, ginger, cinnamon and cloves together in a bowl.
+.SK 2
+Add the vegetable oil and the molasses, stirring until well blended.
+.SK 3
+Mix the baking soda into the boiling water and immediately stir into
+the mixture.
+.SK 4
+Add the flour gradually, mixing well after each addition.
+.SK 5
+Mix in the beaten eggs.
+.SK 6
+Pour into a greased 
+.AB "9\(mu13" "20\(mu30"
+baking pan and bake at
+.TE 350 175
+for 40 minutes.
+.NX
+Top with whipped cream or lemon sauce.
+.SH RATING
+.I Difficulty:
+moderate.
+.I Time:
+20 minutes to prepare, 40 minutes to cook.
+.I Precision:
+measure the ingredients.
+.WR
+Jonathan Hue
+Lockheed Missiles and Space Company\(emMechanisms & Servos, Sunnyvale, CA
+{amdcad!cae780,sun!sunncal}!leadsv!msunix!jon

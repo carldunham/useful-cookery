@@ -1,0 +1,107 @@
+.ig
+Relay-Version: version B 2.10.3 4.3bsd-beta 6/6/85; site decwrl.DEC.COM
+Posting-Version: version B 2.10.3 4.3bsd-beta 6/6/85; site decwrl.DEC.COM
+Path: decwrl!reid
+From: rob@research (Rob Pike)
+Newsgroups: mod.recipes
+Subject: RECIPE: Cheesecake I
+Message-ID: <2093@decwrl.DEC.COM>
+Date: 4 Apr 86 06:57:13 GMT
+Date-Received: 4 Apr 86 06:57:13 GMT
+Sender: reid@decwrl.DEC.COM
+Organization: AT&T Bell Laboratories, Murray Hill
+Lines: 91
+Approved: reid@glacier.ARPA
+
+
+	      Copyright (C) 1986 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE CHEESECAKE-1 D "29 Jan 86" 1986
+.RZ "CHEESECAKE I" "Legendary cheesecake"
+This is from a dessert-chef friend of a regular-chef friend, and apparently
+won some award. I've had cheesecakes that I think are more impressive
+(including one I can make), but I think I'm something of a cheesecake
+connoisseur.  If I want to blow people's socks off, this is the one I cook.
+I think that every time I've served it to a new group, at least one person
+has said ``That was the best cheesecake I've ever had.''
+.IH "one cheesecake"
+.PP
+.SH 		CRUST:
+.IG "2 cups" "graham cracker crumbs" "500 g"
+.IG "6 Tbsp" "melted butter" "100 g"
+.IG "2 Tbsp" "white sugar" "20 g"
+.IG "\(12 tsp" "ground cinnamon" "2.5 ml"
+.SH		CAKE FILLING:
+.IG "1\(12 lb" "cream cheese" "700 g"
+.IG "\(34 cup" "sugar" "150 g"
+.IG "3" "eggs"
+.IG "\(14 cup" "lemon juice" "60 ml"
+.IG "2 tsp" "grated lemon rind" "10 ml"
+.IG "2 tsp" "vanilla" "10 ml"
+.SH		TOPPING:
+.IG "2 cups" "sour cream" "500 ml"
+.IG "3 Tbsp" "sugar" "30 g"
+.IG "1 tsp" "vanilla" "5 ml"
+.SH		GLAZE:
+.IG "\(12 cup" "sugar" "100 g"
+.IG "1\(12 Tbsp" "cornstarch" "25 ml"
+.IG "\(14 tsp" "salt" "1 ml"
+.IG "\(34 cup" "water" "170 ml"
+.IG "1/3 cup" "lemon juice" "75 ml"
+.IG "1" "egg yolk,"
+WELL BEATEN.
+.IG "1 Tbsp" "butter" "15 g"
+.PH
+.SK 1
+Preheat oven to 
+.TE 350 175 .
+Combine crust ingredients. Press crust on bottom and sides of buttered 
+.AB "10-inch" "25 cm"
+springform pan. Bake 5 minutes, and cool.
+.SK 2
+Beat cheese until soft. Add sugar and blend well. Add eggs, one at a time,
+beating well after each. Mix in the lemon rind and the vanilla, and add to
+the mixture. Pour into the pre-baked crust, and bake 35 minutes.
+.SK 3
+Combine topping ingredients, spread on top of cheesecake, and return to oven
+immediately. Bake 10\-12 minutes and remove from oven.
+.SK 4
+Combine dry glaze ingredients; add liquid glaze ingredients. Cook over low
+heat until thick. Add 
+.AB "1 Tbsp" "15 g"
+of butter. Cool, and spread this glaze on the 
+cake before the glaze thickens too much.
+.NX
+Some pointers: this is the traditional crust,
+but I often use a more floury-baked-pie-crust-like one.
+It's not too critical.
+The magic to getting the texture perfect is in how you beat the cheese.
+I use a kitchen aid, work slowly, scrape the bowl often, and ALWAYS USE ROOM
+TEMPERATURE EVERYTHING.  Using cold cream cheese guarantees lumps.
+Don't beat too hard before putting in the sugar, but make sure it's even
+and fluffy before the eggs go in. Then again, don't overbeat. It takes
+practice.
+.PP
+I've been known to make it with no sugar or vanilla in the topping, and I
+think it's more interesting. but the contrast between the layers may
+confuse those accustomed to restaurant cheesecakes.
+.PP
+The glaze is easy as glazes go, but treat it properly.  In particular,
+stir constantly until it's thick, but don't stir hard or you'll break down
+the starch.
+.SH RATING
+.I Difficulty:
+rather difficult (timing is critical.)
+.I Time:
+1 hour.
+.I Precision:
+measure carefully.
+.WR
+Rob Pike, research!rob
+AT&T Bell Laboratories, Murray Hill, NJ

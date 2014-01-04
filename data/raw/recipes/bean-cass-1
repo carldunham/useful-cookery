@@ -1,0 +1,81 @@
+.ig
+Path: decwrl!recipes
+From: jeff@rtech (Jeff Lichtman)
+Newsgroups: mod.recipes
+Subject: RECIPE: Bean casserole
+Message-ID: <8475@decwrl.DEC.COM>
+Date: 6 Mar 87 04:14:35 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: Relational Technology Inc., Alameda CA
+Lines: 68
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1987 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE BEAN-CASS-1 M "13 Mar 86" 1987
+.RZ "SUNSHINE BEAN CASSEROLE" "An easy bean casserole"
+.PP
+This recipe comes from
+.I
+A Primer on Bean Cookery
+by the
+.I
+California Dry Bean Advisory Board.
+The recipe calls for red beans, lima beans, and garbanzos,
+but any combination of cooked or canned beans can be used.
+Pick your own favorites.
+.IH "Serves 6 to 8"
+.IG "2 cups" "canned red beans," "400 g"
+drained
+.IG "2 cups" "canned lima beans," "400 g"
+drained
+.IG "2 cups" "canned garbanzo beans," "400 g"
+drained
+.IG "1 lb" "ground beef" "500 g"
+.IG "1" "large onion,"
+chopped fine
+.IG "1" "garlic clove,"
+minced
+.IG "\(14 cup" "brown sugar" "50 g"
+.IG "1\-2 Tbsp" "prepared mustard" "15\-30 ml"
+.IG "\(12 cup" "ketchup" "12 cl"
+.IG "1 tsp" "cumin powder" "5 ml"
+(optional)
+.IG "\(14 cup" "red wine" "6 cl"
+.IG "" "salt and pepper"
+to taste
+.PH
+.SK 1
+Put drained beans into a
+.AB "2\(12-quart" "2.5-liter"
+casserole; mix lightly and set aside.
+.SK 2
+In large skillet cook ground beef, onions, and garlic
+until meat is lightly browned;
+stir in remaining ingredients (except beans).
+.SK 3
+Add skillet mixture to beans in casserole;
+mix together.
+.SK 4
+Cover and bake for about an hour at
+.TE 325 160
+or simmer the mixture in a crockpot
+for 3 to 4 hours.
+.SH RATING
+.I Difficulty:
+Easy.
+.I Time:
+75 minutes if baked; 3 to 4 hours in a crockpot.
+.I Precision:
+No need to measure.
+.WR
+Jeff Lichtman 
+Relational Technology, Inc.
+{amdahl, sun}!rtech!jeff	-or-	{ucbvax, decvax}!mtxinu!rtech!jeff

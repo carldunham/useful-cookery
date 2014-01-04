@@ -1,0 +1,46 @@
+
+This file contains the entire software distribution. It is too big to travel
+over some older uucp links (which have a 64Kbyte limit)
+
+-rw-rw-r--  1 reid        85286 Jul 18 01:22 full.shar
+
+These files contain the same information, but divided into two parts so
+that each can be mailed more easily. There is some information duplicated
+between the two parts, which is why their sum is larger than the whole.
+
+-rw-rw-r--  1 reid        50312 Jul 18 01:22 documentation.shar
+-rw-rw-r--  1 reid        35888 Jul 18 01:22 software.shar
+
+These are the individual component files that are contained in the above
+distributions. These are included in the archive to permit you to selectively
+update parts of your software without paying for the transmission of the
+entire package. They are listed here in order by date of last modification
+(recent first)
+
+-rw-rw-r--  1 reid         3974 Jul 18 01:20 intro.doc
+-rw-rw-r--  1 reid        16219 Jul 18 01:20 recipes.doc
+-rw-rw-r--  1 reid         7813 Jul 18 01:19 cookbook.doc
+-rw-rw-r--  1 reid        13824 Jul 18 01:18 recipes.5.X
+-rw-rw-r--  1 reid         5381 Jul 18 01:14 rcintro.X
+-rw-rw-r--  1 reid         2126 Nov 16  1987 Makefile.bsd
+-rw-rw-r--  1 reid          266 Sep 30  1987 Novice.step3a
+-rwxrwxr-x  1 reid          581 Sep 30  1987 Novice.start
+-rw-rw-r--  1 reid          562 Sep 30  1987 Novice
+-rwxrwxr-x  1 reid          293 Sep 30  1987 Novice.install
+-rw-rw-r--  1 reid         1395 Sep 30  1987 configure.sh
+-rw-rw-r--  1 reid         2111 Sep 30  1987 Makefile.sysv
+-rwxrwxr-x  1 reid         1557 Sep 30  1987 rckeepnew.X
+-rw-rw-r--  1 reid         7255 Sep 30  1987 cookbook.1.X
+-rw-rw-r--  1 reid         2239 Sep 11  1987 rcnew.t.X
+-rwxrwxr-x  1 reid         2259 Sep 11  1987 rcindex.X
+-rw-rw-r--  1 reid         1818 Sep 11  1987 rcbook.t.X
+-rwxrwxr-x  1 reid         1288 Sep 11  1987 rctypeset.X
+-rwxrwxr-x  1 reid         1169 Sep 11  1987 rcshow.X
+-rw-rw-r--  1 reid         1570 Sep 11  1987 rckeep.X
+-rwxrwxr-x  1 reid          675 Sep 11  1987 rcextract.X
+-rw-rw-r--  1 reid         1763 Aug 21  1987 tmac.recip
+-rw-rw-r--  1 reid         2889 Dec 23  1986 README
+-rw-rw-r--  1 reid         2267 Jul  6  1986 Novice.makefile
+-rw-rw-r--  1 reid          310 Mar 24  1986 Novice.step1
+-rw-rw-r--  1 reid          157 Dec 20  1985 Novice.step3b
+-rw-rw-r--  1 reid          337 Dec 20  1985 Novice.step2

@@ -1,0 +1,51 @@
+.ig
+Path: decwrl!recipes
+From: dkw1@hou2a (Dennis Wombough)
+Newsgroups: mod.recipes
+Subject: RECIPE: Simple garlic bread
+Message-ID: <8983@decwrl.DEC.COM>
+Date: 1 Apr 87 19:47:26 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: AT&T Bell Labs, Holmdel, New Jersey
+Lines: 38
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1986 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE GARLIC-BREAD-2 B "10 Jul 86" 1986
+.RZ "SIMPLE GARLIC BREAD" "Quick and easy garlic bread"
+This is a quick and painless way to make garlic bread in a hurry.
+It might not be a gourmet recipe, but it is easy and tasty.
+.IH "serves 4"
+.IG "" "butter"
+.IG "" "garlic salt"
+.IG "" "grated cheese"
+.IG "1" "loaf of Italian or French bread"
+.PH
+.SK 1
+Preheat broiler.
+Slice loaf of bread lengthwise and butter both halves.
+.SK 2
+Sprinkle garlic salt and grated cheese on both halves.
+.SK 3
+Place under broiler until brown (about 3 minutes).
+.NX
+This also works well with almost any other kind of bread.
+.SH RATING
+.I Difficulty:
+trivial.
+.I Time:
+3 minutes preparation, 3 minutes cooking.
+.I Precision:
+no need to measure.
+.WR
+Dennis Wombough
+AT&T Bell Labs, Holmdel, New Jersey
+ihnp4!hou2a!dkw1

@@ -1,0 +1,81 @@
+.ig
+Path: decwrl!recipes
+From: nlm@attunix.uucp (Nancy Mintz)
+Newsgroups: mod.recipes
+Subject: RECIPE: Fruit Cornish hens
+Message-ID: <8317@decwrl.DEC.COM>
+Date: 27 Feb 87 08:48:24 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: Unix System Dev., ATT-IS, Summit, New Jersey, USA
+Lines: 68
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1987 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE AUTUMN-HENS M "26 Dec 86" 1987
+.RZ "FRUIT CORNISH HENS" "Cornish game hens stewed in fruit and sugar"
+I originally got this recipe from the Sunday magazine of the local paper.
+I served it last year for Christmas dinner, and it's very good.
+What's more, this recipe is \fIeasy\fR:  you just
+put everything in a bowl, marinate overnight, then bake until done!
+.IH "serves 8"
+.IG "8" "Cornish game hens"
+(each about
+.AB "1 lb" "500 g" )
+.IG "12" "large garlic cloves,"
+peeled and finely minced
+.IG "4 Tbsp" "dried oregano" "5 g"
+.IG "" "salt"
+(to taste)
+.IG "" "pepper"
+(to taste)
+.IG "1 cup" "red wine vinegar" "25 cl"
+.IG "\(12 cup" "olive oil" "1 dl"
+.IG "1 cup" "pitted prunes" "150 g"
+.IG "1 cup" "dried apricots" "150 g"
+.IG "1 cup" "pitted green olives" "150 g"
+.IG "\(12 cup" "capers" "100 g"
+(plus a bit of the juice)
+.IG "8" "bay leaves"
+.IG "1 cup" "brown sugar" "200 g"
+.IG "1 cup" "dry white wine" "25 cl"
+.IG "4 Tbsp" "Italian parsley" "10 g"
+(chopped)
+.PH
+.SK 1
+Clean hens well under cold water.  Pat dry.
+.SK 2
+In a large bowl, combine hens, garlic, oregano, salt, pepper, vinegar, oil,
+prunes, apricots, olives, capers (with juice) and bay leaves.  Cover and
+refrigerate overnight to marinate.
+.SK 3
+Preheat oven to
+.TE 350 175 .
+.SK 4
+Arrange game hens in 1 or 2 shallow roasting pans.  Spoon all the marinade
+over the hens.  Sprinkle evenly with brown sugar and pour wine around them.
+.SK 5
+Bake for 1 to 1\(14 hours, basting frequently, until golden.  Juice should
+look clear when thigh is pricked with a fork.
+.SK 6
+Transfer hens, fruit, olives and capers to a serving platter.  Moisten with
+pan juices and sprinkle with parsley.
+Pass remaining pan juices in a sauceboat.
+.SH RATING
+.I Difficulty:
+easy.
+.I Time:
+5 minutes preparation, overnight marinating, 1 hour cooking.
+.I Precision:
+approximate measurement OK.
+.WR
+Nancy Mintz
+UNIX System Development Lab, AT&T\-IS, Summit, NJ
+ihnp4!attunix!nlm

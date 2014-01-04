@@ -1,0 +1,105 @@
+.ig
+Path: decwrl!recipes
+From: nlm@attunix (Nancy Mintz)
+Newsgroups: mod.recipes
+Subject: RECIPE: Picadillo (Seasoned Chopped Beef)
+Message-ID: <6625@decwrl.DEC.COM>
+Date: 28 Nov 86 04:35:53 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: AT&T UNIX Dev. Lab, Summit, New Jersey, USA
+Lines: 92
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1986 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE PICADILLO M "7 Aug 86" 1986
+.RZ "PICADILLO" "Latin-American seasoned chopped beef"
+I got this recipe from net.cooks in the fall of 1983.
+It was posted by houxm!houxz!llf.
+.PP
+Picadillo is a great favorite throughout Latin America, and every country
+has its own version.  In Mexico it is much appreciated as a filling for tacos,
+empanadas, tamales, and green peppers.  In the north of the country it is 
+popular on its own and is eaten as a main dish, accompanied by rice, beans,
+guacamole, and tortillas.
+.IH "serves 6"
+.IG "3 Tbsp" "olive or vegetable oil" "50 ml"
+.IG "2 lbs" "lean ground beef" "1 kg"
+.IG "1" "large onion,"
+finely chopped
+.IG "1" "garlic clove,"
+finely chopped
+.IG "3" "medium tomatoes,"
+peeled and chopped
+.IG "2" "tart cooking apples,"
+peeled, cored and chopped
+.IG "1" "jalapeno chili,"
+seeded and chopped (or more to taste).
+.IG "\(12 cup" "raisins" "125 ml"
+(soaked 10 minutes in warm water)
+.IG "\(12 cup" "pimento-stuffed olives," "100 g"
+cut in half crosswise
+.IG "\(12 tsp" "oregano" "2.5 ml"
+.IG "\(12 tsp" "thyme" "2.5 ml"
+.IG "" "salt"
+.IG "" "pepper"
+.IG "1 Tbsp" "butter" "15 ml"
+.IG "\(12 cup" "slivered almonds" "100 g"
+.PH
+.SK 1
+Heat the oil in a large, heavy skillet.  Add the beef and saut\z\(aae until
+it is lightly browned, stirring to break up any lumps.
+.SK 2
+Add the onion and garlic and saut\z\(aae for 5 minutes longer.
+.SK 3
+Add all the remaining ingredients except the butter and the almonds.  Mix well
+and simmer, uncovered, over moderate heat, stirring from time to time, for 
+20 minutes.
+.SK 4
+In a small skillet, heat the butter and saut\z\(aae the almonds until they are 
+golden brown.
+.SK 5
+Mound the beef onto a serving platter and sprinkle with the almonds.
+Surround it with a border of rice.
+.NX
+Variatons:  Instead of oregano and thyme, use a pinch or two of cinnamon and
+ground cloves.  This makes an interesting difference in 
+flavor, giving the dish an almost Middle Eastern taste.
+.PP
+In Chihuahua, the apple is left out and 4 medium potatoes, cooked
+and cubed, and
+.AB "2 cups" "300 g"
+cooked green peas are added to the beef at the end of the
+cooking time for just long enough to heat them through.  This makes a nice
+one-dish meal.
+.PP
+Picadillo de la Costa from the state of Guerrero, best known for
+the beach resort of Acapulco, uses the tropical fruits in which the region
+abounds, and instead of beef uses an equal mixture of ground pork and veal.
+The method is the same but the meats, with the onion, garlic, tomatoes, hot
+peppers, salt, and pepper, are cooked, uncovered, for 15 minutes.  Then add
+.AB "1\(12 cups" "400 g"
+pineapple chunks, 2 pears (peeled, cored, and cut in chunks) and 2 bananas
+(peeled and sliced) are added and the mixture simmered for 15 minutes longer
+over low heat.  Sprinkle with almonds just before serving.  This is a 
+delicious summer dish, good with plain rice.
+.PP
+In addition to the almonds, I add fresh coriander leaves as a garnish.
+.SH RATING
+.I Difficulty:
+easy.
+.I Time:
+20 minutes preparation.
+.I Precision:
+approximate measurement OK.
+.WR
+Nancy Mintz
+UNIX System Development Lab, AT&T-IS, Summit, NJ
+ihnp4!attunix!nlm

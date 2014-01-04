@@ -1,0 +1,71 @@
+.ig
+Path: decwrl!recipes
+From: marcum@sun.com (Alan M. Marcum)
+Newsgroups: mod.recipes
+Subject: RECIPE: Hamantashen
+Message-ID: <4582@decwrl.DEC.COM>
+Date: 3 Aug 86 07:21:35 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: Sun Microsystems, Mountain View, California
+Lines: 58
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1986 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE HAMANTASHEN D "23 May 86" 1986
+.RZ "MOHN HAMANTASHEN" "A triangular filled pastry"
+Hamantashen are a triangular pastry, traditionally eaten during the
+Jewish Holiday of Purim.  Purim celebrates the failure of the evil
+Haman in his attempt to exterminate the Jews; Haman wore a three-
+cornered hat.
+.IH "Makes a bunch"
+.SH		PASTRY
+.IG "2 cups" "flour" "200 g"
+.IG "1 cup" "butter" "200 g"
+.IG "\(12 pound" "cream cheese "225 g"
+.SH		MOHN FILLING
+.IG "\(12 cup" "poppy seeds" "70 g"
+.IG "1 cup" "walnuts" "100 g"
+(chopped fine)
+.IG "1 cup" "raisins" "150 g"
+(chopped fine)
+.IG "8 oz" "honey" "225 g"
+.PH
+.SK 1
+Sift the flour.  Cream the butter and cream cheese until well blended.
+Gradually add the flour, mixing, and make a ball of dough.  Refrigerate
+overnight.
+.SK 2
+Combine the 
+.I mohn
+filling ingredients.  It may take a little more, or a little less, than
+.AB "8 oz" "225 g"
+of honey; use enough to hold the mixture together.
+.SK 3
+Roll out the dough (not too thin), and cut into
+.AB "3-inch" "8-cm"
+squares.  Fill each square with
+.AB "1 Tbsp" "15 ml"
+of mohn, and fold the dough square over to make a triangle.
+.SK 4
+Bake on a greased pan at
+.TE 350 175
+until golden brown, about 20 minutes.
+.SH RATING
+.I Difficulty:
+easy.
+.I Time:
+1 hour preparation (in two \(12 hour pieces), 20 minutes baking.
+.I Precision:
+measure the pastry ingredients carefully.
+.WR
+Alan M. Marcum
+Sun Microsystems, Mountain View, California
+sun!nescorna!marcum

@@ -1,0 +1,8 @@
+
+OK, the mod.recipe software and documentation are now all "configured". That
+means that they have been updated to reflect the details of your installation.
+What you need to do next is to "install" them, which means to copy them to
+your home directory where you can execute them while reading news. To do
+that, type this:
+
+	make install

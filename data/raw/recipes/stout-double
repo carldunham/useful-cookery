@@ -1,0 +1,91 @@
+.ig
+Path: decwrl!recipes
+From: thomas@cs.utah.edu (Spencer W. Thomas)
+Newsgroups: alt.gourmand
+Subject: RECIPE: Double stout beer
+Message-ID: <12200@decwrl.DEC.COM>
+Date: 12 Dec 87 16:51:43 GMT
+Sender: recipes@decwrl.DEC.COM
+Distribution: alt
+Organization: University of Utah, Salt Lake City, Utah, USA
+Lines: 77
+Approved: reid@decwrl.dec.com
+
+
+	      Copyright (C) 1987 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE STOUT-DOUBLE L "13 Nov 86" 1987
+.RZ "DOUBLE STOUT" "Double stout beer"
+I would not recommend making this as your first beer, but if you are
+into brewing, and like a \fIstrong\fR
+stout, then give this one a try.  Don't be in a hurry to drink it, though,
+it really benefits from a long aging.  I got the original recipe from Peter
+Lester in rec.food.drink, and formatted it for my local brewfriends. Then I
+thought that the net at large might enjoy it, too, so here it is with some
+additional notes from my experience at making it.
+.IH "Makes about 2 cases"
+.IG "3 U.S. gallons" "water" "12 liters"
+.IG "2\(12 oz" "Bullion hops" "800 g"
+.IG "10 lbs" "dark malt extract" "5 kg"
+.IG "1 lb" "black patent malt" "500 g"
+.IG "2 lbs" "crystal malt" "1 kg"
+.IG "\(12 lb" "flaked barley" "250 g"
+.IG "\(14 lb" "roasted barley" "100 g"
+.IG "\(12" "licorice stick"
+(see note below)
+.IG "1 tsp" "ascorbic acid" "5 ml"
+.IG "\(12 tsp" "citric acid" "2.5 ml"
+.IG "1 tsp" "Irish moss" "5 ml"
+.IG "1\(12 oz" "Golding hops" "50 g"
+.IG "2 tsp" "yeast nutrient" "10 ml"
+.IG "\(34 oz" "ale yeast" "21 g"
+(three standard packages)
+.PH
+.SK 1
+Combine water and Bullion hops.  Boil for 20 minutes.
+.SK 2
+Add dark malt extract.  Boil for 20 minutes.
+.SK 3
+Add black patent malt through Irish moss.  Boil for 5 minutes.
+.SK 4
+Remove from heat and add Golding hops.  Steep for 5 minutes.
+.SK 5
+Cool and add yeast nutrient and ale yeast.
+.SK 6
+When fermentation has "stopped", add priming sugar and bottle.
+.NX
+Lester's initial specific gravity was 1.086 and his
+final specific gravity was 1.020 (alcohol about 8%).
+His fermentation time was 11 days (a slow batch).
+.PP
+My batch fermented in about a week (house
+temperature ranging between 60 and 68).  It was barely drinkable after
+6 weeks, but delicious after 3 months.  As far as I can tell, it's
+still getting better (a year later), so try not to drink it all up
+right away.
+.PP
+Ingredient note: I didn't know what a "licorice stick" was, until I
+asked the clerk at my brewstore.  The one he gave me was about 
+.AB "1/3 inch" "1 cm"
+in diameter and
+.AB "3 inches" "8 cm"
+long.  It was dark black, and not sweet to the taste at all.  It seems
+to be a standard brewing ingredient.  Sorry I can't be more specific
+about it.
+.SH RATING
+.I Difficulty:
+For experienced beer brewers only.
+.I Time:
+1 hour preparation, 2 weeks fermenting, 6 months aging.
+.I Precision:
+measure the ingredients.
+.WR
+Spencer W. Thomas
+University of Utah, Computer Science Department, Salt Lake City, Utah, USA
+ thomas@cs.utah.edu

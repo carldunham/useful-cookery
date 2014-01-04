@@ -1,0 +1,1989 @@
+.XX "" "Vegetable and tofu" "\" "" tofu-balls
+.XX "" "A broccoli soup" "\- hot or cold" "" broc-bisque
+.XX "" "" "1000 calorie-a-bite trifle" "" trifle-1
+.XX "" "A" "10-day Sourdough cake" "" sourdough-cake
+.XX "" "" "12-fruit compote with spirits" "" wigilia-13
+.XX "" "A moist" "2-layer chocolate layer cake" "" choc-cake-5
+.XX "" "No-bake" "3-layer (chocolate covered) bars" "" nanaimo-bars-2
+.XX "eating plain" "A" "7-grain bread for toasting or" "" bread
+.XX "" "Austrian" "8-layer chocolate cake" "" prinz-torte
+.XX "" "A fruity cabbage saut\z\(" "aae" "" cabbage+apples
+.XX "cream sauce" "Saut\z\(" "aaed chicken with a tarragon" "" chicken-tarrag
+.XX "" "Sweet potatoes saut\z\(" "aaeed in lime and tequila" "" saute-sweepto
+.XX "fish sauce" "Saut\z\(" "aaeed scallops with snow peas in" "" scallops-1
+.XX "" "Traditional Seder" "accompaniment" "" charoset
+.XX "" "Egg-cognac: a potent sweet" "alcoholic beverage" "" advokaat
+.XX "" "" "Algerian green beans with almonds" "" loubia-1
+.XX "" "" "Almond Soup" "" wigilia-7
+.XX "" "bourbon sauce with buttered" "almonds" "Chicken in orange" chicken-bourbn
+.XX "" "Holiday cookies with coconut and" "almonds" "" coconut-drops
+.XX "" "Algerian green beans with" "almonds" "" loubia-1
+.XX "" "A holiday" "alternative to pumpkin pie" "" pumpkin-cake-3
+.XX "cheesecake" "" "Amaretto-amaretti chocolate" "" cheesecake-7
+.XX "flour, honey, and cinnamon" "North" "American crackers with graham" "" graham-crack
+.XX "" "Pheasant in the North" "American tradition" "" pheasant-2
+.XX "shells" "An" "American version of stuffed" "" manicotti-1
+.XX "" "Gumbo with chicken and" "Andouille sausage" "" chicken-gumbo
+.XX "chili" "" "Andy's own recipe for meat/bean" "" chili-3
+.XX "" "San" "Antonio, Texas style tacos" "" texmex-tacos
+.XX "" "Simple" "appetizer for summer days" "" egg-mousse
+.XX "" "A tasty marinated fish" "appetizer from Mexico" "" seviche
+.XX "" "A delicious" "appetizer or vegetable dish" "" spinach-balls
+.XX "and bacon" "A high-cholesterol" "appetizer with shrimp, cheese," "" shrimp-bacon
+.XX "" "Delicious hot" "appetizers" "" olive-puffs
+.XX "oats on top" "" "Apple and orange pudding with" "" chaff
+.XX "" "One-crust" "apple crumb pie" "" apple-pie-1
+.XX "" "Easy baked" "apple dessert" "" apple-crisp
+.XX "" "A simple, fragrant" "apple nut raisin bread" "" apple-bread
+.XX "" "A quick substitute for" "apple pie" "" apple-bake
+.XX "goodness" "" "Apple pie with sour cream" "" apple-pie-2
+.XX "" "Sugary, moist" "apple squares" "" apple-squares
+.XX "" "cooked chutney with tomatoes and" "apples" "A simple" chutney-2
+.XX "" "noodles, raisins, cinnamon, and" "apples" "Egg" noodle-kugel
+.XX "" "Moist cookies with cranberries," "apples, and cinnamon" "" cranb-cookies
+.XX "" "Baked" "apples with red wine" "" wigilia-11
+.XX "" "" "Applesauce jello salad" "" applesauce-sld
+.XX "" "Cake with gumdrops," "applesauce, raisins, and coconut" "" gumdrop-cake
+.XX "" "Chicken embalmed in" "apricot nectar" "" chicken-aprict
+.XX "" "snack popular in southern" "Arizona" "/toasted cheese tortilla" tucson-tostada
+.XX "" "Chicken broth with" "artichokes and poached oysters" "" oyster-soup
+.XX "" "Vegetable casserole with" "artichokes and spinach" "" artichoke-cass
+.XX "" "Quick" "Asian-style chicken breast" "" chicken-shant
+.XX "" "A light and simple" "asparagus soup" "" asparag-soup-1
+.XX "" "Simple desert for failed Pavlova" "attempts" "" ambrosia
+.XX "" "" "Aunt Georgie's chocolate cake" "" sourmilk-cake
+.XX "" "" "Australian baked meat pie" "" meat-pie-3
+.XX "" "An" "Australian herbed meat dish" "" herb-steak-1
+.XX "" "Pavlova (" "Australian meringue dessert)" "" pavlova-1
+.XX "" "Pavlova (" "Australian meringue dessert)" "" pavlova-2
+.XX "" "A traditional" "Australian sweet snack" "" choc-crackles
+.XX "" "" "Austrian 8-layer chocolate cake" "" prinz-torte
+.XX "" "" "Award-winning blueberry muffins" "" muffins-1
+.XX "tomato, and beef soup" "" "Aztec soup: a simple cheese," "" soup-aztec
+.XX "" "Wilted cabbage salad with" "bacon" "" cabbage-salad
+.XX "" "with raw eggs and Italian" "bacon" "Spaghetti" carbonara-2
+.XX "" "Creamed spinach with" "bacon" "" crm-spinach-2
+.XX "" "Pea soup with" "bacon" "" pea-soup-1
+.XX "" "with shrimp, cheese, and" "bacon" "/high-cholesterol appetizer" shrimp-bacon
+.XX "" "casserole with potatoes, eggs," "bacon, and cheese" "A brunch" potato-pie-1
+.XX "" "Tagliatelle with" "bacon and cream" "" tagliatelle
+.XX "" "Cooked mustard greens with" "bacon and onion" "" mustard-greens
+.XX "" "Easy" "baked apple dessert" "" apple-crisp
+.XX "" "" "Baked apples with red wine" "" wigilia-11
+.XX "" "Southern-Italian style" "baked chicken" "" chicken-cacc-1
+.XX "cranberry sauce" "" "Baked chicken glazed with spiced" "" cranb-chicken
+.XX "casserole" "A" "baked egg, sausage, and bread" "" breakfast-cas
+.XX "" "Indonesian" "baked eggplant in chili sauce" "" eggplant-3
+.XX "nuts" "" "Baked fruit with curry sauce and" "" curried-fruit
+.XX "" "Australian" "baked meat pie" "" meat-pie-3
+.XX "" "" "Baked oatmeal biscuits (cookies)" "" oatmeal-slice
+.XX "flavor" "" "Baked rice with a mild curry" "" curried-rice
+.XX "" "A" "baked salmon and spinach loaf" "" salmon-spinach
+.XX "" "Amazingly good" "baking-powder and yogurt pancakes" "" yogurt-cakes
+.XX "" "An incredibly sweet and wonderful" "Balkan dessert" "" baklava
+.XX "" "Savoury spice" "balls" "" gateaux-pim
+.XX "" "Margaret's X-rated melon" "balls" "" melon-balls-1
+.XX "" "Zeek Rum" "Balls" "" rlz-rum-balls
+.XX "soup" "" "Bamboo shoot, pork, and mushroom" "" mandarin-soup
+.XX "" "" "Banana-nut bread" "" banana-bread
+.XX "" "" "Bananas with ham and paprika" "" ham-bananas
+.XX "" "and caloric lime-flavored" "bar cookies" "Delicious" lime-bars
+.XX "" "Chewy rolled oatmeal" "bar cookies" "" oatmeal-bars
+.XX "" "Pork ribs in peach tomato" "barbecue sauce" "" peach-bbq
+.XX "" "Indonesian" "barbecued beef" "" satay-1
+.XX "in lime: a Tex-Mex favorite" "" "Barbecued skirt steak marinated" "" fajitas
+.XX "" "Chewy carrot raisin and nut" "bars" "" carrot-bars
+.XX "" "3-layer (chocolate covered)" "bars" "No-bake" nanaimo-bars-2
+.XX "" "Delicious and nourishing" "bars for hiking or home" "" muesli-bars
+.XX "" "Caloric, filling, and tasty" "bars for the trail" "" hiker-bars
+.XX "" "relish with lime, chili, and" "basil" "Indonesian" sambal-lilang
+.XX "" "Oven-baked chicken pieces with" "basil sauce" "" chicken-basil
+.XX "" "" "Basmati rice with carrots" "" basmati-rice-1
+.XX "" "of lamb with rosemary & tomato" "baste" "Leg" leg-of-lamb-1
+.XX "" "Cornish game hens" "basted in tarragon butter" "" hens-tarragon
+.XX "" "Shrimp in coconut beer" "batter with dipping sauce" "" coconut-shrimp
+.XX "dessert" "A" "Bavarian plum delicacy for" "" zwetschgend
+.XX "" "marinated chicken for outdoor" "BBQ" "Easy" chicken-micrn
+.XX "" "An easy" "bean casserole" "" bean-cass-1
+.XX "" "Andy's own recipe for meat/" "bean chili" "" chili-3
+.XX "" "A Mexican meat and" "bean dish, similar to chili" "" chalupa-1
+.XX "" "A vegetarian" "bean, rice, and cheese casserole" "" rice-bean-bake
+.XX "Senate dining room" "" "Bean soup as served in the U.S." "" senate-soup
+.XX "" "A Hearty" "Bean Stew" "" chuck-wagon
+.XX "" "A simple prizewinning chili with" "beans" "" chili-4
+.XX "" "variation of chili con carne with" "beans" "A" chili-bean
+.XX "" "Tex-Mex style pinto" "beans." "" texmex-beans
+.XX "" "Tex-Mex style refried" "beans." "" texmex-refried
+.XX "" "Soup with black" "beans and ham hocks" "" blackbean-soup
+.XX "Caribbean countries" "" "Beans like they cook in many" "" cuban-beans
+.XX "" "Algerian green" "beans with almonds" "" loubia-1
+.XX "" "Latin-American seasoned chopped" "beef" "" picadillo
+.XX "" "Indonesian barbecued" "beef" "" satay-1
+.XX "" "Mexican-style casserole with" "beef and cheese" "A simple" tortilla-cass
+.XX "" "Danish cabbage and" "beef casserole" "" cabbage-cass
+.XX "tomato" "Simple" "beef casserole with plum and" "" plum-casserole
+.XX "" "Broiled" "beef in a Chinese marinade" "" meat-marinade
+.XX "" "a simple cheese, tomato, and" "beef soup" "Aztec soup:" soup-aztec
+.XX "" "A thick and hearty vegetable" "beef soup" "" veg-soup-2
+.XX "" "Very hot, very simple, very good" "beef stir-fry" "" sesame-beef
+.XX "" "Sumptuous" "beef Stroganoff" "" stroganoff-1
+.XX "" "Double stout" "beer" "" stout-double
+.XX "" "Shrimp in coconut" "beer batter with dipping sauce" "" coconut-shrimp
+.XX "" "Pickled" "beets" "" wigilia-3
+.XX "" "" "Beets in a tangy mustard sauce" "" beet-mustard
+.XX "" "" "Berry cobbler" "" berry-cobbler
+.XX "" "" "Betty Post's quick fish chowder" "" fish-chowder
+.XX "" "a potent sweet alcoholic" "beverage" "Egg-cognac:" advokaat
+.XX "" "Simple, fluffy" "biscuits" "" biscuits-1
+.XX "" "Some not-so-plain" "biscuits" "" buffet-biscuit
+.XX "" "Homemade meatless dog" "biscuits" "" dog-biscuits
+.XX "" "Shortbread-like" "biscuits" "" shortbread-1
+.XX "" "Baked oatmeal" "biscuits (cookies)" "" oatmeal-slice
+.XX "and coconut" "" "Biscuits (cookies) with butter" "" butternuts
+.XX "" "Traditional Welsh" "biscuity cakes" "" welshcakes
+.XX "" "Soup with" "black beans and ham hocks" "" blackbean-soup
+.XX "" "Enchiladas with meat," "black olives, and cheese" "" enchiladas-2
+.XX "" "Spicy Caribean" "Black-Eyed Peas and Rice" "" black-eye-rice
+.XX "" "Mayonnaise made in a" "blender" "" mayonnaise-1
+.XX "" "Award-winning" "blueberry muffins" "" muffins-1
+.XX "" "A nice" "body and face soap" "" soap
+.XX "" "Old-fashioned Christmas" "boiled pudding" "" xmas-pudding
+.XX "" "chocolate snack with rum or" "bourbon" "Intoxicating" rum-balls
+.XX "" "Traditional layered eggnog with" "bourbon and dark rum" "" eggnog2
+.XX "almonds" "Chicken in orange" "bourbon sauce with buttered" "" chicken-bourbn
+.XX "" "" "Braided egg bread" "" challah-2
+.XX "cloves, and ginger" "Indian" "braised chicken with onions," "" chicken-korma
+.XX "" "" "Braised veal shanks in white wine" "" osso-bucco
+.XX "" "Tasty muffins with" "bran and dried fruit" "" bran-muffins-2
+.XX "" "Easy and good" "bran muffins" "" bran-muffins
+.XX "" "Very rich and moist muffins with" "bran, raisins, nuts, and dates" "" muffins-2
+.XX "" "simple, fragrant apple nut raisin" "bread" "A" apple-bread
+.XX "" "Banana-nut" "bread" "" banana-bread
+.XX "" "A sweet, dark whole-grain rye" "bread" "" bread-rye
+.XX "" "Ordinary white" "bread" "" bread-white-1
+.XX "" "A traditional Jewish" "bread" "" challah-1
+.XX "" "Braided egg" "bread" "" challah-2
+.XX "" "Jewish egg" "bread" "" challah-3
+.XX "" "Addictive and fattening garlic" "bread" "" garlic-bread
+.XX "" "Quick and easy garlic" "bread" "" garlic-bread-2
+.XX "" "An old-fashioned sourdough French" "bread" "" sour-french
+.XX "" "culture for making sourdough" "bread" "Starter" sour-start
+.XX "" "Traditional German Christmas" "bread" "" stollen
+.XX "" "Christmas" "Bread" "" wigilia-10
+.XX "" "Makes a meal with cheese," "bread, and red wine." "" squash-soup
+.XX "" "Poultry stuffing with chestnuts," "bread, and wine" "" chestnut-stuff
+.XX "outback" "" "Bread as made by drovers in the" "" damper
+.XX "" "A baked egg, sausage, and" "bread casserole" "" breakfast-cas
+.XX "" "A yeast" "bread for people who like oatmeal" "" oatmeal-bread
+.XX "plain" "A 7-grain" "bread for toasting or eating" "" bread
+.XX "" "A dessert" "bread made from pumpkins" "" pumpkin-bread
+.XX "filling" "Rye" "bread pie with fish and pork" "" meat-pie-4
+.XX "" "Uncooked fruit and" "bread pudding" "" summer-pudding
+.XX "" "chocolate" "bread pudding with cinnamon" "" choc-pudding-2
+.XX "" "An earthy whole-wheat" "bread used for communion" "" altar-bread
+.XX "" "Corn" "bread with peppers and cheese" "" cornbread-1
+.XX "" "" "Bread-like Passover rolls" "" matzo-rolls
+.XX "" "Traditional Passover" "breakfast" "" matzo-brei
+.XX "" "Eastern-style scrapple (a" "breakfast food like sausage)" "" scrapple-1
+.XX "" "Light and fluffy" "breakfast pancakes" "" pancakes-2
+.XX "" "Quick Asian-style chicken" "breast" "" chicken-shant
+.XX "" "Chicken" "breasts in tomato-lime sauce" "" chicken-lime
+.XX "" "Chinese stir-fried chicken with" "broccoli and nuts" "" chicken-stfry1
+.XX "" "Addictive" "broccoli soup" "" broccoli-soup
+.XX "" "A" "broccoli soup \- hot or cold" "" broc-bisque
+.XX "marinade" "" "Broiled beef in a Chinese" "" meat-marinade
+.XX "" "Rice with noodles in chicken" "broth" "" armenian-rice
+.XX "" "Rich homemade chicken" "broth" "" chicken-broth
+.XX "oysters" "Chicken" "broth with artichokes and poached" "" oyster-soup
+.XX "" "A basic" "brown soup stock" "" beef-stock
+.XX "" "chip cookies with honey and" "brown sugar" "Chocolate" choc-chip-3
+.XX "" "Serious chocolate" "brownies" "" brownies-2
+.XX "" "" "Brownies in a skillet" "" choc-pancakes
+.XX "" "Very rich" "brownies with double frosting" "" brownies-1
+.XX "eggs, bacon, and cheese" "A" "brunch casserole with potatoes," "" potato-pie-1
+.XX "" "A rich chocolate" "Bundt cake" "" chokladkaka
+.XX "" "Salmon" "burgers for snack or main course" "" salmon-patties
+.XX "" "game hens basted in tarragon" "butter" "Cornish" hens-tarragon
+.XX "" "Biscuits (cookies) with" "butter and coconut" "" butternuts
+.XX "" "Simple" "butter cookies" "" butter-cookies
+.XX "" "Simple filled" "butter cookies with cream cheese" "" cbuttr-cookies
+.XX "" "Scampi in garlic" "butter sauce" "" garlic-scampi
+.XX "" "in orange bourbon sauce with" "buttered almonds" "Chicken" chicken-bourbn
+.XX "" "Ultimate hot" "buttered rum recipe" "" rum-toddy
+.XX "" "Grilled" "butterflied leg of lamb" "" leg-of-lamb-3
+.XX "" "Grilled" "butterflied leg of lamb" "" leg-of-lamb-4
+.XX "" "Grilled" "butterflied leg of lamb" "" leg-of-lamb-5
+.XX "" "A make-it-yourself mix for" "buttermilk pancakes" "" pancake-mix
+.XX "casserole" "" "Butternut squash and carrot" "" butternut-sqsh
+.XX "" "Easy" "butterscotch oatmeal pan cookies" "" oat-squares
+.XX "meringue top" "" "Butterscotch pudding with a" "" butterscotch
+.XX "" "Delicate and" "buttery sugar cookies" "" sug-cookies-1
+.XX "" "Danish" "cabbage and beef casserole" "" cabbage-cass
+.XX "" "" "Cabbage and Potatoes" "" cabbage-spuds
+.XX "" "Filipino" "cabbage in garlic and soy sauce" "" poncit
+.XX "" "Wilted" "cabbage salad with bacon" "" cabbage-salad
+.XX "" "A fruity" "cabbage saut\z\(aae" "" cabbage+apples
+.XX "" "" "Cajun Catfish" "" catfish-boil
+.XX "" "UCLA Medical center carrot" "cake" "" carrotcake-2
+.XX "" "A no-bake chocolate" "cake" "" choc-cake-1
+.XX "" "Dangerously delicious chocolate" "cake" "" choc-cake-2
+.XX "" "A decadently rich chocolate" "cake" "" choc-cake-3
+.XX "" "no-bake graham cracker chocolate" "cake." "A" choc-cake-4
+.XX "" "A moist 2-layer chocolate layer" "cake" "" choc-cake-5
+.XX "" "A rich chocolate Bundt" "cake" "" chokladkaka
+.XX "" "traditional European-style fruit" "cake" "A" fruit-cake-2
+.XX "" "A French dessert" "cake" "" lemon-pie
+.XX "" "Mississippi mud" "cake" "" miss-mud-cake
+.XX "" "A light, delicate" "cake" "" poppycake
+.XX "" "A luscious orange-flavored pound" "cake" "" pound-cake-1
+.XX "" "Austrian 8-layer chocolate" "cake" "" prinz-torte
+.XX "" "whipped pumpkin upside-down" "cake" "Fluffy" pumpkin-cake-2
+.XX "" "A 10-day Sourdough" "cake" "" sourdough-cake
+.XX "" "Aunt Georgie's chocolate" "cake" "" sourmilk-cake
+.XX "restaurant" "Coffee" "cake from Hobee's Haven" "" coffee-cake-2
+.XX "" "A pound" "cake made with cream cheese" "" pound-cake-2
+.XX "" "Coffee" "cake with cinnamon and sour cream" "" coffee-cake-1
+.XX "" "Carrot" "cake with cream cheese filling" "" carrotcake-1
+.XX "" "A no-cooking" "cake with fruit and whipped cream" "" banana-cake
+.XX "raisins, and coconut" "" "Cake with gumdrops, applesauce," "" gumdrop-cake
+.XX "" "recipe for Cantonese salty turnip" "cakes" "An easy" turnip-cakes
+.XX "" "Traditional Welsh biscuity" "cakes" "" welshcakes
+.XX "for the trail" "" "Caloric, filling, and tasty bars" "" hiker-bars
+.XX "" "Delicious and" "caloric lime-flavored bar cookies" "" lime-bars
+.XX "" "1000" "calorie-a-bite trifle" "" trifle-1
+.XX "" "A Favorite" "Canadian sweet" "" nanaimo-bars-1
+.XX "creamcheese" "Easy-to-make" "candies with chocolate and" "" truffles-3
+.XX "" "An extremely rich" "candy" "" pbutter-fudge
+.XX "" "An easy recipe for" "Cantonese salty turnip cakes" "" turnip-cakes
+.XX "" "Spaghetti" "carbonara, Neapolitan style" "" carbonara
+.XX "" "Beans like they cook in many" "Caribbean countries" "" cuban-beans
+.XX "" "Spicy" "Caribean Black-Eyed Peas and Rice" "" black-eye-rice
+.XX "" "A variation of chili con" "carne with beans" "" chili-bean
+.XX "" "UCLA Medical center" "carrot cake" "" carrotcake-2
+.XX "filling" "" "Carrot cake with cream cheese" "" carrotcake-1
+.XX "" "Butternut squash and" "carrot casserole" "" butternut-sqsh
+.XX "" "An old Welsh steamed" "carrot pudding" "" carrot-pudding
+.XX "" "Chewy" "carrot raisin and nut bars" "" carrot-bars
+.XX "" "A simple and unusual" "carrot-cheese casserole" "" carrots-gratin
+.XX "" "Basmati rice with" "carrots" "" basmati-rice-1
+.XX "" "Kugel with potatoes and" "carrots" "" kugel-3
+.XX "cheese quiche" "Sweet potatoes," "carrots and cranberries in cream" "" cranb-quiche
+.XX "" "An easy bean" "casserole" "" bean-cass-1
+.XX "" "A baked egg, sausage, and bread" "casserole" "" breakfast-cas
+.XX "" "Greek vegetable" "casserole" "" briami
+.XX "" "Butternut squash and carrot" "casserole" "" butternut-sqsh
+.XX "" "Danish cabbage and beef" "casserole" "" cabbage-cass
+.XX "" "simple and unusual carrot-cheese" "casserole" "A" carrots-gratin
+.XX "" "eggplant, onion, and tomato" "casserole" "Indian" eggplant-2
+.XX "" "vegetarian bean, rice, and cheese" "casserole" "A" rice-bean-bake
+.XX "" "Vegetable and fruit" "casserole for Passover" "" tzimmes
+.XX "" "A" "casserole made with jack cheese" "" jack-jubilee
+.XX "cheese" "A" "casserole of potatoes, rice, and" "" delmonicos
+.XX "spinach" "Vegetable" "casserole with artichokes and" "" artichoke-cass
+.XX "" "A simple Mexican-style" "casserole with beef and cheese" "" tortilla-cass
+.XX "vegetables and cheese" "" "Casserole with frankfurters," "" hotdog-cass
+.XX "" "Simple beef" "casserole with plum and tomato" "" plum-casserole
+.XX "" "Chicken" "casserole with poppy seeds" "" chicken-popsd
+.XX "bacon, and cheese" "A brunch" "casserole with potatoes, eggs," "" potato-pie-1
+.XX "" "An Italian vegetable" "casserole with spinach and cheese" "" spinach-roll-1
+.XX "" "Eggplant" "casserole with tomato and cheese" "" eggplant-1
+.XX "" "Spinach" "casserole with yogurt and cheese" "" spinach-cass
+.XX "" "Cajun" "Catfish" "" catfish-boil
+.XX "" "Spiced" "cauliflower" "" cauliflower-2
+.XX "parmesan" "Steamed" "cauliflower with mushrooms and" "" cauliflower-1
+.XX "" "Cooked" "celery root in vinaigrette" "" celery-salad
+.XX "enchiladas" "" "Central Texas style Mexican" "" texmex-enchil
+.XX "" "Fine pea soup with shrimp and" "champagne" "" shrimp-soup
+.XX "" "World" "champion Texas red chili" "" chili-5
+.XX "" "Very easy and" "cheap spaghetti sauce" "" spagh-sauce-2
+.XX "" "filled butter cookies with cream" "cheese" "Simple" cbuttr-cookies
+.XX "" "Corn bread with peppers and" "cheese" "" cornbread-1
+.XX "" "salad made with dandelions and" "cheese" "Dinner" dandelions
+.XX "" "casserole of potatoes, rice, and" "cheese" "A" delmonicos
+.XX "" "casserole with tomato and" "cheese" "Eggplant" eggplant-1
+.XX "" "with meat, black olives, and" "cheese" "Enchiladas" enchiladas-2
+.XX "" "with frankfurters, vegetables and" "cheese" "Casserole" hotdog-cass
+.XX "" "A casserole made with jack" "cheese" "" jack-jubilee
+.XX "" "lasagne with lots of meat and" "cheese" "A hearty" lasagne-1
+.XX "" "with potatoes, eggs, bacon, and" "cheese" "A brunch casserole" potato-pie-1
+.XX "" "A pound cake made with cream" "cheese" "" pound-cake-2
+.XX "" "dessert with fruit and soft" "cheese" "A delicious" rhubarb-fool
+.XX "" "Spinach casserole with yogurt and" "cheese" "" spinach-cass
+.XX "" "A rich spinach pie with ham and" "cheese" "" spinach-pie
+.XX "" "casserole with spinach and" "cheese" "An Italian vegetable" spinach-roll-1
+.XX "" "casserole with beef and" "cheese" "A simple Mexican-style" tortilla-cass
+.XX "" "/appetizer with shrimp," "cheese, and bacon" "" shrimp-bacon
+.XX "" "A quick and easy chicken with" "cheese and marinara" "" chicken-marnar
+.XX "" "Makes a meal with" "cheese, bread, and red wine." "" squash-soup
+.XX "" "A vegetarian bean, rice, and" "cheese casserole" "" rice-bean-bake
+.XX "" "Indian vegetarian spinach and" "cheese curry" "" spinach-curry
+.XX "" "A hot spicy party" "cheese dip" "" hot-cheese-dip
+.XX "" "Chocolate cupcakes with a cream" "cheese filling" "" blackbottom
+.XX "" "Carrot cake with cream" "cheese filling" "" carrotcake-1
+.XX "" "" "Cheese fondue with curry flavor" "" fondue-1
+.XX "" "Greatest macaroni and" "cheese in the universe" "" mac-and-cheese
+.XX "" "A simple cherry cream" "cheese pie" "" cherrycheese-1
+.XX "" "Greek spinach and" "cheese pie" "" spanakopita
+.XX "" "Greek spinach and feta" "cheese pie" "" spanakopita-2
+.XX "cream" "A salmon and" "cheese pie flavored with sour" "" salmon-pie
+.XX "" "carrots and cranberries in cream" "cheese quiche" "Sweet potatoes," cranb-quiche
+.XX "" "" "Cheese soup in a pumpkin shell" "" cheese-soup1
+.XX "" "Aztec soup: a simple" "cheese, tomato, and beef soup" "" soup-aztec
+.XX "" "A spicy soup with" "cheese, tomatoes, and corn" "" tortilla-soup
+.XX "southern Arizona" "A toasted" "cheese tortilla snack popular in" "" tucson-tostada
+.XX "" "Simple" "cheese-and-tomato lasagna" "" lasagna-4
+.XX "" "Legendary" "cheesecake" "" cheesecake-1
+.XX "" "Picture-perfect chocolate" "cheesecake" "" cheesecake-2
+.XX "" "Restaurant-style" "cheesecake" "" cheesecake-3
+.XX "" "Ultimate" "cheesecake" "" cheesecake-4
+.XX "" "A truly decadent chocolate chip" "cheesecake" "" cheesecake-6
+.XX "" "Amaretto-amaretti chocolate" "cheesecake" "" cheesecake-7
+.XX "" "Food processor" "cheesecake" "" cheesecake-8
+.XX "flavor" "A" "cheesecake rich with pumpkin" "" pumpkin-cake
+.XX "" "A moist" "cheesecake with a wonderful crust" "" cheesecake-5
+.XX "" "Spinach and" "cheeses in a puff pastry crust" "" spinach-pastry
+.XX "" "Pilaf with sour" "cherries and lentils" "" cherry-pilaf
+.XX "" "An extremely quick" "cherry cobbler dessert" "" quick-cobbler
+.XX "" "A simple" "cherry cream cheese pie" "" cherrycheese-1
+.XX "" "A rich chocolate/" "cherry pie" "" blkforest-pie
+.XX "" "Party dip with spinach and water" "chestnuts" "" spinach-dip
+.XX "" "Poultry stuffing with" "chestnuts, bread, and wine" "" chestnut-stuff
+.XX "" "Traditional gingerbread, soft and" "chewy" "" gingerbread
+.XX "" "" "Chewy carrot raisin and nut bars" "" carrot-bars
+.XX "" "" "Chewy rolled oatmeal bar cookies" "" oatmeal-bars
+.XX "" "Southern-Italian style baked" "chicken" "" chicken-cacc-1
+.XX "" "Succulent and easy" "chicken" "" chicken-wbacon
+.XX "" "Gumbo with" "chicken and Andouille sausage" "" chicken-gumbo
+.XX "" "Quick Asian-style" "chicken breast" "" chicken-shant
+.XX "sauce" "" "Chicken breasts in tomato-lime" "" chicken-lime
+.XX "" "Rice with noodles in" "chicken broth" "" armenian-rice
+.XX "" "Rich homemade" "chicken broth" "" chicken-broth
+.XX "poached oysters" "" "Chicken broth with artichokes and" "" oyster-soup
+.XX "seeds" "" "Chicken casserole with poppy" "" chicken-popsd
+.XX "" "" "Chicken curry" "" chicken-curry
+.XX "" "An Easy-to-prepare" "chicken curry" "" chicken-curry2
+.XX "" "A simple" "chicken curry" "" chicken-curry4
+.XX "" "Spicy" "chicken curry" "" chicken-vindal
+.XX "pepper" "An Indian-style" "chicken dish with yogurt and red" "" chicken-yogurt
+.XX "nectar" "" "Chicken embalmed in apricot" "" chicken-aprict
+.XX "" "Easy marinated" "chicken for outdoor BBQ" "" chicken-micrn
+.XX "" "" "Chicken fruit salad curry" "" chicken-curry3
+.XX "cranberry sauce" "Baked" "chicken glazed with spiced" "" cranb-chicken
+.XX "" "" "Chicken in a spicy peanut sauce" "" chicken-peanut
+.XX "" "" "Chicken in a wine sauce" "" chicken-wine
+.XX "with buttered almonds" "" "Chicken in orange bourbon sauce" "" chicken-bourbn
+.XX "" "Crispy chunks of" "chicken in sweet lemon sauce" "" chicken-lemon
+.XX "orange" "" "Chicken in wine with grapes and" "" chicken-grape
+.XX "" "" "Chicken or duck in hot mole sauce" "" chicken-mole-2
+.XX "" "Tomato salsa for" "chicken or fish" "" salsa-1
+.XX "" "Oven-baked" "chicken pieces with basil sauce" "" chicken-basil
+.XX "seasonings" "" "Chicken salad with Chinese" "" chicken-salad1
+.XX "" "Greek style egg & lemon" "chicken soup" "" avgolemono
+.XX "vegetables" "Roast" "chicken stuffed with rice and" "" chicken-stuff
+.XX "" "A spicy peanut sauce for" "chicken, tempeh, or tofu" "" peanut-sauce-1
+.XX "" "Spaghetti squash in a" "chicken tetrazzini" "" spag-squash
+.XX "sauce" "Saut\z\(aaed" "chicken with a tarragon cream" "" chicken-tarrag
+.XX "" "Chinese stir-fried" "chicken with broccoli and nuts" "" chicken-stfry1
+.XX "" "A quick and easy" "chicken with cheese and marinara" "" chicken-marnar
+.XX "" "Filipino" "chicken with garlic" "" chicken-adobo
+.XX "peppers" "" "Chicken with garlic and hot" "" chicken-asian
+.XX "honey" "Quick and easy" "chicken with macadamia nuts and" "" chicken-macad
+.XX "ginger" "Indian braised" "chicken with onions, cloves, and" "" chicken-korma
+.XX "sauce" "" "Chicken with pineapple and soya" "" chicken-pine1
+.XX "cinnamon" "" "Chicken with tomatoes and" "" chicken-cinn-1
+.XX "" "Stir-fried" "chicken with vegetables" "" chick-kung-pao
+.XX "" "" "Chicken with white sauce" "" chick-milan
+.XX "" "Greek style" "chick-pea soup" "" chickpea-soup
+.XX "" "meat and bean dish, similar to" "chili" "A Mexican" chalupa-1
+.XX "" "A hearty (and hot) Texas-style" "chili" "" chili-1
+.XX "" "A mild, hearty" "chili" "" chili-2
+.XX "" "Andy's own recipe for meat/bean" "chili" "" chili-3
+.XX "" "World champion Texas red" "chili" "" chili-5
+.XX "" "A hearty, hot and tasty" "chili" "" chili-6
+.XX "" "High-energy microwave" "chili" "" chili-7
+.XX "" "Indonesian relish with lime," "chili, and basil" "" sambal-lilang
+.XX "" "A variation of" "chili con carne with beans" "" chili-bean
+.XX "" "Zucchini with ginger and" "chili peppers" "" zucchini-ging
+.XX "" "An easier way to make" "chili rellenos" "" relleno-cass
+.XX "" "Indonesian baked eggplant in" "chili sauce" "" eggplant-3
+.XX "" "A simple prizewinning" "chili with beans" "" chili-4
+.XX "" "Fried" "chili-pepper sambal relish" "" sambal-bajak
+.XX "home" "A nice" "Chinese dinner you can make at" "" chicken-ssour1
+.XX "" "Broiled beef in a" "Chinese marinade" "" meat-marinade
+.XX "roast" "A" "Chinese method of cooking a pork" "" red-pork
+.XX "" "Chicken salad with" "Chinese seasonings" "" chicken-salad1
+.XX "" "Delicious Northern" "Chinese snack and hacker's staple" "" potstickers
+.XX "" "Popular Szechuan" "Chinese soup" "" hotsour-soup-2
+.XX "" "The original" "Chinese spaghetti" "" chinese-spagh
+.XX "broccoli and nuts" "" "Chinese stir-fried chicken with" "" chicken-stfry1
+.XX "spicy peanut sauce" "" "Chinese-style noodles with a" "" peanut-noodles
+.XX "eggplant" "A simple" "Chinese-style recipe for fresh" "" eggplant-4
+.XX "" "A truly decadent chocolate" "chip cheesecake" "" cheesecake-6
+.XX "" "Rich, thick, crunchy chocolate" "chip cookies" "" choc-chip-2
+.XX "makes" "Chocolate" "chip cookies like Mrs. Fields" "" choc-chip-1
+.XX "sugar" "Chocolate" "chip cookies with honey and brown" "" choc-chip-3
+.XX "" "of coconut and chocolate" "chips" "/fattening combination" coco-chips
+.XX "" "Thick, rich Spanish hot" "chocolate" "" spanish-cocoa
+.XX "" "Easy-to-make candies with" "chocolate and creamcheese" "" truffles-3
+.XX "holiday treat" "" "Chocolate and peanutbutter" "" bon-bons
+.XX "cinnamon" "" "chocolate bread pudding with" "" choc-pudding-2
+.XX "" "Serious" "chocolate brownies" "" brownies-2
+.XX "" "A rich" "chocolate Bundt cake" "" chokladkaka
+.XX "" "A no-bake" "chocolate cake" "" choc-cake-1
+.XX "" "Dangerously delicious" "chocolate cake" "" choc-cake-2
+.XX "" "A decadently rich" "chocolate cake" "" choc-cake-3
+.XX "" "A no-bake graham cracker" "chocolate cake." "" choc-cake-4
+.XX "" "Austrian 8-layer" "chocolate cake" "" prinz-torte
+.XX "" "Aunt Georgie's" "chocolate cake" "" sourmilk-cake
+.XX "" "Picture-perfect" "chocolate cheesecake" "" cheesecake-2
+.XX "" "Amaretto-amaretti" "chocolate cheesecake" "" cheesecake-7
+.XX "" "A truly decadent" "chocolate chip cheesecake" "" cheesecake-6
+.XX "" "Rich, thick, crunchy" "chocolate chip cookies" "" choc-chip-2
+.XX "Fields makes" "" "Chocolate chip cookies like Mrs." "" choc-chip-1
+.XX "and brown sugar" "" "Chocolate chip cookies with honey" "" choc-chip-3
+.XX "" "combination of coconut and" "chocolate chips" "/nicely fattening" coco-chips
+.XX "" "French-style" "chocolate confectionery" "" truffles-1
+.XX "" "Classic" "chocolate confectionery" "" truffles-2
+.XX "sugar coating" "" "Chocolate cookies with powdered" "" snowball-2
+.XX "" "No-bake 3-layer (" "chocolate covered) bars" "" nanaimo-bars-2
+.XX "" "" "Chocolate covered cotton" "" truffles-milo
+.XX "" "" "Chocolate cream slices" "" choc-slices
+.XX "cheese filling" "" "Chocolate cupcakes with a cream" "" blackbottom
+.XX "" "A high-cholesterol" "chocolate dessert" "" choc-pudding-1
+.XX "" "Rich" "chocolate dessert for Passover" "" choc-nut-torte
+.XX "" "Rich fattening" "chocolate fudge" "" fudge-1
+.XX "" "A moist 2-layer" "chocolate layer cake" "" choc-cake-5
+.XX "" "Decadent" "chocolate mint pie" "" frango-pie
+.XX "" "A rich but not cloying" "chocolate mousse" "" mousse-choc-1
+.XX "" "Sinful and light mint" "chocolate mousse" "" mousse-choc-2
+.XX "" "Extremely quick and easy" "chocolate mousse" "" mousse-choc-3
+.XX "" "A rich" "chocolate no-bake cookie" "" cognac-cookies
+.XX "" "No-bake" "chocolate oatmeal cookies" "" oatmeal-fudge
+.XX "" "A rich" "chocolate pie" "" choc-pie-1
+.XX "" "" "Chocolate rum truffles" "" rum-balls-2
+.XX "bourbon" "Intoxicating" "chocolate snack with rum or" "" rum-balls
+.XX "" "Very simple" "chocolate truffles" "" truffles-4
+.XX "" "A rich" "chocolate/cherry pie" "" blkforest-pie
+.XX "" "Latin-American seasoned" "chopped beef" "" picadillo
+.XX "" "My mother's" "chopped liver" "" chopped-liver2
+.XX "to make" "" "Chopped liver just like Mom used" "" chopped-liver
+.XX "sauce" "Pork" "chops in mushroom peanut-butter" "" pork-chops-2
+.XX "onion" "Pork" "chops simmered in tomato and" "" pork-chops-1
+.XX "" "Betty Post's quick fish" "chowder" "" fish-chowder
+.XX "" "A rich creamy" "chowder with corn and sausages" "" corn-chowder-2
+.XX "" "Old-fashioned" "Christmas boiled pudding" "" xmas-pudding
+.XX "" "Traditional German" "Christmas bread" "" stollen
+.XX "" "" "Christmas Bread" "" wigilia-10
+.XX "powdered sugar" "Traditional Greek" "Christmas cookies coated with" "" kourabiedes
+.XX "syrup" "Traditional greek" "Christmas cookies soaked in honey" "" melomacarona
+.XX "" "" "Christmas Eve Kutia" "" wigilia-6
+.XX "" "Rolled cookies for the" "Christmas holidays" "" rolled-cookies
+.XX "" "A southern-hemisphere" "Christmas plum pudding" "" xmas-icecream
+.XX "sauce" "Crispy" "chunks of chicken in sweet lemon" "" chicken-lemon
+.XX "" "An easy" "chutney with no cooking" "" chutney-raw
+.XX "" "A simple cooked" "chutney with tomatoes and apples" "" chutney-2
+.XX "" "Chicken with tomatoes and" "cinnamon" "" chicken-cinn-1
+.XX "" "chocolate bread pudding with" "cinnamon" "" choc-pudding-2
+.XX "" "with cranberries, apples, and" "cinnamon" "Moist cookies" cranb-cookies
+.XX "" "with graham flour, honey, and" "cinnamon" "North American crackers" graham-crack
+.XX "" "Egg noodles, raisins," "cinnamon, and apples" "" noodle-kugel
+.XX "" "Coffee cake with" "cinnamon and sour cream" "" coffee-cake-1
+.XX "" "Garlic," "clam, and tomato spaghetti" "" spagh-clam-1
+.XX "" "braised chicken with onions," "cloves, and ginger" "Indian" chicken-korma
+.XX "" "/Greek Christmas cookies" "coated with powdered sugar" "" kourabiedes
+.XX "" "holiday cookie with a sugar" "coating" "Nut-butter" snobol-cookies
+.XX "" "cookies with powdered sugar" "coating" "Chocolate" snowball-2
+.XX "" "Berry" "cobbler" "" berry-cobbler
+.XX "" "An extremely quick cherry" "cobbler dessert" "" quick-cobbler
+.XX "" "A spicy snack to be eaten with" "cocktail sauce" "" sausage-balls
+.XX "" "(cookies) with butter and" "coconut" "Biscuits" butternuts
+.XX "" "applesauce, raisins, and" "coconut" "Cake with gumdrops," gumdrop-cake
+.XX "" "Holiday cookies with" "coconut and almonds" "" coconut-drops
+.XX "" "A nicely fattening combination of" "coconut and chocolate chips" "" coco-chips
+.XX "sauce" "Shrimp in" "coconut beer batter with dipping" "" coconut-shrimp
+.XX "" "A rich pudding with salt" "cod, eggs, and milk" "" cod-pudding
+.XX "restaurant" "" "Coffee cake from Hobee's Haven" "" coffee-cake-2
+.XX "sour cream" "" "Coffee cake with cinnamon and" "" coffee-cake-1
+.XX "" "A broccoli soup \- hot or" "cold" "" broc-bisque
+.XX "" "Watercress soup, hot or" "cold" "" watercresssoup
+.XX "" "A" "cold dip" "" dill-dip
+.XX "" "" "cold, enriched porridge" "" muesli-1
+.XX "" "Mildly spicy" "cold noodles" "" cold-noodles
+.XX "" "Easy spicy-hot" "cold noodles for summer" "" noodles-spicy
+.XX "" "A" "cold pasta dish" "" curry-salad
+.XX "" "A rich vegetable soup for" "cold weather" "" veg-soup-1
+.XX "" "potato and spinach soup for a" "cold winter day" "/rich cream-style" spud-spin-soup
+.XX "" "" "Coleslaw in many variations" "" coleslaw-1
+.XX "chocolate/" "A nicely fattening" "combination of coconut and" "" coco-chips
+.XX "" "earthy whole-wheat bread used for" "communion" "An" altar-bread
+.XX "" "12-fruit" "compote with spirits" "" wigilia-13
+.XX "" "Waffle ice-cream" "cone, pizelles" "" waffle-cone
+.XX "" "French-style chocolate" "confectionery" "" truffles-1
+.XX "" "Classic chocolate" "confectionery" "" truffles-2
+.XX "" "An oriental-style" "cook-at-the-table dinner" "" sukiyaki-1
+.XX "" "A rich chocolate no-bake" "cookie" "" cognac-cookies
+.XX "" "Nut-butter holiday" "cookie with a sugar coating" "" snobol-cookies
+.XX "" "Frosted" "cookie-cutter cookies" "" xmas-stars
+.XX "" "Norwegian wreath" "cookies" "" berlinerkranz
+.XX "" "Simple butter" "cookies" "" butter-cookies
+.XX "" "thick, crunchy chocolate chip" "cookies" "Rich," choc-chip-2
+.XX "" "Super-sweet, super-rich holiday" "cookies" "" coconut-joys
+.XX "" "Simple peanut-butter" "cookies" "" cookies-pb
+.XX "" "Ginger" "cookies" "" ginger-cookies
+.XX "" "Russian" "Cookies" "" kolachki
+.XX "" "and caloric lime-flavored bar" "cookies" "Delicious" lime-bars
+.XX "" "Chewy rolled oatmeal bar" "cookies" "" oatmeal-bars
+.XX "" "Delicious high-fiber oatmeal drop" "cookies." "" oatmeal-cook-1
+.XX "" "No-bake chocolate oatmeal" "cookies" "" oatmeal-fudge
+.XX "" "Baked oatmeal biscuits (" "cookies)" "" oatmeal-slice
+.XX "" "Easy butterscotch oatmeal pan" "cookies" "" oat-squares
+.XX "" "Texas-style creamy pecan" "cookies" "" pecan-pralines
+.XX "" "Rich shortbread" "cookies" "" shortbread-3
+.XX "" "Delicate and buttery sugar" "cookies" "" sug-cookies-1
+.XX "" "Rolled, walnut-filled" "cookies" "" walnut-horns
+.XX "" "Frosted cookie-cutter" "cookies" "" xmas-stars
+.XX "" "Traditional Greek Christmas" "cookies coated with powdered/" "" kourabiedes
+.XX "holidays" "Rolled" "cookies for the Christmas" "" rolled-cookies
+.XX "" "Chocolate chip" "cookies like Mrs. Fields makes" "" choc-chip-1
+.XX "made" "" "Cookies like what Mom should have" "" choc-chip-4
+.XX "" "Traditional greek Christmas" "cookies soaked in honey syrup" "" melomacarona
+.XX "" "Biscuits (" "cookies) with butter and coconut" "" butternuts
+.XX "" "Holiday" "cookies with coconut and almonds" "" coconut-drops
+.XX "and cinnamon" "Moist" "cookies with cranberries, apples," "" cranb-cookies
+.XX "" "Simple filled butter" "cookies with cream cheese" "" cbuttr-cookies
+.XX "sugar" "Chocolate chip" "cookies with honey and brown" "" choc-chip-3
+.XX "coating" "Chocolate" "cookies with powdered sugar" "" snowball-2
+.XX "" "North Indian lamb dish with" "coriander" "A popular" lamb-coriander
+.XX "" "with spinach, mushrooms and" "corn" "A vegetable lasagne" lasagne-2
+.XX "" "soup with cheese, tomatoes, and" "corn" "A spicy" tortilla-soup
+.XX "" "A rich creamy chowder with" "corn and sausages" "" corn-chowder-2
+.XX "cheese" "" "Corn bread with peppers and" "" cornbread-1
+.XX "" "A hearty" "corn soup" "" corn-chowder
+.XX "" "Southwestern style herbed" "cornbread turkey stuffing" "" cornbread-stuf
+.XX "tarragon butter" "" "Cornish game hens basted in" "" hens-tarragon
+.XX "and sugar" "" "Cornish game hens stewed in fruit" "" autumn-hens
+.XX "UP" "" "Cornish-style meat pies from the" "" meat-pie-2
+.XX "" "Chocolate covered" "cotton" "" truffles-milo
+.XX "" "Salmon burgers for snack or main" "course" "" salmon-patties
+.XX "" "No-bake 3-layer (chocolate" "covered) bars" "" nanaimo-bars-2
+.XX "" "Chocolate" "covered cotton" "" truffles-milo
+.XX "" "Incredible" "crab or shrimp dip" "" crab-butter
+.XX "" "A no-bake graham" "cracker chocolate cake." "" choc-cake-4
+.XX "honey, and/" "North American" "crackers with graham flour," "" graham-crack
+.XX "" "Moist cookies with" "cranberries, apples, and cinnamon" "" cranb-cookies
+.XX "" "Sweet potatoes, carrots and" "cranberries in cream cheese/" "" cranb-quiche
+.XX "" "A festive" "cranberry orange nut-bread" "" cranb-bread-1
+.XX "" "Molded fresh" "cranberry relish with dressing" "" cranb-relish-2
+.XX "" "Frozen" "cranberry relish with horseradish" "" cranb-relish-3
+.XX "" "Baked chicken glazed with spiced" "cranberry sauce" "" cranb-chicken
+.XX "" "Homemade" "cranberry sauce" "" cranb-sauce-1
+.XX "" "cake with fruit and whipped" "cream" "A no-cooking" banana-cake
+.XX "" "cake with cinnamon and sour" "cream" "Coffee" coffee-cake-1
+.XX "" "Creamed spinach with sour" "cream" "" crm-spinach
+.XX "" "Hot fudge sauce for ice" "cream" "" hot-fudge-1
+.XX "" "and cheese pie flavored with sour" "cream" "A salmon" salmon-pie
+.XX "" "dip with spinach, leek, and sour" "cream" "Simple party" spinach-dip-2
+.XX "" "Tagliatelle with bacon and" "cream" "" tagliatelle
+.XX "" "Pickled Herring in Sour" "Cream" "" wigilia-4
+.XX "" "Ladyfingers with" "cream and rum" "" zuccotto
+.XX "" "Omelet with" "cream and smoked fish filling" "" omelet-1
+.XX "" "Simple filled butter cookies with" "cream cheese" "" cbuttr-cookies
+.XX "" "A pound cake made with" "cream cheese" "" pound-cake-2
+.XX "" "Chocolate cupcakes with a" "cream cheese filling" "" blackbottom
+.XX "" "Carrot cake with" "cream cheese filling" "" carrotcake-1
+.XX "" "A simple cherry" "cream cheese pie" "" cherrycheese-1
+.XX "" "carrots and cranberries in" "cream cheese quiche" "/potatoes," cranb-quiche
+.XX "" "A simple way to make whipped" "cream extra yummy" "" whipped-cream
+.XX "" "Apple pie with sour" "cream goodness" "" apple-pie-2
+.XX "" "Easy" "cream of spinach soup" "" spinach-soup
+.XX "" "chicken with a tarragon" "cream sauce" "Saut\z\(aaed" chicken-tarrag
+.XX "" "Chocolate" "cream slices" "" choc-slices
+.XX "" "candies with chocolate and" "creamcheese" "Easy-to-make" truffles-3
+.XX "" "" "Creamed spinach with bacon" "" crm-spinach-2
+.XX "" "" "Creamed spinach with sour cream" "" crm-spinach
+.XX "soup for a cold winter/" "A rich" "cream-style potato and spinach" "" spud-spin-soup
+.XX "sausages" "A rich" "creamy chowder with corn and" "" corn-chowder-2
+.XX "" "Texas-style" "creamy pecan cookies" "" pecan-pralines
+.XX "lemon sauce" "" "Crispy chunks of chicken in sweet" "" chicken-lemon
+.XX "" "A soup with" "crispy tortillas" "" tortilla-soup2
+.XX "" "One-crust apple" "crumb pie" "" apple-pie-1
+.XX "" "Rich, thick," "crunchy chocolate chip cookies" "" choc-chip-2
+.XX "" "A" "crunchy sesame seed granola" "" granola
+.XX "" "moist cheesecake with a wonderful" "crust" "A" cheesecake-5
+.XX "" "eggs in a sausage/oatmeal" "crust" "Hardboiled" eggs-scotch
+.XX "" "and cheeses in a puff pastry" "crust" "Spinach" spinach-pastry
+.XX "" "A rough, livery," "crusty scrapple" "" scrapple-2
+.XX "" "A very sweet" "cucumber pickle" "" cuke-chunks
+.XX "" "A mideast-style sauce with" "cucumbers and yogurt" "" cucumber-sauce
+.XX "bread" "Starter" "culture for making sourdough" "" sour-start
+.XX "filling" "Chocolate" "cupcakes with a cream cheese" "" blackbottom
+.XX "" "Chicken" "curry" "" chicken-curry
+.XX "" "An Easy-to-prepare chicken" "curry" "" chicken-curry2
+.XX "" "Chicken fruit salad" "curry" "" chicken-curry3
+.XX "" "A simple chicken" "curry" "" chicken-curry4
+.XX "" "Spicy chicken" "curry" "" chicken-vindal
+.XX "" "An Indian-style meat" "curry" "" meat-curry
+.XX "" "vegetarian spinach and cheese" "curry" "Indian" spinach-curry
+.XX "" "Baked rice with a mild" "curry flavor" "" curried-rice
+.XX "" "Cheese fondue with" "curry flavor" "" fondue-1
+.XX "" "Baked fruit with" "curry sauce and nuts" "" curried-fruit
+.XX "" "in yogurt and spices\(emgood lamb" "curry substitute" "Yams" yam-curry
+.XX "" "A rich Mexican" "custard" "" flan
+.XX "" "Exquisite New Zealand" "custard dessert" "" spanish-cream
+.XX "" "A marinade for any" "cut of lamb" "" lamb-marinade1
+.XX "" "Dinner salad made with" "dandelions and cheese" "" dandelions
+.XX "cake" "" "Dangerously delicious chocolate" "" choc-cake-2
+.XX "" "" "Danish cabbage and beef casserole" "" cabbage-cass
+.XX "" "layered eggnog with bourbon and" "dark rum" "Traditional" eggnog2
+.XX "" "A sweet," "dark whole-grain rye bread" "" bread-rye
+.XX "" "with bran, raisins, nuts, and" "dates" "/rich and moist muffins" muffins-2
+.XX "" "Simple appetizer for summer" "days" "" egg-mousse
+.XX "" "A" "decadently rich chocolate cake" "" choc-cake-3
+.XX "" "A Bavarian plum" "delicacy for dessert" "" zwetschgend
+.XX "" "A thoroughly decadent" "desert" "" cherry-hazlnut
+.XX "attempts" "Simple" "desert for failed Pavlova" "" ambrosia
+.XX "" "Easy baked apple" "dessert" "" apple-crisp
+.XX "" "sweet and wonderful Balkan" "dessert" "An incredibly" baklava
+.XX "" "A high-cholesterol chocolate" "dessert" "" choc-pudding-1
+.XX "" "Pavlova (Australian meringue" "dessert)" "" pavlova-1
+.XX "" "Pavlova (Australian meringue" "dessert)" "" pavlova-2
+.XX "" "A quick pear" "dessert" "" pear-mice
+.XX "" "An extremely quick cherry cobbler" "dessert" "" quick-cobbler
+.XX "" "Exquisite New Zealand custard" "dessert" "" spanish-cream
+.XX "" "A sweet and tart" "dessert" "" straw-rhu-pie
+.XX "" "A Bavarian plum delicacy for" "dessert" "" zwetschgend
+.XX "" "A" "dessert bread made from pumpkins" "" pumpkin-bread
+.XX "" "A French" "dessert cake" "" lemon-pie
+.XX "" "Rich chocolate" "dessert for Passover" "" choc-nut-torte
+.XX "" "Traditional lime pie" "dessert from the Florida Keys" "" key-lime-pie
+.XX "cheese" "A delicious" "dessert with fruit and soft" "" rhubarb-fool
+.XX "" "A Greek" "dessert with semolina" "" halvas
+.XX "" "A low-calorie frozen" "dessert with yogurt and fruit" "" yogurt-froz-1
+.XX "" "A rich" "dill, paprika and mushroom soup" "" mushroom-soup2
+.XX "" "Swedish" "dill-cured salmon" "" gravlax
+.XX "" "soup as served in the U.S. Senate" "dining room" "Bean" senate-soup
+.XX "" "A fruit relish for holiday" "dinners" "" cranb-relish
+.XX "" "Incredible crab or shrimp" "dip" "" crab-butter
+.XX "" "A cold" "dip" "" dill-dip
+.XX "" "A hot spicy party cheese" "dip" "" hot-cheese-dip
+.XX "chestnuts" "Party" "dip with spinach and water" "" spinach-dip
+.XX "cream" "Simple party" "dip with spinach, leek, and sour" "" spinach-dip-2
+.XX "" "in coconut beer batter with" "dipping sauce" "Shrimp" coconut-shrimp
+.XX "" "Homemade meatless" "dog biscuits" "" dog-biscuits
+.XX "" "Very rich brownies with" "double frosting" "" brownies-1
+.XX "" "" "Double stout beer" "" stout-double
+.XX "" "Simple pizza" "dough" "" pizza-dough-1
+.XX "" "fresh cranberry relish with" "dressing" "Molded" cranb-relish-2
+.XX "" "A mild oil and vinegar salad" "dressing" "" rocket-salad
+.XX "" "Tasty muffins with bran and" "dried fruit" "" bran-muffins-2
+.XX "" "A potent holiday party eggnog" "drink" "" eggnog1
+.XX "" "A refreshing Indian summer" "drink" "" mango-shake
+.XX "" "Delicious high-fiber oatmeal" "drop cookies." "" oatmeal-cook-1
+.XX "" "Bread as made by" "drovers in the outback" "" damper
+.XX "" "Chicken or" "duck in hot mole sauce" "" chicken-mole-2
+.XX "" "Steamed" "dumplings (meatballs)" "" shu-mei
+.XX "" "An" "easier way to make chili rellenos" "" relleno-cass
+.XX "" "San Felese" "Easter pie" "" pizza-rustica
+.XX "breakfast food like sausage)" "" "Eastern-style scrapple (a" "" scrapple-1
+.XX "" "Very" "easy and cheap spaghetti sauce" "" spagh-sauce-2
+.XX "" "" "Easy and good bran muffins" "" bran-muffins
+.XX "" "" "Easy baked apple dessert" "" apple-crisp
+.XX "" "An" "easy bean casserole" "" bean-cass-1
+.XX "cookies" "" "Easy butterscotch oatmeal pan" "" oat-squares
+.XX "" "Succulent and" "easy chicken" "" chicken-wbacon
+.XX "marinara" "A quick and" "easy chicken with cheese and" "" chicken-marnar
+.XX "and honey" "Quick and" "easy chicken with macadamia nuts" "" chicken-macad
+.XX "" "Extremely quick and" "easy chocolate mousse" "" mousse-choc-3
+.XX "" "An" "easy chutney with no cooking" "" chutney-raw
+.XX "" "" "Easy cream of spinach soup" "" spinach-soup
+.XX "" "Quick and" "easy garlic bread" "" garlic-bread-2
+.XX "" "A quick and" "easy Hollandaise sauce" "" hollandaise-1
+.XX "" "An" "Easy Lamb Stew" "" lamb-cacci
+.XX "outdoor BBQ" "" "Easy marinated chicken for" "" chicken-micrn
+.XX "" "Quick and" "easy mushroom soup" "" mushroom-soup
+.XX "" "" "Easy onion soup" "" onion-soup-1
+.XX "" "an" "easy quick tummy-warming soup" "" beer-chs-soup
+.XX "turnip cakes" "An" "easy recipe for Cantonese salty" "" turnip-cakes
+.XX "summer" "" "Easy spicy-hot cold noodles for" "" noodles-spicy
+.XX "" "An" "Easy-to-prepare chicken curry" "" chicken-curry2
+.XX "" "A spicy snack to be" "eaten with cocktail sauce" "" sausage-balls
+.XX "" "A 7-grain bread for toasting or" "eating plain" "" bread
+.XX "" "Greek style" "egg & lemon chicken soup" "" avgolemono
+.XX "" "Braided" "egg bread" "" challah-2
+.XX "" "Jewish" "egg bread" "" challah-3
+.XX "" "A sweet" "egg noodle kugel" "" noodle-kugel-3
+.XX "and apples" "" "Egg noodles, raisins, cinnamon," "" noodle-kugel
+.XX "" "A baked" "egg, sausage, and bread casserole" "" breakfast-cas
+.XX "alcoholic beverage" "" "Egg-cognac: a potent sweet" "" advokaat
+.XX "" "Greek" "egg-lemon soup" "" avgolemono-2
+.XX "" "Wonderful" "eggnog" "" eggnog3
+.XX "" "A potent holiday party" "eggnog drink" "" eggnog1
+.XX "" "Traditional layered" "eggnog with bourbon and dark rum" "" eggnog2
+.XX "" "Chinese-style recipe for fresh" "eggplant" "A simple" eggplant-4
+.XX "" "with sausage, mushrooms, and" "eggplant" "Spaghetti sauce" spagh-sauce-1
+.XX "and cheese" "" "Eggplant casserole with tomato" "" eggplant-1
+.XX "" "Indonesian baked" "eggplant in chili sauce" "" eggplant-3
+.XX "casserole" "Indian" "eggplant, onion, and tomato" "" eggplant-2
+.XX "" "" "Eggplant relish vinaigrette" "" relish-1
+.XX "" "New-Mexico-style enchiladas with" "eggs" "" enchiladas-1
+.XX "" "Spaghetti with raw" "eggs and Italian bacon" "" carbonara-2
+.XX "" "A rich pudding with salt cod," "eggs, and milk" "" cod-pudding
+.XX "" "A brunch casserole with potatoes," "eggs, bacon, and cheese" "" potato-pie-1
+.XX "" "Hardboiled" "eggs in a sausage/oatmeal crust" "" eggs-scotch
+.XX "" "" "Eggs poached in mushroom sauce" "" eggs-shrooms
+.XX "" "Chicken" "embalmed in apricot nectar" "" chicken-aprict
+.XX "" "Yams in yogurt and spices\(" "emgood lamb curry substitute" "" yam-curry
+.XX "" "Central Texas style Mexican" "enchiladas" "" texmex-enchil
+.XX "" "New-Mexico-style" "enchiladas with eggs" "" enchiladas-1
+.XX "olives, and cheese" "" "Enchiladas with meat, black" "" enchiladas-2
+.XX "" "cold," "enriched porridge" "" muesli-1
+.XX "" "A pizza-like dish smothered in" "escargot and mushrooms" "" snail-pizza
+.XX "sabbath stew" "" "European Jewish traditional" "" sabbath-stew
+.XX "" "A traditional" "European-style fruit cake" "" fruit-cake-2
+.XX "" "Christmas" "Eve Kutia" "" wigilia-6
+.XX "" "The most lip smackin' pickles you" "ever tasted." "" sour-pickles-1
+.XX "with meat" "An" "exotically spiced spaghetti sauce" "" spagh-sauce-3
+.XX "dessert" "" "Exquisite New Zealand custard" "" spanish-cream
+.XX "" "simple way to make whipped cream" "extra yummy" "A" whipped-cream
+.XX "" "An" "extravagant traditional fruitcake" "" fruit-cake-1
+.XX "" "A nice body and" "face soap" "" soap
+.XX "" "Simple desert for" "failed Pavlova attempts" "" ambrosia
+.XX "" "from the founder of Pepperidge" "Farm" "A stuffing recipe" bread-stuff-1
+.XX "" "marinated in lime: a Tex-Mex" "favorite" "Barbecued skirt steak" fajitas
+.XX "" "A" "Favorite Canadian sweet" "" nanaimo-bars-1
+.XX "" "San" "Felese Easter pie" "" pizza-rustica
+.XX "nut-bread" "A" "festive cranberry orange" "" cranb-bread-1
+.XX "" "Greek spinach and" "feta cheese pie" "" spanakopita-2
+.XX "" "Chocolate chip cookies like Mrs." "Fields makes" "" choc-chip-1
+.XX "soy sauce" "" "Filipino cabbage in garlic and" "" poncit
+.XX "" "" "Filipino chicken with garlic" "" chicken-adobo
+.XX "cheese" "Simple" "filled butter cookies with cream" "" cbuttr-cookies
+.XX "" "A triangular" "filled pastry" "" hamantashen
+.XX "champagne" "" "Fine pea soup with shrimp and" "" shrimp-soup
+.XX "" "" "Finnish meat pie" "" meat-pie-1
+.XX "" "Spicy Moroccan" "fish" "" moroccan-fish
+.XX "" "Tomato salsa for chicken or" "fish" "" salsa-1
+.XX "" "Rye bread pie with" "fish and pork filling" "" meat-pie-4
+.XX "" "A tasty marinated" "fish appetizer from Mexico" "" seviche
+.XX "" "Betty Post's quick" "fish chowder" "" fish-chowder
+.XX "" "Omelet with cream and smoked" "fish filling" "" omelet-1
+.XX "" "" "Fish in a hot garlic/pecan sauce" "" hot-fanny-1
+.XX "" "" "Fish in horseradish sauce" "" wigilia-1
+.XX "" "scallops with snow peas in" "fish sauce" "Saut\z\(aaeed" scallops-1
+.XX "" "Marseille style" "fish soup" "" bouillabaisse
+.XX "" "Greek smoked" "fish-roe pate" "" taramosalata-1
+.XX "" "A classic souffle," "flavored with maple syrup" "" maple-souffle
+.XX "" "A salmon and cheese pie" "flavored with sour cream" "" salmon-pie
+.XX "" "lime pie dessert from the" "Florida Keys" "Traditional" key-lime-pie
+.XX "" "A Pumpkin Pie with" "flour" "" pumpkin-pie-3
+.XX "" "American crackers with graham" "flour, honey, and cinnamon" "North" graham-crack
+.XX "" "Simple," "fluffy biscuits" "" biscuits-1
+.XX "" "Light and" "fluffy breakfast pancakes" "" pancakes-2
+.XX "upside-down cake" "" "Fluffy whipped pumpkin" "" pumpkin-cake-2
+.XX "" "Cheese" "fondue with curry flavor" "" fondue-1
+.XX "" "A stuffing recipe from the" "founder of Pepperidge Farm" "" bread-stuff-1
+.XX "" "A simple," "fragrant apple nut raisin bread" "" apple-bread
+.XX "" "" "Fragrant lamb stew" "" lamb-stew-1
+.XX "cheese" "Casserole with" "frankfurters, vegetables and" "" hotdog-cass
+.XX "" "An old-fashioned sourdough" "French bread" "" sour-french
+.XX "" "A" "French dessert cake" "" lemon-pie
+.XX "confectionery" "" "French-style chocolate" "" truffles-1
+.XX "seeds" "A" "French-style mixture of herbs and" "" herb-blend-1
+.XX "dressing" "Molded" "fresh cranberry relish with" "" cranb-relish-2
+.XX "" "A simple Chinese-style recipe for" "fresh eggplant" "" eggplant-4
+.XX "" "Generic" "fresh fruit salad" "" fruit-salad
+.XX "" "" "Fresh fruit soup" "" fruit-soup
+.XX "" "" "Fried chili-pepper sambal relish" "" sambal-bajak
+.XX "marinara" "" "Fried mozzarella sticks with" "" mozz-fried
+.XX "" "Garlic" "fried potatoes" "" patatas-pobres
+.XX "" "" "Frosted cookie-cutter cookies" "" xmas-stars
+.XX "" "Very rich brownies with double" "frosting" "" brownies-1
+.XX "horseradish" "" "Frozen cranberry relish with" "" cranb-relish-3
+.XX "fruit" "A low-calorie" "frozen dessert with yogurt and" "" yogurt-froz-1
+.XX "" "Tasty muffins with bran and dried" "fruit" "" bran-muffins-2
+.XX "" "frozen dessert with yogurt and" "fruit" "A low-calorie" yogurt-froz-1
+.XX "" "Uncooked" "fruit and bread pudding" "" summer-pudding
+.XX "" "Holiday stuffing with" "fruit and nuts" "" chicken-stuff2
+.XX "" "A delicious dessert with" "fruit and soft cheese" "" rhubarb-fool
+.XX "" "Cornish game hens stewed in" "fruit and sugar" "" autumn-hens
+.XX "" "A no-cooking cake with" "fruit and whipped cream" "" banana-cake
+.XX "" "A traditional European-style" "fruit cake" "" fruit-cake-2
+.XX "" "Vegetable and" "fruit casserole for Passover" "" tzimmes
+.XX "seedless grapes" "" "Fruit pie made from green" "" grape-pie
+.XX "" "A" "fruit relish for holiday dinners" "" cranb-relish
+.XX "" "Generic fresh" "fruit salad" "" fruit-salad
+.XX "" "Chicken" "fruit salad curry" "" chicken-curry3
+.XX "" "Fresh" "fruit soup" "" fruit-soup
+.XX "" "A quick" "fruit tart pie" "" fruit-tart
+.XX "" "Baked" "fruit with curry sauce and nuts" "" curried-fruit
+.XX "" "An extravagant traditional" "fruitcake" "" fruit-cake-1
+.XX "" "A" "fruity cabbage saut\z\(aae" "" cabbage+apples
+.XX "" "Rich fattening chocolate" "fudge" "" fudge-1
+.XX "" "Hot" "fudge sauce for ice cream" "" hot-fudge-1
+.XX "butter" "Cornish" "game hens basted in tarragon" "" hens-tarragon
+.XX "sugar" "Cornish" "game hens stewed in fruit and" "" autumn-hens
+.XX "" "Filipino chicken with" "garlic" "" chicken-adobo
+.XX "" "Chicken with" "garlic and hot peppers" "" chicken-asian
+.XX "" "Filipino cabbage in" "garlic and soy sauce" "" poncit
+.XX "" "Sardines with" "garlic and tomato" "" sardine-fry
+.XX "" "Addictive and fattening" "garlic bread" "" garlic-bread
+.XX "" "Quick and easy" "garlic bread" "" garlic-bread-2
+.XX "" "Scampi in" "garlic butter sauce" "" garlic-scampi
+.XX "spaghetti" "" "Garlic, clam, and tomato" "" spagh-clam-1
+.XX "" "" "Garlic fried potatoes" "" patatas-pobres
+.XX "" "Simple meatballs in herb and" "garlic tomato sauce" "" meatballs-1
+.XX "" "Fish in a hot" "garlic/pecan sauce" "" hot-fanny-1
+.XX "" "" "Generic fresh fruit salad" "" fruit-salad
+.XX "" "Aunt" "Georgie's chocolate cake" "" sourmilk-cake
+.XX "" "Traditional" "German Christmas bread" "" stollen
+.XX "" "" "German ``Kartoffel Puffer''" "" potato-pancake
+.XX "" "chicken with onions, cloves, and" "ginger" "Indian braised" chicken-korma
+.XX "" "Zucchini with" "ginger and chili peppers" "" zucchini-ging
+.XX "" "" "Ginger cookies" "" ginger-cookies
+.XX "" "Best-ever" "gingerbread" "" gingerbread-2
+.XX "" "Traditional" "gingerbread, soft and chewy" "" gingerbread
+.XX "sauce" "Baked chicken" "glazed with spiced cranberry" "" cranb-chicken
+.XX "" "Apple pie with sour cream" "goodness" "" apple-pie-2
+.XX "" "Southern Hungarian" "goulash" "" goulash-1
+.XX "" "A no-bake" "graham cracker chocolate cake." "" choc-cake-4
+.XX "" "North American crackers with" "graham flour, honey, and cinnamon" "" graham-crack
+.XX "" "A crunchy sesame seed" "granola" "" granola
+.XX "" "pie made from green seedless" "grapes" "Fruit" grape-pie
+.XX "" "Chicken in wine with" "grapes and orange" "" chicken-grape
+.XX "" "A kind of" "gratin with potatoes" "" jansson
+.XX "the universe" "" "Greatest macaroni and cheese in" "" mac-and-cheese
+.XX "with powdered sugar" "Traditional" "Greek Christmas cookies coated" "" kourabiedes
+.XX "honey syrup" "Traditional" "greek Christmas cookies soaked in" "" melomacarona
+.XX "" "vegetarian version of the" "Greek classic" "" moussaka
+.XX "" "A" "Greek dessert with semolina" "" halvas
+.XX "" "" "Greek egg-lemon soup" "" avgolemono-2
+.XX "" "" "Greek smoked fish-roe pate" "" taramosalata-1
+.XX "" "" "Greek spinach and cheese pie" "" spanakopita
+.XX "" "" "Greek spinach and feta cheese pie" "" spanakopita-2
+.XX "" "" "Greek style chick-pea soup" "" chickpea-soup
+.XX "soup" "" "Greek style egg & lemon chicken" "" avgolemono
+.XX "" "" "Greek vegetable casserole" "" briami
+.XX "" "Algerian" "green beans with almonds" "" loubia-1
+.XX "" "Fruit pie made from" "green seedless grapes" "" grape-pie
+.XX "" "Cooked mustard" "greens with bacon and onion" "" mustard-greens
+.XX "" "" "Grilled butterflied leg of lamb" "" leg-of-lamb-3
+.XX "" "" "Grilled butterflied leg of lamb" "" leg-of-lamb-4
+.XX "" "" "Grilled butterflied leg of lamb" "" leg-of-lamb-5
+.XX "" "Spicy" "grilled lamb on a skewer" "" lamb-kebab
+.XX "" "A basic steamed rice for" "gumbo dishes" "" rice-gumbo
+.XX "sausage" "" "Gumbo with chicken and Andouille" "" chicken-gumbo
+.XX "and coconut" "Cake with" "gumdrops, applesauce, raisins," "" gumdrop-cake
+.XX "" "Northern Chinese snack and" "hacker's staple" "Delicious" potstickers
+.XX "" "A rich spinach pie with" "ham and cheese" "" spinach-pie
+.XX "" "Bananas with" "ham and paprika" "" ham-bananas
+.XX "" "Soup with black beans and" "ham hocks" "" blackbean-soup
+.XX "" "A quick" "hamburger dish" "" hamburger-pie
+.XX "sausage/oatmeal crust" "" "Hardboiled eggs in a" "" eggs-scotch
+.XX "" "Coffee cake from Hobee's" "Haven restaurant" "" coffee-cake-2
+.XX "" "Cornish game" "hens basted in tarragon butter" "" hens-tarragon
+.XX "" "Cornish game" "hens stewed in fruit and sugar" "" autumn-hens
+.XX "" "Simple meatballs in" "herb and garlic tomato sauce" "" meatballs-1
+.XX "" "Southwestern style" "herbed cornbread turkey stuffing" "" cornbread-stuf
+.XX "" "An Australian" "herbed meat dish" "" herb-steak-1
+.XX "" "A French-style mixture of" "herbs and seeds" "" herb-blend-1
+.XX "" "Pickled" "Herring in Sour Cream" "" wigilia-4
+.XX "shrimp, cheese, and bacon" "A" "high-cholesterol appetizer with" "" shrimp-bacon
+.XX "dessert" "A" "high-cholesterol chocolate" "" choc-pudding-1
+.XX "" "" "High-energy microwave chili" "" chili-7
+.XX "" "Delicious" "high-fiber oatmeal drop cookies." "" oatmeal-cook-1
+.XX "" "Delicious and nourishing bars for" "hiking or home" "" muesli-bars
+.XX "" "Coffee cake from" "Hobee's Haven restaurant" "" coffee-cake-2
+.XX "" "Soup with black beans and ham" "hocks" "" blackbean-soup
+.XX "pie" "A" "holiday alternative to pumpkin" "" pumpkin-cake-3
+.XX "coating" "Nut-butter" "holiday cookie with a sugar" "" snobol-cookies
+.XX "" "Super-sweet, super-rich" "holiday cookies" "" coconut-joys
+.XX "almonds" "" "Holiday cookies with coconut and" "" coconut-drops
+.XX "" "A fruit relish for" "holiday dinners" "" cranb-relish
+.XX "" "A potent" "holiday party eggnog drink" "" eggnog1
+.XX "walnuts" "" "Holiday persimmon pudding with" "" persim-pudding
+.XX "molasses" "" "Holiday rolls with oatmeal and" "" dark-rolls
+.XX "" "A simple New Mexican" "holiday stew" "" pozole
+.XX "nuts" "" "Holiday stuffing with fruit and" "" chicken-stuff2
+.XX "" "A very simple" "holiday sweet potato pie" "" sweepto-pie
+.XX "" "Chocolate and peanutbutter" "holiday treat" "" bon-bons
+.XX "" "Rolled cookies for the Christmas" "holidays" "" rolled-cookies
+.XX "" "A quick and easy" "Hollandaise sauce" "" hollandaise-1
+.XX "" "Chinese dinner you can make at" "home" "A nice" chicken-ssour1
+.XX "" "and nourishing bars for hiking or" "home" "Delicious" muesli-bars
+.XX "" "Rich" "homemade chicken broth" "" chicken-broth
+.XX "" "" "Homemade cranberry sauce" "" cranb-sauce-1
+.XX "" "" "Homemade meatless dog biscuits" "" dog-biscuits
+.XX "" "" "Homemade playdough" "" playdough
+.XX "" "chicken with macadamia nuts and" "honey" "Quick and easy" chicken-macad
+.XX "" "Chocolate chip cookies with" "honey and brown sugar" "" choc-chip-3
+.XX "" "crackers with graham flour," "honey, and cinnamon" "/American" graham-crack
+.XX "" "greek Christmas cookies soaked in" "honey syrup" "Traditional" melomacarona
+.XX "" "Frozen cranberry relish with" "horseradish" "" cranb-relish-3
+.XX "" "Fish in" "horseradish sauce" "" wigilia-1
+.XX "" "Southern" "Hungarian goulash" "" goulash-1
+.XX "" "" "Hungarian potato paprikash" "" potato-paprksh
+.XX "" "Hot fudge sauce for" "ice cream" "" hot-fudge-1
+.XX "" "Waffle" "ice-cream cone, pizelles" "" waffle-cone
+.XX "Balkan dessert" "An" "incredibly sweet and wonderful" "" baklava
+.XX "onions, cloves, and ginger" "" "Indian braised chicken with" "" chicken-korma
+.XX "tomato casserole" "" "Indian eggplant, onion, and" "" eggplant-2
+.XX "" "A spicy hot" "Indian lamb dish" "" lamb-vind
+.XX "" "A popular North" "Indian lamb dish with coriander" "" lamb-coriander
+.XX "" "An" "Indian spinach side-dish" "" sagh
+.XX "" "A refreshing" "Indian summer drink" "" mango-shake
+.XX "cheese curry" "" "Indian vegetarian spinach and" "" spinach-curry
+.XX "yogurt and red pepper" "An" "Indian-style chicken dish with" "" chicken-yogurt
+.XX "" "An" "Indian-style meat curry" "" meat-curry
+.XX "chili sauce" "" "Indonesian baked eggplant in" "" eggplant-3
+.XX "" "" "Indonesian barbecued beef" "" satay-1
+.XX "" "A tasty" "Indonesian dish" "" barmi-goreng
+.XX "chili, and basil" "" "Indonesian relish with lime," "" sambal-lilang
+.XX "" "Spaghetti with raw eggs and" "Italian bacon" "" carbonara-2
+.XX "spinach and cheese" "An" "Italian vegetable casserole with" "" spinach-roll-1
+.XX "" "" "Italian-style pork roast in milk" "" pork-in-milk
+.XX "" "A casserole made with" "jack cheese" "" jack-jubilee
+.XX "" "A hearty soup with millet and" "Japanese pumpkin" "" kabocha-soup
+.XX "" "A" "Japanese tofu recipe with meat" "" tofu-meat
+.XX "" "Applesauce" "jello salad" "" applesauce-sld
+.XX "" "A traditional" "Jewish bread" "" challah-1
+.XX "" "" "Jewish egg bread" "" challah-3
+.XX "" "European" "Jewish traditional sabbath stew" "" sabbath-stew
+.XX "" "A spicy and simple sloppy" "joe" "" sloppy-joes
+.XX "" "Popovers from the" "Jordan Pond teahouse" "" pond-popovers
+.XX "" "German" "``Kartoffel Puffer''" "" potato-pancake
+.XX "" "Spicy pork or lamb" "kebabs" "" meat-kebabs
+.XX "" "lime pie dessert from the Florida" "Keys" "Traditional" key-lime-pie
+.XX "" "A" "kind of gratin with potatoes" "" jansson
+.XX "" "" "Korean marinated ribs" "" kalbi-kui
+.XX "" "A sweet egg noodle" "kugel" "" noodle-kugel-3
+.XX "" "Noodle" "kugel using uncooked noodles" "" noodle-kugel-2
+.XX "" "" "Kugel with potatoes and carrots" "" kugel-3
+.XX "" "Christmas Eve" "Kutia" "" wigilia-6
+.XX "" "" "Ladyfingers with cream and rum" "" zuccotto
+.XX "" "A marinade for any cut of" "lamb" "" lamb-marinade1
+.XX "" "Grilled butterflied leg of" "lamb" "" leg-of-lamb-3
+.XX "" "Grilled butterflied leg of" "lamb" "" leg-of-lamb-4
+.XX "" "Grilled butterflied leg of" "lamb" "" leg-of-lamb-5
+.XX "" "Yams in yogurt and spices\(emgood" "lamb curry substitute" "" yam-curry
+.XX "" "A spicy hot Indian" "lamb dish" "" lamb-vind
+.XX "" "A popular North Indian" "lamb dish with coriander" "" lamb-coriander
+.XX "" "Spicy pork or" "lamb kebabs" "" meat-kebabs
+.XX "" "Spicy grilled" "lamb on a skewer" "" lamb-kebab
+.XX "" "An Easy" "Lamb Stew" "" lamb-cacci
+.XX "" "Fragrant" "lamb stew" "" lamb-stew-1
+.XX "" "Spicy roast" "lamb with rice" "" cajun-lamb
+.XX "" "Leg of" "lamb with rosemary & tomato baste" "" leg-of-lamb-1
+.XX "" "Leg of" "lamb with rosemary and lemon" "" leg-of-lamb-2
+.XX "" "Traditional salmon dish from" "Lappland" "" salmon-teno
+.XX "" "Simple cheese-and-tomato" "lasagna" "" lasagna-4
+.XX "" "Classic spinach" "lasagna" "" lasagne-3
+.XX "cheese" "A hearty" "lasagne with lots of meat and" "" lasagne-1
+.XX "and corn" "A vegetable" "lasagne with spinach, mushrooms" "" lasagne-2
+.XX "beef" "" "Latin-American seasoned chopped" "" picadillo
+.XX "" "A moist 2-layer chocolate" "layer cake" "" choc-cake-5
+.XX "dark rum" "Traditional" "layered eggnog with bourbon and" "" eggnog2
+.XX "" "Simple party dip with spinach," "leek, and sour cream" "" spinach-dip-2
+.XX "" "" "Leeks in a zesty red wine sauce" "" drunk-leeks
+.XX "" "Grilled butterflied" "leg of lamb" "" leg-of-lamb-3
+.XX "" "Grilled butterflied" "leg of lamb" "" leg-of-lamb-4
+.XX "" "Grilled butterflied" "leg of lamb" "" leg-of-lamb-5
+.XX "tomato baste" "" "Leg of lamb with rosemary &" "" leg-of-lamb-1
+.XX "lemon" "" "Leg of lamb with rosemary and" "" leg-of-lamb-2
+.XX "" "" "Legendary cheesecake" "" cheesecake-1
+.XX "" "Leg of lamb with rosemary and" "lemon" "" leg-of-lamb-2
+.XX "" "Greek style egg &" "lemon chicken soup" "" avgolemono
+.XX "" "Crispy chunks of chicken in sweet" "lemon sauce" "" chicken-lemon
+.XX "" "Pilaf with sour cherries and" "lentils" "" cherry-pilaf
+.XX "" "A simple soup with" "lentils, tomatoes, and hot pepper" "" lentil-soup
+.XX "" "/skirt steak marinated in" "lime: a Tex-Mex favorite" "" fajitas
+.XX "" "Pork with" "lime and hot peppers" "" pork-braise-1
+.XX "" "Sweet potatoes saut\z\(aaeed in" "lime and tequila" "" saute-sweepto
+.XX "" "Indonesian relish with" "lime, chili, and basil" "" sambal-lilang
+.XX "Keys" "Traditional" "lime pie dessert from the Florida" "" key-lime-pie
+.XX "" "Delicious and caloric" "lime-flavored bar cookies" "" lime-bars
+.XX "tasted." "The most" "lip smackin' pickles you ever" "" sour-pickles-1
+.XX "" "My mother's chopped" "liver" "" chopped-liver2
+.XX "" "PARTY PATE WITHOUT" "LIVER" "" pate-1
+.XX "" "Chopped" "liver just like Mom used to make" "" chopped-liver
+.XX "" "A rough," "livery, crusty scrapple" "" scrapple-2
+.XX "" "A quick and flavorful meat" "loaf" "" meatloaf-1
+.XX "" "A baked salmon and spinach" "loaf" "" salmon-spinach
+.XX "" "Two white soda" "loaves" "" soda-bread
+.XX "" "A hearty lasagne with" "lots of meat and cheese" "" lasagne-1
+.XX "" "A rich treat for mushroom" "lovers" "" mushrooms-1
+.XX "pepper salad" "A" "low-calorie but flavorful red" "" pepper-roast
+.XX "yogurt and fruit" "A" "low-calorie frozen dessert with" "" yogurt-froz-1
+.XX "" "Quick and easy chicken with" "macadamia nuts and honey" "" chicken-macad
+.XX "universe" "Greatest" "macaroni and cheese in the" "" mac-and-cheese
+.XX "" "Salmon burgers for snack or" "main course" "" salmon-patties
+.XX "seasonings" "A simple" "main-dish salad with Mexican" "" salad-mexican
+.XX "buttermilk pancakes" "A" "make-it-yourself mix for" "" pancake-mix
+.XX "" "Starter culture for" "making sourdough bread" "" sour-start
+.XX "" "A classic souffle, flavored with" "maple syrup" "" maple-souffle
+.XX "" "" "Margaret's X-rated melon balls" "" melon-balls-1
+.XX "" "Vodka" "margaritas" "" margarita-1
+.XX "" "Broiled beef in a Chinese" "marinade" "" meat-marinade
+.XX "" "A simple, and quite superb meat" "marinade." "" meatmarinade-2
+.XX "" "A" "marinade for any cut of lamb" "" lamb-marinade1
+.XX "" "A" "marinade for redfish" "" redfish-rasta
+.XX "" "and easy chicken with cheese and" "marinara" "A quick" chicken-marnar
+.XX "" "Fried mozzarella sticks with" "marinara" "" mozz-fried
+.XX "" "Easy" "marinated chicken for outdoor BBQ" "" chicken-micrn
+.XX "Mexico" "A tasty" "marinated fish appetizer from" "" seviche
+.XX "favorite" "Barbecued skirt steak" "marinated in lime: a Tex-Mex" "" fajitas
+.XX "" "Korean" "marinated ribs" "" kalbi-kui
+.XX "" "" "Marseille style fish soup" "" bouillabaisse
+.XX "" "Mashed sweet potatoes with" "marshmallows" "" sweet-potato
+.XX "" "" "Marzipan" "" wigilia-12
+.XX "marshmallows" "" "Mashed sweet potatoes with" "" sweet-potato
+.XX "" "" "Mayonnaise made in a blender" "" mayonnaise-1
+.XX "wine." "Makes a" "meal with cheese, bread, and red" "" squash-soup
+.XX "" "spiced spaghetti sauce with" "meat" "An exotically" spagh-sauce-3
+.XX "" "A Japanese tofu recipe with" "meat" "" tofu-meat
+.XX "chili" "A Mexican" "meat and bean dish, similar to" "" chalupa-1
+.XX "" "A hearty lasagne with lots of" "meat and cheese" "" lasagne-1
+.XX "" "Enchiladas with" "meat, black olives, and cheese" "" enchiladas-2
+.XX "" "An Indian-style" "meat curry" "" meat-curry
+.XX "" "An Australian herbed" "meat dish" "" herb-steak-1
+.XX "" "A quick and flavorful" "meat loaf" "" meatloaf-1
+.XX "" "A simple, and quite superb" "meat marinade." "" meatmarinade-2
+.XX "" "Finnish" "meat pie" "" meat-pie-1
+.XX "" "Australian baked" "meat pie" "" meat-pie-3
+.XX "" "Cornish-style" "meat pies from the UP" "" meat-pie-2
+.XX "" "Steamed dumplings (" "meatballs)" "" shu-mei
+.XX "tomato sauce" "Simple" "meatballs in herb and garlic" "" meatballs-1
+.XX "" "Andy's own recipe for" "meat/bean chili" "" chili-3
+.XX "" "Homemade" "meatless dog biscuits" "" dog-biscuits
+.XX "" "A nice, simple" "meatloaf" "" meatloaf-2
+.XX "" "UCLA" "Medical center carrot cake" "" carrotcake-2
+.XX "" "Margaret's X-rated" "melon balls" "" melon-balls-1
+.XX "" "Pavlova (Australian" "meringue dessert)" "" pavlova-1
+.XX "" "Pavlova (Australian" "meringue dessert)" "" pavlova-2
+.XX "" "Butterscotch pudding with a" "meringue top" "" butterscotch
+.XX "" "A Chinese" "method of cooking a pork roast" "" red-pork
+.XX "" "A rich" "Mexican custard" "" flan
+.XX "" "Central Texas style" "Mexican enchiladas" "" texmex-enchil
+.XX "" "A simple New" "Mexican holiday stew" "" pozole
+.XX "similar to chili" "A" "Mexican meat and bean dish," "" chalupa-1
+.XX "" "A simple main-dish salad with" "Mexican seasonings" "" salad-mexican
+.XX "" "Shrimp quiche in a" "Mexican style" "" quiche-mexican
+.XX "and cheese" "A simple" "Mexican-style casserole with beef" "" tortilla-cass
+.XX "" "marinated fish appetizer from" "Mexico" "A tasty" seviche
+.XX "" "High-energy" "microwave chili" "" chili-7
+.XX "" "Stuffed trout cooked in a" "microwave oven" "" trout-1
+.XX "" "a" "microwave version of mole poblano" "" chicken-mole-1
+.XX "cucumbers and yogurt" "A" "mideast-style sauce with" "" cucumber-sauce
+.XX "" "Baked rice with a" "mild curry flavor" "" curried-rice
+.XX "" "A" "mild, hearty chili" "" chili-2
+.XX "dressing" "A" "mild oil and vinegar salad" "" rocket-salad
+.XX "" "" "Mildly spicy cold noodles" "" cold-noodles
+.XX "" "pudding with salt cod, eggs, and" "milk" "A rich" cod-pudding
+.XX "" "Italian-style pork roast in" "milk" "" pork-in-milk
+.XX "" "A hearty soup with" "millet and Japanese pumpkin" "" kabocha-soup
+.XX "" "" "Miniature pecan pies" "" pecan-tarts-1
+.XX "" "Sinful and light" "mint chocolate mousse" "" mousse-choc-2
+.XX "" "Decadent chocolate" "mint pie" "" frango-pie
+.XX "" "" "Mississippi mud cake" "" miss-mud-cake
+.XX "" "A make-it-yourself" "mix for buttermilk pancakes" "" pancake-mix
+.XX "" "A French-style" "mixture of herbs and seeds" "" herb-blend-1
+.XX "" "Soup with a" "mixture of vegetables" "" leftover-soup
+.XX "cake" "A" "moist 2-layer chocolate layer" "" choc-cake-5
+.XX "" "Sugary," "moist apple squares" "" apple-squares
+.XX "crust" "A" "moist cheesecake with a wonderful" "" cheesecake-5
+.XX "apples, and cinnamon" "" "Moist cookies with cranberries," "" cranb-cookies
+.XX "nuts, and dates" "Very rich and" "moist muffins with bran, raisins," "" muffins-2
+.XX "" "Holiday rolls with oatmeal and" "molasses" "" dark-rolls
+.XX "with dressing" "" "Molded fresh cranberry relish" "" cranb-relish-2
+.XX "" "a microwave version of" "mole poblano" "" chicken-mole-1
+.XX "" "Chicken or duck in hot" "mole sauce" "" chicken-mole-2
+.XX "" "Cookies like what" "Mom should have made" "" choc-chip-4
+.XX "" "Chopped liver just like" "Mom used to make" "" chopped-liver
+.XX "" "Spicy" "Moroccan fish" "" moroccan-fish
+.XX "" "My" "mother's chopped liver" "" chopped-liver2
+.XX "" "A rich but not cloying chocolate" "mousse" "" mousse-choc-1
+.XX "" "Sinful and light mint chocolate" "mousse" "" mousse-choc-2
+.XX "" "quick and easy chocolate" "mousse" "Extremely" mousse-choc-3
+.XX "" "Fried" "mozzarella sticks with marinara" "" mozz-fried
+.XX "" "Chocolate chip cookies like" "Mrs. Fields makes" "" choc-chip-1
+.XX "" "Mississippi" "mud cake" "" miss-mud-cake
+.XX "" "Easy and good bran" "muffins" "" bran-muffins
+.XX "" "Award-winning blueberry" "muffins" "" muffins-1
+.XX "" "Tasty" "muffins with bran and dried fruit" "" bran-muffins-2
+.XX "and dates" "Very rich and moist" "muffins with bran, raisins, nuts," "" muffins-2
+.XX "" "A light summer soup with" "multicolored peppers" "" rainbow-soup
+.XX "" "A rich pie with" "mushroom and onions" "" hobbit-pie
+.XX "" "A rich treat for" "mushroom lovers" "" mushrooms-1
+.XX "" "Pork chops in" "mushroom peanut-butter sauce" "" pork-chops-2
+.XX "" "Eggs poached in" "mushroom sauce" "" eggs-shrooms
+.XX "" "Bamboo shoot, pork, and" "mushroom soup" "" mandarin-soup
+.XX "" "Quick and easy" "mushroom soup" "" mushroom-soup
+.XX "" "A rich dill, paprika and" "mushroom soup" "" mushroom-soup2
+.XX "" "" "Mushroom soup with whisky" "" mushroom-soup3
+.XX "" "dish smothered in escargot and" "mushrooms" "A pizza-like" snail-pizza
+.XX "" "Stewed Sauerkraut with" "Mushrooms" "" wigilia-5
+.XX "" "A vegetable lasagne with spinach," "mushrooms and corn" "" lasagne-2
+.XX "" "Spaghetti sauce with sausage," "mushrooms, and eggplant" "" spagh-sauce-1
+.XX "" "Steamed cauliflower with" "mushrooms and parmesan" "" cauliflower-1
+.XX "" "" "Muskrat roasted in tomato sauce" "" muskrat-1
+.XX "onion" "Cooked" "mustard greens with bacon and" "" mustard-greens
+.XX "" "Beets in a tangy" "mustard sauce" "" beet-mustard
+.XX "" "A Swedish" "national dish" "" meatballs-2
+.XX "" "Spaghetti carbonara," "Neapolitan style" "" carbonara
+.XX "" "Chicken embalmed in apricot" "nectar" "" chicken-aprict
+.XX "eggs" "" "New-Mexico-style enchiladas with" "" enchiladas-1
+.XX "" "A" "nice body and face soap" "" soap
+.XX "at home" "A" "nice Chinese dinner you can make" "" chicken-ssour1
+.XX "" "A" "nice, simple meatloaf" "" meatloaf-2
+.XX "coconut and chocolate chips" "A" "nicely fattening combination of" "" coco-chips
+.XX "covered) bars" "" "No-bake 3-layer (chocolate" "" nanaimo-bars-2
+.XX "" "A" "no-bake chocolate cake" "" choc-cake-1
+.XX "" "" "No-bake chocolate oatmeal cookies" "" oatmeal-fudge
+.XX "" "A rich chocolate" "no-bake cookie" "" cognac-cookies
+.XX "cake." "A" "no-bake graham cracker chocolate" "" choc-cake-4
+.XX "whipped cream" "A" "no-cooking cake with fruit and" "" banana-cake
+.XX "" "A" "non-alcoholic party punch recipe" "" sherbet-punch
+.XX "" "A sweet egg" "noodle kugel" "" noodle-kugel-3
+.XX "noodles" "" "Noodle kugel using uncooked" "" noodle-kugel-2
+.XX "" "Mildly spicy cold" "noodles" "" cold-noodles
+.XX "" "Noodle kugel using uncooked" "noodles" "" noodle-kugel-2
+.XX "" "Easy spicy-hot cold" "noodles for summer" "" noodles-spicy
+.XX "" "Rice with" "noodles in chicken broth" "" armenian-rice
+.XX "apples" "Egg" "noodles, raisins, cinnamon, and" "" noodle-kugel
+.XX "" "Chinese-style" "noodles with a spicy peanut sauce" "" peanut-noodles
+.XX "Raisins" "" "Noodles with Poppy Seed and" "" wigilia-8
+.XX "graham flour, honey, and/" "" "North American crackers with" "" graham-crack
+.XX "" "Pheasant in the" "North American tradition" "" pheasant-2
+.XX "coriander" "A popular" "North Indian lamb dish with" "" lamb-coriander
+.XX "hacker's staple" "Delicious" "Northern Chinese snack and" "" potstickers
+.XX "" "" "Norwegian wreath cookies" "" berlinerkranz
+.XX "" "Some" "not-so-plain biscuits" "" buffet-biscuit
+.XX "home" "Delicious and" "nourishing bars for hiking or" "" muesli-bars
+.XX "" "Chewy carrot raisin and" "nut bars" "" carrot-bars
+.XX "" "A simple, fragrant apple" "nut raisin bread" "" apple-bread
+.XX "" "A festive cranberry orange" "nut-bread" "" cranb-bread-1
+.XX "sugar coating" "" "Nut-butter holiday cookie with a" "" snobol-cookies
+.XX "" "chicken with broccoli and" "nuts" "Chinese stir-fried" chicken-stfry1
+.XX "" "Holiday stuffing with fruit and" "nuts" "" chicken-stuff2
+.XX "" "Baked fruit with curry sauce and" "nuts" "" curried-fruit
+.XX "" "moist muffins with bran, raisins," "nuts, and dates" "Very rich and" muffins-2
+.XX "" "and easy chicken with macadamia" "nuts and honey" "Quick" chicken-macad
+.XX "" "A yeast bread for people who like" "oatmeal" "" oatmeal-bread
+.XX "" "Holiday rolls with" "oatmeal and molasses" "" dark-rolls
+.XX "" "" "Oatmeal and whole wheat pancakes" "" oatmealcakes
+.XX "" "Chewy rolled" "oatmeal bar cookies" "" oatmeal-bars
+.XX "" "Baked" "oatmeal biscuits (cookies)" "" oatmeal-slice
+.XX "" "No-bake chocolate" "oatmeal cookies" "" oatmeal-fudge
+.XX "" "Hardboiled eggs in a sausage/" "oatmeal crust" "" eggs-scotch
+.XX "" "Delicious high-fiber" "oatmeal drop cookies." "" oatmeal-cook-1
+.XX "" "Easy butterscotch" "oatmeal pan cookies" "" oat-squares
+.XX "" "Apple and orange pudding with" "oats on top" "" chaff
+.XX "" "A mild" "oil and vinegar salad dressing" "" rocket-salad
+.XX "pudding" "" "Old-fashioned Christmas boiled" "" xmas-pudding
+.XX "bread" "An" "old-fashioned sourdough French" "" sour-french
+.XX "" "Enchiladas with meat, black" "olives, and cheese" "" enchiladas-2
+.XX "filling" "" "Omelet with cream and smoked fish" "" omelet-1
+.XX "" "" "One-crust apple crumb pie" "" apple-pie-1
+.XX "" "mustard greens with bacon and" "onion" "Cooked" mustard-greens
+.XX "" "Pork chops simmered in tomato and" "onion" "" pork-chops-1
+.XX "" "Indian eggplant," "onion, and tomato casserole" "" eggplant-2
+.XX "" "Easy" "onion soup" "" onion-soup-1
+.XX "" "A rich pie with mushroom and" "onions" "" hobbit-pie
+.XX "" "Indian braised chicken with" "onions, cloves, and ginger" "" chicken-korma
+.XX "" "Chicken in wine with grapes and" "orange" "" chicken-grape
+.XX "buttered almonds" "Chicken in" "orange bourbon sauce with" "" chicken-bourbn
+.XX "" "A festive cranberry" "orange nut-bread" "" cranb-bread-1
+.XX "" "Apple and" "orange pudding with oats on top" "" chaff
+.XX "" "A luscious" "orange-flavored pound cake" "" pound-cake-1
+.XX "" "" "Ordinary white bread" "" bread-white-1
+.XX "dinner" "An" "oriental-style cook-at-the-table" "" sukiyaki-1
+.XX "" "The" "original Chinese spaghetti" "" chinese-spagh
+.XX "" "Bread as made by drovers in the" "outback" "" damper
+.XX "" "Easy marinated chicken for" "outdoor BBQ" "" chicken-micrn
+.XX "" "trout cooked in a microwave" "oven" "Stuffed" trout-1
+.XX "basil sauce" "" "Oven-baked chicken pieces with" "" chicken-basil
+.XX "" "broth with artichokes and poached" "oysters" "Chicken" oyster-soup
+.XX "" "Easy butterscotch oatmeal" "pan cookies" "" oat-squares
+.XX "" "Oatmeal and whole wheat" "pancakes" "" oatmealcakes
+.XX "" "mix for buttermilk" "pancakes" "A make-it-yourself" pancake-mix
+.XX "" "Light and fluffy breakfast" "pancakes" "" pancakes-2
+.XX "" "good baking-powder and yogurt" "pancakes" "Amazingly" yogurt-cakes
+.XX "" "Bananas with ham and" "paprika" "" ham-bananas
+.XX "" "A rich dill," "paprika and mushroom soup" "" mushroom-soup2
+.XX "" "Hungarian potato" "paprikash" "" potato-paprksh
+.XX "" "cauliflower with mushrooms and" "parmesan" "Steamed" cauliflower-1
+.XX "" "A hot spicy" "party cheese dip" "" hot-cheese-dip
+.XX "chestnuts" "" "Party dip with spinach and water" "" spinach-dip
+.XX "sour cream" "Simple" "party dip with spinach, leek, and" "" spinach-dip-2
+.XX "" "A potent holiday" "party eggnog drink" "" eggnog1
+.XX "" "" "PARTY PATE WITHOUT LIVER" "" pate-1
+.XX "" "A non-alcoholic" "party punch recipe" "" sherbet-punch
+.XX "" "Rich chocolate dessert for" "Passover" "" choc-nut-torte
+.XX "" "Vegetable and fruit casserole for" "Passover" "" tzimmes
+.XX "" "Traditional" "Passover breakfast" "" matzo-brei
+.XX "" "Bread-like" "Passover rolls" "" matzo-rolls
+.XX "" "A cold" "pasta dish" "" curry-salad
+.XX "" "A triangular filled" "pastry" "" hamantashen
+.XX "" "Spinach and cheeses in a puff" "pastry crust" "" spinach-pastry
+.XX "" "Greek smoked fish-roe" "pate" "" taramosalata-1
+.XX "" "PARTY" "PATE WITHOUT LIVER" "" pate-1
+.XX "" "Simple desert for failed" "Pavlova attempts" "" ambrosia
+.XX "dessert)" "" "Pavlova (Australian meringue" "" pavlova-1
+.XX "dessert)" "" "Pavlova (Australian meringue" "" pavlova-2
+.XX "" "" "Pea soup with bacon" "" pea-soup-1
+.XX "champagne" "Fine" "pea soup with shrimp and" "" shrimp-soup
+.XX "" "Pork ribs in" "peach tomato barbecue sauce" "" peach-bbq
+.XX "" "Chicken in a spicy" "peanut sauce" "" chicken-peanut
+.XX "" "noodles with a spicy" "peanut sauce" "Chinese-style" peanut-noodles
+.XX "or tofu" "A spicy" "peanut sauce for chicken, tempeh," "" peanut-sauce-1
+.XX "" "Simple" "peanut-butter cookies" "" cookies-pb
+.XX "" "Chocolate and" "peanutbutter holiday treat" "" bon-bons
+.XX "" "Pork chops in mushroom" "peanut-butter sauce" "" pork-chops-2
+.XX "" "A quick" "pear dessert" "" pear-mice
+.XX "" "Spicy Caribean Black-Eyed" "Peas and Rice" "" black-eye-rice
+.XX "" "Saut\z\(aaeed scallops with snow" "peas in fish sauce" "" scallops-1
+.XX "" "Texas-style creamy" "pecan cookies" "" pecan-pralines
+.XX "" "The traditional recipe for" "pecan pie" "" pecan-pie-1
+.XX "" "Miniature" "pecan pies" "" pecan-tarts-1
+.XX "" "Fish in a hot garlic/" "pecan sauce" "" hot-fanny-1
+.XX "" "" "Pecan-pumpkin pie" "" pecn-pmpkn-pie
+.XX "" "Wheat and wild rice pilaf with" "pecans" "" pecan-wildrice
+.XX "" "A rich pie with pumpkin and" "pecans" "" pumpkin-pie-2
+.XX "" "chicken dish with yogurt and red" "pepper" "An Indian-style" chicken-yogurt
+.XX "" "with lentils, tomatoes, and hot" "pepper" "A simple soup" lentil-soup
+.XX "" "A low-calorie but flavorful red" "pepper salad" "" pepper-roast
+.XX "" "recipe from the founder of" "Pepperidge Farm" "A stuffing" bread-stuff-1
+.XX "" "Chicken with garlic and hot" "peppers" "" chicken-asian
+.XX "" "Pork with lime and hot" "peppers" "" pork-braise-1
+.XX "" "summer soup with multicolored" "peppers" "A light" rainbow-soup
+.XX "" "steaks cooked with sweet red" "peppers" "Swordfish" swordfish-1
+.XX "" "Zucchini with ginger and chili" "peppers" "" zucchini-ging
+.XX "" "Corn bread with" "peppers and cheese" "" cornbread-1
+.XX "" "Holiday" "persimmon pudding with walnuts" "" persim-pudding
+.XX "" "" "Pheasant for Thanksgiving" "" pheasant-perry
+.XX "tradition" "" "Pheasant in the North American" "" pheasant-2
+.XX "" "A very sweet cucumber" "pickle" "" cuke-chunks
+.XX "" "" "Pickled beets" "" wigilia-3
+.XX "" "" "Pickled Herring in Sour Cream" "" wigilia-4
+.XX "" "The most lip smackin'" "pickles you ever tasted." "" sour-pickles-1
+.XX "" "A quick substitute for apple" "pie" "" apple-bake
+.XX "" "One-crust apple crumb" "pie" "" apple-pie-1
+.XX "" "A rich chocolate/cherry" "pie" "" blkforest-pie
+.XX "" "A simple cherry cream cheese" "pie" "" cherrycheese-1
+.XX "" "A rich chocolate" "pie" "" choc-pie-1
+.XX "" "Decadent chocolate mint" "pie" "" frango-pie
+.XX "" "A quick fruit tart" "pie" "" fruit-tart
+.XX "" "Finnish meat" "pie" "" meat-pie-1
+.XX "" "Australian baked meat" "pie" "" meat-pie-3
+.XX "" "The traditional recipe for pecan" "pie" "" pecan-pie-1
+.XX "" "Pecan-pumpkin" "pie" "" pecn-pmpkn-pie
+.XX "" "San Felese Easter" "pie" "" pizza-rustica
+.XX "" "A holiday alternative to pumpkin" "pie" "" pumpkin-cake-3
+.XX "" "Greek spinach and cheese" "pie" "" spanakopita
+.XX "" "Greek spinach and feta cheese" "pie" "" spanakopita-2
+.XX "" "very simple holiday sweet potato" "pie" "A" sweepto-pie
+.XX "" "A wonderful vegetable" "pie" "" vegetable-pie
+.XX "" "Traditional lime" "pie dessert from the Florida Keys" "" key-lime-pie
+.XX "" "A salmon and cheese" "pie flavored with sour cream" "" salmon-pie
+.XX "grapes" "Fruit" "pie made from green seedless" "" grape-pie
+.XX "" "Rye bread" "pie with fish and pork filling" "" meat-pie-4
+.XX "" "A Pumpkin" "Pie with flour" "" pumpkin-pie-3
+.XX "" "A rich spinach" "pie with ham and cheese" "" spinach-pie
+.XX "" "A rich" "pie with mushroom and onions" "" hobbit-pie
+.XX "" "A rich" "pie with pumpkin and pecans" "" pumpkin-pie-2
+.XX "" "Apple" "pie with sour cream goodness" "" apple-pie-2
+.XX "" "Oven-baked chicken" "pieces with basil sauce" "" chicken-basil
+.XX "" "Miniature pecan" "pies" "" pecan-tarts-1
+.XX "" "Cornish-style meat" "pies from the UP" "" meat-pie-2
+.XX "" "" "Pike Polish style" "" wigilia-2
+.XX "" "Wheat and wild rice" "pilaf with pecans" "" pecan-wildrice
+.XX "lentils" "" "Pilaf with sour cherries and" "" cherry-pilaf
+.XX "" "Chicken with" "pineapple and soya sauce" "" chicken-pine1
+.XX "" "Tex-Mex style" "pinto beans." "" texmex-beans
+.XX "" "" "Pita\-Seafood Salad Sandwiches" "" pita-seafood
+.XX "" "Waffle ice-cream cone," "pizelles" "" waffle-cone
+.XX "" "Simple" "pizza dough" "" pizza-dough-1
+.XX "escargot and mushrooms" "A" "pizza-like dish smothered in" "" snail-pizza
+.XX "" "bread for toasting or eating" "plain" "A 7-grain" bread
+.XX "" "Homemade" "playdough" "" playdough
+.XX "" "Simple beef casserole with" "plum and tomato" "" plum-casserole
+.XX "" "A Bavarian" "plum delicacy for dessert" "" zwetschgend
+.XX "" "A southern-hemisphere Christmas" "plum pudding" "" xmas-icecream
+.XX "" "Eggs" "poached in mushroom sauce" "" eggs-shrooms
+.XX "" "Chicken broth with artichokes and" "poached oysters" "" oyster-soup
+.XX "" "a microwave version of mole" "poblano" "" chicken-mole-1
+.XX "" "Pike" "Polish style" "" wigilia-2
+.XX "" "Popovers from the Jordan" "Pond teahouse" "" pond-popovers
+.XX "teahouse" "" "Popovers from the Jordan Pond" "" pond-popovers
+.XX "" "Noodles with" "Poppy Seed and Raisins" "" wigilia-8
+.XX "" "" "Poppy seed rolls" "" wigilia-9
+.XX "" "Chicken casserole with" "poppy seeds" "" chicken-popsd
+.XX "" "A toasted cheese tortilla snack" "popular in southern Arizona" "" tucson-tostada
+.XX "with coriander" "A" "popular North Indian lamb dish" "" lamb-coriander
+.XX "" "" "Popular Szechuan Chinese soup" "" hotsour-soup-2
+.XX "" "Bamboo shoot," "pork, and mushroom soup" "" mandarin-soup
+.XX "peanut-butter sauce" "" "Pork chops in mushroom" "" pork-chops-2
+.XX "onion" "" "Pork chops simmered in tomato and" "" pork-chops-1
+.XX "" "Rye bread pie with fish and" "pork filling" "" meat-pie-4
+.XX "" "Spicy" "pork or lamb kebabs" "" meat-kebabs
+.XX "barbecue sauce" "" "Pork ribs in peach tomato" "" peach-bbq
+.XX "" "A Chinese method of cooking a" "pork roast" "" red-pork
+.XX "" "Italian-style" "pork roast in milk" "" pork-in-milk
+.XX "" "" "Pork with lime and hot peppers" "" pork-braise-1
+.XX "" "cold, enriched" "porridge" "" muesli-1
+.XX "" "Betty" "Post's quick fish chowder" "" fish-chowder
+.XX "cold winter/" "A rich cream-style" "potato and spinach soup for a" "" spud-spin-soup
+.XX "" "Hungarian" "potato paprikash" "" potato-paprksh
+.XX "" "A very simple holiday sweet" "potato pie" "" sweepto-pie
+.XX "" "Cabbage and" "Potatoes" "" cabbage-spuds
+.XX "" "A kind of gratin with" "potatoes" "" jansson
+.XX "" "Garlic fried" "potatoes" "" patatas-pobres
+.XX "" "Kugel with" "potatoes and carrots" "" kugel-3
+.XX "in cream cheese quiche" "Sweet" "potatoes, carrots and cranberries" "" cranb-quiche
+.XX "" "A brunch casserole with" "potatoes, eggs, bacon, and cheese" "" potato-pie-1
+.XX "" "A casserole of" "potatoes, rice, and cheese" "" delmonicos
+.XX "and tequila" "Sweet" "potatoes saut\z\(aaeed in lime" "" saute-sweepto
+.XX "" "Mashed sweet" "potatoes with marshmallows" "" sweet-potato
+.XX "" "A" "potent holiday party eggnog drink" "" eggnog1
+.XX "" "Egg-cognac: a" "potent sweet alcoholic beverage" "" advokaat
+.XX "bread, and wine" "" "Poultry stuffing with chestnuts," "" chestnut-stuff
+.XX "" "A luscious orange-flavored" "pound cake" "" pound-cake-1
+.XX "" "A" "pound cake made with cream cheese" "" pound-cake-2
+.XX "" "Christmas cookies coated with" "powdered sugar" "Traditional Greek" kourabiedes
+.XX "" "Chocolate cookies with" "powdered sugar coating" "" snowball-2
+.XX "" "Food" "processor cheesecake" "" cheesecake-8
+.XX "" "An old Welsh steamed carrot" "pudding" "" carrot-pudding
+.XX "" "Uncooked fruit and bread" "pudding" "" summer-pudding
+.XX "" "Christmas plum" "pudding" "A southern-hemisphere" xmas-icecream
+.XX "" "Old-fashioned Christmas boiled" "pudding" "" xmas-pudding
+.XX "" "Butterscotch" "pudding with a meringue top" "" butterscotch
+.XX "" "chocolate bread" "pudding with cinnamon" "" choc-pudding-2
+.XX "" "Apple and orange" "pudding with oats on top" "" chaff
+.XX "milk" "A rich" "pudding with salt cod, eggs, and" "" cod-pudding
+.XX "" "Holiday persimmon" "pudding with walnuts" "" persim-pudding
+.XX "" "Spinach and cheeses in a" "puff pastry crust" "" spinach-pastry
+.XX "" "German ``Kartoffel" "Puffer''" "" potato-pancake
+.XX "" "soup with millet and Japanese" "pumpkin" "A hearty" kabocha-soup
+.XX "" "A rich pie with" "pumpkin and pecans" "" pumpkin-pie-2
+.XX "" "A cheesecake rich with" "pumpkin flavor" "" pumpkin-cake
+.XX "" "A holiday alternative to" "pumpkin pie" "" pumpkin-cake-3
+.XX "" "A" "Pumpkin Pie with flour" "" pumpkin-pie-3
+.XX "" "" "Pumpkin scones" "" pumpkin-scones
+.XX "" "Cheese soup in a" "pumpkin shell" "" cheese-soup1
+.XX "" "Fluffy whipped" "pumpkin upside-down cake" "" pumpkin-cake-2
+.XX "" "A dessert bread made from" "pumpkins" "" pumpkin-bread
+.XX "" "A non-alcoholic party" "punch recipe" "" sherbet-punch
+.XX "" "and cranberries in cream cheese" "quiche" "Sweet potatoes, carrots" cranb-quiche
+.XX "" "Shrimp" "quiche in a Mexican style" "" quiche-mexican
+.XX "cheese and marinara" "A" "quick and easy chicken with" "" chicken-marnar
+.XX "macadamia nuts and honey" "" "Quick and easy chicken with" "" chicken-macad
+.XX "" "Extremely" "quick and easy chocolate mousse" "" mousse-choc-3
+.XX "" "" "Quick and easy garlic bread" "" garlic-bread-2
+.XX "" "A" "quick and easy Hollandaise sauce" "" hollandaise-1
+.XX "" "" "Quick and easy mushroom soup" "" mushroom-soup
+.XX "" "A" "quick and flavorful meat loaf" "" meatloaf-1
+.XX "" "" "Quick Asian-style chicken breast" "" chicken-shant
+.XX "" "An extremely" "quick cherry cobbler dessert" "" quick-cobbler
+.XX "" "Betty Post's" "quick fish chowder" "" fish-chowder
+.XX "" "A" "quick fruit tart pie" "" fruit-tart
+.XX "" "A" "quick hamburger dish" "" hamburger-pie
+.XX "" "A" "quick pear dessert" "" pear-mice
+.XX "" "A" "quick substitute for apple pie" "" apple-bake
+.XX "" "an easy" "quick tummy-warming soup" "" beer-chs-soup
+.XX "" "A simple, and" "quite superb meat marinade." "" meatmarinade-2
+.XX "" "Chewy carrot" "raisin and nut bars" "" carrot-bars
+.XX "" "A simple, fragrant apple nut" "raisin bread" "" apple-bread
+.XX "" "Noodles with Poppy Seed and" "Raisins" "" wigilia-8
+.XX "" "Cake with gumdrops, applesauce," "raisins, and coconut" "" gumdrop-cake
+.XX "" "Egg noodles," "raisins, cinnamon, and apples" "" noodle-kugel
+.XX "" "rich and moist muffins with bran," "raisins, nuts, and dates" "Very" muffins-2
+.XX "" "Spaghetti with" "raw eggs and Italian bacon" "" carbonara-2
+.XX "" "World champion Texas" "red chili" "" chili-5
+.XX "" "chicken dish with yogurt and" "red pepper" "An Indian-style" chicken-yogurt
+.XX "" "A low-calorie but flavorful" "red pepper salad" "" pepper-roast
+.XX "" "steaks cooked with sweet" "red peppers" "Swordfish" swordfish-1
+.XX "" "a meal with cheese, bread, and" "red wine." "Makes" squash-soup
+.XX "" "Baked apples with" "red wine" "" wigilia-11
+.XX "" "Leeks in a zesty" "red wine sauce" "" drunk-leeks
+.XX "" "A marinade for" "redfish" "" redfish-rasta
+.XX "" "Tex-Mex style" "refried beans." "" texmex-refried
+.XX "" "An utterly" "reliable recipe for yeast rolls." "" yeast-rolls
+.XX "" "Fried chili-pepper sambal" "relish" "" sambal-bajak
+.XX "" "A fruit" "relish for holiday dinners" "" cranb-relish
+.XX "" "Eggplant" "relish vinaigrette" "" relish-1
+.XX "" "Molded fresh cranberry" "relish with dressing" "" cranb-relish-2
+.XX "" "Frozen cranberry" "relish with horseradish" "" cranb-relish-3
+.XX "basil" "Indonesian" "relish with lime, chili, and" "" sambal-lilang
+.XX "" "An easier way to make chili" "rellenos" "" relleno-cass
+.XX "" "Coffee cake from Hobee's Haven" "restaurant" "" coffee-cake-2
+.XX "" "" "Restaurant-style cheesecake" "" cheesecake-3
+.XX "" "Korean marinated" "ribs" "" kalbi-kui
+.XX "sauce" "Pork" "ribs in peach tomato barbecue" "" peach-bbq
+.XX "" "Caribean Black-Eyed Peas and" "Rice" "Spicy" black-eye-rice
+.XX "" "Spicy roast lamb with" "rice" "" cajun-lamb
+.XX "" "winter soup with turkey and wild" "rice" "A Hearty" turkey-soup
+.XX "" "A casserole of potatoes," "rice, and cheese" "" delmonicos
+.XX "" "A vegetarian bean," "rice, and cheese casserole" "" rice-bean-bake
+.XX "" "Roast chicken stuffed with" "rice and vegetables" "" chicken-stuff
+.XX "" "A basic steamed" "rice for gumbo dishes" "" rice-gumbo
+.XX "" "Wheat and wild" "rice pilaf with pecans" "" pecan-wildrice
+.XX "" "Baked" "rice with a mild curry flavor" "" curried-rice
+.XX "" "Basmati" "rice with carrots" "" basmati-rice-1
+.XX "broth" "" "Rice with noodles in chicken" "" armenian-rice
+.XX "" "Chinese method of cooking a pork" "roast" "A" red-pork
+.XX "and vegetables" "" "Roast chicken stuffed with rice" "" chicken-stuff
+.XX "" "Italian-style pork" "roast in milk" "" pork-in-milk
+.XX "" "Spicy" "roast lamb with rice" "" cajun-lamb
+.XX "" "Muskrat" "roasted in tomato sauce" "" muskrat-1
+.XX "holidays" "" "Rolled cookies for the Christmas" "" rolled-cookies
+.XX "" "Chewy" "rolled oatmeal bar cookies" "" oatmeal-bars
+.XX "" "" "Rolled, walnut-filled cookies" "" walnut-horns
+.XX "" "Bread-like Passover" "rolls" "" matzo-rolls
+.XX "" "Poppy seed" "rolls" "" wigilia-9
+.XX "" "utterly reliable recipe for yeast" "rolls." "An" yeast-rolls
+.XX "" "Holiday" "rolls with oatmeal and molasses" "" dark-rolls
+.XX "" "served in the U.S. Senate dining" "room" "Bean soup as" senate-soup
+.XX "" "Cooked celery" "root in vinaigrette" "" celery-salad
+.XX "" "Leg of lamb with" "rosemary & tomato baste" "" leg-of-lamb-1
+.XX "" "Leg of lamb with" "rosemary and lemon" "" leg-of-lamb-2
+.XX "" "A" "rough, livery, crusty scrapple" "" scrapple-2
+.XX "" "eggnog with bourbon and dark" "rum" "Traditional layered" eggnog2
+.XX "" "Ladyfingers with cream and" "rum" "" zuccotto
+.XX "" "Zeek" "Rum Balls" "" rlz-rum-balls
+.XX "" "Intoxicating chocolate snack with" "rum or bourbon" "" rum-balls
+.XX "" "Ultimate hot buttered" "rum recipe" "" rum-toddy
+.XX "" "Chocolate" "rum truffles" "" rum-balls-2
+.XX "" "" "Russian Cookies" "" kolachki
+.XX "" "A sweet, dark whole-grain" "rye bread" "" bread-rye
+.XX "filling" "" "Rye bread pie with fish and pork" "" meat-pie-4
+.XX "" "A southern U." "S. classic" "" cheese-grits
+.XX "" "Bean soup as served in the U." "S. Senate dining room" "" senate-soup
+.XX "" "European Jewish traditional" "sabbath stew" "" sabbath-stew
+.XX "" "Applesauce jello" "salad" "" applesauce-sld
+.XX "" "Generic fresh fruit" "salad" "" fruit-salad
+.XX "" "but flavorful red pepper" "salad" "A low-calorie" pepper-roast
+.XX "" "Chicken fruit" "salad curry" "" chicken-curry3
+.XX "" "A mild oil and vinegar" "salad dressing" "" rocket-salad
+.XX "" "A spinach" "salad for summertime" "" spinach-salad
+.XX "cheese" "Dinner" "salad made with dandelions and" "" dandelions
+.XX "" "Pita\-Seafood" "Salad Sandwiches" "" pita-seafood
+.XX "" "Wilted cabbage" "salad with bacon" "" cabbage-salad
+.XX "" "Chicken" "salad with Chinese seasonings" "" chicken-salad1
+.XX "" "A simple main-dish" "salad with Mexican seasonings" "" salad-mexican
+.XX "" "Swedish dill-cured" "salmon" "" gravlax
+.XX "with sour cream" "A" "salmon and cheese pie flavored" "" salmon-pie
+.XX "" "A baked" "salmon and spinach loaf" "" salmon-spinach
+.XX "course" "" "Salmon burgers for snack or main" "" salmon-patties
+.XX "" "Traditional" "salmon dish from Lappland" "" salmon-teno
+.XX "" "Tomato" "salsa for chicken or fish" "" salsa-1
+.XX "" "A rich pudding with" "salt cod, eggs, and milk" "" cod-pudding
+.XX "" "An easy recipe for Cantonese" "salty turnip cakes" "" turnip-cakes
+.XX "" "Fried chili-pepper" "sambal relish" "" sambal-bajak
+.XX "" "" "San Antonio, Texas style tacos" "" texmex-tacos
+.XX "" "" "San Felese Easter pie" "" pizza-rustica
+.XX "" "Pita\-Seafood Salad" "Sandwiches" "" pita-seafood
+.XX "" "" "Sardines with garlic and tomato" "" sardine-fry
+.XX "" "Beets in a tangy mustard" "sauce" "" beet-mustard
+.XX "" "chicken pieces with basil" "sauce" "Oven-baked" chicken-basil
+.XX "" "chunks of chicken in sweet lemon" "sauce" "Crispy" chicken-lemon
+.XX "" "Chicken breasts in tomato-lime" "sauce" "" chicken-lime
+.XX "" "Chicken or duck in hot mole" "sauce" "" chicken-mole-2
+.XX "" "Chicken in a spicy peanut" "sauce" "" chicken-peanut
+.XX "" "Chicken with pineapple and soya" "sauce" "" chicken-pine1
+.XX "" "chicken with a tarragon cream" "sauce" "Saut\z\(aaed" chicken-tarrag
+.XX "" "Chicken in a wine" "sauce" "" chicken-wine
+.XX "" "Chicken with white" "sauce" "" chick-milan
+.XX "" "coconut beer batter with dipping" "sauce" "Shrimp in" coconut-shrimp
+.XX "" "glazed with spiced cranberry" "sauce" "Baked chicken" cranb-chicken
+.XX "" "Homemade cranberry" "sauce" "" cranb-sauce-1
+.XX "" "Leeks in a zesty red wine" "sauce" "" drunk-leeks
+.XX "" "baked eggplant in chili" "sauce" "Indonesian" eggplant-3
+.XX "" "Eggs poached in mushroom" "sauce" "" eggs-shrooms
+.XX "" "Scampi in garlic butter" "sauce" "" garlic-scampi
+.XX "" "A quick and easy Hollandaise" "sauce" "" hollandaise-1
+.XX "" "Fish in a hot garlic/pecan" "sauce" "" hot-fanny-1
+.XX "" "in herb and garlic tomato" "sauce" "Simple meatballs" meatballs-1
+.XX "" "Muskrat roasted in tomato" "sauce" "" muskrat-1
+.XX "" "ribs in peach tomato barbecue" "sauce" "Pork" peach-bbq
+.XX "" "noodles with a spicy peanut" "sauce" "Chinese-style" peanut-noodles
+.XX "" "cabbage in garlic and soy" "sauce" "Filipino" poncit
+.XX "" "chops in mushroom peanut-butter" "sauce" "Pork" pork-chops-2
+.XX "" "snack to be eaten with cocktail" "sauce" "A spicy" sausage-balls
+.XX "" "scallops with snow peas in fish" "sauce" "Saut\z\(aaeed" scallops-1
+.XX "" "Very easy and cheap spaghetti" "sauce" "" spagh-sauce-2
+.XX "" "Fish in horseradish" "sauce" "" wigilia-1
+.XX "" "Baked fruit with curry" "sauce and nuts" "" curried-fruit
+.XX "tofu" "A spicy peanut" "sauce for chicken, tempeh, or" "" peanut-sauce-1
+.XX "" "Hot fudge" "sauce for ice cream" "" hot-fudge-1
+.XX "" "Chicken in orange bourbon" "sauce with buttered almonds" "" chicken-bourbn
+.XX "" "A mideast-style" "sauce with cucumbers and yogurt" "" cucumber-sauce
+.XX "" "An exotically spiced spaghetti" "sauce with meat" "" spagh-sauce-3
+.XX "and eggplant" "Spaghetti" "sauce with sausage, mushrooms," "" spagh-sauce-1
+.XX "" "Stewed" "Sauerkraut with Mushrooms" "" wigilia-5
+.XX "" "Gumbo with chicken and Andouille" "sausage" "" chicken-gumbo
+.XX "" "scrapple (a breakfast food like" "sausage)" "Eastern-style" scrapple-1
+.XX "" "A baked egg," "sausage, and bread casserole" "" breakfast-cas
+.XX "" "Spaghetti sauce with" "sausage, mushrooms, and eggplant" "" spagh-sauce-1
+.XX "" "Hardboiled eggs in a" "sausage/oatmeal crust" "" eggs-scotch
+.XX "" "rich creamy chowder with corn and" "sausages" "A" corn-chowder-2
+.XX "" "A fruity cabbage" "saut\z\(aae" "" cabbage+apples
+.XX "tarragon cream sauce" "" "Saut\z\(aaed chicken with a" "" chicken-tarrag
+.XX "" "Sweet potatoes" "saut\z\(aaeed in lime and tequila" "" saute-sweepto
+.XX "peas in fish sauce" "" "Saut\z\(aaeed scallops with snow" "" scallops-1
+.XX "" "" "Savoury spice balls" "" gateaux-pim
+.XX "sauce" "Saut\z\(aaeed" "scallops with snow peas in fish" "" scallops-1
+.XX "" "" "Scampi in garlic butter sauce" "" garlic-scampi
+.XX "" "Pumpkin" "scones" "" pumpkin-scones
+.XX "" "A rough, livery, crusty" "scrapple" "" scrapple-2
+.XX "sausage)" "Eastern-style" "scrapple (a breakfast food like" "" scrapple-1
+.XX "" "Latin-American" "seasoned chopped beef" "" picadillo
+.XX "" "Chicken salad with Chinese" "seasonings" "" chicken-salad1
+.XX "" "main-dish salad with Mexican" "seasonings" "A simple" salad-mexican
+.XX "" "Traditional" "Seder accompaniment" "" charoset
+.XX "" "Noodles with Poppy" "Seed and Raisins" "" wigilia-8
+.XX "" "A crunchy sesame" "seed granola" "" granola
+.XX "" "Poppy" "seed rolls" "" wigilia-9
+.XX "" "Fruit pie made from green" "seedless grapes" "" grape-pie
+.XX "" "Chicken casserole with poppy" "seeds" "" chicken-popsd
+.XX "" "French-style mixture of herbs and" "seeds" "A" herb-blend-1
+.XX "" "A Greek dessert with" "semolina" "" halvas
+.XX "" "Bean soup as served in the U.S." "Senate dining room" "" senate-soup
+.XX "" "" "Serious chocolate brownies" "" brownies-2
+.XX "room" "Bean soup as" "served in the U.S. Senate dining" "" senate-soup
+.XX "" "A crunchy" "sesame seed granola" "" granola
+.XX "" "Braised veal" "shanks in white wine" "" osso-bucco
+.XX "" "Cheese soup in a pumpkin" "shell" "" cheese-soup1
+.XX "" "An American version of stuffed" "shells" "" manicotti-1
+.XX "" "Bamboo" "shoot, pork, and mushroom soup" "" mandarin-soup
+.XX "" "Soft" "shortbread" "" shortbread-2
+.XX "" "Rich" "shortbread cookies" "" shortbread-3
+.XX "" "" "Shortbread-like biscuits" "" shortbread-1
+.XX "" "Fine pea soup with" "shrimp and champagne" "" shrimp-soup
+.XX "" "A high-cholesterol appetizer with" "shrimp, cheese, and bacon" "" shrimp-bacon
+.XX "" "Incredible crab or" "shrimp dip" "" crab-butter
+.XX "with dipping sauce" "" "Shrimp in coconut beer batter" "" coconut-shrimp
+.XX "" "" "Shrimp quiche in a Mexican style" "" quiche-mexican
+.XX "" "An Indian spinach" "side-dish" "" sagh
+.XX "" "A Mexican meat and bean dish," "similar to chili" "" chalupa-1
+.XX "" "Pork chops" "simmered in tomato and onion" "" pork-chops-1
+.XX "marinade." "A" "simple, and quite superb meat" "" meatmarinade-2
+.XX "casserole" "A" "simple and unusual carrot-cheese" "" carrots-gratin
+.XX "" "" "Simple appetizer for summer days" "" egg-mousse
+.XX "" "A light and" "simple asparagus soup" "" asparag-soup-1
+.XX "and tomato" "" "Simple beef casserole with plum" "" plum-casserole
+.XX "" "" "Simple butter cookies" "" butter-cookies
+.XX "soup" "Aztec soup: a" "simple cheese, tomato, and beef" "" soup-aztec
+.XX "" "" "Simple cheese-and-tomato lasagna" "" lasagna-4
+.XX "" "A" "simple cherry cream cheese pie" "" cherrycheese-1
+.XX "" "A" "simple chicken curry" "" chicken-curry4
+.XX "fresh eggplant" "A" "simple Chinese-style recipe for" "" eggplant-4
+.XX "" "Very" "simple chocolate truffles" "" truffles-4
+.XX "tomatoes and apples" "A" "simple cooked chutney with" "" chutney-2
+.XX "attempts" "" "Simple desert for failed Pavlova" "" ambrosia
+.XX "cream cheese" "" "Simple filled butter cookies with" "" cbuttr-cookies
+.XX "" "" "Simple, fluffy biscuits" "" biscuits-1
+.XX "bread" "A" "simple, fragrant apple nut raisin" "" apple-bread
+.XX "" "A very" "simple holiday sweet potato pie" "" sweepto-pie
+.XX "Mexican seasonings" "A" "simple main-dish salad with" "" salad-mexican
+.XX "garlic tomato sauce" "" "Simple meatballs in herb and" "" meatballs-1
+.XX "" "A nice," "simple meatloaf" "" meatloaf-2
+.XX "with beef and cheese" "A" "simple Mexican-style casserole" "" tortilla-cass
+.XX "" "A" "simple New Mexican holiday stew" "" pozole
+.XX "leek, and sour cream" "" "Simple party dip with spinach," "" spinach-dip-2
+.XX "" "" "Simple peanut-butter cookies" "" cookies-pb
+.XX "" "" "Simple pizza dough" "" pizza-dough-1
+.XX "beans" "A" "simple prizewinning chili with" "" chili-4
+.XX "" "A spicy and" "simple sloppy joe" "" sloppy-joes
+.XX "tomatoes, and hot pepper" "A" "simple soup with lentils," "" lentil-soup
+.XX "" "Very hot, very" "simple, very good beef stir-fry" "" sesame-beef
+.XX "extra yummy" "A" "simple way to make whipped cream" "" whipped-cream
+.XX "mousse" "" "Sinful and light mint chocolate" "" mousse-choc-2
+.XX "" "Spicy grilled lamb on a" "skewer" "" lamb-kebab
+.XX "" "Brownies in a" "skillet" "" choc-pancakes
+.XX "Tex-Mex favorite" "Barbecued" "skirt steak marinated in lime: a" "" fajitas
+.XX "" "A spicy warm" "slaw" "" coleslaw-2
+.XX "" "Chocolate cream" "slices" "" choc-slices
+.XX "" "A spicy and simple" "sloppy joe" "" sloppy-joes
+.XX "" "The most lip" "smackin' pickles you ever tasted." "" sour-pickles-1
+.XX "" "Omelet with cream and" "smoked fish filling" "" omelet-1
+.XX "" "Greek" "smoked fish-roe pate" "" taramosalata-1
+.XX "" "A traditional Australian sweet" "snack" "" choc-crackles
+.XX "" "Delicious Northern Chinese" "snack and hacker's staple" "" potstickers
+.XX "" "Salmon burgers for" "snack or main course" "" salmon-patties
+.XX "" "A toasted cheese tortilla" "snack popular in southern Arizona" "" tucson-tostada
+.XX "sauce" "A spicy" "snack to be eaten with cocktail" "" sausage-balls
+.XX "" "Intoxicating chocolate" "snack with rum or bourbon" "" rum-balls
+.XX "" "Saut\z\(aaeed scallops with" "snow peas in fish sauce" "" scallops-1
+.XX "" "/greek Christmas cookies" "soaked in honey syrup" "" melomacarona
+.XX "" "A nice body and face" "soap" "" soap
+.XX "" "Two white" "soda loaves" "" soda-bread
+.XX "" "Traditional gingerbread," "soft and chewy" "" gingerbread
+.XX "" "delicious dessert with fruit and" "soft cheese" "A" rhubarb-fool
+.XX "" "" "Soft shortbread" "" shortbread-2
+.XX "syrup" "A classic" "souffle, flavored with maple" "" maple-souffle
+.XX "" "A light and simple asparagus" "soup" "" asparag-soup-1
+.XX "" "Greek style egg & lemon chicken" "soup" "" avgolemono
+.XX "" "Greek egg-lemon" "soup" "" avgolemono-2
+.XX "" "an easy quick tummy-warming" "soup" "" beer-chs-soup
+.XX "" "Marseille style fish" "soup" "" bouillabaisse
+.XX "" "Addictive broccoli" "soup" "" broccoli-soup
+.XX "" "Greek style chick-pea" "soup" "" chickpea-soup
+.XX "" "A hearty corn" "soup" "" corn-chowder
+.XX "" "Fresh fruit" "soup" "" fruit-soup
+.XX "" "Szechuan hot and sour" "soup" "" hotsour-soup-1
+.XX "" "Popular Szechuan Chinese" "soup" "" hotsour-soup-2
+.XX "" "Bamboo shoot, pork, and mushroom" "soup" "" mandarin-soup
+.XX "" "Quick and easy mushroom" "soup" "" mushroom-soup
+.XX "" "A rich dill, paprika and mushroom" "soup" "" mushroom-soup2
+.XX "" "Easy onion" "soup" "" onion-soup-1
+.XX "" "a simple cheese, tomato, and beef" "soup" "Aztec soup:" soup-aztec
+.XX "" "Easy cream of spinach" "soup" "" spinach-soup
+.XX "" "A thick and hearty vegetable beef" "soup" "" veg-soup-2
+.XX "" "Almond" "Soup" "" wigilia-7
+.XX "" "A broccoli" "soup \- hot or cold" "" broc-bisque
+.XX "and beef soup" "Aztec" "soup: a simple cheese, tomato," "" soup-aztec
+.XX "dining room" "Bean" "soup as served in the U.S. Senate" "" senate-soup
+.XX "" "cream-style potato and spinach" "soup for a cold winter day" "/rich" spud-spin-soup
+.XX "" "A rich vegetable" "soup for cold weather" "" veg-soup-1
+.XX "" "Watercress" "soup, hot or cold" "" watercresssoup
+.XX "" "Cheese" "soup in a pumpkin shell" "" cheese-soup1
+.XX "" "A basic brown" "soup stock" "" beef-stock
+.XX "" "" "Soup with a mixture of vegetables" "" leftover-soup
+.XX "" "Pea" "soup with bacon" "" pea-soup-1
+.XX "hocks" "" "Soup with black beans and ham" "" blackbean-soup
+.XX "corn" "A spicy" "soup with cheese, tomatoes, and" "" tortilla-soup
+.XX "" "A" "soup with crispy tortillas" "" tortilla-soup2
+.XX "hot pepper" "A simple" "soup with lentils, tomatoes, and" "" lentil-soup
+.XX "pumpkin" "A hearty" "soup with millet and Japanese" "" kabocha-soup
+.XX "" "A light summer" "soup with multicolored peppers" "" rainbow-soup
+.XX "" "Fine pea" "soup with shrimp and champagne" "" shrimp-soup
+.XX "" "A Hearty winter" "soup with turkey and wild rice" "" turkey-soup
+.XX "" "Mushroom" "soup with whisky" "" mushroom-soup3
+.XX "" "Pilaf with" "sour cherries and lentils" "" cherry-pilaf
+.XX "" "Coffee cake with cinnamon and" "sour cream" "" coffee-cake-1
+.XX "" "Creamed spinach with" "sour cream" "" crm-spinach
+.XX "" "and cheese pie flavored with" "sour cream" "A salmon" salmon-pie
+.XX "" "party dip with spinach, leek, and" "sour cream" "Simple" spinach-dip-2
+.XX "" "Pickled Herring in" "Sour Cream" "" wigilia-4
+.XX "" "Apple pie with" "sour cream goodness" "" apple-pie-2
+.XX "" "Szechuan hot and" "sour soup" "" hotsour-soup-1
+.XX "" "Starter culture for making" "sourdough bread" "" sour-start
+.XX "" "A 10-day" "Sourdough cake" "" sourdough-cake
+.XX "" "An old-fashioned" "sourdough French bread" "" sour-french
+.XX "" "cheese tortilla snack popular in" "southern Arizona" "A toasted" tucson-tostada
+.XX "" "" "Southern Hungarian goulash" "" goulash-1
+.XX "" "A" "southern U.S. classic" "" cheese-grits
+.XX "plum pudding" "A" "southern-hemisphere Christmas" "" xmas-icecream
+.XX "chicken" "" "Southern-Italian style baked" "" chicken-cacc-1
+.XX "cornbread turkey stuffing" "" "Southwestern style herbed" "" cornbread-stuf
+.XX "" "Filipino cabbage in garlic and" "soy sauce" "" poncit
+.XX "" "Chicken with pineapple and" "soya sauce" "" chicken-pine1
+.XX "" "The original Chinese" "spaghetti" "" chinese-spagh
+.XX "" "Garlic, clam, and tomato" "spaghetti" "" spagh-clam-1
+.XX "style" "" "Spaghetti carbonara, Neapolitan" "" carbonara
+.XX "" "Very easy and cheap" "spaghetti sauce" "" spagh-sauce-2
+.XX "" "An exotically spiced" "spaghetti sauce with meat" "" spagh-sauce-3
+.XX "mushrooms, and eggplant" "" "Spaghetti sauce with sausage," "" spagh-sauce-1
+.XX "tetrazzini" "" "Spaghetti squash in a chicken" "" spag-squash
+.XX "Italian bacon" "" "Spaghetti with raw eggs and" "" carbonara-2
+.XX "" "Thick, rich" "Spanish hot chocolate" "" spanish-cocoa
+.XX "" "Savoury" "spice balls" "" gateaux-pim
+.XX "" "" "Spiced cauliflower" "" cauliflower-2
+.XX "" "Baked chicken glazed with" "spiced cranberry sauce" "" cranb-chicken
+.XX "" "An exotically" "spiced spaghetti sauce with meat" "" spagh-sauce-3
+.XX "substitute" "Yams in yogurt and" "spices\(emgood lamb curry" "" yam-curry
+.XX "" "A" "spicy and simple sloppy joe" "" sloppy-joes
+.XX "and Rice" "" "Spicy Caribean Black-Eyed Peas" "" black-eye-rice
+.XX "" "" "Spicy chicken curry" "" chicken-vindal
+.XX "" "Mildly" "spicy cold noodles" "" cold-noodles
+.XX "" "" "Spicy grilled lamb on a skewer" "" lamb-kebab
+.XX "" "A" "spicy hot Indian lamb dish" "" lamb-vind
+.XX "" "" "Spicy Moroccan fish" "" moroccan-fish
+.XX "" "A hot" "spicy party cheese dip" "" hot-cheese-dip
+.XX "" "Chicken in a" "spicy peanut sauce" "" chicken-peanut
+.XX "" "Chinese-style noodles with a" "spicy peanut sauce" "" peanut-noodles
+.XX "tempeh, or tofu" "A" "spicy peanut sauce for chicken," "" peanut-sauce-1
+.XX "" "" "Spicy pork or lamb kebabs" "" meat-kebabs
+.XX "" "" "Spicy roast lamb with rice" "" cajun-lamb
+.XX "cocktail sauce" "A" "spicy snack to be eaten with" "" sausage-balls
+.XX "and corn" "A" "spicy soup with cheese, tomatoes," "" tortilla-soup
+.XX "" "A" "spicy vegetable stew" "" african-stew
+.XX "" "A" "spicy warm slaw" "" coleslaw-2
+.XX "" "Easy" "spicy-hot cold noodles for summer" "" noodles-spicy
+.XX "" "casserole with artichokes and" "spinach" "Vegetable" artichoke-cass
+.XX "" "Italian vegetable casserole with" "spinach and cheese" "An" spinach-roll-1
+.XX "" "Indian vegetarian" "spinach and cheese curry" "" spinach-curry
+.XX "" "Greek" "spinach and cheese pie" "" spanakopita
+.XX "pastry crust" "" "Spinach and cheeses in a puff" "" spinach-pastry
+.XX "" "Greek" "spinach and feta cheese pie" "" spanakopita-2
+.XX "" "Party dip with" "spinach and water chestnuts" "" spinach-dip
+.XX "cheese" "" "Spinach casserole with yogurt and" "" spinach-cass
+.XX "" "Classic" "spinach lasagna" "" lasagne-3
+.XX "" "Simple party dip with" "spinach, leek, and sour cream" "" spinach-dip-2
+.XX "" "A baked salmon and" "spinach loaf" "" salmon-spinach
+.XX "" "A vegetable lasagne with" "spinach, mushrooms and corn" "" lasagne-2
+.XX "" "A rich" "spinach pie with ham and cheese" "" spinach-pie
+.XX "" "A" "spinach salad for summertime" "" spinach-salad
+.XX "" "An Indian" "spinach side-dish" "" sagh
+.XX "" "Easy cream of" "spinach soup" "" spinach-soup
+.XX "" "A rich cream-style potato and" "spinach soup for a cold winter/" "" spud-spin-soup
+.XX "" "Creamed" "spinach with bacon" "" crm-spinach-2
+.XX "" "Creamed" "spinach with sour cream" "" crm-spinach
+.XX "" "12-fruit compote with" "spirits" "" wigilia-13
+.XX "" "Sugary, moist apple" "squares" "" apple-squares
+.XX "" "Butternut" "squash and carrot casserole" "" butternut-sqsh
+.XX "" "Spaghetti" "squash in a chicken tetrazzini" "" spag-squash
+.XX "" "Chinese snack and hacker's" "staple" "Delicious Northern" potstickers
+.XX "sourdough bread" "" "Starter culture for making" "" sour-start
+.XX "Tex-Mex favorite" "Barbecued skirt" "steak marinated in lime: a" "" fajitas
+.XX "peppers" "Swordfish" "steaks cooked with sweet red" "" swordfish-1
+.XX "" "An old Welsh" "steamed carrot pudding" "" carrot-pudding
+.XX "mushrooms and parmesan" "" "Steamed cauliflower with" "" cauliflower-1
+.XX "" "" "Steamed dumplings (meatballs)" "" shu-mei
+.XX "" "A basic" "steamed rice for gumbo dishes" "" rice-gumbo
+.XX "" "A spicy vegetable" "stew" "" african-stew
+.XX "" "A Hearty Bean" "Stew" "" chuck-wagon
+.XX "" "An Easy Lamb" "Stew" "" lamb-cacci
+.XX "" "Fragrant lamb" "stew" "" lamb-stew-1
+.XX "" "A simple New Mexican holiday" "stew" "" pozole
+.XX "" "Jewish traditional sabbath" "stew" "European" sabbath-stew
+.XX "" "Cornish game hens" "stewed in fruit and sugar" "" autumn-hens
+.XX "" "" "Stewed Sauerkraut with Mushrooms" "" wigilia-5
+.XX "" "Fried mozzarella" "sticks with marinara" "" mozz-fried
+.XX "and nuts" "Chinese" "stir-fried chicken with broccoli" "" chicken-stfry1
+.XX "vegetables" "" "Stir-fried chicken with" "" chick-kung-pao
+.XX "" "hot, very simple, very good beef" "stir-fry" "Very" sesame-beef
+.XX "" "A basic brown soup" "stock" "" beef-stock
+.XX "" "Double" "stout beer" "" stout-double
+.XX "" "Sumptuous beef" "Stroganoff" "" stroganoff-1
+.XX "" "An American version of" "stuffed shells" "" manicotti-1
+.XX "microwave oven" "" "Stuffed trout cooked in a" "" trout-1
+.XX "" "Roast chicken" "stuffed with rice and vegetables" "" chicken-stuff
+.XX "" "style herbed cornbread turkey" "stuffing" "Southwestern" cornbread-stuf
+.XX "of Pepperidge Farm" "A" "stuffing recipe from the founder" "" bread-stuff-1
+.XX "and wine" "Poultry" "stuffing with chestnuts, bread," "" chestnut-stuff
+.XX "" "Holiday" "stuffing with fruit and nuts" "" chicken-stuff2
+.XX "" "Spaghetti carbonara, Neapolitan" "style" "" carbonara
+.XX "" "Shrimp quiche in a Mexican" "style" "" quiche-mexican
+.XX "" "Pike Polish" "style" "" wigilia-2
+.XX "" "Southern-Italian" "style baked chicken" "" chicken-cacc-1
+.XX "" "Greek" "style chick-pea soup" "" chickpea-soup
+.XX "" "Greek" "style egg & lemon chicken soup" "" avgolemono
+.XX "" "Marseille" "style fish soup" "" bouillabaisse
+.XX "stuffing" "Southwestern" "style herbed cornbread turkey" "" cornbread-stuf
+.XX "" "Central Texas" "style Mexican enchiladas" "" texmex-enchil
+.XX "" "Tex-Mex" "style pinto beans." "" texmex-beans
+.XX "" "Tex-Mex" "style refried beans." "" texmex-refried
+.XX "" "San Antonio, Texas" "style tacos" "" texmex-tacos
+.XX "" "Tex-Mex" "style tostada" "" texmex-chalupa
+.XX "" "and spices\(emgood lamb curry" "substitute" "Yams in yogurt" yam-curry
+.XX "" "A quick" "substitute for apple pie" "" apple-bake
+.XX "" "game hens stewed in fruit and" "sugar" "Cornish" autumn-hens
+.XX "" "chip cookies with honey and brown" "sugar" "Chocolate" choc-chip-3
+.XX "" "cookies coated with powdered" "sugar" "/Greek Christmas" kourabiedes
+.XX "" "Nut-butter holiday cookie with a" "sugar coating" "" snobol-cookies
+.XX "" "Chocolate cookies with powdered" "sugar coating" "" snowball-2
+.XX "" "Delicate and buttery" "sugar cookies" "" sug-cookies-1
+.XX "" "" "Sugary, moist apple squares" "" apple-squares
+.XX "" "Easy spicy-hot cold noodles for" "summer" "" noodles-spicy
+.XX "" "Simple appetizer for" "summer days" "" egg-mousse
+.XX "" "A refreshing Indian" "summer drink" "" mango-shake
+.XX "peppers" "A light" "summer soup with multicolored" "" rainbow-soup
+.XX "" "A spinach salad for" "summertime" "" spinach-salad
+.XX "" "" "Sumptuous beef Stroganoff" "" stroganoff-1
+.XX "" "A simple, and quite" "superb meat marinade." "" meatmarinade-2
+.XX "" "Super-sweet," "super-rich holiday cookies" "" coconut-joys
+.XX "cookies" "" "Super-sweet, super-rich holiday" "" coconut-joys
+.XX "" "" "Swedish dill-cured salmon" "" gravlax
+.XX "" "A" "Swedish national dish" "" meatballs-2
+.XX "" "A Favorite Canadian" "sweet" "" nanaimo-bars-1
+.XX "" "Egg-cognac: a potent" "sweet alcoholic beverage" "" advokaat
+.XX "" "A" "sweet and tart dessert" "" straw-rhu-pie
+.XX "dessert" "An incredibly" "sweet and wonderful Balkan" "" baklava
+.XX "" "A very" "sweet cucumber pickle" "" cuke-chunks
+.XX "" "A" "sweet, dark whole-grain rye bread" "" bread-rye
+.XX "" "A" "sweet egg noodle kugel" "" noodle-kugel-3
+.XX "" "Crispy chunks of chicken in" "sweet lemon sauce" "" chicken-lemon
+.XX "" "A very simple holiday" "sweet potato pie" "" sweepto-pie
+.XX "cranberries in cream cheese/" "" "Sweet potatoes, carrots and" "" cranb-quiche
+.XX "lime and tequila" "" "Sweet potatoes saut\z\(aaeed in" "" saute-sweepto
+.XX "" "Mashed" "sweet potatoes with marshmallows" "" sweet-potato
+.XX "" "Swordfish steaks cooked with" "sweet red peppers" "" swordfish-1
+.XX "" "A traditional Australian" "sweet snack" "" choc-crackles
+.XX "sweet red peppers" "" "Swordfish steaks cooked with" "" swordfish-1
+.XX "" "souffle, flavored with maple" "syrup" "A classic" maple-souffle
+.XX "" "Christmas cookies soaked in honey" "syrup" "Traditional greek" melomacarona
+.XX "" "Popular" "Szechuan Chinese soup" "" hotsour-soup-2
+.XX "" "" "Szechuan hot and sour soup" "" hotsour-soup-1
+.XX "" "San Antonio, Texas style" "tacos" "" texmex-tacos
+.XX "" "" "Tagliatelle with bacon and cream" "" tagliatelle
+.XX "" "Beets in a" "tangy mustard sauce" "" beet-mustard
+.XX "" "Cornish game hens basted in" "tarragon butter" "" hens-tarragon
+.XX "" "Saut\z\(aaed chicken with a" "tarragon cream sauce" "" chicken-tarrag
+.XX "" "A sweet and" "tart dessert" "" straw-rhu-pie
+.XX "" "A quick fruit" "tart pie" "" fruit-tart
+.XX "" "lip smackin' pickles you ever" "tasted." "The most" sour-pickles-1
+.XX "" "Caloric, filling, and" "tasty bars for the trail" "" hiker-bars
+.XX "" "A hearty, hot and" "tasty chili" "" chili-6
+.XX "" "A" "tasty Indonesian dish" "" barmi-goreng
+.XX "from Mexico" "A" "tasty marinated fish appetizer" "" seviche
+.XX "fruit" "" "Tasty muffins with bran and dried" "" bran-muffins-2
+.XX "" "Popovers from the Jordan Pond" "teahouse" "" pond-popovers
+.XX "" "A spicy peanut sauce for chicken," "tempeh, or tofu" "" peanut-sauce-1
+.XX "" "saut\z\(aaeed in lime and" "tequila" "Sweet potatoes" saute-sweepto
+.XX "" "Spaghetti squash in a chicken" "tetrazzini" "" spag-squash
+.XX "" "World champion" "Texas red chili" "" chili-5
+.XX "" "Central" "Texas style Mexican enchiladas" "" texmex-enchil
+.XX "" "San Antonio," "Texas style tacos" "" texmex-tacos
+.XX "" "A hearty (and hot)" "Texas-style chili" "" chili-1
+.XX "" "" "Texas-style creamy pecan cookies" "" pecan-pralines
+.XX "" "skirt steak marinated in lime: a" "Tex-Mex favorite" "Barbecued" fajitas
+.XX "" "" "Tex-Mex style pinto beans." "" texmex-beans
+.XX "" "" "Tex-Mex style refried beans." "" texmex-refried
+.XX "" "" "Tex-Mex style tostada" "" texmex-chalupa
+.XX "" "Pheasant for" "Thanksgiving" "" pheasant-perry
+.XX "" "A" "thoroughly decadent desert" "" cherry-hazlnut
+.XX "popular in southern Arizona" "A" "toasted cheese tortilla snack" "" tucson-tostada
+.XX "" "A 7-grain bread for" "toasting or eating plain" "" bread
+.XX "" "sauce for chicken, tempeh, or" "tofu" "A spicy peanut" peanut-sauce-1
+.XX "" "Vegetable and" "tofu \" "" tofu-balls
+.XX "" "A Japanese" "tofu recipe with meat" "" tofu-meat
+.XX "" "beef casserole with plum and" "tomato" "Simple" plum-casserole
+.XX "" "Sardines with garlic and" "tomato" "" sardine-fry
+.XX "" "Aztec soup: a simple cheese," "tomato, and beef soup" "" soup-aztec
+.XX "" "Eggplant casserole with" "tomato and cheese" "" eggplant-1
+.XX "" "Pork chops simmered in" "tomato and onion" "" pork-chops-1
+.XX "" "Pork ribs in peach" "tomato barbecue sauce" "" peach-bbq
+.XX "" "Leg of lamb with rosemary &" "tomato baste" "" leg-of-lamb-1
+.XX "" "Indian eggplant, onion, and" "tomato casserole" "" eggplant-2
+.XX "" "" "Tomato salsa for chicken or fish" "" salsa-1
+.XX "" "meatballs in herb and garlic" "tomato sauce" "Simple" meatballs-1
+.XX "" "Muskrat roasted in" "tomato sauce" "" muskrat-1
+.XX "" "Garlic, clam, and" "tomato spaghetti" "" spagh-clam-1
+.XX "" "A simple cooked chutney with" "tomatoes and apples" "" chutney-2
+.XX "" "Chicken with" "tomatoes and cinnamon" "" chicken-cinn-1
+.XX "" "A spicy soup with cheese," "tomatoes, and corn" "" tortilla-soup
+.XX "" "A simple soup with lentils," "tomatoes, and hot pepper" "" lentil-soup
+.XX "" "Chicken breasts in" "tomato-lime sauce" "" chicken-lime
+.XX "" "pudding with a meringue" "top" "Butterscotch" butterscotch
+.XX "" "and orange pudding with oats on" "top" "Apple" chaff
+.XX "southern/" "A toasted cheese" "tortilla snack popular in" "" tucson-tostada
+.XX "" "A soup with crispy" "tortillas" "" tortilla-soup2
+.XX "" "Tex-Mex style" "tostada" "" texmex-chalupa
+.XX "" "Pheasant in the North American" "tradition" "" pheasant-2
+.XX "snack" "A" "traditional Australian sweet" "" choc-crackles
+.XX "cake" "A" "traditional European-style fruit" "" fruit-cake-2
+.XX "" "An extravagant" "traditional fruitcake" "" fruit-cake-1
+.XX "bread" "" "Traditional German Christmas" "" stollen
+.XX "chewy" "" "Traditional gingerbread, soft and" "" gingerbread
+.XX "cookies coated with powdered/" "" "Traditional Greek Christmas" "" kourabiedes
+.XX "cookies soaked in honey syrup" "" "Traditional greek Christmas" "" melomacarona
+.XX "" "A" "traditional Jewish bread" "" challah-1
+.XX "bourbon and dark rum" "" "Traditional layered eggnog with" "" eggnog2
+.XX "the Florida Keys" "" "Traditional lime pie dessert from" "" key-lime-pie
+.XX "" "" "Traditional Passover breakfast" "" matzo-brei
+.XX "" "The" "traditional recipe for pecan pie" "" pecan-pie-1
+.XX "" "European Jewish" "traditional sabbath stew" "" sabbath-stew
+.XX "Lappland" "" "Traditional salmon dish from" "" salmon-teno
+.XX "" "" "Traditional Seder accompaniment" "" charoset
+.XX "" "" "Traditional Welsh biscuity cakes" "" welshcakes
+.XX "" "filling, and tasty bars for the" "trail" "Caloric," hiker-bars
+.XX "" "and peanutbutter holiday" "treat" "Chocolate" bon-bons
+.XX "" "A rich" "treat for mushroom lovers" "" mushrooms-1
+.XX "" "A" "triangular filled pastry" "" hamantashen
+.XX "" "1000 calorie-a-bite" "trifle" "" trifle-1
+.XX "" "Stuffed" "trout cooked in a microwave oven" "" trout-1
+.XX "" "Chocolate rum" "truffles" "" rum-balls-2
+.XX "" "Very simple chocolate" "truffles" "" truffles-4
+.XX "cheesecake" "A" "truly decadent chocolate chip" "" cheesecake-6
+.XX "" "an easy quick" "tummy-warming soup" "" beer-chs-soup
+.XX "" "A Hearty winter soup with" "turkey and wild rice" "" turkey-soup
+.XX "" "style herbed cornbread" "turkey stuffing" "Southwestern" cornbread-stuf
+.XX "" "easy recipe for Cantonese salty" "turnip cakes" "An" turnip-cakes
+.XX "" "" "UCLA Medical center carrot cake" "" carrotcake-2
+.XX "" "" "Uncooked fruit and bread pudding" "" summer-pudding
+.XX "" "Noodle kugel using" "uncooked noodles" "" noodle-kugel-2
+.XX "" "A simple and" "unusual carrot-cheese casserole" "" carrots-gratin
+.XX "" "Fluffy whipped pumpkin" "upside-down cake" "" pumpkin-cake-2
+.XX "" "A southern" "U.S. classic" "" cheese-grits
+.XX "" "Bean soup as served in the" "U.S. Senate dining room" "" senate-soup
+.XX "" "Noodle kugel" "using uncooked noodles" "" noodle-kugel-2
+.XX "rolls." "An" "utterly reliable recipe for yeast" "" yeast-rolls
+.XX "beans" "A" "variation of chili con carne with" "" chili-bean
+.XX "" "Coleslaw in many" "variations" "" coleslaw-1
+.XX "" "Braised" "veal shanks in white wine" "" osso-bucco
+.XX "Passover" "" "Vegetable and fruit casserole for" "" tzimmes
+.XX "" "" "Vegetable and tofu \" "" tofu-balls
+.XX "" "A thick and hearty" "vegetable beef soup" "" veg-soup-2
+.XX "" "Greek" "vegetable casserole" "" briami
+.XX "artichokes and spinach" "" "Vegetable casserole with" "" artichoke-cass
+.XX "and cheese" "An Italian" "vegetable casserole with spinach" "" spinach-roll-1
+.XX "" "A delicious appetizer or" "vegetable dish" "" spinach-balls
+.XX "mushrooms and corn" "A" "vegetable lasagne with spinach," "" lasagne-2
+.XX "" "A wonderful" "vegetable pie" "" vegetable-pie
+.XX "" "A rich" "vegetable soup for cold weather" "" veg-soup-1
+.XX "" "A spicy" "vegetable stew" "" african-stew
+.XX "" "chicken stuffed with rice and" "vegetables" "Roast" chicken-stuff
+.XX "" "Stir-fried chicken with" "vegetables" "" chick-kung-pao
+.XX "" "Soup with a mixture of" "vegetables" "" leftover-soup
+.XX "" "Casserole with frankfurters," "vegetables and cheese" "" hotdog-cass
+.XX "casserole" "A" "vegetarian bean, rice, and cheese" "" rice-bean-bake
+.XX "curry" "Indian" "vegetarian spinach and cheese" "" spinach-curry
+.XX "classic" "" "vegetarian version of the Greek" "" moussaka
+.XX "" "a microwave" "version of mole poblano" "" chicken-mole-1
+.XX "" "An American" "version of stuffed shells" "" manicotti-1
+.XX "" "vegetarian" "version of the Greek classic" "" moussaka
+.XX "" "Cooked celery root in" "vinaigrette" "" celery-salad
+.XX "" "Eggplant relish" "vinaigrette" "" relish-1
+.XX "" "A mild oil and" "vinegar salad dressing" "" rocket-salad
+.XX "" "" "Vodka margaritas" "" margarita-1
+.XX "" "" "Waffle ice-cream cone, pizelles" "" waffle-cone
+.XX "" "Rolled," "walnut-filled cookies" "" walnut-horns
+.XX "" "Holiday persimmon pudding with" "walnuts" "" persim-pudding
+.XX "" "A spicy" "warm slaw" "" coleslaw-2
+.XX "" "Party dip with spinach and" "water chestnuts" "" spinach-dip
+.XX "" "" "Watercress soup, hot or cold" "" watercresssoup
+.XX "" "A rich vegetable soup for cold" "weather" "" veg-soup-1
+.XX "" "Traditional" "Welsh biscuity cakes" "" welshcakes
+.XX "" "An old" "Welsh steamed carrot pudding" "" carrot-pudding
+.XX "pecans" "" "Wheat and wild rice pilaf with" "" pecan-wildrice
+.XX "" "Oatmeal and whole" "wheat pancakes" "" oatmealcakes
+.XX "" "A no-cooking cake with fruit and" "whipped cream" "" banana-cake
+.XX "" "A simple way to make" "whipped cream extra yummy" "" whipped-cream
+.XX "" "Fluffy" "whipped pumpkin upside-down cake" "" pumpkin-cake-2
+.XX "" "Mushroom soup with" "whisky" "" mushroom-soup3
+.XX "" "Ordinary" "white bread" "" bread-white-1
+.XX "" "Chicken with" "white sauce" "" chick-milan
+.XX "" "Two" "white soda loaves" "" soda-bread
+.XX "" "Braised veal shanks in" "white wine" "" osso-bucco
+.XX "" "Oatmeal and" "whole wheat pancakes" "" oatmealcakes
+.XX "" "A sweet, dark" "whole-grain rye bread" "" bread-rye
+.XX "communion" "An earthy" "whole-wheat bread used for" "" altar-bread
+.XX "" "winter soup with turkey and" "wild rice" "A Hearty" turkey-soup
+.XX "" "Wheat and" "wild rice pilaf with pecans" "" pecan-wildrice
+.XX "" "" "Wilted cabbage salad with bacon" "" cabbage-salad
+.XX "" "with chestnuts, bread, and" "wine" "Poultry stuffing" chestnut-stuff
+.XX "" "Braised veal shanks in white" "wine" "" osso-bucco
+.XX "" "meal with cheese, bread, and red" "wine." "Makes a" squash-soup
+.XX "" "Baked apples with red" "wine" "" wigilia-11
+.XX "" "Chicken in a" "wine sauce" "" chicken-wine
+.XX "" "Leeks in a zesty red" "wine sauce" "" drunk-leeks
+.XX "" "Chicken in" "wine with grapes and orange" "" chicken-grape
+.XX "" "and spinach soup for a cold" "winter day" "/cream-style potato" spud-spin-soup
+.XX "rice" "A Hearty" "winter soup with turkey and wild" "" turkey-soup
+.XX "" "PARTY PATE" "WITHOUT LIVER" "" pate-1
+.XX "" "Norwegian" "wreath cookies" "" berlinerkranz
+.XX "" "Margaret's" "X-rated melon balls" "" melon-balls-1
+.XX "lamb curry substitute" "" "Yams in yogurt and spices\(emgood" "" yam-curry
+.XX "oatmeal" "A" "yeast bread for people who like" "" oatmeal-bread
+.XX "" "An utterly reliable recipe for" "yeast rolls." "" yeast-rolls
+.XX "" "sauce with cucumbers and" "yogurt" "A mideast-style" cucumber-sauce
+.XX "" "Spinach casserole with" "yogurt and cheese" "" spinach-cass
+.XX "" "A low-calorie frozen dessert with" "yogurt and fruit" "" yogurt-froz-1
+.XX "" "An Indian-style chicken dish with" "yogurt and red pepper" "" chicken-yogurt
+.XX "curry substitute" "Yams in" "yogurt and spices\(emgood lamb" "" yam-curry
+.XX "" "Amazingly good baking-powder and" "yogurt pancakes" "" yogurt-cakes
+.XX "" "way to make whipped cream extra" "yummy" "A simple" whipped-cream
+.XX "" "Exquisite New" "Zealand custard dessert" "" spanish-cream
+.XX "" "" "Zeek Rum Balls" "" rlz-rum-balls
+.XX "" "Leeks in a" "zesty red wine sauce" "" drunk-leeks
+.XX "peppers" "" "Zucchini with ginger and chili" "" zucchini-ging

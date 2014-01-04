@@ -1,0 +1,153 @@
+.ig
+Path: decwrl!recipes
+From: kent@decwrl.DEC.COM (Christopher A. Kent)
+Newsgroups: mod.recipes
+Subject: RECIPE: potstickers
+Message-ID: <5045@decwrl.DEC.COM>
+Date: 29 Aug 86 05:31:59 GMT
+Sender: recipes@decwrl.DEC.COM
+Organization: DEC Western Research, Palo Alto CA
+Lines: 140
+Approved: reid@decwrl.UUCP
+
+
+	      Copyright (C) 1986 USENET Community Trust
+Permission to copy without fee all or part of this material is granted
+provided that the copies are not made or distributed for direct commercial
+advantage, the USENET copyright notice and the title of the newsgroup and
+its date appear, and notice is given that copying is by permission of
+the USENET Community Trust or the original contributor.
+
+..
+.RH MOD.RECIPES-SOURCE POTSTICKERS A "22 May 86" 1986
+.RZ "POTSTICKERS" "Delicious Northern Chinese snack and hacker's staple"
+Hackers on both coasts and most places in between love potstickers (though
+if you're from the Right Coast, you probably know them as Peking Ravioli,
+or just \fIravs\fR.
+This recipe is based on one found in \fIChef Chu's Distinctive Cuisine of
+China\fR.
+Total preparation time is about 45 minutes.
+They don't come out as good as the ones from Cho's in Mountain View, but
+if you don't happen to be within 45 minutes of Mountain View, they'll do
+very nicely, thank you.
+.IH "Makes about 2 dozen"
+.SH		DOUGH
+.IG "2 cups" "all-purpose flour" "200 g"
+.IG "\(12 cup" "water" "125 ml"
+.SH		FILLING
+.IG "\(12 lb" "ground pork" "250 g"
+.IG "\(12" "small Chinese (Napa) cabbage,"
+cored and chopped
+.IG "1" "green onion,"
+coarsely chopped
+.IG "2" "thumb-sized slices fresh ginger,"
+minced
+.IG "2" "water chestnuts,"
+chopped
+.IG "1 tsp" "salt" "5 ml"
+.IG "\(12 tsp" "sugar" "2.5 ml"
+.IG "pinch" "white pepper" "0.5 ml"
+.IG "1 tsp" "sesame oil" "5 ml"
+.SH		TO COOK
+.IG "5 Tbsp" "vegetable oil" "75 ml"
+.IG "1 cup" "water" "250 ml"
+.SH		SAUCE
+.IG "" "hot chili oil"
+.IG "" "red rice vinegar"
+.IG "" "soy sauce"
+.PH
+.SK 1
+In a bowl, combine flour and water, mixing to form a ball. 
+Remove to a floured board and knead with your palm for about 3 minutes.
+Shape into a ball, cover with a damp towel, and let stand for about 10
+minutes.
+.SK 2
+Make the filling by combining the \fIFilling\fR ingredients above.
+Refrigerate until ready to use.
+.SK 3
+To shape and assemble, knead dough for about 3 minutes.
+Roll into a cylinder that is about 
+.AB "1 inch" "2.5 cm"
+in diameter.
+Cut off the ends, then cut into about 24 pieces, each about 
+.AB "\(34-inch" "1 cm"
+wide.
+With the cut side up, press the dough down with your palm to flatten.
+Use a rolling pin to make pancakes about
+.AB "2\(12\-3 inches" "6\-7 cm"
+in diameter.
+(They get quite thin; that's what you want.)
+.SK 4
+Spoon
+.AB "1 tablespoon" "15 ml"
+of filling into the center of each pancake.
+Fold the dough over to make a half circle and pleat the edges firmly
+together.
+.SK 5
+To pan-fry, heat cast-iron or other heavy-bottom skillet over moderate
+heat.
+Add
+.AB "3 Tbsp" "50 ml"
+oil, swirling to coat bottom. 
+(Watch out, it sizzles quite a bit. Don't get burned!)
+When oil is hot, place potstickers, seam side up, in skillet and 
+agitate (shake) for 30 seconds.
+Pour in water, cover, and gently boil over moderate heat for 7
+to 8 minutes. 
+When oil and water start to sizzle, add remaining 
+.AB "2 Tbsp" "25 ml"
+oil. Tip skillet to distribute oil evenly; watch carefully
+(uncovered) to prevent sticking. 
+When bottoms are brown (usually several minutes later), remove from
+heat and carefully lift out potstickers with spatula.
+.SK 6
+To serve, turn potstickers over (dark side up) and arrange on serving
+platter.
+Combine chili oil, vinegar, and soy sauce in proportions to
+suit your taste and offer sauce for dipping.
+Alternatively, cut up a hot chili pepper into red rice vinegar.
+.NX
+You can freeze uncooked potstickers for later use, if you
+squeeze out the water from the cabbage during preparation (in a colander or
+cheesecloth). 
+Freeze potstickers separately on cookie sheets until
+firm, then put them in plastic bags.
+.PP
+When rolling out the pancakes, leave the centers slightly thicker
+than the edges. A thicker center will hold up better during the browning.
+.PP
+If you prefer, steam potstickers for about 12 minutes over boiling
+water instead of pan-frying.
+(No self-respecting hacker would be caught eating steamed potstickers,
+though.)
+.PP
+These are really not hard to make, and come out quite nicely! Following
+the dough recipe above leads to a fairly dry and floury dough; this
+makes it hard to roll out and pleat. Feel free to add a little more
+water. There are also now commercially available potsticker presses that
+take care of folding and pleating; they're cheap and plastic and work
+rather well.
+.PP
+The perfect potsticker is uniformly brown with a thick brown area on
+the bottom (where it sticks to the pot); it seems that achieving this only
+comes with practice.
+I tend to fry both sides a bit before adding the water;
+this helps. Beware of too much heat; the bottom will bubble and crack.
+This doesn't taste any different, but doesn't look as nice. 
+.PP
+If you don't cook the whole batch at once, store the potstickers
+so that they don't touch; the dough tends to stick to itself, so the
+potstickers may tear as you remove them.
+.PP
+Many restaurants serve Hoy Sin sauce instead of hot sauce.
+.SH RATING
+.I Difficulty:
+moderate.
+.I Time:
+45 minutes.
+.I Precision:
+measure the ingredients.
+.WR
+Chris Kent
+DEC Western Research Lab, Palo Alto, California
+kent@decwrl.DEC.COM	{ihnp4,ucbvax,decvax}!decwrl!kent
