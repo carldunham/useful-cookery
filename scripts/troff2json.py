@@ -47,11 +47,14 @@ def main():
         print('opts="%s"' % opts, file=sys.stderr)
 
 
-    json.dump(readRecipe(opts.infile), sys.stdout, indent=2, separators=(',', ': '))
-    print()
+    recipe = readRecipe(opts.infile)
+
+    if not opts.quiet:
+        json.dump(recipe, sys.stdout, indent=2, separators=(',', ': '))
+        print()
 
 
-def readRecipe(anFP):
+def readRecipe(anIterator):
     ret = {
         'name': '',
         'category': '',
@@ -64,13 +67,22 @@ def readRecipe(anFP):
 
     global DEBUG
 
-    for block in _blockIter(anFP):
+    for block in _blockIter(anIterator):
         if DEBUG >= 4: print(block, file=sys.stderr)
 
         cmdline = block[0]
         cmd = cmdline[1:3]
 
-        cmdargs = shlex.split(cmdline)[1:]
+        try:
+            cmdargs = shlex.split(cmdline)[1:]
+        except ValueError:
+            if DEBUG >= 2: print('error parsing line [%s]' % cmdline, file=sys.stderr)
+
+            # simple possible fix
+            if not cmdline.endswith('"'):
+                cmdargs = shlex.split(cmdline + '"')[1:]
+            else:
+                raise
 
         if cmd == 'RH':
             assert(len(cmdargs) == 5)
@@ -101,7 +113,10 @@ def readRecipe(anFP):
                 ret['introduction'] = intro
 
         elif cmd == 'SH':
-            sh = { 'name': cmdargs[0] if len(cmdargs) > 0 else '' }
+            sh = {}
+
+            if len(cmdargs) > 0:
+                sh['name'] = cmdargs[0]
             
             if len(block) > 1:
                 sh['comments'] = block[1:]
@@ -109,10 +124,14 @@ def readRecipe(anFP):
             # may be at the start of an ingredients section, or a section of its own
             # not sure what 'within' an ingredients section would mean...
             #
-            if len(ret['sections'][-1]['ingredient_sets'][-1]['ingredients']) > 0:
+            if ((len(ret['sections']) == 0) or
+                (('ingredient_sets' in ret['sections'][-1]) and (len(ret['sections'][-1]['ingredient_sets'][-1]['ingredients']) > 0)) or
+                ('name' in  ret['sections'][-1])
+                ):
+
                 ret['sections'].append(sh)
             else:
-                assert('name' not in  ret['sections'][-1])
+                #assert('name' not in  ret['sections'][-1])
                 assert('comments' not in ret['sections'][-1])
 
                 ret['sections'][-1]['name'] = sh['name']
@@ -130,12 +149,17 @@ def readRecipe(anFP):
             if 'ingredient_sets' not in ret['sections'][-1]:
                 ret['sections'][-1]['ingredient_sets'] = []
 
-            yld = { 'us': cmdargs[0] }
+            set = { 'ingredients': [] }
+            
+            if len(cmdargs) > 0:
+                yld = { 'us': cmdargs[0] }
 
-            if len(cmdargs) > 1:
-                yld['metric'] = cmdargs[1]
+                if len(cmdargs) > 1:
+                    yld['metric'] = cmdargs[1]
 
-            ret['sections'][-1]['ingredient_sets'].append( { 'yield': yld, 'ingredients': [] } )
+                set['yield'] = yld
+
+            ret['sections'][-1]['ingredient_sets'].append(set)
             
         elif cmd == 'IG':
             assert(len(ret['sections']) > 0)
@@ -163,14 +187,19 @@ def readRecipe(anFP):
             if 'procedure_sets' not in ret['sections'][-1]:
                 ret['sections'][-1]['procedure_sets'] = []
 
-            name = cmdargs[0] if len(cmdargs) > 0 else ''
+            proc =  { 'procedures': [] } 
+
+            if len(cmdargs) > 0:
+                proc['name'] = cmdargs[0]
             
-            ret['sections'][-1]['procedure_sets'].append( { 'name': name, 'procedures': [] } )
+            ret['sections'][-1]['procedure_sets'].append(proc)
 
         elif cmd == 'SK':
             assert(len(ret['sections']) > 0)
-            assert('procedure_sets' in ret['sections'][-1])
             assert(len(cmdargs) > 0)
+
+            if  'procedure_sets' not in ret['sections'][-1]:
+                ret['sections'][-1]['procedure_sets'] = [ { 'procedures': [] } ]
 
             step = { 'index': cmdargs[0] }
         
