@@ -1,5 +1,6 @@
 parse formatting codes
 deal with inline us/metric
+? parse/interpret RATING section
 validate structure
 
 load into mongo
