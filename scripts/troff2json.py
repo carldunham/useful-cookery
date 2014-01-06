@@ -107,7 +107,7 @@ def readRecipe(anIterator):
 
             title, desc = cmdargs
 
-            intro = " ".join(block[1:]) if (len(block) > 1) else ''
+            intro = _convertMultilineCodes(" ".join(block[1:])) if (len(block) > 1) else ''
 
             if DEBUG >= 3: print('.RZ, title="%s", desc="%s", intro="%s"' % (title, desc, intro), file=sys.stderr)
 
@@ -254,7 +254,7 @@ def _blockIter(anIterator):
             
 
 def _convertCodes(aString):
-    ret = aString
+    ret = _convertMultilineCodes(aString)
 
     REPLACEMENTS = {
         r'\\\(18': ' 1/8',
@@ -265,15 +265,32 @@ def _convertCodes(aString):
         r'\\\(mu': '&times;',
         r'\\\(em': '&em;',
         r'\\-': '-',       # &em;
-        r'\\fI(.+)\\f[PR]': '<i>\\1</i>',
         r'^.I (.+)$': '<i>\\1</i>',
-        r'\\fB(.+)\\f[PR]': '<b>\\1</b>',
         r'^.B (.+)$': '<b>\\1</b>',
         r'\\z\\\(aae': '&eacute;',
         r'\\z\\\(aao': '&oacute;',
         r'\\z\\\(gaa': '&agrave;',
-        r"``": '&ldquo;',
+        r"\\o'e\\\(aa": '&eacute;', # this shows up in a couple of recipes
+        r'\\\*\:o': '&ouml;',
+        r"\\o'o\"'": '&ouml;',
+        r'``': '&ldquo;',
         r"''": '&rdquo;',
+        r'^\.PP\s*': '<p>',
+        }
+
+    for k,v in REPLACEMENTS.items():
+        ret = re.sub(k, v, ret)
+
+    ret = ret.strip()
+    
+    return ret
+    
+def _convertMultilineCodes(aString):
+    ret = aString
+
+    REPLACEMENTS = {
+        r'\\fI(.+?)\\f[PR](?m)': '<i>\\1</i>',
+        r'\\fB(.+?)\\f[PR](?m)': '<b>\\1</b>',
         }
 
     for k,v in REPLACEMENTS.items():
