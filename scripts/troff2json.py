@@ -20,6 +20,9 @@ import argparse
 
 import json
 import shlex
+import re
+
+from datetime import datetime
 
 DEBUG = 0
 
@@ -58,7 +61,6 @@ def readRecipe(anIterator):
     ret = {
         'name': '',
         'category': '',
-        'date': '',
         'title': '',
         'description': '',
 
@@ -94,7 +96,11 @@ def readRecipe(anIterator):
             # should only be one per file. if not, last in wins
             ret['name'] = name
             ret['category'] = category
-            ret['date'] = date
+            ret['date'] = datetime.strptime(date, '%d %b %y').strftime('%Y-%m-%d')
+
+            if DEBUG >= 3: print("[%s] -> [%s]" % (date, ret['date']), file=sys.stderr)
+
+            # assert(datetime.strptime(ret['date'], '%Y-%m-%d').strftime('%e %b %y').strip().lower() == date.lower())
 
         elif cmd == 'RZ':
             assert(len(cmdargs) == 2)
@@ -152,10 +158,10 @@ def readRecipe(anIterator):
             set = { 'ingredients': [] }
             
             if len(cmdargs) > 0:
-                yld = { 'us': cmdargs[0] }
+                yld = { 'us': cmdargs[0].strip() }
 
                 if len(cmdargs) > 1:
-                    yld['metric'] = cmdargs[1]
+                    yld['metric'] = cmdargs[1].strip()
 
                 set['yield'] = yld
 
@@ -168,10 +174,10 @@ def readRecipe(anIterator):
             if  'ingredient_sets' not in ret['sections'][-1]:
                 ret['sections'][-1]['ingredient_sets'] = [ { 'ingredients': [] } ]
 
-            ig = { 'us': cmdargs[0], 'ingredient': cmdargs[1] }
+            ig = { 'us': cmdargs[0].strip(), 'ingredient': cmdargs[1].strip() }
 
             if len(cmdargs) > 2:
-                ig['metric'] = cmdargs[2]
+                ig['metric'] = cmdargs[2].strip()
 
             if len(block) > 1:
                 ig['comments'] = block[1:]
@@ -190,7 +196,7 @@ def readRecipe(anIterator):
             proc =  { 'procedures': [] } 
 
             if len(cmdargs) > 0:
-                proc['name'] = cmdargs[0]
+                proc['name'] = cmdargs[0].strip()
             
             ret['sections'][-1]['procedure_sets'].append(proc)
 
@@ -201,7 +207,7 @@ def readRecipe(anIterator):
             if  'procedure_sets' not in ret['sections'][-1]:
                 ret['sections'][-1]['procedure_sets'] = [ { 'procedures': [] } ]
 
-            step = { 'index': cmdargs[0] }
+            step = { 'index': cmdargs[0].strip() }
         
             if len(block) > 1:
                 step['comments'] = block[1:]
@@ -233,7 +239,7 @@ def _blockIter(anIterator):
     INLINE_FORMAT_CODES = ('.TE', '.AB', '.I ', '.B ', '.SM', '.PP', '.PD', '.IP', '.RS', '.RE', '.if', '.ds', '.br', '.nf', '.fi', '.ta')
 
     for rawline in anIterator:
-        line = rawline.strip()
+        line = _convertCodes(rawline.strip())
 
         if line.startswith('.') and not line.startswith(INLINE_FORMAT_CODES):
 
@@ -247,6 +253,35 @@ def _blockIter(anIterator):
         yield ret
             
 
+def _convertCodes(aString):
+    ret = aString
+
+    REPLACEMENTS = {
+        r'\\\(18': ' 1/8',
+        r'\\\(14': ' 1/4',  # '&frac14'
+        r'\\\(13': ' 1/3',
+        r'\\\(12': ' 1/2',  # '&frac12'
+        r'\\\(34': ' 3/4',  # '&frac34'
+        r'\\\(mu': '&times;',
+        r'\\\(em': '&em;',
+        r'\\-': '-',       # &em;
+        r'\\fI(.+)\\f[PR]': '<i>\\1</i>',
+        r'^.I (.+)$': '<i>\\1</i>',
+        r'\\fB(.+)\\f[PR]': '<b>\\1</b>',
+        r'^.B (.+)$': '<b>\\1</b>',
+        r'\\z\\\(aae': '&eacute;',
+        r'\\z\\\(aao': '&oacute;',
+        r'\\z\\\(gaa': '&agrave;',
+        r"``": '&ldquo;',
+        r"''": '&rdquo;',
+        }
+
+    for k,v in REPLACEMENTS.items():
+        ret = re.sub(k, v, ret)
+
+    ret = ret.strip()
+    
+    return ret
     
 if __name__ == '__main__':
     main()
