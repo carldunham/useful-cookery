@@ -60,8 +60,8 @@ Weathervane Books by arrangement with Michael Joseph Ltd.
 (The book is out of print.)
 .PP
 Melt some chocolate over hot water, let it cool slowly until it
-just thickens
-.AB "(80\-84\(deF)" "26\-28\(deC)" .
+just thickens 
+.TE "(80\-84" "(26\-28" ")."
 Now warm the chocolate gently
 and slowly until it thins slightly.  The temperature should be
 above
