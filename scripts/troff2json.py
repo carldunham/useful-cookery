@@ -236,17 +236,36 @@ def _blockIter(anIterator):
     """
     ret = []
 
-    INLINE_FORMAT_CODES = ('.TE', '.AB', '.I ', '.B ', '.SM', '.PP', '.PD', '.IP', '.RS', '.RE', '.if', '.ds', '.br', '.nf', '.fi', '.ta')
+    INLINE_CONVERSION_CODES = ('.TE', '.AB')
+    INLINE_FORMAT_CODES = ('.I ', '.B ', '.SM', '.PP', '.PD', '.IP', '.RS', '.RE', '.if', '.ds', '.br', '.nf', '.fi', '.ta')
 
     for rawline in anIterator:
         line = _convertCodes(rawline.strip())
 
-        if line.startswith('.') and not line.startswith(INLINE_FORMAT_CODES):
+        if line.startswith('.'):
 
-            if ret:
-                yield ret
-                ret = []
+            if line.startswith(INLINE_CONVERSION_CODES):
+                parts = shlex.split(line)
 
+                # us units
+                params = '"%s"' % parts[1].strip()
+
+                if len(parts) > 2:
+                    # optional metric
+                    params += ', "%s"' % parts[2].strip()
+
+                line = '{{ chooseUnits(%s) }}' % params
+
+                if len(parts) > 3:
+                    # optional appended text
+                    line += parts[3]
+                
+            elif not line.startswith(INLINE_FORMAT_CODES):
+
+                if ret:
+                    yield ret
+                    ret = []
+                
         ret.append(line)
 
     if ret:
@@ -276,6 +295,7 @@ def _convertCodes(aString):
         r'``': '&ldquo;',
         r"''": '&rdquo;',
         r'^\.PP\s*': '<p>',
+        r'^\.br\s*': '<br>',
         }
 
     for k,v in REPLACEMENTS.items():
