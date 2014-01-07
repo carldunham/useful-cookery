@@ -38,8 +38,8 @@ def main():
     group.add_argument('-q', '--quiet', action='store_true')
     group.add_argument('-v', '--verbose', action='store_true')
 
-    parser.add_argument('infile', metavar='filename', nargs='?', default=sys.stdin, type=argparse.FileType('r'), help='file to read from (<stdin> if missing or "-")')
-    #parser.add_argument('-o', '--outfile', default=sys.stdout, type=argparse.FileType('w'), help='file to write to (<stdout> if missing or "-")')
+    parser.add_argument('infile', metavar='filename', nargs='?', default=sys.stdin, type=argparse.FileType('r'), help='file to read from (default: <stdin> if missing or "-")')
+    #parser.add_argument('-o', '--outfile', default=sys.stdout, type=argparse.FileType('w'), help='file to write to (default: <stdout> if missing or "-")')
 
     opts = parser.parse_args()
 
@@ -89,7 +89,7 @@ def readRecipe(anIterator):
                 raise
 
         if cmd == 'RH':
-            assert(len(cmdargs) == 5)
+            assert len(cmdargs) == 5, 'exactly five params expected for .RH'
 
             src, name, category, date, year = cmdargs
 
@@ -102,10 +102,10 @@ def readRecipe(anIterator):
 
             if DEBUG >= 3: print("[%s] -> [%s]" % (date, ret['date']), file=sys.stderr)
 
-            # assert(datetime.strptime(ret['date'], '%Y-%m-%d').strftime('%e %b %y').strip().lower() == date.lower())
+            # assert datetime.strptime(ret['date'], '%Y-%m-%d').strftime('%e %b %y').strip().lower() == date.lower()
 
         elif cmd == 'RZ':
-            assert(len(cmdargs) == 2)
+            assert len(cmdargs) == 2, 'exactly two params expected for .RZ'
 
             title, desc = cmdargs
 
@@ -137,8 +137,8 @@ def readRecipe(anIterator):
 
                 ret['sections'].append(sh)
             else:
-                #assert('name' not in  ret['sections'][-1])
-                assert('comments' not in ret['sections'][-1])
+                #assert 'name' not in  ret['sections'][-1]
+                assert 'comments' not in ret['sections'][-1], 'unexpected existing section data'
 
                 ret['sections'][-1]['name'] = sh['name']
 
@@ -168,8 +168,8 @@ def readRecipe(anIterator):
             ret['sections'][-1]['ingredient_sets'].append(set)
             
         elif cmd == 'IG':
-            assert(len(ret['sections']) > 0)
-            assert(len(cmdargs) > 1)
+            assert len(ret['sections']) > 0, 'Unepected IG before start of section'
+            assert 2 <= len(cmdargs) <= 3, '.IG expects at least two params, no more than three'
 
             if  'ingredient_sets' not in ret['sections'][-1]:
                 ret['sections'][-1]['ingredient_sets'] = [ { 'ingredients': [] } ]
@@ -201,8 +201,8 @@ def readRecipe(anIterator):
             ret['sections'][-1]['procedure_sets'].append(proc)
 
         elif cmd == 'SK':
-            assert(len(ret['sections']) > 0)
-            assert(len(cmdargs) > 0)
+            assert len(ret['sections']) > 0, 'Unepected SK before start of section'
+            assert len(cmdargs) == 1, '.SK expects exactly one param'
 
             if  'procedure_sets' not in ret['sections'][-1]:
                 ret['sections'][-1]['procedure_sets'] = [ { 'procedures': [] } ]
@@ -391,7 +391,7 @@ def _collapseLines(aLineList):
     for nextline in aLineList:
 
         if nextline == '{{pre}}':
-            if DEBUG >= 2: print('---> pre', file=sys.stderr)
+            if DEBUG >= 3: print('---> pre', file=sys.stderr)
             pre = True
 
             if linebuf:
@@ -399,7 +399,7 @@ def _collapseLines(aLineList):
                 linebuf = ''
 
         elif nextline == '{{/pre}}':
-            if DEBUG >= 2: print('<--- pre', file=sys.stderr)
+            if DEBUG >= 3: print('<--- pre', file=sys.stderr)
             pre = False
 
             if linebuf:
