@@ -69,6 +69,8 @@ def readRecipe(anIterator):
 
     global DEBUG
 
+    IGNORABLE_COMMANDS = ('ig', '.')
+
     for block in _blockIter(anIterator):
         if DEBUG >= 4: print(block, file=sys.stderr)
 
@@ -222,8 +224,11 @@ def readRecipe(anIterator):
             if len(block) > 1:
                 ret['footer'] = block[1:]
         
+        elif cmd in IGNORABLE_COMMANDS:
+            if DEBUG >= 3: print('ignoring cmd "%s"' % cmd, file=sys.stderr)
+
         else:
-            if DEBUG >= 3: print('skipping cmd="%s"' % cmd, file=sys.stderr)
+            if DEBUG >= 2: print('***unknown cmd*** "%s"' % cmd, file=sys.stderr)
 
     return ret
 
@@ -236,15 +241,27 @@ def _blockIter(anIterator):
     """
     ret = []
 
-    INLINE_CONVERSION_CODES = ('.TE', '.AB')
-    INLINE_FORMAT_CODES = ('.I ', '.B ', '.SM', '.PP', '.PD', '.IP', '.RS', '.RE', '.if', '.ds', '.br', '.nf', '.fi', '.ta')
+    CONVERSION_CODES = ('.TE', '.AB')
+    NON_BREAKING_CODES = ('.SM', '.PP', '.PD', '.IP', '.RS', '.RE', '.if', '.ds', '.br', '.nf', '.fi', '.ta', '..') # that last one allows for old-style email paths
+
+    FORMAT_CODE_MAP = {
+        'B': ('b',),
+        'I': ('i',),
+        'BI': ('b', 'i'),
+        'IB': ('i', 'b'),
+        'SM': ('small',),
+        }
+
+    # todo: generate this from keys of FORMAT_CODE_MAP
+    nextLineRE = re.compile(r'^\.(B|I|BI|IB|SM)(\s(.*))?$')
 
     for rawline in anIterator:
         line = _convertCodes(rawline.strip())
 
         if line.startswith('.'):
+            m = nextLineRE.match(line)
 
-            if line.startswith(INLINE_CONVERSION_CODES):
+            if line.startswith(CONVERSION_CODES):
                 parts = shlex.split(line)
 
                 # us units
@@ -259,8 +276,18 @@ def _blockIter(anIterator):
                 if len(parts) > 3:
                     # optional appended text
                     line += parts[3]
+
+            elif m is not None:
+                op = m.group(1)
+                text = m.group(3)
+
+                if text:
+                    line = ''.join([ '<%s>' % c for c in FORMAT_CODE_MAP[op] ]) + text + ''.join([ '</%s>' % c for c in reversed(FORMAT_CODE_MAP[op]) ])
+                else:
+                    # todo
+                    if DEBUG >= 2: print('***not handling next-line format for .%s ***' % op, file=sys.stderr)
                 
-            elif not line.startswith(INLINE_FORMAT_CODES):
+            elif not line.startswith(NON_BREAKING_CODES):
 
                 if ret:
                     yield ret
@@ -284,8 +311,9 @@ def _convertCodes(aString):
         r'\\\(mu': '&times;',
         r'\\\(em': '&em;',
         r'\\-': '-',       # &em;
-        r'^.I (.+)$': '<i>\\1</i>',
-        r'^.B (.+)$': '<b>\\1</b>',
+        #r'^.I (.+)$': '<i>\\1</i>',
+        #r'^.B (.+)$': '<b>\\1</b>',
+        #r'^.SM (.+)$': '<small>\\1</small>',
         r'\\z\\\(aae': '&eacute;',
         r'\\z\\\(aao': '&oacute;',
         r'\\z\\\(gaa': '&agrave;',
