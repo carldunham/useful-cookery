@@ -109,16 +109,14 @@ def readRecipe(anIterator):
 
             title, desc = cmdargs
 
-            intro = _convertMultilineCodes(" ".join(block[1:])) if (len(block) > 1) else ''
-
-            if DEBUG >= 3: print('.RZ, title="%s", desc="%s", intro="%s"' % (title, desc, intro), file=sys.stderr)
+            if DEBUG >= 3: print('.RZ, title="%s", desc="%s"' % (title, desc), file=sys.stderr)
 
             # should only be one per file. if not, last in wins
             ret['title'] = title
             ret['description'] = desc
 
-            if intro:
-                ret['introduction'] = intro
+            if len(block) > 1:
+                ret['introduction'] = [ _convertMultilineCodes(l) for l in _collapseLines(block[1:]) ]
 
         elif cmd == 'SH':
             sh = {}
@@ -127,7 +125,7 @@ def readRecipe(anIterator):
                 sh['name'] = cmdargs[0]
             
             if len(block) > 1:
-                sh['comments'] = block[1:]
+                sh['comments'] = [ _convertMultilineCodes(l) for l in _collapseLines(block[1:]) ]
 
             # may be at the start of an ingredients section, or a section of its own
             # not sure what 'within' an ingredients section would mean...
@@ -182,7 +180,7 @@ def readRecipe(anIterator):
                 ig['metric'] = cmdargs[2].strip()
 
             if len(block) > 1:
-                ig['comments'] = block[1:]
+                ig['comments'] = [ _convertMultilineCodes(l) for l in _collapseLines(block[1:]) ]
 
             ret['sections'][-1]['ingredient_sets'][-1]['ingredients'].append(ig)
         
@@ -212,13 +210,13 @@ def readRecipe(anIterator):
             step = { 'index': cmdargs[0].strip() }
         
             if len(block) > 1:
-                step['comments'] = block[1:]
+                step['comments'] = [ _convertMultilineCodes(l) for l in _collapseLines(block[1:]) ]
 
             ret['sections'][-1]['procedure_sets'][-1]['procedures'].append(step)
         
         elif cmd == 'NX':
             if len(block) > 1:
-                ret['notes'] = block[1:]
+                ret['notes'] = [ _convertMultilineCodes(l) for l in _collapseLines(block[1:]) ]
         
         elif cmd == 'WR':
             if len(block) > 1:
@@ -243,6 +241,7 @@ def _blockIter(anIterator):
 
     CONVERSION_CODES = ('.TE', '.AB')
     NON_BREAKING_CODES = ('.SM', '.PP', '.PD', '.RS', '.RE', '.if', '.ds', '.br', '.nf', '.fi', '.ta', '..') # that last one allows for old-style email paths
+    IGNORE_CODES = ('.ta', ) # for one-liners. multi-line ones (like .ig) are dealt with as ignored commands above
 
     FORMAT_CODE_MAP = {
         'B': ('b',),
@@ -267,7 +266,11 @@ def _blockIter(anIterator):
         if line.startswith('.'):
             m = nextLineRE.match(line)
 
-            if line.startswith(CONVERSION_CODES):
+            if line.startswith(IGNORE_CODES):
+                if DEBUG >= 3: print('*** ignoring line: "%s" ***' % line, file=sys.stderr)
+                line = None
+                
+            elif line.startswith(CONVERSION_CODES):
                 parts = shlex.split(line)
 
                 # us units
@@ -289,7 +292,7 @@ def _blockIter(anIterator):
 
                 if text:
                     line = _convertFormat(text, op)
-                    #line = ''.join([ '<%s>' % c for c in FORMAT_CODE_MAP[op] ]) + text + ''.join([ '</%s>' % c for c in reversed(FORMAT_CODE_MAP[op]) ])
+
                 else:
                     # todo
                     if DEBUG >= 3: print('*** handling next-line format for .%s ***' % op, file=sys.stderr)
@@ -311,7 +314,6 @@ def _blockIter(anIterator):
             if nextop is not None:
                 line = _convertFormat(line, nextop)
                 if DEBUG >= 3: print('***    emitting "%s" ***' % line, file=sys.stderr)
-                #line = ''.join([ '<%s>' % c for c in FORMAT_CODE_MAP[nextop] ]) + line + ''.join([ '</%s>' % c for c in reversed(FORMAT_CODE_MAP[nextop]) ])
                 nextop = None
                 
             ret.append(line)
@@ -343,8 +345,15 @@ def _convertCodes(aString):
         r"\\o'o\"'": '&ouml;',
         r'``': '&ldquo;',
         r"''": '&rdquo;',
+        r'\t': ' ',    # '&nbsp;',
+        r'\\s\-2': '<span class="troff-s-2">',
+        r'\\s0': '</span>',
         r'^\.PP\s*': '<p>',
         r'^\.br\s*': '<br>',
+        r'^\.nf\s*': '{{pre}}',  # allows for more reasonable options than just <pre>, ie css white-space: pre-line
+        r'^\.fi\s*': '{{/pre}}',
+        r'^\.RS\s*': '<div class="troff-RS">',
+        r'^\.RE\s*': '</div>',
         }
 
     for k,v in REPLACEMENTS.items():
@@ -353,7 +362,8 @@ def _convertCodes(aString):
     ret = ret.strip()
     
     return ret
-    
+
+
 def _convertMultilineCodes(aString):
     ret = aString
 
@@ -368,6 +378,46 @@ def _convertMultilineCodes(aString):
     ret = ret.strip()
     
     return ret
+
+
+def _collapseLines(aLineList):
+    ret = []
+
+    global DEBUG
+
+    linebuf = ''
+    pre = False
+
+    for nextline in aLineList:
+
+        if nextline == '{{pre}}':
+            if DEBUG >= 2: print('---> pre', file=sys.stderr)
+            pre = True
+
+            if linebuf:
+                ret.append(linebuf)
+                linebuf = ''
+
+        elif nextline == '{{/pre}}':
+            if DEBUG >= 2: print('<--- pre', file=sys.stderr)
+            pre = False
+
+            if linebuf:
+                ret.append(linebuf)
+                linebuf = ''
+
+        if pre:
+            ret.append(nextline)
+        elif not linebuf:
+            linebuf = nextline
+        else:
+            linebuf += (' ' + nextline) # this leaves the {{/pre}} appended with following text, but that should be ok
+
+    if linebuf:
+        ret.append(linebuf)
+
+    return ret
+
     
 if __name__ == '__main__':
     main()
