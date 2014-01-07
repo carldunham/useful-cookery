@@ -1,0 +1,4 @@
+
+use useful-cookery
+
+db.recipes.ensureIndex( { "name": 1 }, { unique: true } )

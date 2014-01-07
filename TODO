@@ -1,5 +1,22 @@
 validate structure
+  sections with ig sets, proc sets
+  required elements
+  no stray elements
 
-load into mongo
+? pull out rating as a different element type (not section)
 
 build app
+  search
+    by name
+    by keyword (name, description, intro, notes, ingredients? procedures? other?)
+    permuted index
+    by ingredient
+
+  display
+    basic
+    printable
+      sheet, card, other?
+    links to related
+    ratings?, reviews?, discussion?
+
+  add
