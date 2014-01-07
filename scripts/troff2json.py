@@ -69,7 +69,7 @@ def readRecipe(anIterator):
 
     global DEBUG
 
-    IGNORABLE_COMMANDS = ('ig', '.')
+    IGNORABLE_COMMANDS = ('ig', '.', 'S', 'sp')
 
     for block in _blockIter(anIterator):
         if DEBUG >= 4: print(block, file=sys.stderr)
@@ -242,18 +242,24 @@ def _blockIter(anIterator):
     ret = []
 
     CONVERSION_CODES = ('.TE', '.AB')
-    NON_BREAKING_CODES = ('.SM', '.PP', '.PD', '.IP', '.RS', '.RE', '.if', '.ds', '.br', '.nf', '.fi', '.ta', '..') # that last one allows for old-style email paths
+    NON_BREAKING_CODES = ('.SM', '.PP', '.PD', '.RS', '.RE', '.if', '.ds', '.br', '.nf', '.fi', '.ta', '..') # that last one allows for old-style email paths
 
     FORMAT_CODE_MAP = {
         'B': ('b',),
         'I': ('i',),
+        'IR': ('i',),
         'BI': ('b', 'i'),
         'IB': ('i', 'b'),
         'SM': ('small',),
+        'IP': ('li',),
         }
 
-    # todo: generate this from keys of FORMAT_CODE_MAP
-    nextLineRE = re.compile(r'^\.(B|I|BI|IB|SM)(\s(.*))?$')
+    nextLineRE = re.compile(r'^\.(%s)(\s"?(.*?)"?)?\s*$' % '|'.join(FORMAT_CODE_MAP.keys()))
+
+    nextop = None
+
+    def _convertFormat(aString, anOp):
+        return ''.join([ '<%s>' % c for c in FORMAT_CODE_MAP[anOp] ]) + aString + ''.join([ '</%s>' % c for c in reversed(FORMAT_CODE_MAP[anOp]) ])
 
     for rawline in anIterator:
         line = _convertCodes(rawline.strip())
@@ -282,18 +288,33 @@ def _blockIter(anIterator):
                 text = m.group(3)
 
                 if text:
-                    line = ''.join([ '<%s>' % c for c in FORMAT_CODE_MAP[op] ]) + text + ''.join([ '</%s>' % c for c in reversed(FORMAT_CODE_MAP[op]) ])
+                    line = _convertFormat(text, op)
+                    #line = ''.join([ '<%s>' % c for c in FORMAT_CODE_MAP[op] ]) + text + ''.join([ '</%s>' % c for c in reversed(FORMAT_CODE_MAP[op]) ])
                 else:
                     # todo
-                    if DEBUG >= 2: print('***not handling next-line format for .%s ***' % op, file=sys.stderr)
+                    if DEBUG >= 3: print('*** handling next-line format for .%s ***' % op, file=sys.stderr)
+                    nextop = op
+                    line = None
                 
             elif not line.startswith(NON_BREAKING_CODES):
 
                 if ret:
                     yield ret
                     ret = []
+                    nextop = None
+
+            else:
+                if DEBUG >= 3: print('*** passing through line [%s] ***' % line, file=sys.stderr)
+                    
+        if line is not None:
+
+            if nextop is not None:
+                line = _convertFormat(line, nextop)
+                if DEBUG >= 3: print('***    emitting "%s" ***' % line, file=sys.stderr)
+                #line = ''.join([ '<%s>' % c for c in FORMAT_CODE_MAP[nextop] ]) + line + ''.join([ '</%s>' % c for c in reversed(FORMAT_CODE_MAP[nextop]) ])
+                nextop = None
                 
-        ret.append(line)
+            ret.append(line)
 
     if ret:
         yield ret
