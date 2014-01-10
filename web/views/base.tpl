@@ -41,7 +41,30 @@
 <body>
   <span id="loading-indicator"><img src="loading.gif" width="32" height="32"></span>
 
-  <div id="content">{% block content %}{% endblock %}</div>
+  <div id="header">
+    {% block header %}
+    <div id="nav">
+      {% block nav %}
+      <ul>
+	<li><span><a href="/">Home</a></span>
+	<li><span><a href="/index">Index</a></span>
+	<li><span><a href="/search">Search</a></span>
+      </ul>
+      {% endblock nav %}
+    </div>
+    {% endblock header %}
+  </div>
+
+  <div id="content">{% block content %}{% endblock content %}</div>
+
+  <div id="footer">
+    {% block footer %}
+    <div class="copyright">
+      <div class="main">Website and original content Copyright &copy; 2014 Carl A. Dunham, All Rights Reserved</div>
+      <div class="sub"><i>Usenet Cookbook</i> content from <a href="https://groups.google.com/forum/#!forum/alt.gourmand">alt.gourmand</a> Copyright &copy; 1985-1988 USENET Community Trust</div>
+    </div>
+    {% endblock footer %}
+  </div>
 </body>
 
 </html>

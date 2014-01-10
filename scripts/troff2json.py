@@ -127,23 +127,28 @@ def readRecipe(anIterator):
             if len(block) > 1:
                 sh['comments'] = [ _convertMultilineCodes(l) for l in _collapseLines(block[1:]) ]
 
-            # may be at the start of an ingredients section, or a section of its own
-            # not sure what 'within' an ingredients section would mean...
-            #
-            if ((len(ret['sections']) == 0) or
-                (('ingredient_sets' in ret['sections'][-1]) and (len(ret['sections'][-1]['ingredient_sets'][-1]['ingredients']) > 0)) or
-                ('name' in  ret['sections'][-1])
-                ):
+            if sh['name'] == 'RATING':
+                assert 'ratings' not in ret, 'not expecting more than one RATINGS section'
 
-                ret['sections'].append(sh)
+                ret['ratings'] = sh
             else:
-                #assert 'name' not in  ret['sections'][-1]
-                assert 'comments' not in ret['sections'][-1], 'unexpected existing section data'
+                # may be at the start of an ingredients section, or a section of its own
+                # not sure what 'within' an ingredients section would mean...
+                #
+                if ((len(ret['sections']) == 0) or
+                    (('ingredient_sets' in ret['sections'][-1]) and (len(ret['sections'][-1]['ingredient_sets'][-1]['ingredients']) > 0)) or
+                    ('name' in  ret['sections'][-1])
+                    ):
 
-                ret['sections'][-1]['name'] = sh['name']
+                    ret['sections'].append(sh)
+                else:
+                    #assert 'name' not in  ret['sections'][-1]
+                    assert 'comments' not in ret['sections'][-1], 'unexpected existing section data'
 
-                if 'comments' in sh:
-                    ret['sections'][-1]['comments'] = sh['comments']
+                    ret['sections'][-1]['name'] = sh['name']
+
+                    if 'comments' in sh:
+                        ret['sections'][-1]['comments'] = sh['comments']
                 
         elif cmd == 'IH':
             # some recipes are broken into sections, others are not. So if we come across an ingredients header,
@@ -273,12 +278,17 @@ def _blockIter(anIterator):
             elif line.startswith(CONVERSION_CODES):
                 parts = shlex.split(line)
 
+                units = {'us': '', 'metric': ''}
+
+                if line.startswith('.TE'):
+                    units = {'us': '&deg;F', 'metric': '&deg;C'}
+
                 # us units
-                params = '"%s"' % parts[1].strip()
+                params = '"%s%s"' % (parts[1].strip(), units['us'])
 
                 if len(parts) > 2:
                     # optional metric
-                    params += ', "%s"' % parts[2].strip()
+                    params += ', "%s%s"' % (parts[2].strip(), units['metric'])
 
                 line = '{{ chooseUnits(%s) }}' % params
 
@@ -332,8 +342,8 @@ def _convertCodes(aString):
         r'\\\(12': ' 1/2',  # '&frac12'
         r'\\\(34': ' 3/4',  # '&frac34'
         r'\\\(mu': '&times;',
-        r'\\\(em': '&em;',
-        r'\\-': '-',       # &em;
+        r'\\\(em': '&mdash;',
+        r'\\-': '-',       # &mdash;
         #r'^.I (.+)$': '<i>\\1</i>',
         #r'^.B (.+)$': '<b>\\1</b>',
         #r'^.SM (.+)$': '<small>\\1</small>',
@@ -351,7 +361,7 @@ def _convertCodes(aString):
         r'^\.PP\s*': '<p>',
         r'^\.br\s*': '<br>',
         r'^\.nf\s*': '{{pre}}',  # allows for more reasonable options than just <pre>, ie css white-space: pre-line
-        r'^\.fi\s*': '{{/pre}}',
+        r'^\.fi\s*': '{{endpre}}',
         r'^\.RS\s*': '<div class="troff-RS">',
         r'^\.RE\s*': '</div>',
         }
@@ -398,7 +408,7 @@ def _collapseLines(aLineList):
                 ret.append(linebuf)
                 linebuf = ''
 
-        elif nextline == '{{/pre}}':
+        elif nextline == '{{endpre}}':
             if DEBUG >= 3: print('<--- pre', file=sys.stderr)
             pre = False
 
@@ -411,7 +421,7 @@ def _collapseLines(aLineList):
         elif not linebuf:
             linebuf = nextline
         else:
-            linebuf += (' ' + nextline) # this leaves the {{/pre}} appended with following text, but that should be ok
+            linebuf += (' ' + nextline) # this leaves the {{endpre}} appended with following text, but that should be ok
 
     if linebuf:
         ret.append(linebuf)

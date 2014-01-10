@@ -18,8 +18,13 @@ import sys
 import os
 from argparse import ArgumentParser
 from pymongo import MongoClient
+from jinja2 import evalcontextfilter
 
 DEBUG = 0
+
+_client = MongoClient()
+
+_db = _client['useful-cookery']
 
 
 def setDebug(aDebugLevel=1):
@@ -31,10 +36,17 @@ def get(aName):
     """
     Return a recipe with a given name, or None if it doesn't exist
     """
-    client = MongoClient()
+    ret = _db.recipes.find_one({ 'name': aName })
 
-    db = client['useful-cookery']
+    return ret
 
-    recipe = db.recipes.find_one({ 'name': aName })
 
-    return recipe
+def getSummary():
+    """
+    Return a summary list of all the recipes
+    """
+    ret = _db.recipes.find({}, { 'name': 1, 'title': 1, 'description': 1 }).sort('title')
+
+    return ret
+
+

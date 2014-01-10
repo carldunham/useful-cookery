@@ -17,8 +17,11 @@ Main bottle app for usefulcookery.com
 import sys
 import os
 from argparse import ArgumentParser
+import functools
 
-from bottle import run, debug as bottle_debug, route, redirect, abort, static_file, jinja2_view as view, jinja2_template as template
+from bottle import run, debug as bottle_debug, route, redirect, abort, static_file, jinja2_view, jinja2_template as template
+
+import jinja2
 
 import recipes
 
@@ -49,7 +52,53 @@ def main():
 
     recipes.setDebug(DEBUG)
     
-    run(reloader=True)
+    run(reloader=(DEBUG>0))
+
+
+# set up some basic stuff
+#
+
+# from http://jpvanoosten.nl/blog/2013/03/24/custom-jinja2-filters-when-using-bottle/
+
+filter_dict = {}
+view = functools.partial(jinja2_view, template_settings={'filters': filter_dict})
+
+def filter(func):
+	"""Decorator to add the function to filter_dict"""
+	filter_dict[func.__name__] = func
+	return func
+
+
+@filter
+def interpret(aValue, aUnitsType='us'):
+    ret = aValue
+
+    global DEBUG
+
+    if '{{' in ret:
+        def chooseUnits(aUS, aMetric=None, anAddon=None):
+            ret = aUS
+
+            # todo: check a param, cookie, config setting or something
+
+            if aMetric and (aUnitsType == 'metric'):
+                ret = aMetric
+            
+            if anAddon:
+                ret += anAddon
+
+            return ret
+
+        e = jinja2.Environment()
+        t = e.from_string(ret)
+        ret = t.render(chooseUnits=chooseUnits,
+                       pre = '<pre>',
+                       endpre = '</pre>'
+            )
+
+        if DEBUG >= 3: print('filter called, value="%s", units="%s" -> "%s"' % (aValue, aUnitsType, ret), file=sys.stderr)
+
+    return ret
 
 
 @route('/<:re:(index|home|default)\.html?>')
@@ -76,8 +125,42 @@ def home():
                                    'errorText': 'Unable to find recipe',
                                    }
 
-
     ret['rotd'] = rotd
+
+    return ret
+
+
+@route('/index')
+@view('permindex.tpl')
+def home():
+    """
+    index page
+    """
+    ret = {
+        'title': 'Useful Cookery Permuted Index - Recipes lovingly restored for the global village',
+        }
+
+    # todo: paging windows
+    
+    all = recipes.getSummary() or { 'error': True,
+                                    'errorText': 'Unable to get recipe list',
+                                    }
+
+    ret['recipes'] = all
+
+    return ret
+
+
+@route('/search')
+@view('search.tpl')
+def home():
+    """
+    search page
+    """
+    ret = {
+        'title': 'Search Useful Cookery - Recipes lovingly restored for the global village',
+        }
+
 
     return ret
 

@@ -11,7 +11,7 @@
   {% if recipe.introduction %}
     <div class="introduction">
       {% for line in recipe.introduction %}
-        <div class="line">{{ line }}</div>
+        <div class="line">{{ line|interpret }}</div>
       {% endfor %}
     </div>
   {% endif %}
@@ -33,7 +33,7 @@
 	         {% if ig.comments %}
 		   <div class="comments">
 		   {% for comment in ig.comments %}
-	             <div class="comment">{{ comment }}</div>
+	             <div class="comment">{{ comment|interpret }}</div>
                    {% endfor %}
 		   </div>
 		 {% endif %}
@@ -50,11 +50,11 @@
              {% for sk in set.procedures %}
 	       <div class="procedure">
 		 <div>
-		   <span class="index">{{sk.index}}.</span>
-		   <span class="comments">{{sk.comments[0]}}</span>
+		   <span class="index">{{ sk.index }}.</span>
+		   <span class="comments">{{ sk.comments[0]|interpret }}</span>
 		   {% for comment in sk.comments[1:] %}
 		     <span class="index next-line"></span>
-		     <span class="comment">{{comment}}</span>
+		     <span class="comment">{{ comment|interpret }}</span>
 		   {% endfor %}
 		 </div>
 	       </div>
@@ -66,20 +66,41 @@
       {% if section.comments %}
 	<div class="comments">
 	  {% for comment in section.comments %}
-	  <div class="comment">{{ comment }}</div>
+	  <div class="comment">{{ comment|interpret }}</div>
           {% endfor %}
 	</div>
       {% endif %}
     </div>
   {% endfor %}
 
-
   {% if recipe.notes %}
     <div class="section">
       <div class="name">NOTES</div>
       <div class="notes">
 	{% for line in recipe.notes %}
-          <div class="line">{{ line }}</div>
+          <div class="line">{{ line|interpret }}</div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if recipe.ratings %}
+    <div class="section">
+      <div class="name">RATINGS</div>
+      <div class="notes">
+	{% for line in recipe.ratings.comments %}
+          <div class="line">{{ line|interpret }}</div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if recipe.footer %}
+    <div class="section">
+      <div class="name">CONTRIBUTER</div>
+      <div class="footer">
+	{% for line in recipe.footer %}
+          <div class="line">{{ line|interpret }}</div>
         {% endfor %}
       </div>
     </div>
