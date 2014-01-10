@@ -22,7 +22,7 @@ var
 sdist
 develop-eggs
 .installed.cfg
-lib
+#lib
 lib64
 __pycache__
 
@@ -42,4 +42,5 @@ nosetests.xml
 .project
 .pydevproject
 
+# project-specific
 data/json/
