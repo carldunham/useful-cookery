@@ -154,7 +154,10 @@ def readRecipe(anIterator):
             # some recipes are broken into sections, others are not. So if we come across an ingredients header,
             # and have no sections started, start one. Otherwise, append to the last one.
             #
-            if len(ret['sections']) == 0:
+            # Also, only allow multiple ingredient sets for named sections. If the section is not named, start
+            # a new unnamed section.
+            #
+            if (len(ret['sections']) == 0) or ('name' not in ret['sections'][-1]):
                 ret['sections'].append( {} )
                 
             if 'ingredient_sets' not in ret['sections'][-1]:
