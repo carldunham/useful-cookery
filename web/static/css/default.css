@@ -1,1 +1,82 @@
 
+/* general */
+
+body {
+    font-family: Verdana, Genevea, sans-serif;
+    margin: 0;
+}
+
+#content {
+    margin: 10px;
+}
+
+
+/* header */
+
+#header {
+    height: 60px;
+    color: white;
+    background-color: blue;
+    clear: both;
+}
+
+#header a:link, #header a:visited {
+    color: white;
+}
+
+.unitstype {
+    display: inline;
+    float: right;
+    padding: 20px;
+}
+
+
+/* navigation bar */
+
+.nav {
+    display: inline;
+    float: left;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.nav ul {
+    height: 40px;
+    padding: 10px 0;
+}
+
+.nav li {
+    display: inline;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.nav a {
+    margin: 0;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+
+#header .nav a:hover {
+    color: blue;
+    background-color: white;
+}
+
+
+/* footer */
+
+#footer {
+    color: white;
+    background-color: blue;
+    font-size: 10px;
+    text-align: center;
+    padding: 5px 0;
+}
+
+#footer a {
+    text-decoration: none;
+}
+
+#footer a:link, #footer a:visited {
+    color: white;
+}

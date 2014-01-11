@@ -1,0 +1,76 @@
+
+/* descriptive information */
+
+.recipe .reference {
+    text-align: right;
+    font-size: 18px;
+}
+
+.recipe .reference .category {
+    margin: 5px;
+}
+
+.recipe .reference .category:before {
+    content: "("
+}
+
+.recipe .reference .category:after {
+    content: ")"
+}
+
+.recipe .title {
+    text-align: center;
+    font-size: 24px;
+}
+
+.recipe .description {
+    margin: 20px 0;
+}
+
+.recipe .introduction .line, .recipe .notes .line, .recipe .ratings.line {
+    margin: 20px;
+}
+
+
+.recipe .contributer {
+    margin: 20px;
+}
+
+
+.recipe .contributer .line {
+    margin: 0;
+}
+
+
+/* sections/ingredients/procedures */
+
+.recipe .section .named-section {
+    margin-left: 20px;
+}
+
+.recipe .ingredients, .recipe .procedures {
+}
+
+.recipe .section .named-section .name {
+    font-size: 16px;
+    border-bottom: 1px solid black;
+    margin-top: 20px;
+    margin-left: -20px;
+}
+
+.recipe .ingredients .header, .procedures .header {
+    margin-top: 20px;
+}
+
+.recipe .ingredients .ingredient {
+    margin: 10px 25px;
+}
+
+.recipe .ingredients .ingredient .item {
+    font-style: italic;
+}
+
+.recipe .procedures .procedure {
+    margin: 10px 15px;
+}
+

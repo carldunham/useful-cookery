@@ -10,9 +10,8 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 
+  {% block styles %}
   <link rel="stylesheet" href="/css/default.css">
-  <script src="/js/cookies.js"></script>
-  <script src="/js/main.js"></script>
 
   <style>
     #loading-indicator {
@@ -22,6 +21,11 @@
       top: 0; left: 800px;*/
     }
   </style>
+  {% endblock styles %}
+
+  {% block javascript %}
+  <script src="/js/cookies.js"></script>
+  <script src="/js/main.js"></script>
 
   <script type="text/javascript">
 
@@ -36,6 +40,7 @@
       });
 
   </script>
+  {% endblock javascript %}
 
 </head>
 
@@ -44,12 +49,12 @@
 
   <div id="header">
     {% block header %}
-    <div id="nav">
+    <div class="nav">
       {% block nav %}
       <ul>
-	<li><span><a href="/">Home</a></span>
-	<li><span><a href="/index">Index</a></span>
-	<li><span><a href="/search">Search</a></span>
+	<li><span><a href="/">Home</a></span></li>
+	<li><span><a href="/index">Index</a></span></li>
+	<li><span><a href="/search">Search</a></span></li>
       </ul>
       {% endblock nav %}
     </div>

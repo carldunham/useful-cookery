@@ -1,11 +1,17 @@
 {% extends "base.tpl" %}
 
+{% block styles %}
+{{ super() }}
+  <link rel="stylesheet" href="/css/recipe.css">
+{% endblock styles %}
+
+
 {% block content %}
 {% if error or not recipe %}
 <div class="error">{{ errorText or 'Recipe not found.' }}</div>
 {% else %}
 <div class="recipe">
-  <div class=headline><span class="name">{{ recipe.name }}</span></div>
+  <div class="reference"><span class="name">{{ recipe.name }}</span><span class="category">{{ recipe.category }}</span></div>
   <div class="title">{{ recipe.title }}</div>
   <div class="description">{{ recipe.description }}</div>
   {% if recipe.introduction %}
@@ -18,7 +24,10 @@
 
   {% for section in recipe.sections %}
     <div class="section">
-      <div class="name">{{ section.name or '(unnamed section)' }}</div>
+      {% if section.name %}
+         <div class="named-section">
+	 <span class="name">{{ section.name }}</span>
+      {% endif %}
 
       {% if section.ingredient_sets %}
          <div class="ingredients">
@@ -26,16 +35,12 @@
 	     <div class="header">INGREDIENTS: {% if set.yield %} ({{ chooseUnits(set.yield.us, set.yield.metric) }}){% endif %}</div>
              {% for ig in set.ingredients %}
 	       <div class="ingredient">
-		 <div>
-		   <span class="amount">{{ chooseUnits(ig.us, ig.metric) }}</span>
-		   <span class="item">{{ig.ingredient}}</span>
-		 </div>
+	       	 <span class="amount">{{ chooseUnits(ig.us, ig.metric) }}</span>
+		 <span class="item">{{ig.ingredient}}</span>
 	         {% if ig.comments %}
-		   <div class="comments">
 		   {% for comment in ig.comments %}
-	             <div class="comment">{{ comment|interpret }}</div>
+	             <span class="comment">{{ comment|interpret }}</span>
                    {% endfor %}
-		   </div>
 		 {% endif %}
 	       </div>
              {% endfor %}
@@ -49,14 +54,13 @@
 	     <div class="header">PROCEDURES: {% if set.name %} {{ set.name }}{% endif %}</div>
              {% for sk in set.procedures %}
 	       <div class="procedure">
-		 <div>
-		   <span class="index">{{ sk.index }}.</span>
-		   <span class="comments">{{ sk.comments[0]|interpret }}</span>
-		   {% for comment in sk.comments[1:] %}
-		     <span class="index next-line"></span>
-		     <span class="comment">{{ comment|interpret }}</span>
-		   {% endfor %}
-		 </div>
+		 <ol>
+		   <li value="{{ sk.index }}">
+		     {% for comment in sk.comments %}
+		       <div class="comment">{{ comment|interpret }}</div>
+		     {% endfor %}
+		   </li>
+		 </ol>
 	       </div>
              {% endfor %}
            {% endfor %}
@@ -70,6 +74,8 @@
           {% endfor %}
 	</div>
       {% endif %}
+
+      {% if section.name %}</div>{% endif %}
     </div>
   {% endfor %}
 
@@ -98,7 +104,7 @@
   {% if recipe.footer %}
     <div class="section">
       <div class="name">CONTRIBUTER</div>
-      <div class="footer">
+      <div class="contributer">
 	{% for line in recipe.footer %}
           <div class="line">{{ line|interpret }}</div>
         {% endfor %}
