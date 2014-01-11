@@ -2,6 +2,7 @@
 /* descriptive information */
 
 .recipe .reference {
+    white-space: nowrap;
     text-align: right;
     font-size: 18px;
 }
@@ -19,6 +20,7 @@
 }
 
 .recipe .title {
+    white-space: nowrap;
     text-align: center;
     font-size: 24px;
 }
@@ -45,6 +47,11 @@
 /* sections/ingredients/procedures */
 
 .recipe .section .named-section {
+    margin-left: 20px;
+}
+
+.recipe .section .named-section .name {
+    display: block;
     margin-left: 20px;
 }
 

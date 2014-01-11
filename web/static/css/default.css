@@ -3,7 +3,11 @@
 
 body {
     font-family: Verdana, Genevea, sans-serif;
-    margin: 0;
+    margin: 0 auto;
+}
+
+.clear {
+    clear: left;
 }
 
 #content {
@@ -18,6 +22,7 @@ body {
     color: white;
     background-color: blue;
     clear: both;
+    white-space: nowrap;
 }
 
 #header a:link, #header a:visited {
@@ -27,6 +32,7 @@ body {
 .unitstype {
     display: inline;
     float: right;
+    white-space: nowrap;
     padding: 20px;
 }
 
@@ -36,6 +42,7 @@ body {
 .nav {
     display: inline;
     float: left;
+    white-space: nowrap;
     font-size: 20px;
     font-weight: bold;
 }
@@ -43,6 +50,7 @@ body {
 .nav ul {
     height: 40px;
     padding: 10px 0;
+    list-stype-type: none;
 }
 
 .nav li {

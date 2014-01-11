@@ -64,7 +64,11 @@
     {% endblock header %}
   </div>
 
+  <div class="clear"></div>
+
   <div id="content">{% block content %}{% endblock content %}</div>
+
+  <div class="clear"></div>
 
   <div id="footer">
     {% block footer %}
