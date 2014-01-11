@@ -19,13 +19,15 @@ import os
 from argparse import ArgumentParser
 import functools
 
-from bottle import run, debug as bottle_debug, route, redirect, abort, static_file, jinja2_view, jinja2_template as template
+from bottle import *
 
 import jinja2
 
 import recipes
 
 DEBUG = 0
+
+_unitsType = 'us' # default
 
 
 def main():
@@ -48,7 +50,7 @@ def main():
         print('opts="%s"' % opts, file=sys.stderr)
 
     if DEBUG > 0:
-        bottle_debug(True)
+        debug(True)
 
     recipes.setDebug(DEBUG)
     
@@ -69,26 +71,38 @@ def filter(func):
 	return func
 
 
+def setcookies():
+    """Check for setting of cookies, eg us vs. metric. should be done for each page"""
+
+    global _unitsType
+    
+    if 'unitstype' in request.query:
+        _unitsType = request.query['unitstype']
+    elif 'unitstype' in request.cookies:
+        _unitsType = request.cookies['unitstype']
+
+    response.set_cookie('unitstype', _unitsType, path='/', max_age=1000*24*60*60)   # a long time
+    
+    
+def chooseUnits(aUS, aMetric=None, anAddon=None):
+    ret = aUS
+
+    if aMetric and (_unitsType == 'metric'):
+        ret = aMetric
+    
+    if anAddon:
+        ret += anAddon
+
+    return ret
+
+
 @filter
-def interpret(aValue, aUnitsType='us'):
+def interpret(aValue):
     ret = aValue
 
     global DEBUG
 
     if '{{' in ret:
-        def chooseUnits(aUS, aMetric=None, anAddon=None):
-            ret = aUS
-
-            # todo: check a param, cookie, config setting or something
-
-            if aMetric and (aUnitsType == 'metric'):
-                ret = aMetric
-            
-            if anAddon:
-                ret += anAddon
-
-            return ret
-
         e = jinja2.Environment()
         t = e.from_string(ret)
         ret = t.render(chooseUnits=chooseUnits,
@@ -96,7 +110,7 @@ def interpret(aValue, aUnitsType='us'):
                        endpre = '</pre>'
             )
 
-        if DEBUG >= 3: print('filter called, value="%s", units="%s" -> "%s"' % (aValue, aUnitsType, ret), file=sys.stderr)
+        if DEBUG >= 3: print('filter called, value="%s", units="%s" -> "%s"' % (aValue, _unitsType, ret), file=sys.stderr)
 
     return ret
 
@@ -119,6 +133,8 @@ def home():
         'title': 'Useful Cookery - Recipes lovingly restored for the global village',
         }
 
+    setcookies()
+
     rname = 'CHOC-CHIP-1'
     rotd = recipes.get(rname) or { 'name': rname,
                                    'error': True,
@@ -139,6 +155,8 @@ def home():
     ret = {
         'title': 'Useful Cookery Permuted Index - Recipes lovingly restored for the global village',
         }
+
+    setcookies()
 
     # todo: paging windows
     
@@ -162,6 +180,8 @@ def home():
         }
 
 
+    setcookies()
+
     return ret
 
 
@@ -173,7 +193,10 @@ def home(aName):
     """
     ret = {
         'rawname': aName,
+        'chooseUnits': chooseUnits,
         }
+
+    setcookies()
 
     recipe = recipes.get(aName.strip().upper()) 
 

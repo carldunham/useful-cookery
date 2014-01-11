@@ -10,8 +10,9 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 
-  <link rel="stylesheet" href="css/default.css">
-  <script src="js/main.js"></script>
+  <link rel="stylesheet" href="/css/default.css">
+  <script src="/js/cookies.js"></script>
+  <script src="/js/main.js"></script>
 
   <style>
     #loading-indicator {
@@ -39,7 +40,7 @@
 </head>
 
 <body>
-  <span id="loading-indicator"><img src="loading.gif" width="32" height="32"></span>
+  <span id="loading-indicator"><img src="/images/loading.gif" width="32" height="32"></span>
 
   <div id="header">
     {% block header %}
@@ -51,6 +52,9 @@
 	<li><span><a href="/search">Search</a></span>
       </ul>
       {% endblock nav %}
+    </div>
+    <div class="unitstype">
+      Choose Units: <a class="us" href="javascript:chooseUnits('us')">US</a> or <a class="metric" href="javascript:chooseUnits('metric')">Metric</a>
     </div>
     {% endblock header %}
   </div>

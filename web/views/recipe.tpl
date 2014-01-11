@@ -23,11 +23,11 @@
       {% if section.ingredient_sets %}
          <div class="ingredients">
            {% for set in section.ingredient_sets %}
-	     <div class="header">INGREDIENTS: {% if set.yield %} ({{ set.yield.us }}){% endif %}</div>
+	     <div class="header">INGREDIENTS: {% if set.yield %} ({{ chooseUnits(set.yield.us, set.yield.metric) }}){% endif %}</div>
              {% for ig in set.ingredients %}
 	       <div class="ingredient">
 		 <div>
-		   <span class="amount">{{ig.us}}</span>
+		   <span class="amount">{{ chooseUnits(ig.us, ig.metric) }}</span>
 		   <span class="item">{{ig.ingredient}}</span>
 		 </div>
 	         {% if ig.comments %}
@@ -46,7 +46,7 @@
       {% if section.procedure_sets %}
          <div class="procedures">
            {% for set in section.procedure_sets %}
-	     <div class="header">PROCEDURES:</div>
+	     <div class="header">PROCEDURES: {% if set.name %} {{ set.name }}{% endif %}</div>
              {% for sk in set.procedures %}
 	       <div class="procedure">
 		 <div>
