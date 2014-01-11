@@ -11,7 +11,7 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 
   {% block styles %}
-  <link rel="stylesheet" href="/css/default.css">
+  <link rel="stylesheet" href="/css/base.css">
 
   <style>
     #loading-indicator {
