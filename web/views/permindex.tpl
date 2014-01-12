@@ -6,7 +6,10 @@
 {% else %}
 <div class="permindex">
   {% for recipe in recipes %}
-    <div class="recipe"><a href="/recipe/{{ recipe.name }}">{{ recipe.title }}</a> <span class="name">({{ recipe.name }})</span> <span class="description">{{ recipe.description }}</span></div>
+    <div class="recipe">
+      <a href="/recipe/{{ recipe.name }}">{{ recipe.title }}</a> 
+      <span class="description">{{ recipe.description }}</span>
+    </div>
   {% endfor %}
 </div>
 {% endif %}

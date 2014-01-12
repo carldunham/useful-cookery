@@ -50,3 +50,11 @@ def getSummary():
     return ret
 
 
+def search(aTerm):
+    ret = None
+
+    # db.recipes.runCommand( "text", { search: "\"bacon\"", project: { "name": 1 }, language: "english" } )
+
+    ret = _db.command('text', 'recipes', search=aTerm, project={ 'name': 1, 'title': 1, 'description': 1 }, language='english')
+
+    return ret

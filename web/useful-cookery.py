@@ -110,7 +110,7 @@ def interpret(aValue):
                        endpre = '</pre>'
             )
 
-        if DEBUG >= 3: print('filter called, value="%s", units="%s" -> "%s"' % (aValue, _unitsType, ret), file=sys.stderr)
+        if DEBUG >= 4: print('filter called, value="%s", units="%s" -> "%s"' % (aValue, _unitsType, ret), file=sys.stderr)
 
     return ret
 
@@ -148,7 +148,7 @@ def home():
 
 @route('/index')
 @view('permindex.tpl')
-def home():
+def index():
     """
     index page
     """
@@ -171,7 +171,7 @@ def home():
 
 @route('/search')
 @view('search.tpl')
-def home():
+def search():
     """
     search page
     """
@@ -179,15 +179,27 @@ def home():
         'title': 'Search Useful Cookery - Recipes lovingly restored for the global village',
         }
 
-
     setcookies()
+
+    query = request.query.query
+
+    if query:
+        if DEBUG >= 4: print('search for "%s"' % (query), file=sys.stderr)
+
+        ret['query'] = query
+
+        results = recipes.search(query) or { 'error': True,
+                                             'errorText': 'Unable to get search results',
+                                             }
+
+        ret['results'] = results
 
     return ret
 
 
 @route('/recipe/<aName>')
 @view('recipe.tpl')
-def home(aName):
+def recipe(aName):
     """
     recipe page
     """
