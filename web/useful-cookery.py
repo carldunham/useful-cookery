@@ -96,6 +96,12 @@ def chooseUnits(aUS, aMetric=None, anAddon=None):
     return ret
 
 
+def convertToISO8601(aTime):
+    ret = 'PT1H'
+
+    return ret
+
+
 @filter
 def interpret(aValue):
     ret = aValue
@@ -206,6 +212,7 @@ def recipe(aName):
     ret = {
         'rawname': aName,
         'chooseUnits': chooseUnits,
+        'convertToISO8601': convertToISO8601,
         }
 
     setcookies()

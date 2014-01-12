@@ -129,14 +129,41 @@ def readRecipe(anIterator, aSource, aCopyright):
             if len(cmdargs) > 0:
                 sh['name'] = cmdargs[0]
             
-            if len(block) > 1:
-                sh['comments'] = [ _convertMultilineCodes(l) for l in _collapseLines(block[1:]) ]
-
             if sh['name'] == 'RATING':
                 assert 'ratings' not in ret, 'not expecting more than one RATINGS section'
 
-                ret['ratings'] = sh
+                ratings = {}
+                key = ''
+
+                for line in block[1:]:
+                    line = line.strip().rstrip('.')
+
+                    if line.startswith('<i>'):
+                        assert not key or ratings[key], 'Missing value for rating key "%s"' % key
+
+                        if line.startswith('<i>Difficulty'):
+                            key = 'difficulty'
+                        elif line.startswith('<i>Time'):
+                            key = 'time'
+                        elif line.startswith('<i>Precision'):
+                            key = 'precision'
+                        else:
+                            assert False, 'unexpected rating key line "%s"' % line
+                    else:
+                        assert key, 'Missing rating key for value "%s"' % line
+
+                        ratings[key] = line if key not in ratings else ' '.join([ ratings[key], line ])
+
+                #assert 'difficulty' in ratings, 'expecting Difficulty in Ratings'
+                #assert 'time' in ratings, 'expecting Time in Ratings'
+                #assert 'precision' in ratings, 'expecting Precision in Ratings'
+
+                ret['ratings'] = ratings
             else:
+
+                if len(block) > 1:
+                    sh['comments'] = [ _convertMultilineCodes(l) for l in _collapseLines(block[1:]) ]
+
                 # may be at the start of an ingredients section, or a section of its own
                 # not sure what 'within' an ingredients section would mean...
                 #

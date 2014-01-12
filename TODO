@@ -3,12 +3,15 @@ validate structure
   required elements
   no stray elements
 
+improve schema.org markup
+  calculate totalTime from ratings.time
+  split out prep and cook times
+  category
+
 build app
-  search
-    by name
-    by keyword (name, description, intro, notes, ingredients? procedures? other?)
-    permuted index
-    by ingredient
+  permuted index
+
+  ingredient index?
 
   display
     printable
