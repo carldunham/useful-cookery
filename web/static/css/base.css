@@ -81,10 +81,6 @@ body {
     padding: 5px 0;
 }
 
-#footer a {
-    text-decoration: none;
-}
-
 #footer a:link, #footer a:visited {
     color: white;
 }

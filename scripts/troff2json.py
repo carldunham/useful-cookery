@@ -41,6 +41,9 @@ def main():
     parser.add_argument('infile', metavar='filename', nargs='?', default=sys.stdin, type=argparse.FileType('r'), help='file to read from (default: <stdin> if missing or "-")')
     #parser.add_argument('-o', '--outfile', default=sys.stdout, type=argparse.FileType('w'), help='file to write to (default: <stdout> if missing or "-")')
 
+    parser.add_argument('-s', '--source', type=str, required=True, help='source identifier for recipe. may be pre-defined code ("usenet") or more complete description')
+    parser.add_argument('-c', '--copyright', type=str, required=True, help='copyright information for the recipe. may be pre-defined code ("usenet") or full copyright notice')
+
     opts = parser.parse_args()
 
     global DEBUG
@@ -50,19 +53,21 @@ def main():
         print('opts="%s"' % opts, file=sys.stderr)
 
 
-    recipe = readRecipe(opts.infile)
+    recipe = readRecipe(opts.infile, opts.source, opts.copyright)
 
     if not opts.quiet:
         json.dump(recipe, sys.stdout, indent=2, separators=(',', ': '))
         print()
 
 
-def readRecipe(anIterator):
+def readRecipe(anIterator, aSource, aCopyright):
     ret = {
         'name': '',
         'category': '',
         'title': '',
         'description': '',
+        'source': aSource,
+        'copyright': aCopyright,
 
         'sections': []
         }

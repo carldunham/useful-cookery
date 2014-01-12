@@ -3,8 +3,6 @@ validate structure
   required elements
   no stray elements
 
-? pull out rating as a different element type (not section)
-
 build app
   search
     by name
@@ -13,7 +11,6 @@ build app
     by ingredient
 
   display
-    basic
     printable
       sheet, card, other?
     links to related

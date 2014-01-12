@@ -42,6 +42,9 @@ def main():
 
     parser.add_argument('infiles', metavar='filename', nargs='*', type=str, default=['-'], help='file(s) to read from (default: <stdin> if missing or "-")')
 
+    parser.add_argument('-s', '--source', type=str, required=True, help='source identifier for recipe. may be pre-defined code ("usenet") or more complete description')
+    parser.add_argument('-c', '--copyright', type=str, required=True, help='copyright information for the recipe. may be pre-defined code ("usenet") or full copyright notice')
+
     opts = parser.parse_args()
 
     global DEBUG
@@ -60,7 +63,7 @@ def main():
     for fname in opts.infiles:
         fd = sys.stdin if (not fname) or (fname == '-') else open(fname, 'r')
 
-        recipe = readRecipe(fd)
+        recipe = readRecipe(fd, opts.source, opts.copyright)
 
         res = db.recipes.update({ 'name': recipe['name'] }, recipe, upsert=True)
 
