@@ -50,19 +50,24 @@
     margin-left: 20px;
 }
 
-.recipe .section .named-section .name {
-    display: block;
-    margin-left: 20px;
+/* these next two are a hack to handle procedures stuck to the last section */
+.recipe .section .named-section .procedures {
+    margin-left: -20px;
+}
+
+.recipe .section .named-section .procedures .header {
+    border-bottom: 1px solid black;
 }
 
 .recipe .ingredients, .recipe .procedures {
 }
 
 .recipe .section .named-section .name {
-    font-size: 16px;
+    display: block;
     border-bottom: 1px solid black;
     margin-top: 20px;
     margin-left: -20px;
+    font-size: 16px;
 }
 
 .recipe .ingredients .header, .procedures .header {
