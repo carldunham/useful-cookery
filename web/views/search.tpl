@@ -10,7 +10,7 @@
   <div class="searchform">
     <form>
       <label for="query">Search: </label>
-      <input type="search" id="query" name="query" size="40" placeholder="Enter Search Term(s)" value="{{ query }}">
+      <input type="search" id="query" name="q" size="40" placeholder="Enter Search Term(s)" value="{{ q }}">
       <input type="submit" value="Search">
     </form>
   </div>

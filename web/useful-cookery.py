@@ -164,11 +164,9 @@ def index():
 
     setcookies()
 
-    # todo: paging windows
-    
-    all = recipes.getSummary() or { 'error': True,
-                                    'errorText': 'Unable to get recipe list',
-                                    }
+    all = recipes.permutedIndex() or { 'error': True,
+                                       'errorText': 'Unable to get permuted index',
+                                       }
 
     ret['recipes'] = all
 
@@ -187,12 +185,12 @@ def search():
 
     setcookies()
 
-    query = request.query.query
+    query = request.query.q
 
     if query:
         if DEBUG >= 4: print('search for "%s"' % (query), file=sys.stderr)
 
-        ret['query'] = query
+        ret['q'] = query
 
         results = recipes.search(query) or { 'error': True,
                                              'errorText': 'Unable to get search results',

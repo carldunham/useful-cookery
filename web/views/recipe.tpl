@@ -5,7 +5,6 @@
   <link rel="stylesheet" href="/css/recipe.css">
 {% endblock styles %}
 
-
 {% block content %}
 {% if error or not recipe %}
 <div class="error">{{ errorText or 'Recipe not found.' }}</div>
