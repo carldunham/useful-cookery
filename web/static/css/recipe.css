@@ -4,7 +4,7 @@
 .recipe .reference {
     white-space: nowrap;
     text-align: right;
-    font-size: 18px;
+    font-size: 80%;
 }
 
 .recipe .reference .category {
@@ -22,24 +22,24 @@
 .recipe .title {
     white-space: nowrap;
     text-align: center;
-    font-size: 24px;
+    font-size: 120%;
 }
 
 .recipe .description {
     margin: 20px 0;
 }
 
-.recipe .introduction .line, .recipe .notes .line, .recipe .ratings .line {
+.recipe .introduction .line, .recipe .notes .line {
     margin: 20px;
 }
 
 
-.recipe .contributer {
+.recipe .contributer, .recipe .ratings {
     margin: 20px;
 }
 
 
-.recipe .contributer .line {
+.recipe .contributer .line, .recipe .ratings .line {
     margin: 0;
 }
 
@@ -67,7 +67,7 @@
     border-bottom: 1px solid black;
     margin-top: 20px;
     margin-left: -20px;
-    font-size: 16px;
+    font-size: 110%;
 }
 
 .recipe .ingredients .header, .procedures .header {

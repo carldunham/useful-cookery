@@ -1,0 +1,29 @@
+
+.permindex .line {
+    font-size: 80%;
+    white-space: nowrap;
+}
+
+.permindex .line a {
+    text-decoration: none;
+}
+
+.permindex .line a:link, .permindex .line a:visited {
+    color: blue;
+}
+
+.permindex .line .prefix {
+    display: inline-block;
+    width: 450px;
+    text-align: right;
+}
+
+.permindex .line .key {
+    text-align: left;
+    font-weight: bold;
+}
+
+.permindex .line .postfix {
+    text-align: left;
+}
+
