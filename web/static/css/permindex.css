@@ -20,6 +20,7 @@
 
 .permindex .line .key {
     text-align: left;
+    padding-left: 15px;
     font-weight: bold;
 }
 
