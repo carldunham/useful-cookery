@@ -10,7 +10,7 @@
 <div class="error">{{ errorText or 'Recipe not found.' }}</div>
 {% else %}
 <div class="recipe" itemscope itemtype="http://schema.org/Recipe">
-  <div class="reference"><span class="name">{{ recipe.name }}</span><span class="category">{{ recipe.category }}</span></div>
+  <div class="category" itemprop="recipeCategory">{{ getCategory(recipe.category) }}</div>
   <div class="title" itemprop="name">{{ recipe.title }}</div>
   <div class="description" itemprop="description">{{ recipe.description }}</div>
   {% if recipe.introduction %}
@@ -97,7 +97,7 @@
           <div class="line difficulty"><i>Difficulty</i>: <span>{{ recipe.ratings.difficulty|interpret }}</span></div>
         {% endif %}
         {% if recipe.ratings.time %}
-          <div class="line time"><i>Time</i>: <span{# itemprop="totalTime" content="{{ convertToISO8601(recipe.ratings.time|interpret) }}" #}>{{ recipe.ratings.time|interpret }}</span></div>
+          <div class="line time"><i>Time</i>: <span itemprop="totalTime" content="{{ convertToISO8601(recipe.ratings.time|interpret) }}">{{ recipe.ratings.time|interpret }}</span></div>
         {% endif %}
         {% if recipe.ratings.precision %}
           <div class="line precision"><i>Precision</i>: <span>{{ recipe.ratings.precision|interpret }}</span></div>

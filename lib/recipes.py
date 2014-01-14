@@ -22,12 +22,27 @@ from argparse import ArgumentParser
 from pymongo import MongoClient
 from jinja2 import evalcontextfilter
 
-DEBUG = 0
+
+CATEGORIES = { 'M': 'Main Dish',
+               'A': 'Appetizer/Snack',
+               'B': 'Bread/Pasta',
+               'L': 'Beverage',
+               'C': 'Cookie/Cake',
+               'S': 'Sauce',
+               'SL': 'Salad',
+               'SP': 'Soup',
+               'D': 'Dessert',
+               'V': 'Vegetable',
+               'O': 'Other',
+               }
+
 
 _client = MongoClient()
 
 _db = _client['useful-cookery']
 
+
+DEBUG = 0
 
 def setDebug(aDebugLevel=1):
     global DEBUG

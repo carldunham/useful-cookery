@@ -73,6 +73,12 @@ body {
 }
 
 
+/* content */
+#content {
+    min-height: 600px;
+}
+
+
 /* footer */
 
 #footer {

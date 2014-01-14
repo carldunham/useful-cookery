@@ -1,22 +1,10 @@
 
 /* descriptive information */
 
-.recipe .reference {
+.recipe .category {
     white-space: nowrap;
     text-align: right;
     font-size: 80%;
-}
-
-.recipe .reference .category {
-    margin: 5px;
-}
-
-.recipe .reference .category:before {
-    content: "("
-}
-
-.recipe .reference .category:after {
-    content: ")"
 }
 
 .recipe .title {

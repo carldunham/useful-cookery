@@ -6,11 +6,8 @@ validate structure
 improve schema.org markup
   calculate totalTime from ratings.time
   split out prep and cook times
-  category
 
 build app
-  permuted index
-
   ingredient index?
 
   display
@@ -22,3 +19,7 @@ build app
   add
 
   tos, about
+
+tracking
+  ga
+

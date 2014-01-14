@@ -20,10 +20,10 @@ from argparse import ArgumentParser
 import functools
 
 from bottle import *
-
 import jinja2
 
 import recipes
+
 
 DEBUG = 0
 
@@ -35,7 +35,7 @@ def main():
     If run as a script, parse command line arguments and start embedded server
     """
 
-    parser = ArgumentParser(description="A really interesting program")
+    parser = ArgumentParser(description="Server for useful cookery website")
     parser.add_argument("-d", "--debug", type=int, default=0, help="set debug level to DEBUG (default: %(default)s)")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-q", "--quiet", action="store_true")
@@ -93,6 +93,22 @@ def chooseUnits(aUS, aMetric=None, anAddon=None):
     if anAddon:
         ret += anAddon
 
+    return ret
+
+
+def getCategory(aCategoryCode):
+    ret = 'Unkown'
+
+    code = aCategoryCode.upper()
+    prefix = ''
+
+    if (len(code) > 1) and code.endswith('V'):
+        code = code[:-1]
+        prefix = 'Vegetarian '
+
+    if code in recipes.CATEGORIES:
+        ret = prefix + recipes.CATEGORIES[code] 
+    
     return ret
 
 
@@ -210,6 +226,7 @@ def recipe(aName):
     ret = {
         'rawname': aName,
         'chooseUnits': chooseUnits,
+        'getCategory': getCategory,
         'convertToISO8601': convertToISO8601,
         }
 
