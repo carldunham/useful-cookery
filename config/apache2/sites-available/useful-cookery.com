@@ -5,17 +5,17 @@
 <IfDefine SSL>
     SSLEngine off
 </IfDefine>
-    DocumentRoot /var/www/useful-cookery.com/web/static/
-    <Directory "/var/www/useful-cookery.com/wev/static/">
+    DocumentRoot /var/www/useful-cookery.com/current/web/static/
+    <Directory "/var/www/useful-cookery.com/current/web/static/">
         AllowOverride All
         Order allow,deny
         Allow from all
     </Directory>
     CustomLog /var/www/useful-cookery.com/log/access.log combined
 
-    WSGIScriptAlias / /var/www/useful-cookery.com/web/adapter.wsgi
+    WSGIScriptAlias / /var/www/useful-cookery.com/current/web/adapter.wsgi
 
-    <Directory /var/www/useful-cookery.com/web/>
+    <Directory /var/www/useful-cookery.com/current/web/>
         Order allow,deny
         Allow from all
     </Directory>
