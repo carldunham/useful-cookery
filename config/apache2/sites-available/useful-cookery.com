@@ -1,7 +1,6 @@
 
 WSGIPythonPath /var/www/useful-cookery.com/current/web/:/var/www/useful-cookery.com/current/lib/
 
-
 <VirtualHost *:80>
     ServerName www.useful-cookery.com
     ServerAlias uc.carldunham.com
