@@ -1,5 +1,5 @@
 
-WSGIPythonPath /var/www/useful-cookery.com/current/lib/
+WSGIPythonPath /var/www/useful-cookery.com/current/web/:/var/www/useful-cookery.com/current/lib/
 
 
 <VirtualHost *:80>
