@@ -1,4 +1,7 @@
 
+WSGIPythonPath /var/www/useful-cookery.com/current/lib/
+
+
 <VirtualHost *:80>
     ServerName www.useful-cookery.com
     ServerAlias uc.carldunham.com
@@ -14,8 +17,6 @@
     CustomLog /var/www/useful-cookery.com/log/access.log combined
 
     WSGIScriptAlias / /var/www/useful-cookery.com/current/web/adapter.wsgi
-
-    WSGIPythonPath /var/www/useful-cookery.com/current/lib/
 
     <Directory /var/www/useful-cookery.com/current/web/>
         Order allow,deny
