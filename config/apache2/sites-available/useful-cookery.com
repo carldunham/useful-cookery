@@ -15,6 +15,8 @@
 
     WSGIScriptAlias / /var/www/useful-cookery.com/current/web/adapter.wsgi
 
+    WSGIPythonPath /var/www/useful-cookery.com/current/lib/
+
     <Directory /var/www/useful-cookery.com/current/web/>
         Order allow,deny
         Allow from all
