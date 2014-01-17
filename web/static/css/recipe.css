@@ -13,6 +13,12 @@
     font-size: 120%;
 }
 
+.recipe .image {
+    width: 100%;
+    margin: 20px auto;
+    text-align: center;
+}
+
 .recipe .description {
     margin: 20px 0;
 }

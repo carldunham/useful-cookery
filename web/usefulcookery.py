@@ -158,12 +158,15 @@ def home():
     setcookies()
 
     rname = 'CHOC-CHIP-1'
-    rotd = recipes.get(rname) or { 'name': rname,
-                                   'error': True,
-                                   'errorText': 'Unable to find recipe',
-                                   }
+    rotd = recipes.get(rname) 
 
-    ret['rotd'] = rotd
+    if not rotd:
+        ret.update({ 'name': rname,
+                     'error': True,
+                     'errorText': 'Unable to find recipe',
+                     })
+    else:
+        ret['rotd'] = rotd
 
     return ret
 

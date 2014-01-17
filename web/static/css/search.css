@@ -1,0 +1,25 @@
+
+.search .summary {
+    border-bottom: 1px solid black;
+    margin: 20px 0;
+}
+
+
+.search .results {
+    margin-left: 10px;
+    font-size: 80%;
+}
+
+
+.search .result {
+    padding: 3px 0;
+}
+
+
+.search .result a {
+}
+
+
+.search .result .description {
+    font-style: italic;
+}

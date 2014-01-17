@@ -31,11 +31,11 @@
 
       $(document).ready(function () {
 
-	  $(document).bind("ajaxSend", function() {
+	  /* $(document).bind("ajaxSend", function() {
 	      $("#loading-indicator").show();
 	  }).bind("ajaxComplete", function() {
 	      $("#loading-indicator").hide();
-	  });
+	  });*/
 	  
       });
 
@@ -45,10 +45,11 @@
 </head>
 
 <body>
-  <span id="loading-indicator"><img src="/images/loading.gif" width="32" height="32"></span>
+  {# <span id="loading-indicator"><img src="/images/loading.gif" width="32" height="32"></span> #}
 
   <div id="header">
     {% block header %}
+    <div class="bar"></div>
     <div class="nav">
       {% block nav %}
       <ul>
@@ -58,7 +59,8 @@
       </ul>
       {% endblock nav %}
     </div>
-    <div class="logo"><span class="name">Useful Cookery</span><span class="tagline">Recipes restored for the global village</span></div>
+    {# <div class="logo"><span class="name">Useful Cookery</span><span class="tagline">Recipes restored for the global village</span></div> #}
+    <div class="logo"><img src="/images/logo-med.png" alt="Useful Cookery - Recipes restored for the global village" /></div>
     <div class="unitstype">Choose Units: <a class="us" href="javascript:chooseUnits('us')">US</a> or <a class="metric" href="javascript:chooseUnits('metric')">Metric</a></div>
     {% endblock header %}
   </div>

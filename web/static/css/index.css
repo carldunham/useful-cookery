@@ -1,0 +1,21 @@
+
+.rotd {
+    width: 750px;
+    text-align: center;
+}
+
+
+.rotd .headline {
+    font-size: 120%;
+}
+
+
+.rotd .image {
+    margin: 20px auto;
+}
+
+
+.rotd .description {
+    font-style: italic;
+}
+
