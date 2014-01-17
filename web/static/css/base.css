@@ -2,7 +2,7 @@
 /* general */
 
 body {
-    font-family: Verdana, 'Lucida Grande', Arial, Genevea, sans-serif;
+    font-family: Verdana, 'Lucida Grande', Arial, Geneva, sans-serif;
     font-size: 100%;
     margin: 0 auto;
 }
@@ -19,10 +19,10 @@ body {
 /* header */
 
 #header {
-    height: 60px;
+    width: 100%;
+    min-width: 750px;
     color: white;
     background-color: blue;
-    clear: both;
     white-space: nowrap;
 }
 
@@ -30,29 +30,49 @@ body {
     color: white;
 }
 
-.unitstype {
-    display: inline;
+#header .logo {
+    display: inline-block;
+    width: 40%;
+    text-align: center;
+    margin: 0 auto;
+    padding: 5px 10px;
+}
+
+#header .logo .name {
+    display: block;
+    font-size: 35px;
+}
+
+#header .logo .tagline {
+    display: block;
+    margin-left: 10px;
+    font-size: 10px;
+    font-style: italic;
+}
+
+#header .unitstype {
+    display: inline-block;
     float: right;
     white-space: nowrap;
-    padding: 20px;
+    padding: 10px;
     font-size: 10px;
 }
 
 
 /* navigation bar */
 
-.nav {
-    display: inline;
+#header .nav {
+    display: inline-block;
     float: left;
     white-space: nowrap;
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 90%;
 }
 
 .nav ul {
-    height: 40px;
-    padding: 10px 0;
-    list-stype-type: none;
+    margin: 30px 0 0 0;
+    padding: 0;
+    list-style-type: none;
+    list-style-position: inside;
 }
 
 .nav li {

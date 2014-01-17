@@ -35,7 +35,7 @@ def main():
     If run as a script, parse command line arguments and start embedded server
     """
 
-    parser = ArgumentParser(description="Server for useful cookery website")
+    parser = ArgumentParser(description="Serves up the useful-cookery.com website")
     parser.add_argument("-d", "--debug", type=int, default=0, help="set debug level to DEBUG (default: %(default)s)")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-q", "--quiet", action="store_true")
@@ -152,7 +152,7 @@ def home():
     home page
     """
     ret = {
-        'title': 'Useful Cookery - Recipes lovingly restored for the global village',
+        'title': 'Useful Cookery - Recipes restored for the global village',
         }
 
     setcookies()
@@ -175,7 +175,7 @@ def index():
     index page
     """
     ret = {
-        'title': 'Useful Cookery Permuted Index - Recipes lovingly restored for the global village',
+        'title': 'Useful Cookery Permuted Index - Recipes restored for the global village',
         }
 
     setcookies()
@@ -196,7 +196,7 @@ def search():
     search page
     """
     ret = {
-        'title': 'Search Useful Cookery - Recipes lovingly restored for the global village',
+        'title': 'Search Useful Cookery - Recipes restored for the global village',
         }
 
     setcookies()
@@ -244,6 +244,13 @@ def recipe(aName):
         abort(404, 'File does not exist.')
 
     return ret
+
+
+@route('/favicon.ico')
+def favicon():
+    #print('looking for favicon', file=sys.stderr)
+    return static_file('images/favicon.ico', root='static')
+    #redirect('/images/favicon.ico')
 
 
 # put this last, routes are processed in order

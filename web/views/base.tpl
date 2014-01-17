@@ -58,9 +58,8 @@
       </ul>
       {% endblock nav %}
     </div>
-    <div class="unitstype">
-      Choose Units: <a class="us" href="javascript:chooseUnits('us')">US</a> or <a class="metric" href="javascript:chooseUnits('metric')">Metric</a>
-    </div>
+    <div class="logo"><span class="name">Useful Cookery</span><span class="tagline">Recipes restored for the global village</span></div>
+    <div class="unitstype">Choose Units: <a class="us" href="javascript:chooseUnits('us')">US</a> or <a class="metric" href="javascript:chooseUnits('metric')">Metric</a></div>
     {% endblock header %}
   </div>
 
