@@ -23,9 +23,9 @@
     </div>
     <div class="results">
       {% for result in results.results %}
-        <div class="result">
-          <a href="/recipe/{{ result.obj.name }}">{{ result.obj.title }}</a> 
-	  <span class="description">{{ result.obj.description }}</span>
+        <div class="result" itemscope itemtype="http://schema.org/Recipe">
+          <a itemprop="url" href="/recipe/{{ result.obj.name }}"><span itemprop="name">{{ result.obj.title }}</span></a> 
+	  <span class="description" itemprop="description">{{ result.obj.description }}</span>
 	  <!-- <span class="score">{{ "%0.2f"|format(result.score) }}</span> -->
 	</div>
       {% endfor %}

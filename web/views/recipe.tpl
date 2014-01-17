@@ -11,7 +11,7 @@
 {% else %}
 <div class="recipe" itemscope itemtype="http://schema.org/Recipe">
   <div class="category" itemprop="recipeCategory">{{ getCategory(recipe.category) }}</div>
-  {% if recipe.image %}<div class="image"><img src="{{ recipe.image.url }}" width="{{ recipe.image.width }}" height="{{ recipe.image.height }}" alt="{{ recipe.title }}" /></div>{% endif %}
+  {% if recipe.image %}<div class="image"><img itemprop="image" src="{{ recipe.image.url }}" width="{{ recipe.image.width|int }}" height="{{ recipe.image.height|int }}" alt="{{ recipe.title }}" /></div>{% endif %}
   <div class="title" itemprop="name">{{ recipe.title }}</div>
   <div class="description" itemprop="description">{{ recipe.description }}</div>
   {% if recipe.introduction %}
