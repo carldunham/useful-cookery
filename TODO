@@ -10,6 +10,12 @@ improve schema.org markup
 build app
   ingredient index?
 
+  dynamic rotd
+
+  category listing
+    category list page
+    category list page (like search)
+
   display
     printable
       sheet, card, other?
