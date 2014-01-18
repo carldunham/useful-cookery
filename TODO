@@ -4,10 +4,6 @@ build app
 
   dynamic rotd
 
-  category listing
-    category list page
-    category list page (like search)
-
   display
     printable
       sheet, card, other?
@@ -27,7 +23,7 @@ build app
   404/error page(s)
 
 SEO
-  keywords? (from ingredients list? category?)
+  keywords? (from ingredients list)
 
 improve schema.org markup
   calculate totalTime from ratings.time

@@ -3,4 +3,6 @@ use useful-cookery
 
 db.recipes.ensureIndex( { "name": 1 }, { unique: true } )
 
+db.recipes.ensureIndex( { "category": 1 }, { unique: false } )
+
 db.recipes.ensureIndex( { "$**": "text" } )
