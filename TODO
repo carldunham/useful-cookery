@@ -1,14 +1,6 @@
-validate structure
-  sections with ig sets, proc sets
-  required elements
-  no stray elements
-
-improve schema.org markup
-  calculate totalTime from ratings.time
-  split out prep and cook times
 
 build app
-  ingredient index?
+  ingredient index
 
   dynamic rotd
 
@@ -20,9 +12,29 @@ build app
     printable
       sheet, card, other?
     links to related
-    ratings?, reviews?, discussion?
+    link to original discussions
+    more pictures
 
-  add
+  user participation
+    login
+    newsletter signup
+    upload pictures
+    ratings, reviews, discussion
+    add recipes
 
   tos, about
 
+  404/error page(s)
+
+SEO
+  keywords?
+  description
+
+improve schema.org markup
+  calculate totalTime from ratings.time
+  split out prep and cook times
+
+validate structure
+  sections with ig sets, proc sets
+  required elements
+  no stray elements
