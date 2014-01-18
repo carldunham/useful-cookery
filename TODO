@@ -27,8 +27,7 @@ build app
   404/error page(s)
 
 SEO
-  keywords?
-  description
+  keywords? (from ingredients list? category?)
 
 improve schema.org markup
   calculate totalTime from ratings.time

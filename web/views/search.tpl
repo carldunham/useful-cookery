@@ -21,15 +21,15 @@
     <div class="summary">
       <span class="count">{{ results.stats.nfound }} result{% if results.stats.nfound != 1 %}s{% endif %} found{% if results.stats.nfound > 0 %} (in {{ "%0.3f"|format(results.stats.timeMicros/1000.0) }} seconds):{% endif %}</span>
     </div>
-    <div class="results">
+    <ol class="results">
       {% for result in results.results %}
-        <div class="result" itemscope itemtype="http://schema.org/Recipe">
+        <li class="result" itemscope itemtype="http://schema.org/Recipe">
           <a itemprop="url" href="/recipe/{{ result.obj.name }}"><span itemprop="name">{{ result.obj.title }}</span></a> 
 	  <span class="description" itemprop="description">{{ result.obj.description }}</span>
 	  <!-- <span class="score">{{ "%0.2f"|format(result.score) }}</span> -->
-	</div>
+	</li>
       {% endfor %}
-    </div>
+    </ol>
   {% endif %}
 </div>
 {% endblock %}

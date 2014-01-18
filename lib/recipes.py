@@ -24,13 +24,16 @@ from jinja2 import evalcontextfilter
 
 
 CATEGORIES = { 'M': 'Main Dish',
+               'MV': 'Vegetarian Main Dish',
                'A': 'Appetizer/Snack',
+               'AV': 'Vegetarian Appetizer/Snack',
                'B': 'Bread/Pasta',
                'L': 'Beverage',
                'C': 'Cookie/Cake',
                'S': 'Sauce',
                'SL': 'Salad',
                'SP': 'Soup',
+               'SPV': 'Vegetarian Soup',
                'D': 'Dessert',
                'V': 'Vegetable',
                'O': 'Other',
@@ -58,11 +61,15 @@ def get(aName):
     return ret
 
 
-def getSummary(aSortKey=None):
+def getSummary(aCategory=None, aSortKey=None):
     """
     Return a summary list of all the recipes
     """
-    ret = _db.recipes.find({}, { 'name': 1, 'title': 1, 'description': 1 })
+    ret = None
+
+    cond = { 'category': aCategory } if aCategory else {}
+    
+    ret = _db.recipes.find(cond, { 'name': 1, 'title': 1, 'description': 1 })
 
     if ret and aSortKey:
         ret.sort(aSortKey)
@@ -109,3 +116,4 @@ def permutedIndex():
     ret.sort(key = lambda x: getkey(x[1]))
     
     return ret
+

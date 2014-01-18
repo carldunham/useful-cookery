@@ -1,26 +1,26 @@
 
-.search .summary {
+.category {
+}
+
+.category .header {
     border-bottom: 1px solid black;
     margin: 20px 0;
 }
 
-
-.search .results {
+.category .recipes {
     margin-left: 5px;
     font-size: 80%;
     list-style: none;
 }
 
-
-.search .result {
+.category .recipes .recipe {
     padding: 3px 0;
 }
 
-
-.search .result a {
+.category .recipes .recipe .title {
 }
 
-
-.search .result .description {
+.category .recipes .recipe .description {
     font-style: italic;
 }
+

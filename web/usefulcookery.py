@@ -100,14 +100,9 @@ def getCategory(aCategoryCode):
     ret = 'Unkown'
 
     code = aCategoryCode.upper()
-    prefix = ''
-
-    if (len(code) > 1) and code.endswith('V'):
-        code = code[:-1]
-        prefix = 'Vegetarian '
 
     if code in recipes.CATEGORIES:
-        ret = prefix + recipes.CATEGORIES[code] 
+        ret = recipes.CATEGORIES[code] 
     
     return ret
 
@@ -217,6 +212,52 @@ def search():
 
         ret['results'] = results
 
+    return ret
+
+
+@route('/categories')
+@view('categories.tpl')
+def category():
+    """
+    listing of recipes categories
+    """
+    ret = {
+        'title': 'Useful Cookery Categories - Recipes restored for the global village',
+        }
+
+    categories = recipes.CATEGORIES
+
+    if not categories:
+        ret.update({ 'error': True,
+                     'errorText': 'Unable to get categories',
+                     })
+    else:
+        ret['categories'] = categories
+
+    return ret
+
+
+@route('/category/<aCategory>')
+#@route('/category/<aCategory>/<aSortKey>')
+@view('category.tpl')
+def category(aCategory, aSortKey='title'):
+    """
+    listing of recipes in a given category
+    """
+    ret = {
+        'title': 'Useful Cookery Recipes by Category - Recipes restored for the global village',
+        'category': {
+            'key': aCategory,
+            }
+        }
+
+    if aCategory in recipes.CATEGORIES.keys():
+        ret['recipes'] = recipes.getSummary(aCategory=aCategory, aSortKey=aSortKey)
+        ret['category']['name'] = getCategory(aCategory)
+
+    else:
+        abort(404, 'File does not exist.')
+        
     return ret
 
 

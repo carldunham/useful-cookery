@@ -11,6 +11,12 @@ body {
     clear: left;
 }
 
+
+.error {
+    font-color: red;
+}
+
+
 #content {
     margin: 10px;
 }

@@ -5,6 +5,9 @@
   <meta name="copyright" content="Copyright &copy; 2014 Carl A. Dunham, All Rights Reserved" />
   <title>{% block title %}{{ title }}{% endblock %}</title>
 
+  <meta name="description" value="{% block description %}Recipes from the original USENET Cookbook (and more).{% endblock %}" />
+  <meta name="keywords" value="{% block keywords %}recipes, food, cooking, delicious, cooking, dinner, lunch, vegetarian, usenet, cookbook{% endblock %}" />
+
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
 
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -54,6 +57,7 @@
       {% block nav %}
       <ul>
 	<li><span><a href="/">Home</a></span></li>
+	<li><span><a href="/categories">Categories</a></span></li>
 	<li><span><a href="/index">Index</a></span></li>
 	<li><span><a href="/search">Search</a></span></li>
       </ul>

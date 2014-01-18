@@ -5,6 +5,9 @@
   <link rel="stylesheet" href="/css/recipe.css">
 {% endblock styles %}
 
+{% block description %}{% if recipe.description %}{{ recipe.description }}{% else %}{{ super() }}{% endif %}{% endblock description %}
+{% block keywords %}{{ getCategory(recipe.category)|lower }}, {{ super() }}{% endblock keywords %}
+
 {% block content %}
 {% if error or not recipe %}
 <div class="error">{{ errorText or 'Recipe not found.' }}</div>
@@ -36,7 +39,7 @@
              {% for ig in set.ingredients %}
 	       <div class="ingredient" itemprop="ingredients">
 	       	 <span class="amount">{{ chooseUnits(ig.us, ig.metric) }}</span>
-		 <span class="item">{{ig.ingredient}}</span>
+		 <span class="item">{{ ig.ingredient }}</span>
 	         {% if ig.comments %}
 		   {% for comment in ig.comments %}
 	             <span class="comment">{{ comment|interpret }}</span>
