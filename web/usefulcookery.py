@@ -120,8 +120,8 @@ def interpret(aValue):
     global DEBUG
 
     if '{{' in ret:
-        e = jinja2.Environment()
-        t = e.from_string(ret)
+        t = jinja2.Template(ret)
+
         ret = t.render(chooseUnits=chooseUnits,
                        pre = '<pre>',
                        endpre = '</pre>'

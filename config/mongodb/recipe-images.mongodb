@@ -1,2 +1,2 @@
 
-db.recipes.update({ name: "CHOC-CHIP-1" }, { $set: { image: { url: "/images/recipes/choc-chip-1.jpg", width: 380, height: 240 } } })
+db.recipes.update({ name: "CHOC-CHIP-1" }, { $set: { image: { url: "/images/recipes/choc-chip-1.jpg", width: 436, height: 275 } } })
