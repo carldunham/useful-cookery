@@ -7,6 +7,7 @@ build app
   display
     printable
       sheet, card, other?
+    mobile?
     links to related
     link to original discussions
     more pictures
@@ -19,8 +20,6 @@ build app
     add recipes
 
   tos, about
-
-  404/error page(s)
 
 SEO
   keywords? (from ingredients list)

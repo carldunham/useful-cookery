@@ -290,6 +290,17 @@ def recipe(aName):
     return ret
 
 
+@error(404)
+@view('error404.tpl')
+def error404(anError):
+    ret = {
+        'title': 'Useful Cookery - File Not Found',
+        'statusText': anError.status_line,
+        }
+
+    return ret
+
+
 @route('/favicon.ico')
 def favicon():
     #print('looking for favicon', file=sys.stderr)
