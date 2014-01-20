@@ -210,6 +210,8 @@ def search():
                                              'errorText': 'Unable to get search results',
                                              }
 
+        if DEBUG >= 4: print('search for "%s", results=[%s]' % (query, results), file=sys.stderr)
+
         ret['results'] = results
 
     return ret

@@ -22,6 +22,8 @@ from argparse import ArgumentParser
 from pymongo import MongoClient
 from jinja2 import evalcontextfilter
 
+import mongoutil
+
 
 CATEGORIES = { 'M': 'Main Dish',
                'MV': 'Vegetarian Main Dish',
@@ -50,6 +52,7 @@ DEBUG = 0
 def setDebug(aDebugLevel=1):
     global DEBUG
     DEBUG = aDebugLevel
+    mongoutil.setDebug(aDebugLevel)
 
 
 def get(aName):
@@ -80,9 +83,9 @@ def getSummary(aCategory=None, aSortKey=None):
 def search(aTerm):
     ret = None
 
-    # db.recipes.runCommand( "text", { search: "\"bacon\"", project: { "name": 1 }, language: "english" } )
+    #ret = _db.command('text', 'recipes', search=aTerm, project={ 'name': 1, 'title': 1, 'description': 1 }, language='english')
 
-    ret = _db.command('text', 'recipes', search=aTerm, project={ 'name': 1, 'title': 1, 'description': 1 }, language='english')
+    ret = mongoutil.andSearch(_db, 'recipes', aTerm, aProjection={ 'name': 1, 'title': 1, 'description': 1 })
 
     return ret
 
