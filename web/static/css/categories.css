@@ -5,6 +5,10 @@
 .categories .category {
 }
 
-.categories .category a {
+.categories .category .catlink {
+}
+
+.categories .category .random {
+    margin-left: 10px;
 }
 

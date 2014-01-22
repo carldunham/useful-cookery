@@ -11,7 +11,7 @@
   {% else %}
     <ul class="categories">
       {% for key,value in categories|dictsort(false, 'value') %}
-        <li class="category"><a href="/category/{{ key }}">{{ value }}</a></li>
+        <li class="category"><a class="catlink" href="/category/{{ key }}">{{ value }}</a><a class="random" href="/random/{{ key }}">(random)</a></li>
       {% endfor %}
     </ul>
   {% endif %}

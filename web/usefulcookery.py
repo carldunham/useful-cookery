@@ -263,6 +263,23 @@ def category(aCategory, aSortKey='title'):
     return ret
 
 
+@route('/random')
+@route('/random/<aCategory>')
+def randRecipe(aCategory=None):
+    """
+    Just redirect to some random recipe
+    """
+
+    r = recipes.getRandom(aCategory)
+
+    if r and r['name']:
+        redirect('/recipe/%s' % r['name'])
+    else:
+        abort(404, 'File does not exist.')
+
+    return ret
+
+
 @route('/recipe/<aName>')
 @view('recipe.tpl')
 def recipe(aName):
@@ -278,11 +295,11 @@ def recipe(aName):
 
     setcookies()
 
-    recipe = recipes.get(aName.strip().upper()) 
+    r = recipes.get(aName.strip().upper()) 
 
-    if recipe:
-        ret['title'] = (recipe['title'] or recipe['description'] or  '') + ' Recipe - Useful Cookery'
-        ret['recipe'] = recipe
+    if r:
+        ret['title'] = (r['title'] or r['description'] or  '') + ' Recipe - Useful Cookery'
+        ret['recipe'] = r
 
     else:
         #ret['error'] = True

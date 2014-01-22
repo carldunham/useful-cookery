@@ -19,6 +19,8 @@ import os
 import re
 from argparse import ArgumentParser
 
+import random
+
 from pymongo import MongoClient
 from jinja2 import evalcontextfilter
 
@@ -64,6 +66,23 @@ def get(aName):
     return ret
 
 
+def getRandom(aCategory=None):
+    """
+    Return a random recipe name
+    """
+    ret = None
+
+    cond = { 'category': aCategory } if aCategory else {}
+    
+    n = _db.recipes.find(cond).count()
+
+    i = random.randint(0, n-1)
+    
+    ret = _db.recipes.find_one(cond, { 'name': 1 }, skip=i)
+
+    return ret
+
+
 def getSummary(aCategory=None, aSortKey=None):
     """
     Return a summary list of all the recipes
@@ -97,7 +116,7 @@ def permutedIndex():
         'a', '(a', '(and', 'an', 'the', 'of', 'in', 'and', 'or', 'for', 'made', 
         'make', 'with', 'from', '-', '&', 'like', 'to', 'very', 'as', 'who', 
         'what', 'where', 'when', 'at', 'be', 'no', 'not', 'on', 'piece', 'pieces',
-        'top', 'truly', 'two', 'used', 'you', 'ever', 
+        'top', 'truly', 'two', 'used', 'you', 'ever', 'recipe',
         )
 
     for recipe in getSummary():
