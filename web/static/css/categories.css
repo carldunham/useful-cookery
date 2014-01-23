@@ -9,6 +9,8 @@
 }
 
 .categories .category .random {
-    margin-left: 10px;
+    content: url('../images/rand-sm.png');
+    padding-left: 5px;
+    vertical-align: text-bottom;
 }
 

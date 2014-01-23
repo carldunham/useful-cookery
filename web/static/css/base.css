@@ -91,6 +91,12 @@ body {
     list-style-position: inside;
 }
 
+.nav li:last-child a:last-child:last-child:after {
+    content: url('../images/rand-sm.png');
+    padding-left: 5px;
+    vertical-align: middle;
+}
+
 .nav li {
     display: inline;
     text-align: center;
