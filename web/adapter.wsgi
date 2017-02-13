@@ -2,7 +2,8 @@ import sys
 import os
 import bottle
 
-sys.path = ['/var/www/useful-cookery.com/web/'] + sys.path
+pwd = os.path.dirname(__file__)
+sys.path = [pwd, os.path.join(os.path.dirname(pwd), 'lib')] + sys.path
 
 import usefulcookery  # noqa
 
