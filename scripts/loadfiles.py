@@ -1,21 +1,20 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
-##----------------------------------------------------------------------
-## Copyright (c) 2014 Carl A. Dunham, All Rights Reserved
-##----------------------------------------------------------------------
-##
-## loadfiles.py
-##
-## Created: 2014-Jan-07 by carl
-##
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+#  Copyright (c) 2014-2017 Carl A. Dunham, All Rights Reserved
+# ----------------------------------------------------------------------
+#
+#  loadfiles.py
+#
+#  Created: 2014-Jan-07 by carl
+#
+# ----------------------------------------------------------------------
 
 """
 Convert troff file(s) and load into the database
 """
 
 import sys
-import os
 import argparse
 
 from urllib.parse import urlparse
@@ -40,10 +39,18 @@ def main():
     parser.add_argument('-u', '--url', type=str, default='mongodb://localhost:27017/', help='MongoDB URL (default: %(default)s)')
     parser.add_argument('-D', '--database', type=str, default='useful-cookery', help='MongoDB database name (default: %(default)s)')
 
-    parser.add_argument('infiles', metavar='filename', nargs='*', type=str, default=['-'], help='file(s) to read from (default: <stdin> if missing or "-")')
-
-    parser.add_argument('-s', '--source', type=str, required=True, help='source identifier for recipe. may be pre-defined code ("usenet") or more complete description')
-    parser.add_argument('-c', '--copyright', type=str, required=True, help='copyright information for the recipe. may be pre-defined code ("usenet") or full copyright notice')
+    parser.add_argument(
+        'infiles', metavar='filename', nargs='*', type=str, default=['-'],
+        help='file(s) to read from (default: <stdin> if missing or "-")'
+    )
+    parser.add_argument(
+        '-s', '--source', type=str, required=True,
+        help='source identifier for recipe. may be pre-defined code ("usenet") or more complete description'
+    )
+    parser.add_argument(
+        '-c', '--copyright', type=str, required=True,
+        help='copyright information for the recipe. may be pre-defined code ("usenet") or full copyright notice'
+    )
 
     opts = parser.parse_args()
 
@@ -65,12 +72,13 @@ def main():
 
         recipe = readRecipe(fd, opts.source, opts.copyright)
 
-        res = db.recipes.update({ 'name': recipe['name'] }, recipe, upsert=True)
+        res = db.recipes.update({'name': recipe['name']}, recipe, upsert=True)
 
         id = res['upserted'] if 'upserted' in res else res
 
-        if DEBUG >= 3: print('inserted "%s" as record [%s]' % (fname, id), file=sys.stderr)
-        
+        if DEBUG >= 3:
+            print('inserted "%s" as record [%s]' % (fname, id), file=sys.stderr)
+
 
 if __name__ == '__main__':
     main()

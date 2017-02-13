@@ -15,5 +15,4 @@
       {% endfor %}
     </ul>
   {% endif %}
-</div>
 {% endblock content %}

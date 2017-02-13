@@ -1,9 +1,10 @@
 
-WSGIPythonPath /var/www/useful-cookery.com/current/web/:/var/www/useful-cookery.com/current/lib/
+# Currently broken https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=811077
+# fixed by setting path in adapter.wsgi
+# WSGIPythonPath /var/www/useful-cookery.com/current/web/:/var/www/useful-cookery.com/current/lib/
 
 <VirtualHost *:80>
     ServerName www.useful-cookery.com
-    ServerAlias uc.carldunham.com
 <IfDefine SSL>
     SSLEngine off
 </IfDefine>
