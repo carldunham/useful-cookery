@@ -19,15 +19,15 @@
   {% endif %}
   {% if results %}
     <div class="summary">
-      <span class="count">{{ results.stats.nfound }} result{% if results.stats.nfound != 1 %}s{% endif %} found{% if results.stats.nfound > 0 %} (in {{ "%0.3f"|format(results.stats.timeMicros/1000.0) }} seconds):{% endif %}</span>
+      <span class="count">{{ nfound }} result{% if nfound != 1 %}s{% endif %} found{% if nfound > 0 %} (in {{ "%0.3f"|format(timeSeconds) }} seconds):{% endif %}</span>
     </div>
     <ol class="results">
-      {% for result in results.results %}
+      {% for result in results %}
         <li class="result" itemscope itemtype="http://schema.org/Recipe">
-          <a itemprop="url" href="/recipe/{{ result.obj.name }}"><span itemprop="name">{{ result.obj.title }}</span></a> 
-	  <span class="description" itemprop="description">{{ result.obj.description }}</span>
-	  <!-- <span class="score">{{ "%0.2f"|format(result.score) }}</span> -->
-	</li>
+          <a itemprop="url" href="/recipe/{{ result.name }}"><span itemprop="name">{{ result.title }}</span></a>
+	        <span class="description" itemprop="description">{{ result.description }}</span>
+	        <!-- <span class="score">{{ "%0.2f"|format(result.score) }}</span> -->
+	      </li>
       {% endfor %}
     </ol>
   {% endif %}

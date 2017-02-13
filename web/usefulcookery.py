@@ -17,6 +17,7 @@ Main bottle app for usefulcookery.com
 import sys
 from argparse import ArgumentParser
 import functools
+import time
 
 import bottle
 import jinja2
@@ -213,14 +214,17 @@ def search():
 
         ret['q'] = query
 
+        start = time.time()
         results = recipes.search(query) or {
             'error': True,
             'errorText': 'Unable to get search results',
         }
+        ret['timeSeconds'] = time.time() - start
 
         if DEBUG >= 4:
             print('search for "%s", results=[%s]' % (query, results), file=sys.stderr)
 
+        ret['nfound'] = results.count()
         ret['results'] = results
 
     return ret

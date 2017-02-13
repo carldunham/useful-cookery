@@ -13,4 +13,14 @@ db.recipes.createIndex({
   unique: false,
 })
 
-db.recipes.ensureIndex( { "$**": "text" } )
+db.recipes.createIndex({
+  "$**": "text",
+}, {
+  weights: {
+    title: 10,
+    description: 9,
+    ingredient: 8,
+    category: 7,
+    name: 6,
+  },
+})

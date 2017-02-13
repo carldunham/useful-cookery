@@ -14,11 +14,10 @@ functions for managing recipes
 """
 
 import re
+import shlex
 import random
 
 from pymongo import MongoClient
-
-import mongoutil
 
 
 CATEGORIES = {
@@ -49,7 +48,6 @@ DEBUG = 0
 def setDebug(aDebugLevel=1):
     global DEBUG
     DEBUG = aDebugLevel
-    mongoutil.setDebug(aDebugLevel)
 
 
 def get(aName):
@@ -94,12 +92,21 @@ def getSummary(aCategory=None, aSortKey=None):
     return ret
 
 
-def search(aTerm):
+def search(search_input):
     ret = None
 
-    #ret = _db.command('text', 'recipes', search=aTerm, project={ 'name': 1, 'title': 1, 'description': 1 }, language='english')
+    terms = [('"%s"' % t) for t in shlex.split(search_input)]
 
-    ret = mongoutil.andSearch(_db, 'recipes', aTerm, aProjection={ 'name': 1, 'title': 1, 'description': 1 })
+    ret = _db.recipes.find({
+        "$text": {
+            "$search": ''.join(terms),
+        },
+    }, {
+        "name": 1, "title": 1, "description": 1,
+        "score": {"$meta": "textScore"},
+    }).sort([
+        ('score', {'$meta': 'textScore'}),
+    ])
 
     return ret
 
