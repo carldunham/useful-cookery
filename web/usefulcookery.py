@@ -1,25 +1,24 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
-##----------------------------------------------------------------------
-## Copyright (c) 2014 Carl A. Dunham, All Rights Reserved
-##----------------------------------------------------------------------
-##
-## useful-cookery.py
-##
-## Created: 2014-Jan-09 by carl
-##
-##----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+#  Copyright (c) 2014-2017 Carl A. Dunham, All Rights Reserved
+# ----------------------------------------------------------------------
+#
+#  useful-cookery.py
+#
+#  Created: 2014-Jan-09 by carl
+#
+# ----------------------------------------------------------------------
 
 """
 Main bottle app for usefulcookery.com
 """
 
 import sys
-import os
 from argparse import ArgumentParser
 import functools
 
-from bottle import *
+import bottle
 import jinja2
 
 import recipes
@@ -27,7 +26,7 @@ import recipes
 
 DEBUG = 0
 
-_unitsType = 'us' # default
+_unitsType = 'us'  # default
 
 
 def main():
@@ -50,11 +49,11 @@ def main():
         print('opts="%s"' % opts, file=sys.stderr)
 
     if DEBUG > 0:
-        debug(True)
+        bottle.debug(True)
 
     recipes.setDebug(DEBUG)
-    
-    run(reloader=(DEBUG>0))
+
+    bottle.run(reloader=(DEBUG > 0))
 
 
 # set up some basic stuff
@@ -63,33 +62,38 @@ def main():
 # from http://jpvanoosten.nl/blog/2013/03/24/custom-jinja2-filters-when-using-bottle/
 
 filter_dict = {}
-view = functools.partial(jinja2_view, template_settings={'filters': filter_dict})
+view = functools.partial(bottle.jinja2_view, template_settings={'filters': filter_dict})
+
 
 def filter(func):
-	"""Decorator to add the function to filter_dict"""
-	filter_dict[func.__name__] = func
-	return func
+    """
+    Decorator to add the function to filter_dict
+    """
+    filter_dict[func.__name__] = func
+    return func
 
 
 def setcookies():
-    """Check for setting of cookies, eg us vs. metric. should be done for each page"""
+    """
+    Check for setting of cookies, eg us vs. metric. should be done for each page
+    """
 
     global _unitsType
-    
-    if 'unitstype' in request.query:
-        _unitsType = request.query['unitstype']
-    elif 'unitstype' in request.cookies:
-        _unitsType = request.cookies['unitstype']
 
-    response.set_cookie('unitstype', _unitsType, path='/', max_age=1000*24*60*60)   # a long time
-    
-    
+    if 'unitstype' in bottle.request.query:
+        _unitsType = bottle.request.query['unitstype']
+    elif 'unitstype' in bottle.request.cookies:
+        _unitsType = bottle.request.cookies['unitstype']
+
+    bottle.response.set_cookie('unitstype', _unitsType, path='/', max_age=1000*24*60*60)   # a long time
+
+
 def chooseUnits(aUS, aMetric=None, anAddon=None):
     ret = aUS
 
     if aMetric and (_unitsType == 'metric'):
         ret = aMetric
-    
+
     if anAddon:
         ret += anAddon
 
@@ -102,15 +106,13 @@ def getCategory(aCategoryCode):
     code = aCategoryCode.upper()
 
     if code in recipes.CATEGORIES:
-        ret = recipes.CATEGORIES[code] 
-    
+        ret = recipes.CATEGORIES[code]
+
     return ret
 
 
 def convertToISO8601(aTime):
-    ret = 'PT1H'
-
-    return ret
+    return 'PT1H'
 
 
 @filter
@@ -122,25 +124,27 @@ def interpret(aValue):
     if '{{' in ret:
         t = jinja2.Template(ret)
 
-        ret = t.render(chooseUnits=chooseUnits,
-                       pre = '<pre>',
-                       endpre = '</pre>'
-            )
+        ret = t.render(
+            chooseUnits=chooseUnits,
+            pre='<pre>',
+            endpre='</pre>'
+        )
 
-        if DEBUG >= 4: print('filter called, value="%s", units="%s" -> "%s"' % (aValue, _unitsType, ret), file=sys.stderr)
+        if DEBUG >= 4:
+            print('filter called, value="%s", units="%s" -> "%s"' % (aValue, _unitsType, ret), file=sys.stderr)
 
     return ret
 
 
-@route('/<:re:(index|home|default)\.html?>')
+@bottle.route('/<:re:(index|home|default)\.html?>')
 def sendhome():
     """
     redirect for home page aliases
     """
-    redirect('/')
+    bottle.redirect('/')
 
 
-@route('/')
+@bottle.route('/')
 @view('index.tpl')
 def home():
     """
@@ -148,25 +152,26 @@ def home():
     """
     ret = {
         'title': 'Useful Cookery - Recipes restored for the global village',
-        }
+    }
 
     setcookies()
 
     rname = 'CHOC-CHIP-1'
-    rotd = recipes.get(rname) 
+    rotd = recipes.get(rname)
 
     if not rotd:
-        ret.update({ 'name': rname,
-                     'error': True,
-                     'errorText': 'Unable to find recipe',
-                     })
+        ret.update({
+            'name': rname,
+            'error': True,
+            'errorText': 'Unable to find recipe',
+        })
     else:
         ret['rotd'] = rotd
 
     return ret
 
 
-@route('/index')
+@bottle.route('/index')
 @view('permindex.tpl')
 def index():
     """
@@ -174,20 +179,21 @@ def index():
     """
     ret = {
         'title': 'Useful Cookery Permuted Index - Recipes restored for the global village',
-        }
+    }
 
     setcookies()
 
-    all = recipes.permutedIndex() or { 'error': True,
-                                       'errorText': 'Unable to get permuted index',
-                                       }
+    all = recipes.permutedIndex() or {
+        'error': True,
+        'errorText': 'Unable to get permuted index',
+    }
 
     ret['recipes'] = all
 
     return ret
 
 
-@route('/search')
+@bottle.route('/search')
 @view('search.tpl')
 def search():
     """
@@ -195,52 +201,56 @@ def search():
     """
     ret = {
         'title': 'Search Useful Cookery - Recipes restored for the global village',
-        }
+    }
 
     setcookies()
 
-    query = request.query.q
+    query = bottle.request.query.q
 
     if query:
-        if DEBUG >= 4: print('search for "%s"' % (query), file=sys.stderr)
+        if DEBUG >= 4:
+            print('search for "%s"' % (query), file=sys.stderr)
 
         ret['q'] = query
 
-        results = recipes.search(query) or { 'error': True,
-                                             'errorText': 'Unable to get search results',
-                                             }
+        results = recipes.search(query) or {
+            'error': True,
+            'errorText': 'Unable to get search results',
+        }
 
-        if DEBUG >= 4: print('search for "%s", results=[%s]' % (query, results), file=sys.stderr)
+        if DEBUG >= 4:
+            print('search for "%s", results=[%s]' % (query, results), file=sys.stderr)
 
         ret['results'] = results
 
     return ret
 
 
-@route('/categories')
+@bottle.route('/categories')
 @view('categories.tpl')
-def category():
+def categories():
     """
     listing of recipes categories
     """
     ret = {
         'title': 'Useful Cookery Categories - Recipes restored for the global village',
-        }
+    }
 
     categories = recipes.CATEGORIES
 
     if not categories:
-        ret.update({ 'error': True,
-                     'errorText': 'Unable to get categories',
-                     })
+        ret.update({
+            'error': True,
+            'errorText': 'Unable to get categories',
+        })
     else:
         ret['categories'] = categories
 
     return ret
 
 
-@route('/category/<aCategory>')
-#@route('/category/<aCategory>/<aSortKey>')
+@bottle.route('/category/<aCategory>')
+# @bottle.route('/category/<aCategory>/<aSortKey>')
 @view('category.tpl')
 def category(aCategory, aSortKey='title'):
     """
@@ -250,21 +260,21 @@ def category(aCategory, aSortKey='title'):
         'title': 'Useful Cookery Recipes by Category - Recipes restored for the global village',
         'category': {
             'key': aCategory,
-            }
-        }
+        },
+    }
 
     if aCategory in recipes.CATEGORIES.keys():
         ret['recipes'] = recipes.getSummary(aCategory=aCategory, aSortKey=aSortKey)
         ret['category']['name'] = getCategory(aCategory)
 
     else:
-        abort(404, 'File does not exist.')
-        
+        bottle.abort(404, 'File does not exist.')
+
     return ret
 
 
-@route('/random')
-@route('/random/<aCategory>')
+@bottle.route('/random')
+@bottle.route('/random/<aCategory>')
 def randRecipe(aCategory=None):
     """
     Just redirect to some random recipe
@@ -273,14 +283,12 @@ def randRecipe(aCategory=None):
     r = recipes.getRandom(aCategory)
 
     if r and r['name']:
-        redirect('/recipe/%s' % r['name'])
+        bottle.redirect('/recipe/%s' % r['name'])
     else:
-        abort(404, 'File does not exist.')
-
-    return ret
+        bottle.abort(404, 'File does not exist.')
 
 
-@route('/recipe/<aName>')
+@bottle.route('/recipe/<aName>')
 @view('recipe.tpl')
 def recipe(aName):
     """
@@ -291,50 +299,48 @@ def recipe(aName):
         'chooseUnits': chooseUnits,
         'getCategory': getCategory,
         'convertToISO8601': convertToISO8601,
-        }
+    }
 
     setcookies()
 
-    r = recipes.get(aName.strip().upper()) 
+    r = recipes.get(aName.strip().upper())
 
     if r:
-        ret['title'] = (r['title'] or r['description'] or  '') + ' Recipe - Useful Cookery'
+        ret['title'] = (r['title'] or r['description'] or '') + ' Recipe - Useful Cookery'
         ret['recipe'] = r
 
     else:
-        #ret['error'] = True
-        #ret['errorText'] = 'Unable to find a recipe named "%s"' % aName
-        abort(404, 'File does not exist.')
+        # ret['error'] = True
+        # ret['errorText'] = 'Unable to find a recipe named "%s"' % aName
+        bottle.abort(404, 'File does not exist.')
 
     return ret
 
 
-@error(404)
+@bottle.error(404)
 @view('error404.tpl')
 def error404(anError):
-    ret = {
+    return {
         'title': 'Useful Cookery - File Not Found',
         'statusText': anError.status_line,
-        }
-
-    return ret
+    }
 
 
-@route('/favicon.ico')
+@bottle.route('/favicon.ico')
 def favicon():
-    #print('looking for favicon', file=sys.stderr)
-    return static_file('images/favicon.ico', root='static')
-    #redirect('/images/favicon.ico')
+    # print('looking for favicon', file=sys.stderr)
+    return bottle.static_file('images/favicon.ico', root='static')
+    # redirect('/images/favicon.ico')
 
 
 # put this last, routes are processed in order
 #
-@route('/<aPath:path>')
+@bottle.route('/<aPath:path>')
 def staticfiles(aPath):
     """
     handle static content
     """
-    return static_file(aPath, root='static')
+    return bottle.static_file(aPath, root='static')
 
 
 # if run as a script...

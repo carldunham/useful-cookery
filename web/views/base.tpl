@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="copyright" content="Copyright &copy; 2014 Carl A. Dunham, All Rights Reserved" />
+  <meta name="copyright" content="Copyright &copy; 2014-2017 Carl A. Dunham, All Rights Reserved" />
   <title>{% block title %}{{ title }}{% endblock %}</title>
 
-  <meta name="description" value="{% block description %}Recipes from the original USENET Cookbook (and more).{% endblock %}" />
-  <meta name="keywords" value="{% block keywords %}recipes, food, cooking, delicious, cooking, dinner, lunch, vegetarian, usenet, cookbook{% endblock %}" />
+  <meta name="description" content="{% block description %}Recipes from the original USENET Cookbook (and more).{% endblock %}" />
+  <meta name="keywords" content="{% block keywords %}recipes, food, cooking, delicious, cooking, dinner, lunch, vegetarian, usenet, cookbook{% endblock %}" />
 
   {% block styles %}
   <link rel="stylesheet" href="/css/base.css">
@@ -49,7 +49,7 @@
   <div id="footer">
     {% block footer %}
     <div class="copyright">
-      <div class="main">Website and original content Copyright &copy; 2014 Carl A. Dunham, All Rights Reserved</div>
+      <div class="main">Website and original content Copyright &copy; 2014-2017 Carl A. Dunham, All Rights Reserved</div>
       <div class="sub"><i>Usenet Cookbook</i> content from <a href="https://groups.google.com/forum/#!forum/alt.gourmand">alt.gourmand</a> Copyright &copy; 1985-1988 USENET Community Trust</div>
     </div>
     {% endblock footer %}
@@ -64,7 +64,7 @@
     ga('create', 'UA-47126324-1', 'useful-cookery.com');
     ga('require', 'linkid', 'linkid.js');
     {% block tracking_send %}ga('send', 'pageview');{% endblock tracking_send %}
-  </script>  
+  </script>
 
 </body>
 

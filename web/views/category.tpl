@@ -18,9 +18,9 @@
     <ol class="recipes">
       {% for recipe in recipes %}
         <li class="recipe" itemscope itemtype="http://schema.org/Recipe">
-          <a itemprop="url" href="/recipe/{{ recipe.name }}"><span class="title" itemprop="name">{{ recipe.title }}</span></a> 
-	  <span class="description" itemprop="description">{{ recipe.description }}</span>
-	</li>
+          <a itemprop="url" href="/recipe/{{ recipe.name }}"><span class="title" itemprop="name">{{ recipe.title }}</span></a>
+	        <span class="description" itemprop="description">{{ recipe.description }}</span>
+	      </li>
       {% endfor %}
     </ol>
   {% else %}
