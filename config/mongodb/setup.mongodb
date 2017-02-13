@@ -1,8 +1,26 @@
 
 use useful-cookery
 
-db.recipes.ensureIndex( { "name": 1 }, { unique: true } )
+db.recipes.createIndex({
+  name: 1,
+}, {
+  unique: true,
+})
 
-db.recipes.ensureIndex( { "category": 1 }, { unique: false } )
+db.recipes.createIndex({
+  category: 1,
+}, {
+  unique: false,
+})
 
-db.recipes.ensureIndex( { "$**": "text" } )
+db.recipes.createIndex({
+  "$**": "text",
+}, {
+  weights: {
+    title: 10,
+    description: 9,
+    ingredient: 8,
+    category: 7,
+    name: 6,
+  },
+})

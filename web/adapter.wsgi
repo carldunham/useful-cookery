@@ -1,8 +1,12 @@
-import sys, os, bottle
+import sys
+import os
+import bottle
 
-sys.path = ['/var/www/useful-cookery.com/web/'] + sys.path
+pwd = os.path.dirname(__file__)
+sys.path = [pwd, os.path.join(os.path.dirname(pwd), 'lib')] + sys.path
+
+import usefulcookery  # noqa
+
 os.chdir(os.path.dirname(__file__))
-
-import usefulcookery
 
 application = bottle.default_app()
