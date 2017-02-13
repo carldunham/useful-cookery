@@ -1,0 +1,4 @@
+
+pymongo~=3.4.0
+jinja2~=2.9.5
+bottle~=0.12.13
