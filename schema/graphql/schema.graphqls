@@ -1,0 +1,273 @@
+scalar DateTime
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+type Query {
+  # Recipe queries
+  recipe(id: ID!): Recipe
+  recipes(
+    filter: RecipeFilter
+    order: RecipeOrder
+    first: Int
+    offset: Int
+  ): [Recipe!]!
+  
+  # User queries
+  me: User
+  user(id: ID!): User
+  
+  # Category queries
+  categories: [Category!]!
+  category(id: ID!): Category
+  
+  # AI-powered queries
+  searchRecipes(query: String!): [Recipe!]!
+  recommendRecipes(
+    userId: ID
+    availableIngredients: [String!]
+  ): [Recipe!]!
+  findSubstitutes(ingredientName: String!): [String!]!
+}
+
+type Mutation {
+  # Auth mutations
+  register(input: RegisterInput!): AuthPayload!
+  login(email: String!, password: String!): AuthPayload!
+  updateUser(input: UpdateUserInput!): User!
+  
+  # Recipe mutations
+  createRecipe(input: RecipeInput!): Recipe!
+  updateRecipe(id: ID!, input: RecipeInput!): Recipe!
+  deleteRecipe(id: ID!): Boolean!
+  likeRecipe(id: ID!): Recipe!
+  saveRecipe(id: ID!): User!
+  unsaveRecipe(id: ID!): User!
+  
+  # Review mutations
+  addReview(recipeId: ID!, rating: Int!, comment: String): Review!
+  updateReview(id: ID!, rating: Int, comment: String): Review!
+  deleteReview(id: ID!): Boolean!
+  
+  # Category mutations
+  createCategory(name: String!, description: String): Category!
+  updateCategory(id: ID!, name: String, description: String): Category!
+  deleteCategory(id: ID!): Boolean!
+}
+
+type Subscription {
+  recipeLikes(id: ID!): Int
+  newReview(recipeId: ID!): Review
+}
+
+# Auth types
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+input RegisterInput {
+  name: String!
+  email: String!
+  password: String!
+}
+
+input UpdateUserInput {
+  name: String
+  email: String
+  password: String
+  preferences: UserPreferencesInput
+}
+
+input UserPreferencesInput {
+  dietaryRestrictions: [String!]
+  favoriteIngredients: [String!]
+  dislikedIngredients: [String!]
+  skillLevel: SkillLevel
+  cuisinePreferences: [String!]
+}
+
+# Recipe filtering and ordering
+input RecipeFilter {
+  search: String
+  categories: [ID!]
+  cuisine: String
+  difficulty: SkillLevel
+  maxPrepTime: Int
+  ingredients: [String!]
+  authorId: ID
+}
+
+input RecipeOrder {
+  field: RecipeOrderField!
+  direction: OrderDirection!
+}
+
+enum RecipeOrderField {
+  CREATED_AT
+  TITLE
+  LIKES
+  RATING
+}
+
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+# Recipe input types
+input RecipeInput {
+  title: String!
+  description: String!
+  categoryIds: [ID!]
+  cuisine: String
+  prepTime: Int
+  cookTime: Int
+  servings: Int
+  difficulty: SkillLevel
+  ingredients: [IngredientInput!]!
+  steps: [StepInput!]!
+  nutritionInfo: NutritionInfoInput
+  tags: [String!]
+  images: [ImageInput!]
+}
+
+input IngredientInput {
+  name: String!
+  quantity: Float
+  unit: String
+  preparation: String
+  substitutes: [String!]
+  isOptional: Boolean
+}
+
+input StepInput {
+  orderIndex: Int!
+  description: String!
+  image: ImageInput
+  timeEstimate: Int
+}
+
+input NutritionInfoInput {
+  calories: Int
+  protein: Float
+  carbs: Float
+  fat: Float
+  fiber: Float
+  sugar: Float
+  sodium: Int
+}
+
+input ImageInput {
+  url: String!
+  alt: String
+  width: Int
+  height: Int
+}
+
+# Main types that match the DGraph schema
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  role: Role!
+  preferences: UserPreferences
+  savedRecipes: [Recipe!]
+  createdRecipes: [Recipe!]
+  reviews: [Review!]
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type UserPreferences {
+  dietaryRestrictions: [String!]
+  favoriteIngredients: [String!]
+  dislikedIngredients: [String!]
+  skillLevel: SkillLevel
+  cuisinePreferences: [String!]
+}
+
+type Category {
+  id: ID!
+  name: String!
+  description: String
+  recipes: [Recipe!]
+}
+
+type Recipe {
+  id: ID!
+  title: String!
+  description: String
+  author: User
+  categories: [Category!]
+  cuisine: String
+  prepTime: Int
+  cookTime: Int
+  servings: Int
+  difficulty: SkillLevel
+  ingredients: [DetailedIngredient!]
+  steps: [Step!]
+  nutritionInfo: NutritionInfo
+  images: [Image!]
+  tags: [String!]
+  likes: Int
+  reviews: [Review!]
+  averageRating: Float
+  savedBy: [User!]
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type DetailedIngredient {
+  id: ID!
+  name: String!
+  quantity: Float
+  unit: String
+  preparation: String
+  substitutes: [String!]
+  isOptional: Boolean
+}
+
+type Step {
+  id: ID!
+  orderIndex: Int
+  description: String!
+  image: Image
+  timeEstimate: Int
+}
+
+type NutritionInfo {
+  calories: Int
+  protein: Float
+  carbs: Float
+  fat: Float
+  fiber: Float
+  sugar: Float
+  sodium: Int
+}
+
+type Image {
+  id: ID!
+  url: String!
+  alt: String
+  width: Int
+  height: Int
+}
+
+type Review {
+  id: ID!
+  recipe: Recipe!
+  author: User!
+  rating: Int!
+  comment: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
