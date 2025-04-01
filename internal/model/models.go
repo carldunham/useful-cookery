@@ -1,4 +1,4 @@
-package models
+package model
 
 import (
 	"time"
@@ -9,34 +9,34 @@ import (
 
 // User represents a user in the system
 type User struct {
-	ID              string           `json:"id" dgraph:"uid"`
-	Name            string           `json:"name" dgraph:"name"`
-	Email           string           `json:"email" dgraph:"email"`
-	Password        string           `json:"-" dgraph:"password"`
-	Role            string           `json:"role" dgraph:"role"`
-	Preferences     *UserPreferences `json:"preferences,omitempty" dgraph:"preferences"`
-	SavedRecipes    []Recipe         `json:"savedRecipes,omitempty" dgraph:"savedRecipes"`
-	CreatedRecipes  []Recipe         `json:"createdRecipes,omitempty" dgraph:"createdRecipes"`
-	Reviews         []Review         `json:"reviews,omitempty" dgraph:"reviews"`
-	CreatedAt       time.Time        `json:"createdAt" dgraph:"createdAt"`
-	UpdatedAt       time.Time        `json:"updatedAt" dgraph:"updatedAt"`
+	ID             string           `json:"id" dgraph:"uid"`
+	Name           string           `json:"name" dgraph:"name"`
+	Email          string           `json:"email" dgraph:"email"`
+	Password       string           `json:"-" dgraph:"password"`
+	Role           string           `json:"role" dgraph:"role"`
+	Preferences    *UserPreferences `json:"preferences,omitempty" dgraph:"preferences"`
+	SavedRecipes   []Recipe         `json:"savedRecipes,omitempty" dgraph:"savedRecipes"`
+	CreatedRecipes []Recipe         `json:"createdRecipes,omitempty" dgraph:"createdRecipes"`
+	Reviews        []Review         `json:"reviews,omitempty" dgraph:"reviews"`
+	CreatedAt      time.Time        `json:"createdAt" dgraph:"createdAt"`
+	UpdatedAt      time.Time        `json:"updatedAt" dgraph:"updatedAt"`
 }
 
 // UserPreferences represents a user's preferences
 type UserPreferences struct {
-	DietaryRestrictions []string   `json:"dietaryRestrictions,omitempty" dgraph:"dietaryRestrictions"`
-	FavoriteIngredients []string   `json:"favoriteIngredients,omitempty" dgraph:"favoriteIngredients"`
-	DislikedIngredients []string   `json:"dislikedIngredients,omitempty" dgraph:"dislikedIngredients"`
-	SkillLevel          string     `json:"skillLevel,omitempty" dgraph:"skillLevel"`
-	CuisinePreferences  []string   `json:"cuisinePreferences,omitempty" dgraph:"cuisinePreferences"`
+	DietaryRestrictions []string `json:"dietaryRestrictions,omitempty" dgraph:"dietaryRestrictions"`
+	FavoriteIngredients []string `json:"favoriteIngredients,omitempty" dgraph:"favoriteIngredients"`
+	DislikedIngredients []string `json:"dislikedIngredients,omitempty" dgraph:"dislikedIngredients"`
+	SkillLevel          string   `json:"skillLevel,omitempty" dgraph:"skillLevel"`
+	CuisinePreferences  []string `json:"cuisinePreferences,omitempty" dgraph:"cuisinePreferences"`
 }
 
 // Category represents a recipe category
 type Category struct {
-	ID          string    `json:"id" dgraph:"uid"`
-	Name        string    `json:"name" dgraph:"name"`
-	Description string    `json:"description,omitempty" dgraph:"description"`
-	Recipes     []Recipe  `json:"recipes,omitempty" dgraph:"recipes"`
+	ID          string   `json:"id" dgraph:"uid"`
+	Name        string   `json:"name" dgraph:"name"`
+	Description string   `json:"description,omitempty" dgraph:"description"`
+	Recipes     []Recipe `json:"recipes,omitempty" dgraph:"recipes"`
 }
 
 // Recipe represents a recipe
@@ -137,10 +137,10 @@ func DgraphQuery(q string, vars map[string]string) *api.Request {
 	req := &api.Request{
 		Query: q,
 	}
-	
+
 	if vars != nil {
 		req.Vars = vars
 	}
-	
+
 	return req
 }

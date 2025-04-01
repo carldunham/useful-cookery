@@ -1,13 +1,10 @@
 package parser
 
 import (
-	"bufio"
 	"errors"
 	"io"
 	"regexp"
 	"strings"
-
-	"github.com/carldunham/useful-cookery/internal/models"
 )
 
 // Common TROFF formatting patterns

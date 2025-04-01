@@ -6,9 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
-	"github.com/carldunham/useful-cookery/internal/models"
+	"github.com/carldunham/useful-cookery/internal/model"
 	"github.com/sashabaranov/go-openai"
 )
 
@@ -106,7 +107,7 @@ func (s *AIService) GenerateEmbedding(ctx context.Context, text string) ([]float
 }
 
 // SearchRecipes performs semantic search on recipes
-func (s *AIService) SearchRecipes(ctx context.Context, query string, limit int) ([]models.Recipe, error) {
+func (s *AIService) SearchRecipes(ctx context.Context, query string, limit int) ([]model.Recipe, error) {
 	// Generate embedding for the query
 	queryEmbedding, err := s.GenerateEmbedding(ctx, query)
 	if err != nil {
@@ -115,7 +116,7 @@ func (s *AIService) SearchRecipes(ctx context.Context, query string, limit int) 
 
 	// In a real implementation, this would send the embedding to DGraph
 	// to perform vector search. For now, return a placeholder.
-	return []models.Recipe{}, errors.New("not implemented")
+	return []model.Recipe{}, errors.New("not implemented")
 }
 
 // RecommendRecipes recommends recipes based on user preferences and ingredients
@@ -124,10 +125,10 @@ func (s *AIService) RecommendRecipes(
 	userID string,
 	availableIngredients []string,
 	limit int,
-) ([]models.Recipe, error) {
+) ([]model.Recipe, error) {
 	// In a real implementation, this would use a combination of
 	// collaborative filtering and content-based recommendations
-	return []models.Recipe{}, errors.New("not implemented")
+	return []model.Recipe{}, errors.New("not implemented")
 }
 
 // GenerateSubstitutes generates ingredient substitutes
@@ -199,7 +200,7 @@ func (s *AIService) GenerateSubstitutes(ctx context.Context, ingredient string) 
 
 // ProcessNaturalLanguageQuery processes a natural language query and translates it
 // into structured search parameters
-func (s *AIService) ProcessNaturalLanguageQuery(ctx context.Context, query string) (*models.SearchParams, error) {
+func (s *AIService) ProcessNaturalLanguageQuery(ctx context.Context, query string) (*model.SearchParams, error) {
 	prompt := fmt.Sprintf(`
 Analyze this recipe search query: "%s"
 
@@ -220,7 +221,7 @@ Extract the following parameters in JSON format:
 		cacheKey := fmt.Sprintf("nlquery:%s", query)
 		cached, err := s.cache.Get(ctx, cacheKey)
 		if err == nil && cached != nil {
-			var params models.SearchParams
+			var params model.SearchParams
 			if err := json.Unmarshal(cached, &params); err == nil {
 				return &params, nil
 			}
@@ -260,7 +261,7 @@ Extract the following parameters in JSON format:
 	}
 
 	// Parse JSON
-	var params models.SearchParams
+	var params model.SearchParams
 	if err := json.Unmarshal([]byte(jsonStr), &params); err != nil {
 		return nil, fmt.Errorf("failed to parse response JSON: %w", err)
 	}
@@ -282,10 +283,10 @@ Extract the following parameters in JSON format:
 func extractJSON(input string) string {
 	startIdx := strings.Index(input, "{")
 	endIdx := strings.LastIndex(input, "}")
-	
+
 	if startIdx == -1 || endIdx == -1 || endIdx <= startIdx {
 		return ""
 	}
-	
+
 	return input[startIdx : endIdx+1]
 }

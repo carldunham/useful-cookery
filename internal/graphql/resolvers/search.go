@@ -8,7 +8,7 @@ import (
 
 	"github.com/carldunham/useful-cookery/internal/ai"
 	"github.com/carldunham/useful-cookery/internal/database"
-	"github.com/carldunham/useful-cookery/internal/models"
+	"github.com/carldunham/useful-cookery/internal/model"
 )
 
 // SearchResolver handles search-related resolvers
@@ -67,8 +67,8 @@ func (r *SearchResolver) SearchRecipes(ctx context.Context, query string) ([]*mo
 
 // RecommendRecipes recommends recipes based on user preferences and available ingredients
 func (r *SearchResolver) RecommendRecipes(
-	ctx context.Context, 
-	userID *string, 
+	ctx context.Context,
+	userID *string,
 	availableIngredients []string,
 ) ([]*models.Recipe, error) {
 	// Start timing for the recommendation
@@ -152,7 +152,7 @@ func (r *SearchResolver) basicTextSearch(ctx context.Context, query string) ([]*
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return result.Recipes, nil
 }
 
@@ -165,16 +165,16 @@ func (r *SearchResolver) getPopularRecipes(ctx context.Context) ([]*models.Recip
 			expand(_all_)
 		}
 	}`
-	
+
 	var result struct {
 		Recipes []*models.Recipe `json:"recipes"`
 	}
-	
+
 	err := r.DB.Query(ctx, q, nil, &result)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return result.Recipes, nil
 }
 
@@ -185,7 +185,7 @@ func (r *SearchResolver) findRecipesByIngredients(
 	user *models.User,
 ) ([]*models.Recipe, error) {
 	variables := make(map[string]string)
-	
+
 	// Build ingredient match conditions
 	ingConditions := []string{}
 	for i, ing := range ingredients {
@@ -193,7 +193,7 @@ func (r *SearchResolver) findRecipesByIngredients(
 		ingConditions = append(ingConditions, fmt.Sprintf("anyoftext(ingredients, $%s)", varName))
 		variables[varName] = ing
 	}
-	
+
 	// Add user preferences if available
 	userFilters := []string{}
 	if user != nil && user.Preferences != nil {
@@ -203,7 +203,7 @@ func (r *SearchResolver) findRecipesByIngredients(
 			userFilters = append(userFilters, fmt.Sprintf("NOT anyoftext(ingredients, $%s)", varName))
 			variables[varName] = ing
 		}
-		
+
 		// Match dietary restrictions
 		for i, diet := range user.Preferences.DietaryRestrictions {
 			varName := fmt.Sprintf("diet%d", i)
@@ -211,7 +211,7 @@ func (r *SearchResolver) findRecipesByIngredients(
 			variables[varName] = diet
 		}
 	}
-	
+
 	// Combine all conditions
 	conditions := fmt.Sprintf("(%s)", strings.Join(ingConditions, " OR "))
 	if len(userFilters) > 0 {
@@ -219,7 +219,7 @@ func (r *SearchResolver) findRecipesByIngredients(
 			conditions = fmt.Sprintf("%s AND %s", conditions, filter)
 		}
 	}
-	
+
 	q := fmt.Sprintf(`
 	query RecipesByIngredients(%s) {
 		recipes(func: has(title), @filter(%s), first: 20) {
@@ -227,16 +227,16 @@ func (r *SearchResolver) findRecipesByIngredients(
 			expand(_all_)
 		}
 	}`, buildVariableDeclarations(variables), conditions)
-	
+
 	var result struct {
 		Recipes []*models.Recipe `json:"recipes"`
 	}
-	
+
 	err := r.DB.Query(ctx, q, variables, &result)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return result.Recipes, nil
 }
 
@@ -248,10 +248,10 @@ func (r *SearchResolver) recommendBasedOnPreferences(
 	if user.Preferences == nil {
 		return r.getPopularRecipes(ctx)
 	}
-	
+
 	variables := make(map[string]string)
 	conditions := []string{}
-	
+
 	// Match favorite ingredients
 	favIngredients := []string{}
 	for i, ing := range user.Preferences.FavoriteIngredients {
@@ -259,11 +259,11 @@ func (r *SearchResolver) recommendBasedOnPreferences(
 		favIngredients = append(favIngredients, fmt.Sprintf("anyoftext(ingredients, $%s)", varName))
 		variables[varName] = ing
 	}
-	
+
 	if len(favIngredients) > 0 {
 		conditions = append(conditions, fmt.Sprintf("(%s)", strings.Join(favIngredients, " OR ")))
 	}
-	
+
 	// Match favorite cuisines
 	favCuisines := []string{}
 	for i, cuisine := range user.Preferences.CuisinePreferences {
@@ -271,37 +271,37 @@ func (r *SearchResolver) recommendBasedOnPreferences(
 		favCuisines = append(favCuisines, fmt.Sprintf("eq(cuisine, $%s)", varName))
 		variables[varName] = cuisine
 	}
-	
+
 	if len(favCuisines) > 0 {
 		conditions = append(conditions, fmt.Sprintf("(%s)", strings.Join(favCuisines, " OR ")))
 	}
-	
+
 	// Match skill level
 	if user.Preferences.SkillLevel != "" {
 		conditions = append(conditions, "eq(difficulty, $skillLevel)")
 		variables["skillLevel"] = user.Preferences.SkillLevel
 	}
-	
+
 	// Exclude disliked ingredients
 	for i, ing := range user.Preferences.DislikedIngredients {
 		varName := fmt.Sprintf("disliked%d", i)
 		conditions = append(conditions, fmt.Sprintf("NOT anyoftext(ingredients, $%s)", varName))
 		variables[varName] = ing
 	}
-	
+
 	// Match dietary restrictions
 	for i, diet := range user.Preferences.DietaryRestrictions {
 		varName := fmt.Sprintf("diet%d", i)
 		conditions = append(conditions, fmt.Sprintf("anyoftext(tags, $%s)", varName))
 		variables[varName] = diet
 	}
-	
+
 	// Add conditions to query
 	var filterClause string
 	if len(conditions) > 0 {
 		filterClause = fmt.Sprintf("@filter(%s)", strings.Join(conditions, " AND "))
 	}
-	
+
 	q := fmt.Sprintf(`
 	query RecommendRecipes(%s) {
 		recipes(func: has(title), %s, first: 20) {
@@ -309,16 +309,16 @@ func (r *SearchResolver) recommendBasedOnPreferences(
 			expand(_all_)
 		}
 	}`, buildVariableDeclarations(variables), filterClause)
-	
+
 	var result struct {
 		Recipes []*models.Recipe `json:"recipes"`
 	}
-	
+
 	err := r.DB.Query(ctx, q, variables, &result)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return result.Recipes, nil
 }
 
@@ -327,12 +327,12 @@ func buildVariableDeclarations(vars map[string]string) string {
 	if len(vars) == 0 {
 		return ""
 	}
-	
+
 	declarations := []string{}
 	for k := range vars {
 		declarations = append(declarations, fmt.Sprintf("$%s: string", k))
 	}
-	
+
 	return strings.Join(declarations, ", ")
 }ctx, q, variables, &result)
 	if err != nil {
@@ -443,7 +443,7 @@ func (r *SearchResolver) hybridSearch(
 ) ([]*models.Recipe, error) {
 	// Implement vector search with filters
 	// This is a simplified example - actual implementation would depend on DGraph's vector search capabilities
-	
+
 	// Convert embedding to string for query
 	embeddingStr := "["
 	for i, val := range embedding {
@@ -453,17 +453,17 @@ func (r *SearchResolver) hybridSearch(
 		embeddingStr += fmt.Sprintf("%f", val)
 	}
 	embeddingStr += "]"
-	
+
 	// Build conditions from search params
 	var conditions []string
 	variables := map[string]string{
 		"embeddings": embeddingStr,
 		"distance":   "0.8", // Threshold for vector similarity
 	}
-	
+
 	// Add structured conditions...
 	// (similar to structuredSearch method)
-	
+
 	// Construct DGraph query with vector search
 	q := `
 	query HybridSearch($embeddings: string, $distance: float) {
@@ -472,9 +472,9 @@ func (r *SearchResolver) hybridSearch(
 			expand(_all_)
 		}
 	}`
-	
+
 	var result struct {
 		Recipes []*models.Recipe `json:"recipes"`
 	}
-	
+
 	err := r.DB.Query(

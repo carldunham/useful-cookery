@@ -1,0 +1,42 @@
+# Useful Cookery Configuration
+
+# Server configuration
+server:
+  port: "8080"
+  cors_origin: "http://localhost:3000"
+  enable_playground: true
+  read_timeout_seconds: 30
+  write_timeout_seconds: 30
+  idle_timeout_seconds: 60
+
+# DGraph configuration
+dgraph:
+  hosts:
+    - "localhost:9080"
+
+# Redis configuration
+redis:
+  addr: "localhost:6379"
+  password: ""
+  db: 0
+
+# Authentication configuration
+auth:
+  jwt_secret: "change-me-in-production"
+  token_expiry: "24h"
+
+# AI configuration
+ai:
+  openai_key: "your-openai-api-key"
+  embedding_model: "text-embedding-ada-002"
+  completion_model: "gpt-3.5-turbo"
+  enable_cache: true
+  cache_ttl_minutes: 1440 # 24 hours
+  max_tokens: 4000
+
+# Storage configuration
+storage:
+  type: "local" # Options: local, s3
+  s3_bucket: "useful-cookery-uploads"
+  s3_region: "us-east-1"
+  local_path: "./uploads"
