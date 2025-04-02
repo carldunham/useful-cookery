@@ -7,10 +7,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/openai/openai-go"
 	"github.com/spf13/viper"
 )
 
-// Config holds the application configuration
+// Config holds the application configuration.
 type Config struct {
 	Server  ServerConfig  `mapstructure:"server"`
 	DGraph  DGraphConfig  `mapstructure:"dgraph"`
@@ -20,7 +21,7 @@ type Config struct {
 	Storage StorageConfig `mapstructure:"storage"`
 }
 
-// ServerConfig holds server-related configuration
+// ServerConfig holds server-related configuration.
 type ServerConfig struct {
 	Port                string `mapstructure:"port"`
 	CorsOrigin          string `mapstructure:"cors_origin"`
@@ -30,35 +31,35 @@ type ServerConfig struct {
 	IdleTimeoutSeconds  int    `mapstructure:"idle_timeout_seconds"`
 }
 
-// DGraphConfig holds DGraph-related configuration
+// DGraphConfig holds DGraph-related configuration.
 type DGraphConfig struct {
-	Hosts []string `mapstructure:"hosts"`
+	ConnectionString string `mapstructure:"connection_string"`
 }
 
-// RedisConfig holds Redis-related configuration
+// RedisConfig holds Redis-related configuration.
 type RedisConfig struct {
 	Addr     string `mapstructure:"addr"`
 	Password string `mapstructure:"password"`
 	DB       int    `mapstructure:"db"`
 }
 
-// AuthConfig holds authentication-related configuration
+// AuthConfig holds authentication-related configuration.
 type AuthConfig struct {
 	JWTSecret   string        `mapstructure:"jwt_secret"`
 	TokenExpiry time.Duration `mapstructure:"token_expiry"`
 }
 
-// AIConfig holds AI-related configuration
+// AIConfig holds AI-related configuration.
 type AIConfig struct {
-	OpenAIKey         string `mapstructure:"openai_key"`
-	EmbeddingModel    string `mapstructure:"embedding_model"`
-	CompletionModel   string `mapstructure:"completion_model"`
-	EnableCache       bool   `mapstructure:"enable_cache"`
-	CacheTTLMinutes   int    `mapstructure:"cache_ttl_minutes"`
-	MaxTokens         int    `mapstructure:"max_tokens"`
+	OpenAIKey       string                `mapstructure:"openai_key"`
+	EmbeddingModel  openai.EmbeddingModel `mapstructure:"embedding_model"`
+	CompletionModel string                `mapstructure:"completion_model"`
+	EnableCache     bool                  `mapstructure:"enable_cache"`
+	CacheTTLMinutes int                   `mapstructure:"cache_ttl_minutes"`
+	MaxTokens       int                   `mapstructure:"max_tokens"`
 }
 
-// StorageConfig holds storage-related configuration
+// StorageConfig holds storage-related configuration.
 type StorageConfig struct {
 	Type      string `mapstructure:"type"`
 	S3Bucket  string `mapstructure:"s3_bucket"`
@@ -66,7 +67,7 @@ type StorageConfig struct {
 	LocalPath string `mapstructure:"local_path"`
 }
 
-// Load loads the configuration from environment variables and config files
+// Load loads the configuration from environment variables and config files.
 func Load() (*Config, error) {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
@@ -106,7 +107,7 @@ func Load() (*Config, error) {
 	return &config, nil
 }
 
-// setDefaults sets default values for configuration
+// setDefaults sets default values for configuration.
 func setDefaults() {
 	// Server defaults
 	viper.SetDefault("server.port", "8080")
@@ -117,7 +118,7 @@ func setDefaults() {
 	viper.SetDefault("server.idle_timeout_seconds", 60)
 
 	// DGraph defaults
-	viper.SetDefault("dgraph.hosts", []string{"localhost:9080"})
+	viper.SetDefault("dgraph.connection_string", "localhost:9080")
 
 	// Redis defaults
 	viper.SetDefault("redis.addr", "localhost:6379")
@@ -140,7 +141,7 @@ func setDefaults() {
 	viper.SetDefault("storage.local_path", "./uploads")
 }
 
-// validateConfig validates the configuration
+// validateConfig validates the configuration.
 func validateConfig(config *Config) error {
 	// Validate server config
 	if config.Server.Port == "" {
@@ -148,8 +149,8 @@ func validateConfig(config *Config) error {
 	}
 
 	// Validate DGraph config
-	if len(config.DGraph.Hosts) == 0 {
-		return fmt.Errorf("at least one DGraph host is required")
+	if config.DGraph.ConnectionString == "" {
+		return fmt.Errorf("DGraph connection string is required")
 	}
 
 	// Validate Auth config

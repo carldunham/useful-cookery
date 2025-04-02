@@ -14,27 +14,19 @@ enum SkillLevel {
 type Query {
   # Recipe queries
   recipe(id: ID!): Recipe
-  recipes(
-    filter: RecipeFilter
-    order: RecipeOrder
-    first: Int
-    offset: Int
-  ): [Recipe!]!
-  
+  recipes(filter: RecipeFilter, order: RecipeOrder, first: Int, offset: Int): [Recipe!]!
+
   # User queries
   me: User
   user(id: ID!): User
-  
+
   # Category queries
   categories: [Category!]!
   category(id: ID!): Category
-  
+
   # AI-powered queries
   searchRecipes(query: String!): [Recipe!]!
-  recommendRecipes(
-    userId: ID
-    availableIngredients: [String!]
-  ): [Recipe!]!
+  recommendRecipes(userID: ID, availableIngredients: [String!]): [Recipe!]!
   findSubstitutes(ingredientName: String!): [String!]!
 }
 
@@ -43,7 +35,7 @@ type Mutation {
   register(input: RegisterInput!): AuthPayload!
   login(email: String!, password: String!): AuthPayload!
   updateUser(input: UpdateUserInput!): User!
-  
+
   # Recipe mutations
   createRecipe(input: RecipeInput!): Recipe!
   updateRecipe(id: ID!, input: RecipeInput!): Recipe!
@@ -51,12 +43,12 @@ type Mutation {
   likeRecipe(id: ID!): Recipe!
   saveRecipe(id: ID!): User!
   unsaveRecipe(id: ID!): User!
-  
+
   # Review mutations
-  addReview(recipeId: ID!, rating: Int!, comment: String): Review!
+  addReview(recipeID: ID!, rating: Int!, comment: String): Review!
   updateReview(id: ID!, rating: Int, comment: String): Review!
   deleteReview(id: ID!): Boolean!
-  
+
   # Category mutations
   createCategory(name: String!, description: String): Category!
   updateCategory(id: ID!, name: String, description: String): Category!
@@ -65,7 +57,7 @@ type Mutation {
 
 type Subscription {
   recipeLikes(id: ID!): Int
-  newReview(recipeId: ID!): Review
+  newReview(recipeID: ID!): Review
 }
 
 # Auth types
@@ -103,7 +95,7 @@ input RecipeFilter {
   difficulty: SkillLevel
   maxPrepTime: Int
   ingredients: [String!]
-  authorId: ID
+  authorID: ID
 }
 
 input RecipeOrder {
@@ -127,7 +119,7 @@ enum OrderDirection {
 input RecipeInput {
   title: String!
   description: String!
-  categoryIds: [ID!]
+  categoryIDs: [ID!]
   cuisine: String
   prepTime: Int
   cookTime: Int

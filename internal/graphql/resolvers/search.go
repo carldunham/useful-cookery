@@ -4,20 +4,21 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/carldunham/useful-cookery/internal/ai"
 	"github.com/carldunham/useful-cookery/internal/database"
-	"github.com/carldunham/useful-cookery/internal/model"
+	domainmodel "github.com/carldunham/useful-cookery/internal/model"
 )
 
-// SearchResolver handles search-related resolvers
+// SearchResolver handles search-related resolvers.
 type SearchResolver struct {
 	DB        *database.DGraphClient
 	AIService *ai.AIService
 }
 
-// NewSearchResolver creates a new search resolver
+// NewSearchResolver creates a new search resolver.
 func NewSearchResolver(db *database.DGraphClient, aiService *ai.AIService) *SearchResolver {
 	return &SearchResolver{
 		DB:        db,
@@ -25,10 +26,10 @@ func NewSearchResolver(db *database.DGraphClient, aiService *ai.AIService) *Sear
 	}
 }
 
-// SearchRecipes performs a natural language search for recipes
-func (r *SearchResolver) SearchRecipes(ctx context.Context, query string) ([]*models.Recipe, error) {
+// SearchRecipes performs a natural language search for recipes.
+func (r *SearchResolver) SearchRecipes(ctx context.Context, query string) ([]*domainmodel.Recipe, error) {
 	if query == "" {
-		return []*models.Recipe{}, nil
+		return []*domainmodel.Recipe{}, nil
 	}
 
 	// Start timing for the search
@@ -39,7 +40,11 @@ func (r *SearchResolver) SearchRecipes(ctx context.Context, query string) ([]*mo
 	if err != nil {
 		log.Printf("Error processing natural language query: %v", err)
 		// Fall back to basic text search if NLP fails
-		return r.basicTextSearch(ctx, query)
+		recipes, searchErr := r.basicTextSearch(ctx, query)
+		if searchErr != nil {
+			return nil, fmt.Errorf("failed to perform basic text search after NLP error: %w", searchErr)
+		}
+		return recipes, nil
 	}
 
 	// Generate embedding for vector search
@@ -47,7 +52,11 @@ func (r *SearchResolver) SearchRecipes(ctx context.Context, query string) ([]*mo
 	if err != nil {
 		log.Printf("Error generating embedding: %v", err)
 		// Fall back to structured search if embedding fails
-		return r.structuredSearch(ctx, searchParams)
+		recipes, searchErr := r.structuredSearch(ctx, searchParams)
+		if searchErr != nil {
+			return nil, fmt.Errorf("failed to perform structured search after embedding error: %w", searchErr)
+		}
+		return recipes, nil
 	}
 
 	// Hybrid search: combine vector search with structured filters
@@ -55,7 +64,11 @@ func (r *SearchResolver) SearchRecipes(ctx context.Context, query string) ([]*mo
 	if err != nil {
 		log.Printf("Error in hybrid search: %v", err)
 		// Fall back to structured search
-		return r.structuredSearch(ctx, searchParams)
+		recipes, searchErr := r.structuredSearch(ctx, searchParams)
+		if searchErr != nil {
+			return nil, fmt.Errorf("failed to perform structured search after hybrid search error: %w", searchErr)
+		}
+		return recipes, nil
 	}
 
 	// Log search performance
@@ -65,21 +78,25 @@ func (r *SearchResolver) SearchRecipes(ctx context.Context, query string) ([]*mo
 	return results, nil
 }
 
-// RecommendRecipes recommends recipes based on user preferences and available ingredients
+// RecommendRecipes recommends recipes based on user preferences and available ingredients.
 func (r *SearchResolver) RecommendRecipes(
 	ctx context.Context,
 	userID *string,
 	availableIngredients []string,
-) ([]*models.Recipe, error) {
+) ([]*domainmodel.Recipe, error) {
 	// Start timing for the recommendation
 	start := time.Now()
 
 	// If no user ID provided and no ingredients, return popular recipes
 	if userID == nil && len(availableIngredients) == 0 {
-		return r.getPopularRecipes(ctx)
+		recipes, err := r.getPopularRecipes(ctx)
+		if err != nil {
+			return nil, fmt.Errorf("failed to get popular recipes: %w", err)
+		}
+		return recipes, nil
 	}
 
-	var user *models.User
+	var user *domainmodel.User
 	var err error
 
 	// Get user preferences if user ID is provided
@@ -95,7 +112,7 @@ func (r *SearchResolver) RecommendRecipes(
 		recipes, err := r.findRecipesByIngredients(ctx, availableIngredients, user)
 		if err != nil {
 			log.Printf("Error finding recipes by ingredients: %v", err)
-			return nil, err
+			return nil, fmt.Errorf("failed to find recipes by ingredients: %w", err)
 		}
 
 		// Log recommendation performance
@@ -110,7 +127,7 @@ func (r *SearchResolver) RecommendRecipes(
 		recipes, err := r.recommendBasedOnPreferences(ctx, user)
 		if err != nil {
 			log.Printf("Error finding recipes by preferences: %v", err)
-			return nil, err
+			return nil, fmt.Errorf("failed to find recipes by preferences: %w", err)
 		}
 
 		// Log recommendation performance
@@ -121,16 +138,24 @@ func (r *SearchResolver) RecommendRecipes(
 	}
 
 	// Fall back to popular recipes if nothing else works
-	return r.getPopularRecipes(ctx)
+	recipes, err := r.getPopularRecipes(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get popular recipes: %w", err)
+	}
+	return recipes, nil
 }
 
-// FindSubstitutes finds substitutes for an ingredient
+// FindSubstitutes finds substitutes for an ingredient.
 func (r *SearchResolver) FindSubstitutes(ctx context.Context, ingredientName string) ([]string, error) {
-	return r.AIService.GenerateSubstitutes(ctx, ingredientName)
+	substitutes, err := r.AIService.GenerateSubstitutes(ctx, ingredientName)
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate substitutes: %w", err)
+	}
+	return substitutes, nil
 }
 
-// basicTextSearch performs a basic text search
-func (r *SearchResolver) basicTextSearch(ctx context.Context, query string) ([]*models.Recipe, error) {
+// basicTextSearch performs a basic text search.
+func (r *SearchResolver) basicTextSearch(ctx context.Context, query string) ([]*domainmodel.Recipe, error) {
 	// Basic text search implementation
 	q := `
 	query SearchRecipes($searchText: string) {
@@ -145,45 +170,45 @@ func (r *SearchResolver) basicTextSearch(ctx context.Context, query string) ([]*
 	}
 
 	var result struct {
-		Recipes []*models.Recipe `json:"recipes"`
+		Recipes []*domainmodel.Recipe `json:"recipes"`
 	}
 
 	err := r.DB.Query(ctx, q, variables, &result)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute basic text search query: %w", err)
 	}
 
 	return result.Recipes, nil
 }
 
-// getPopularRecipes returns popular recipes
-func (r *SearchResolver) getPopularRecipes(ctx context.Context) ([]*models.Recipe, error) {
+// getPopularRecipes returns popular recipes.
+func (r *SearchResolver) getPopularRecipes(ctx context.Context) ([]*domainmodel.Recipe, error) {
 	q := `
 	query PopularRecipes() {
-		recipes(func: has(title), orderasc: likes, first: 20) {
+		recipes(func: type(Recipe), orderasc: likes, first: 20) {
 			uid
 			expand(_all_)
 		}
 	}`
 
 	var result struct {
-		Recipes []*models.Recipe `json:"recipes"`
+		Recipes []*domainmodel.Recipe `json:"recipes"`
 	}
 
 	err := r.DB.Query(ctx, q, nil, &result)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute popular recipes query: %w", err)
 	}
 
 	return result.Recipes, nil
 }
 
-// findRecipesByIngredients finds recipes that use the specified ingredients
+// findRecipesByIngredients finds recipes that use the specified ingredients.
 func (r *SearchResolver) findRecipesByIngredients(
 	ctx context.Context,
 	ingredients []string,
-	user *models.User,
-) ([]*models.Recipe, error) {
+	user *domainmodel.User,
+) ([]*domainmodel.Recipe, error) {
 	variables := make(map[string]string)
 
 	// Build ingredient match conditions
@@ -222,31 +247,35 @@ func (r *SearchResolver) findRecipesByIngredients(
 
 	q := fmt.Sprintf(`
 	query RecipesByIngredients(%s) {
-		recipes(func: has(title), @filter(%s), first: 20) {
+		recipes(func: type(Recipe), @filter(%s), first: 20) {
 			uid
 			expand(_all_)
 		}
 	}`, buildVariableDeclarations(variables), conditions)
 
 	var result struct {
-		Recipes []*models.Recipe `json:"recipes"`
+		Recipes []*domainmodel.Recipe `json:"recipes"`
 	}
 
 	err := r.DB.Query(ctx, q, variables, &result)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute recipes by ingredients query: %w", err)
 	}
 
 	return result.Recipes, nil
 }
 
-// recommendBasedOnPreferences recommends recipes based on user preferences
+// recommendBasedOnPreferences recommends recipes based on user preferences.
 func (r *SearchResolver) recommendBasedOnPreferences(
 	ctx context.Context,
-	user *models.User,
-) ([]*models.Recipe, error) {
+	user *domainmodel.User,
+) ([]*domainmodel.Recipe, error) {
 	if user.Preferences == nil {
-		return r.getPopularRecipes(ctx)
+		recipes, err := r.getPopularRecipes(ctx)
+		if err != nil {
+			return nil, fmt.Errorf("failed to get popular recipes: %w", err)
+		}
+		return recipes, nil
 	}
 
 	variables := make(map[string]string)
@@ -304,25 +333,25 @@ func (r *SearchResolver) recommendBasedOnPreferences(
 
 	q := fmt.Sprintf(`
 	query RecommendRecipes(%s) {
-		recipes(func: has(title), %s, first: 20) {
+		recipes(func: type(Recipe), %s, first: 20) {
 			uid
 			expand(_all_)
 		}
 	}`, buildVariableDeclarations(variables), filterClause)
 
 	var result struct {
-		Recipes []*models.Recipe `json:"recipes"`
+		Recipes []*domainmodel.Recipe `json:"recipes"`
 	}
 
 	err := r.DB.Query(ctx, q, variables, &result)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute recommendation by preferences query: %w", err)
 	}
 
 	return result.Recipes, nil
 }
 
-// buildVariableDeclarations creates the variable declaration string for DGraph queries
+// buildVariableDeclarations creates the variable declaration string for DGraph queries.
 func buildVariableDeclarations(vars map[string]string) string {
 	if len(vars) == 0 {
 		return ""
@@ -334,23 +363,17 @@ func buildVariableDeclarations(vars map[string]string) string {
 	}
 
 	return strings.Join(declarations, ", ")
-}ctx, q, variables, &result)
-	if err != nil {
-		return nil, err
-	}
-
-	return result.Recipes, nil
 }
 
-// structuredSearch performs a search using structured parameters
-func (r *SearchResolver) structuredSearch(ctx context.Context, params *models.SearchParams) ([]*models.Recipe, error) {
+// structuredSearch performs a search using structured parameters.
+func (r *SearchResolver) structuredSearch(ctx context.Context, params *domainmodel.SearchParams) ([]*domainmodel.Recipe, error) {
 	// Build query conditions based on search parameters
 	var conditions []string
 	variables := make(map[string]string)
 
 	// Add conditions for each parameter
 	if len(params.Ingredients) > 0 {
-		ingredientCondition := "has(ingredients)"
+		ingredientCondition := "type(Recipe)"
 		for i, ing := range params.Ingredients {
 			varName := fmt.Sprintf("ing%d", i)
 			ingredientCondition = fmt.Sprintf("%s AND anyoftext(ingredients, $%s)", ingredientCondition, varName)
@@ -370,7 +393,7 @@ func (r *SearchResolver) structuredSearch(ctx context.Context, params *models.Se
 
 	// Add categories
 	if len(params.Categories) > 0 {
-		categoryCondition := "has(categories)"
+		categoryCondition := "type(Recipe)"
 		for i, cat := range params.Categories {
 			varName := fmt.Sprintf("cat%d", i)
 			categoryCondition = fmt.Sprintf("%s AND anyoftext(categories, $%s)", categoryCondition, varName)
@@ -417,30 +440,30 @@ func (r *SearchResolver) structuredSearch(ctx context.Context, params *models.Se
 
 	q := fmt.Sprintf(`
 	query StructuredSearch(%s) {
-		recipes(func: has(title), %s, first: 20) {
+		recipes(func: type(Recipe), %s, first: 20) {
 			uid
 			expand(_all_)
 		}
 	}`, buildVariableDeclarations(variables), filterClause)
 
 	var result struct {
-		Recipes []*models.Recipe `json:"recipes"`
+		Recipes []*domainmodel.Recipe `json:"recipes"`
 	}
 
 	err := r.DB.Query(ctx, q, variables, &result)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to execute structured search query: %w", err)
 	}
 
 	return result.Recipes, nil
 }
 
-// hybridSearch combines vector search with structured filters
+// hybridSearch combines vector search with structured filters.
 func (r *SearchResolver) hybridSearch(
 	ctx context.Context,
 	embedding []float32,
-	params *models.SearchParams,
-) ([]*models.Recipe, error) {
+	params *domainmodel.SearchParams,
+) ([]*domainmodel.Recipe, error) {
 	// Implement vector search with filters
 	// This is a simplified example - actual implementation would depend on DGraph's vector search capabilities
 
@@ -461,20 +484,97 @@ func (r *SearchResolver) hybridSearch(
 		"distance":   "0.8", // Threshold for vector similarity
 	}
 
-	// Add structured conditions...
-	// (similar to structuredSearch method)
+	// Add conditions for each parameter
+	if len(params.Ingredients) > 0 {
+		ingredientCondition := "type(Recipe)"
+		for i, ing := range params.Ingredients {
+			varName := fmt.Sprintf("ing%d", i)
+			ingredientCondition = fmt.Sprintf("%s AND anyoftext(ingredients, $%s)", ingredientCondition, varName)
+			variables[varName] = ing
+		}
+		conditions = append(conditions, fmt.Sprintf("(%s)", ingredientCondition))
+	}
 
-	// Construct DGraph query with vector search
-	q := `
-	query HybridSearch($embeddings: string, $distance: float) {
-		recipes(func: vector(embeddings, $embeddings, $distance), first: 20) {
+	// Add excluded ingredients
+	if len(params.ExcludedIngredients) > 0 {
+		for i, ing := range params.ExcludedIngredients {
+			varName := fmt.Sprintf("excing%d", i)
+			conditions = append(conditions, fmt.Sprintf("NOT anyoftext(ingredients, $%s)", varName))
+			variables[varName] = ing
+		}
+	}
+
+	// Add categories
+	if len(params.Categories) > 0 {
+		categoryCondition := "type(Recipe)"
+		for i, cat := range params.Categories {
+			varName := fmt.Sprintf("cat%d", i)
+			categoryCondition = fmt.Sprintf("%s AND anyoftext(categories, $%s)", categoryCondition, varName)
+			variables[varName] = cat
+		}
+		conditions = append(conditions, fmt.Sprintf("(%s)", categoryCondition))
+	}
+
+	// Add cuisine
+	if params.Cuisine != "" {
+		conditions = append(conditions, "anyoftext(cuisine, $cuisine)")
+		variables["cuisine"] = params.Cuisine
+	}
+
+	// Add dietary restrictions
+	if len(params.DietaryRestrictions) > 0 {
+		for i, diet := range params.DietaryRestrictions {
+			varName := fmt.Sprintf("diet%d", i)
+			conditions = append(conditions, fmt.Sprintf("anyoftext(tags, $%s)", varName))
+			variables[varName] = diet
+		}
+	}
+
+	// Add max prep time
+	if params.MaxPrepTime > 0 {
+		conditions = append(conditions, "le(prepTime, $maxPrepTime)")
+		variables["maxPrepTime"] = fmt.Sprintf("%d", params.MaxPrepTime)
+	}
+
+	// Add difficulty
+	if params.Difficulty != "" {
+		conditions = append(conditions, "eq(difficulty, $difficulty)")
+		variables["difficulty"] = params.Difficulty
+	}
+
+	// Construct filter clause if we have conditions
+	var filterClause string
+	if len(conditions) > 0 {
+		filterClause = fmt.Sprintf("@filter(%s)", strings.Join(conditions, " AND "))
+	}
+
+	// Construct DGraph query with vector search and filters
+	q := fmt.Sprintf(`
+	query HybridSearch(%s) {
+		recipes(func: vector(embeddings, $embeddings, $distance), %s, first: 20) {
 			uid
 			expand(_all_)
 		}
-	}`
+	}`, buildVariableDeclarations(variables), filterClause)
 
 	var result struct {
-		Recipes []*models.Recipe `json:"recipes"`
+		Recipes []*domainmodel.Recipe `json:"recipes"`
 	}
 
-	err := r.DB.Query(
+	err := r.DB.Query(ctx, q, variables, &result)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute hybrid search query: %w", err)
+	}
+
+	// If we got no results from vector search, fall back to structured search
+	if len(result.Recipes) == 0 {
+		log.Printf("No results from vector search, falling back to structured search")
+		recipes, err := r.structuredSearch(ctx, params)
+		if err != nil {
+			return nil, fmt.Errorf("failed to perform structured search after empty vector search: %w", err)
+		}
+		return recipes, nil
+	}
+
+	return result.Recipes, nil
+}

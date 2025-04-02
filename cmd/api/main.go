@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"log"
 	"net/http"
 	"os"
@@ -10,16 +11,19 @@ import (
 	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/handler/extension"
+	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
+
 	"github.com/carldunham/useful-cookery/internal/ai"
 	"github.com/carldunham/useful-cookery/internal/auth"
 	"github.com/carldunham/useful-cookery/internal/config"
 	"github.com/carldunham/useful-cookery/internal/database"
-	"github.com/carldunham/useful-cookery/internal/graphql"
+	"github.com/carldunham/useful-cookery/internal/generated"
 	"github.com/carldunham/useful-cookery/internal/graphql/resolvers"
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
-	"github.com/go-chi/cors"
 )
 
 func main() {
@@ -34,7 +38,7 @@ func main() {
 	logger.Printf("Starting Useful Cookery API server on port %s", cfg.Server.Port)
 
 	// Connect to DGraph
-	dgraphClient, err := database.NewDGraphClient(cfg.DGraph.Hosts)
+	dgraphClient, err := database.NewDGraphClient(cfg.DGraph.ConnectionString)
 	if err != nil {
 		logger.Fatalf("Failed to connect to DGraph: %v", err)
 	}
@@ -70,9 +74,11 @@ func main() {
 	resolver := resolvers.NewRootResolver(dgraphClient, aiService, authService)
 
 	// Create GraphQL handler
-	gqlHandler := handler.NewDefaultServer(graphql.NewExecutableSchema(graphql.Config{
+	gqlHandler := handler.New(generated.NewExecutableSchema(generated.Config{
 		Resolvers: resolver,
 	}))
+	gqlHandler.AddTransport(transport.POST{})
+	gqlHandler.Use(extension.Introspection{})
 
 	// Create router
 	router := chi.NewRouter()
@@ -95,12 +101,16 @@ func main() {
 	}))
 
 	// Define routes
-	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Useful Cookery API"))
+	router.Get("/", func(w http.ResponseWriter, _ *http.Request) {
+		if _, err := w.Write([]byte("Useful Cookery API")); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	})
 
-	router.Get("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("OK"))
+	router.Get("/health", func(w http.ResponseWriter, _ *http.Request) {
+		if _, err := w.Write([]byte("OK")); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	})
 
 	// GraphQL endpoint
@@ -123,7 +133,7 @@ func main() {
 
 	// Start server in a goroutine
 	go func() {
-		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		if err := server.ListenAndServe(); err != nil && errors.Is(err, http.ErrServerClosed) {
 			logger.Fatalf("Server error: %v", err)
 		}
 	}()

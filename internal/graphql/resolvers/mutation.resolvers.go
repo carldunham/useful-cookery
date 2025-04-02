@@ -3,62 +3,63 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/carldunham/useful-cookery/internal/auth"
 	"github.com/carldunham/useful-cookery/internal/database"
-	"github.com/carldunham/useful-cookery/internal/graphql/models"
-	domainModels "github.com/carldunham/useful-cookery/internal/model"
+	gqlmodel "github.com/carldunham/useful-cookery/internal/graphql/model"
+	domainmodel "github.com/carldunham/useful-cookery/internal/model"
 )
 
-// Register registers a new user
-func (r *Resolver) Register(ctx context.Context, input models.RegisterInput) (*models.AuthPayload, error) {
-	user, err := r.UserResolver.RegisterUser(ctx, input)
+// Register registers a new user.
+func (r *Resolver) register(ctx context.Context, input gqlmodel.RegisterInput) (*gqlmodel.AuthPayload, error) {
+	user, err := r.UserResolver.registerUser(ctx, input)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to register user: %w", err)
 	}
 
-	token, err := r.AuthService.generateToken(user.ID, user.Role)
-	if err != nil {
-		return nil, err
-	}
+	// token, err := r.AuthService.GenerateToken(user.ID, user.Role)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	return &models.AuthPayload{
-		Token: token,
-		User:  user,
+	return &gqlmodel.AuthPayload{
+		// Token: token,
+		User: user,
 	}, nil
 }
 
-// Login authenticates a user
-func (r *Resolver) Login(ctx context.Context, email string, password string) (*models.AuthPayload, error) {
+// Login authenticates a user.
+func (r *Resolver) login(ctx context.Context, email string, password string) (*gqlmodel.AuthPayload, error) {
 	token, user, err := r.AuthService.Login(ctx, email, password)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to log in: %w", err)
 	}
 
-	return &models.AuthPayload{
+	return &gqlmodel.AuthPayload{
 		Token: token,
 		User:  user,
 	}, nil
 }
 
-// RegisterUser registers a new user
-func (r *UserResolver) RegisterUser(ctx context.Context, input models.RegisterInput) (*domainModels.User, error) {
+// RegisterUser registers a new user.
+func (r *UserResolver) registerUser(ctx context.Context, input gqlmodel.RegisterInput) (*domainmodel.User, error) {
 	user, err := r.AuthService.RegisterUser(ctx, input.Name, input.Email, input.Password)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to register user: %w", err)
 	}
 
 	return user, nil
 }
 
-// UpdateUser updates the current user's information
-func (r *Resolver) UpdateUser(ctx context.Context, input models.UpdateUserInput) (*domainModels.User, error) {
-	return r.UserResolver.UpdateUser(ctx, input)
+// UpdateUser updates the current user's information.
+func (r *Resolver) updateUser(ctx context.Context, input gqlmodel.UpdateUserInput) (*domainmodel.User, error) {
+	return r.UserResolver.updateUser(ctx, input)
 }
 
-// UpdateUser updates a user's information
-func (r *UserResolver) UpdateUser(ctx context.Context, input models.UpdateUserInput) (*domainModels.User, error) {
+// UpdateUser updates a user's information.
+func (r *UserResolver) updateUser(ctx context.Context, input gqlmodel.UpdateUserInput) (*domainmodel.User, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
@@ -76,7 +77,7 @@ func (r *UserResolver) UpdateUser(ctx context.Context, input models.UpdateUserIn
 		// Hash the new password
 		hashedPassword, err := r.AuthService.HashPassword(*input.Password)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to hash password: %w", err)
 		}
 		currentUser.Password = hashedPassword
 	}
@@ -84,7 +85,7 @@ func (r *UserResolver) UpdateUser(ctx context.Context, input models.UpdateUserIn
 	// Update preferences if provided
 	if input.Preferences != nil {
 		if currentUser.Preferences == nil {
-			currentUser.Preferences = &domainModels.UserPreferences{}
+			currentUser.Preferences = &domainmodel.UserPreferences{}
 		}
 
 		prefs := currentUser.Preferences
@@ -102,7 +103,7 @@ func (r *UserResolver) UpdateUser(ctx context.Context, input models.UpdateUserIn
 		}
 
 		if input.Preferences.SkillLevel != nil {
-			prefs.SkillLevel = *input.Preferences.SkillLevel
+			prefs.SkillLevel = input.Preferences.SkillLevel.String()
 		}
 
 		if len(input.Preferences.CuisinePreferences) > 0 {
@@ -116,19 +117,19 @@ func (r *UserResolver) UpdateUser(ctx context.Context, input models.UpdateUserIn
 	// Save to database
 	err := r.DB.UpdateUser(ctx, currentUser)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to update user: %w", err)
 	}
 
 	return currentUser, nil
 }
 
-// CreateRecipe creates a new recipe
-func (r *Resolver) CreateRecipe(ctx context.Context, input models.RecipeInput) (*domainModels.Recipe, error) {
-	return r.RecipeResolver.CreateRecipe(ctx, input)
+// CreateRecipe creates a new recipe.
+func (r *Resolver) createRecipe(ctx context.Context, input gqlmodel.RecipeInput) (*domainmodel.Recipe, error) {
+	return r.RecipeResolver.createRecipe(ctx, input)
 }
 
-// CreateRecipe creates a new recipe
-func (r *RecipeResolver) CreateRecipe(ctx context.Context, input models.RecipeInput) (*domainModels.Recipe, error) {
+// CreateRecipe creates a new recipe.
+func (r *RecipeResolver) createRecipe(ctx context.Context, input gqlmodel.RecipeInput) (*domainmodel.Recipe, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
@@ -136,20 +137,17 @@ func (r *RecipeResolver) CreateRecipe(ctx context.Context, input models.RecipeIn
 	}
 
 	// Create recipe
-	recipe := &domainModels.Recipe{
-		ID:          domainModels.NewID(),
+	recipe := &domainmodel.Recipe{
 		Title:       input.Title,
+		Description: input.Description,
 		Author:      currentUser,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
-		Ingredients: []domainModels.DetailedIngredient{},
-		Steps:       []domainModels.Step{},
+		Ingredients: []domainmodel.DetailedIngredient{},
+		Steps:       []domainmodel.Step{},
 	}
 
 	// Set optional fields
-	if input.Description != nil {
-		recipe.Description = *input.Description
-	}
 	if input.Cuisine != nil {
 		recipe.Cuisine = *input.Cuisine
 	}
@@ -163,7 +161,7 @@ func (r *RecipeResolver) CreateRecipe(ctx context.Context, input models.RecipeIn
 		recipe.Servings = *input.Servings
 	}
 	if input.Difficulty != nil {
-		recipe.Difficulty = *input.Difficulty
+		recipe.Difficulty = string(*input.Difficulty)
 	}
 	if len(input.Tags) > 0 {
 		recipe.Tags = input.Tags
@@ -171,8 +169,8 @@ func (r *RecipeResolver) CreateRecipe(ctx context.Context, input models.RecipeIn
 
 	// Process ingredients
 	for _, ingInput := range input.Ingredients {
-		ingredient := domainModels.DetailedIngredient{
-			ID:   domainModels.NewID(),
+		ingredient := domainmodel.DetailedIngredient{
+			ID:   domainmodel.NewID(),
 			Name: ingInput.Name,
 		}
 
@@ -197,8 +195,8 @@ func (r *RecipeResolver) CreateRecipe(ctx context.Context, input models.RecipeIn
 
 	// Process steps
 	for _, stepInput := range input.Steps {
-		step := domainModels.Step{
-			ID:          domainModels.NewID(),
+		step := domainmodel.Step{
+			ID:          domainmodel.NewID(),
 			OrderIndex:  stepInput.OrderIndex,
 			Description: stepInput.Description,
 		}
@@ -212,7 +210,7 @@ func (r *RecipeResolver) CreateRecipe(ctx context.Context, input models.RecipeIn
 
 	// Process categories
 	if len(input.CategoryIDs) > 0 {
-		categories := make([]domainModels.Category, 0, len(input.CategoryIDs))
+		categories := make([]domainmodel.Category, 0, len(input.CategoryIDs))
 		for _, catID := range input.CategoryIDs {
 			cat, err := r.DB.GetCategory(ctx, catID)
 			if err != nil {
@@ -226,19 +224,19 @@ func (r *RecipeResolver) CreateRecipe(ctx context.Context, input models.RecipeIn
 	// Save to database
 	err := r.DB.CreateRecipe(ctx, recipe)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create recipe: %w", err)
 	}
 
 	return recipe, nil
 }
 
-// UpdateRecipe updates an existing recipe
-func (r *Resolver) UpdateRecipe(ctx context.Context, id string, input models.RecipeInput) (*domainModels.Recipe, error) {
-	return r.RecipeResolver.UpdateRecipe(ctx, id, input)
+// UpdateRecipe updates an existing recipe.
+func (r *Resolver) updateRecipe(ctx context.Context, id string, input gqlmodel.RecipeInput) (*domainmodel.Recipe, error) {
+	return r.RecipeResolver.updateRecipe(ctx, id, input)
 }
 
-// UpdateRecipe updates an existing recipe
-func (r *RecipeResolver) UpdateRecipe(ctx context.Context, id string, input models.RecipeInput) (*domainModels.Recipe, error) {
+// UpdateRecipe updates an existing recipe.
+func (r *RecipeResolver) updateRecipe(ctx context.Context, id string, input gqlmodel.RecipeInput) (*domainmodel.Recipe, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
@@ -251,22 +249,21 @@ func (r *RecipeResolver) UpdateRecipe(ctx context.Context, id string, input mode
 		if errors.Is(err, database.ErrNotFound) {
 			return nil, errors.New("recipe not found")
 		}
-		return nil, err
+		return nil, fmt.Errorf("failed to get recipe: %w", err)
 	}
 
 	// Check if user has permission to update (author or admin)
-	if recipe.Author != nil && recipe.Author.ID != currentUser.ID && currentUser.Role != "ADMIN" {
+	if recipe.Author != nil && recipe.Author.ID != currentUser.ID && currentUser.Role != domainmodel.AdminRole {
 		return nil, errors.New("permission denied")
 	}
 
 	// Update basic fields
 	recipe.Title = input.Title
+	recipe.Description = input.Description
+	recipe.Difficulty = input.Difficulty.String()
 	recipe.UpdatedAt = time.Now()
 
 	// Update optional fields
-	if input.Description != nil {
-		recipe.Description = *input.Description
-	}
 	if input.Cuisine != nil {
 		recipe.Cuisine = *input.Cuisine
 	}
@@ -279,18 +276,15 @@ func (r *RecipeResolver) UpdateRecipe(ctx context.Context, id string, input mode
 	if input.Servings != nil {
 		recipe.Servings = *input.Servings
 	}
-	if input.Difficulty != nil {
-		recipe.Difficulty = *input.Difficulty
-	}
 	if len(input.Tags) > 0 {
 		recipe.Tags = input.Tags
 	}
 
 	// Process ingredients (replace all)
-	recipe.Ingredients = []domainModels.DetailedIngredient{}
+	recipe.Ingredients = []domainmodel.DetailedIngredient{}
 	for _, ingInput := range input.Ingredients {
-		ingredient := domainModels.DetailedIngredient{
-			ID:   domainModels.NewID(),
+		ingredient := domainmodel.DetailedIngredient{
+			ID:   domainmodel.NewID(),
 			Name: ingInput.Name,
 		}
 
@@ -314,10 +308,10 @@ func (r *RecipeResolver) UpdateRecipe(ctx context.Context, id string, input mode
 	}
 
 	// Process steps (replace all)
-	recipe.Steps = []domainModels.Step{}
+	recipe.Steps = []domainmodel.Step{}
 	for _, stepInput := range input.Steps {
-		step := domainModels.Step{
-			ID:          domainModels.NewID(),
+		step := domainmodel.Step{
+			ID:          domainmodel.NewID(),
 			OrderIndex:  stepInput.OrderIndex,
 			Description: stepInput.Description,
 		}
@@ -331,7 +325,7 @@ func (r *RecipeResolver) UpdateRecipe(ctx context.Context, id string, input mode
 
 	// Process categories
 	if len(input.CategoryIDs) > 0 {
-		categories := make([]domainModels.Category, 0, len(input.CategoryIDs))
+		categories := make([]domainmodel.Category, 0, len(input.CategoryIDs))
 		for _, catID := range input.CategoryIDs {
 			cat, err := r.DB.GetCategory(ctx, catID)
 			if err != nil {
@@ -345,19 +339,19 @@ func (r *RecipeResolver) UpdateRecipe(ctx context.Context, id string, input mode
 	// Save to database
 	err = r.DB.UpdateRecipe(ctx, recipe)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to update recipe: %w", err)
 	}
 
 	return recipe, nil
 }
 
-// DeleteRecipe deletes a recipe
-func (r *Resolver) DeleteRecipe(ctx context.Context, id string) (bool, error) {
-	return r.RecipeResolver.DeleteRecipe(ctx, id)
+// DeleteRecipe deletes a recipe.
+func (r *Resolver) deleteRecipe(ctx context.Context, id string) (bool, error) {
+	return r.RecipeResolver.deleteRecipe(ctx, id)
 }
 
-// DeleteRecipe deletes a recipe
-func (r *RecipeResolver) DeleteRecipe(ctx context.Context, id string) (bool, error) {
+// DeleteRecipe deletes a recipe.
+func (r *RecipeResolver) deleteRecipe(ctx context.Context, id string) (bool, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
@@ -370,25 +364,25 @@ func (r *RecipeResolver) DeleteRecipe(ctx context.Context, id string) (bool, err
 		if errors.Is(err, database.ErrNotFound) {
 			return false, errors.New("recipe not found")
 		}
-		return false, err
+		return false, fmt.Errorf("failed to get recipe: %w", err)
 	}
 
 	// Check if user has permission to delete (author or admin)
-	if recipe.Author != nil && recipe.Author.ID != currentUser.ID && currentUser.Role != "ADMIN" {
+	if recipe.Author != nil && recipe.Author.ID != currentUser.ID && currentUser.Role != domainmodel.AdminRole {
 		return false, errors.New("permission denied")
 	}
 
 	// Delete from database
 	err = r.DB.DeleteRecipe(ctx, id)
 	if err != nil {
-		return false, err
+		return false, fmt.Errorf("failed to delete recipe: %w", err)
 	}
 
 	return true, nil
 }
 
-// LikeRecipe adds a like to a recipe
-func (r *Resolver) LikeRecipe(ctx context.Context, id string) (*domainModels.Recipe, error) {
+// LikeRecipe adds a like to a recipe.
+func (r *Resolver) likeRecipe(ctx context.Context, id string) (*domainmodel.Recipe, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
@@ -401,7 +395,7 @@ func (r *Resolver) LikeRecipe(ctx context.Context, id string) (*domainModels.Rec
 		if errors.Is(err, database.ErrNotFound) {
 			return nil, errors.New("recipe not found")
 		}
-		return nil, err
+		return nil, fmt.Errorf("failed to get recipe: %w", err)
 	}
 
 	// Increment likes
@@ -411,14 +405,14 @@ func (r *Resolver) LikeRecipe(ctx context.Context, id string) (*domainModels.Rec
 	// Save to database
 	err = r.DB.UpdateRecipe(ctx, recipe)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to update recipe: %w", err)
 	}
 
 	return recipe, nil
 }
 
-// AddReview adds a review to a recipe
-func (r *Resolver) AddReview(ctx context.Context, recipeId string, rating int, comment *string) (*domainModels.Review, error) {
+// SaveRecipe saves a recipe to the user's saved recipes list.
+func (r *Resolver) saveRecipe(ctx context.Context, id string) (*domainmodel.User, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
@@ -426,17 +420,90 @@ func (r *Resolver) AddReview(ctx context.Context, recipeId string, rating int, c
 	}
 
 	// Get recipe
-	recipe, err := r.DB.GetRecipe(ctx, recipeId)
+	recipe, err := r.DB.GetRecipe(ctx, id)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
 			return nil, errors.New("recipe not found")
 		}
-		return nil, err
+		return nil, fmt.Errorf("failed to get recipe: %w", err)
+	}
+
+	// Check if recipe is already saved
+	for _, savedRecipe := range currentUser.SavedRecipes {
+		if savedRecipe.ID == recipe.ID {
+			return currentUser, nil // Recipe already saved
+		}
+	}
+
+	// Add recipe to saved recipes
+	currentUser.SavedRecipes = append(currentUser.SavedRecipes, *recipe)
+	currentUser.UpdatedAt = time.Now()
+
+	// Save to database
+	err = r.DB.UpdateUser(ctx, currentUser)
+	if err != nil {
+		return nil, fmt.Errorf("failed to update user: %w", err)
+	}
+
+	return currentUser, nil
+}
+
+// UnsaveRecipe removes a recipe from the user's saved recipes list.
+func (r *Resolver) unsaveRecipe(ctx context.Context, id string) (*domainmodel.User, error) {
+	// Get current user from context
+	currentUser := auth.GetUserFromContext(ctx)
+	if currentUser == nil {
+		return nil, errors.New("not authenticated")
+	}
+
+	// Find and remove recipe from saved recipes
+	savedRecipes := make([]domainmodel.Recipe, 0, len(currentUser.SavedRecipes))
+	recipeFound := false
+
+	for _, savedRecipe := range currentUser.SavedRecipes {
+		if savedRecipe.ID != id {
+			savedRecipes = append(savedRecipes, savedRecipe)
+		} else {
+			recipeFound = true
+		}
+	}
+
+	if !recipeFound {
+		return nil, errors.New("recipe not found in saved recipes")
+	}
+
+	currentUser.SavedRecipes = savedRecipes
+	currentUser.UpdatedAt = time.Now()
+
+	// Save to database
+	err := r.DB.UpdateUser(ctx, currentUser)
+	if err != nil {
+		return nil, fmt.Errorf("failed to update user: %w", err)
+	}
+
+	return currentUser, nil
+}
+
+// AddReview adds a review to a recipe.
+func (r *Resolver) addReview(ctx context.Context, recipeID string, rating int, comment *string) (*domainmodel.Review, error) {
+	// Get current user from context
+	currentUser := auth.GetUserFromContext(ctx)
+	if currentUser == nil {
+		return nil, errors.New("not authenticated")
+	}
+
+	// Get recipe
+	recipe, err := r.DB.GetRecipe(ctx, recipeID)
+	if err != nil {
+		if errors.Is(err, database.ErrNotFound) {
+			return nil, errors.New("recipe not found")
+		}
+		return nil, fmt.Errorf("failed to get recipe: %w", err)
 	}
 
 	// Create review
-	review := &domainModels.Review{
-		ID:        domainModels.NewID(),
+	review := &domainmodel.Review{
+		ID:        domainmodel.NewID(),
 		Recipe:    recipe,
 		Author:    currentUser,
 		Rating:    rating,
@@ -451,17 +518,196 @@ func (r *Resolver) AddReview(ctx context.Context, recipeId string, rating int, c
 	// Save to database
 	err = r.DB.CreateReview(ctx, review)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to create review: %w", err)
 	}
 
 	// Update recipe's average rating
-	r.updateRecipeRating(ctx, recipe)
+	if err := r.RecipeResolver.updateRecipeRating(ctx, recipe); err != nil {
+		return nil, fmt.Errorf("updating recipe rating: %w", err)
+	}
 
 	return review, nil
 }
 
-// updateRecipeRating calculates and updates a recipe's average rating
-func (r *RecipeResolver) updateRecipeRating(ctx context.Context, recipe *domainModels.Recipe) error {
+// UpdateReview updates an existing review.
+func (r *Resolver) updateReview(ctx context.Context, id string, rating *int, comment *string) (*domainmodel.Review, error) {
+	// Get current user from context
+	currentUser := auth.GetUserFromContext(ctx)
+	if currentUser == nil {
+		return nil, errors.New("not authenticated")
+	}
+
+	// Get review
+	review, err := r.DB.GetReview(ctx, id)
+	if err != nil {
+		if errors.Is(err, database.ErrNotFound) {
+			return nil, errors.New("review not found")
+		}
+		return nil, fmt.Errorf("failed to get review: %w", err)
+	}
+
+	// Check if user has permission to update (author or admin)
+	if review.Author != nil && review.Author.ID != currentUser.ID && currentUser.Role != domainmodel.AdminRole {
+		return nil, errors.New("permission denied")
+	}
+
+	// Update review fields
+	if rating != nil {
+		review.Rating = *rating
+	}
+	if comment != nil {
+		review.Comment = *comment
+	}
+	review.UpdatedAt = time.Now()
+
+	// Save to database
+	err = r.DB.UpdateReview(ctx, review)
+	if err != nil {
+		return nil, fmt.Errorf("failed to update review: %w", err)
+	}
+
+	// Update recipe's average rating
+	if err := r.RecipeResolver.updateRecipeRating(ctx, review.Recipe); err != nil {
+		return nil, fmt.Errorf("updating recipe rating: %w", err)
+	}
+
+	return review, nil
+}
+
+// DeleteReview deletes a review.
+func (r *Resolver) deleteReview(ctx context.Context, id string) (bool, error) {
+	// Get current user from context
+	currentUser := auth.GetUserFromContext(ctx)
+	if currentUser == nil {
+		return false, errors.New("not authenticated")
+	}
+
+	// Get review to check ownership
+	review, err := r.DB.GetReview(ctx, id)
+	if err != nil {
+		if errors.Is(err, database.ErrNotFound) {
+			return false, errors.New("review not found")
+		}
+		return false, fmt.Errorf("failed to get review: %w", err)
+	}
+
+	// Check if user has permission to delete (author or admin)
+	if review.Author != nil && review.Author.ID != currentUser.ID && currentUser.Role != domainmodel.AdminRole {
+		return false, errors.New("permission denied")
+	}
+
+	// Delete from database
+	err = r.DB.DeleteReview(ctx, id)
+	if err != nil {
+		return false, fmt.Errorf("failed to delete review: %w", err)
+	}
+
+	// Update recipe's average rating
+	if err := r.RecipeResolver.updateRecipeRating(ctx, review.Recipe); err != nil {
+		return false, fmt.Errorf("updating recipe rating: %w", err)
+	}
+
+	return true, nil
+}
+
+// updateRecipeRating calculates and updates a recipe's average rating.
+func (r *RecipeResolver) updateRecipeRating(ctx context.Context, recipe *domainmodel.Recipe) error {
 	// Implementation would recalculate the average rating based on all reviews
 	return nil
+}
+
+// CreateCategory creates a new category.
+func (r *Resolver) createCategory(ctx context.Context, name string, description *string) (*domainmodel.Category, error) {
+	// Get current user from context
+	currentUser := auth.GetUserFromContext(ctx)
+	if currentUser == nil {
+		return nil, errors.New("not authenticated")
+	}
+
+	// Check if user is admin
+	if currentUser.Role != domainmodel.AdminRole {
+		return nil, errors.New("permission denied")
+	}
+
+	// Create category
+	category := &domainmodel.Category{
+		ID:        domainmodel.NewID(),
+		Name:      name,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	}
+
+	if description != nil {
+		category.Description = *description
+	}
+
+	// Save to database
+	err := r.DB.CreateCategory(ctx, category)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create category: %w", err)
+	}
+
+	return category, nil
+}
+
+// UpdateCategory updates an existing category.
+func (r *Resolver) updateCategory(ctx context.Context, id string, name *string, description *string) (*domainmodel.Category, error) {
+	// Get current user from context
+	currentUser := auth.GetUserFromContext(ctx)
+	if currentUser == nil {
+		return nil, errors.New("not authenticated")
+	}
+
+	// Check if user is admin
+	if currentUser.Role != domainmodel.AdminRole {
+		return nil, errors.New("permission denied")
+	}
+
+	// Get category
+	category, err := r.DB.GetCategory(ctx, id)
+	if err != nil {
+		if errors.Is(err, database.ErrNotFound) {
+			return nil, errors.New("category not found")
+		}
+		return nil, fmt.Errorf("failed to get category: %w", err)
+	}
+
+	// Update category fields
+	if name != nil {
+		category.Name = *name
+	}
+	if description != nil {
+		category.Description = *description
+	}
+	category.UpdatedAt = time.Now()
+
+	// Save to database
+	err = r.DB.UpdateCategory(ctx, category)
+	if err != nil {
+		return nil, fmt.Errorf("failed to update category: %w", err)
+	}
+
+	return category, nil
+}
+
+// DeleteCategory deletes a category.
+func (r *Resolver) deleteCategory(ctx context.Context, id string) (bool, error) {
+	// Get current user from context
+	currentUser := auth.GetUserFromContext(ctx)
+	if currentUser == nil {
+		return false, errors.New("not authenticated")
+	}
+
+	// Check if user is admin
+	if currentUser.Role != domainmodel.AdminRole {
+		return false, errors.New("permission denied")
+	}
+
+	// Delete from database
+	err := r.DB.DeleteCategory(ctx, id)
+	if err != nil {
+		return false, fmt.Errorf("failed to delete category: %w", err)
+	}
+
+	return true, nil
 }

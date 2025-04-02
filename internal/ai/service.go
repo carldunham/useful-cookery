@@ -9,47 +9,49 @@ import (
 	"strings"
 	"time"
 
+	"github.com/openai/openai-go"
+	"github.com/openai/openai-go/option"
+
 	"github.com/carldunham/useful-cookery/internal/model"
-	"github.com/sashabaranov/go-openai"
 )
 
-// AIService provides AI capabilities for the application
+// AIService provides AI capabilities for the application.
 type AIService struct {
-	openAIClient *openai.Client
+	openAIClient openai.Client
 	config       *Config
 	cache        Cache
 }
 
-// Config holds configuration for the AI service
+// Config holds configuration for the AI service.
 type Config struct {
 	OpenAIAPIKey     string
-	EmbeddingModel   string
+	EmbeddingModel   openai.EmbeddingModel
 	CompletionModel  string
 	CacheEnabled     bool
 	CacheTTL         time.Duration
 	MaxRequestTokens int
 }
 
-// Cache interface for storing AI results
+// Cache interface for storing AI results.
 type Cache interface {
 	Get(ctx context.Context, key string) ([]byte, error)
 	Set(ctx context.Context, key string, value []byte, ttl time.Duration) error
 }
 
-// NewAIService creates a new AI service
+// NewAIService creates a new AI service.
 func NewAIService(config *Config, cache Cache) (*AIService, error) {
 	if config.OpenAIAPIKey == "" {
 		return nil, errors.New("OpenAI API key is required")
 	}
 
-	openAIClient := openai.NewClient(config.OpenAIAPIKey)
+	openAIClient := openai.NewClient(option.WithAPIKey(config.OpenAIAPIKey))
 
 	if config.EmbeddingModel == "" {
-		config.EmbeddingModel = openai.AdaEmbeddingV2
+		config.EmbeddingModel = openai.EmbeddingModelTextEmbeddingAda002
 	}
 
 	if config.CompletionModel == "" {
-		config.CompletionModel = openai.GPT3Dot5Turbo
+		config.CompletionModel = openai.ChatModelGPT3_5Turbo
 	}
 
 	if config.MaxRequestTokens == 0 {
@@ -63,7 +65,7 @@ func NewAIService(config *Config, cache Cache) (*AIService, error) {
 	}, nil
 }
 
-// GenerateEmbedding creates vector embeddings for text using OpenAI
+// GenerateEmbedding creates vector embeddings for text using OpenAI.
 func (s *AIService) GenerateEmbedding(ctx context.Context, text string) ([]float32, error) {
 	if s.cache != nil && s.config.CacheEnabled {
 		// Check cache first
@@ -77,12 +79,18 @@ func (s *AIService) GenerateEmbedding(ctx context.Context, text string) ([]float
 		}
 	}
 
-	req := openai.EmbeddingRequest{
-		Input: []string{text},
+	// Create input union with a string
+	inputUnion := openai.EmbeddingNewParamsInputUnion{}
+	inputUnion.OfString = openai.String(text)
+
+	// Create embedding params
+	params := openai.EmbeddingNewParams{
 		Model: s.config.EmbeddingModel,
+		Input: inputUnion,
 	}
 
-	resp, err := s.openAIClient.CreateEmbeddings(ctx, req)
+	// Create embedding
+	resp, err := s.openAIClient.Embeddings.New(ctx, params)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate embedding: %w", err)
 	}
@@ -91,35 +99,40 @@ func (s *AIService) GenerateEmbedding(ctx context.Context, text string) ([]float
 		return nil, errors.New("no embeddings returned from API")
 	}
 
-	embedding := resp.Data[0].Embedding
+	// Convert embedding from []float64 to []float32
+	embedding64 := resp.Data[0].Embedding
+	embedding32 := make([]float32, len(embedding64))
+	for i, v := range embedding64 {
+		embedding32[i] = float32(v)
+	}
 
 	// Cache the result
 	if s.cache != nil && s.config.CacheEnabled {
 		cacheKey := fmt.Sprintf("embedding:%s", text)
-		if cached, err := json.Marshal(embedding); err == nil {
+		if cached, err := json.Marshal(embedding32); err == nil {
 			if err := s.cache.Set(ctx, cacheKey, cached, s.config.CacheTTL); err != nil {
 				log.Printf("Failed to cache embedding: %v", err)
 			}
 		}
 	}
 
-	return embedding, nil
+	return embedding32, nil
 }
 
-// SearchRecipes performs semantic search on recipes
+// SearchRecipes performs semantic search on recipes.
 func (s *AIService) SearchRecipes(ctx context.Context, query string, limit int) ([]model.Recipe, error) {
 	// Generate embedding for the query
-	queryEmbedding, err := s.GenerateEmbedding(ctx, query)
-	if err != nil {
-		return nil, fmt.Errorf("failed to generate query embedding: %w", err)
-	}
+	// queryEmbedding, err := s.GenerateEmbedding(ctx, query)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failed to generate query embedding: %w", err)
+	// }
 
 	// In a real implementation, this would send the embedding to DGraph
 	// to perform vector search. For now, return a placeholder.
 	return []model.Recipe{}, errors.New("not implemented")
 }
 
-// RecommendRecipes recommends recipes based on user preferences and ingredients
+// RecommendRecipes recommends recipes based on user preferences and ingredients.
 func (s *AIService) RecommendRecipes(
 	ctx context.Context,
 	userID string,
@@ -131,7 +144,7 @@ func (s *AIService) RecommendRecipes(
 	return []model.Recipe{}, errors.New("not implemented")
 }
 
-// GenerateSubstitutes generates ingredient substitutes
+// GenerateSubstitutes generates ingredient substitutes.
 func (s *AIService) GenerateSubstitutes(ctx context.Context, ingredient string) ([]string, error) {
 	prompt := fmt.Sprintf(
 		"Suggest 3 substitutes for %s in cooking recipes. Format as a comma-separated list with no explanations.",
@@ -150,23 +163,22 @@ func (s *AIService) GenerateSubstitutes(ctx context.Context, ingredient string) 
 		}
 	}
 
-	req := openai.ChatCompletionRequest{
-		Model: s.config.CompletionModel,
-		Messages: []openai.ChatCompletionMessage{
-			{
-				Role:    openai.ChatMessageRoleSystem,
-				Content: "You are a helpful cooking assistant that suggests ingredient substitutes.",
-			},
-			{
-				Role:    openai.ChatMessageRoleUser,
-				Content: prompt,
-			},
-		},
-		Temperature: 0.3,
-		MaxTokens:   100,
+	// Create messages
+	messages := []openai.ChatCompletionMessageParamUnion{
+		openai.SystemMessage("You are a helpful cooking assistant that suggests ingredient substitutes."),
+		openai.UserMessage(prompt),
 	}
 
-	resp, err := s.openAIClient.CreateChatCompletion(ctx, req)
+	// Create chat completion params
+	params := openai.ChatCompletionNewParams{
+		Model:       s.config.CompletionModel,
+		Messages:    messages,
+		Temperature: openai.Float(0.3),
+		MaxTokens:   openai.Int(100),
+	}
+
+	// Create chat completion
+	resp, err := s.openAIClient.Chat.Completions.New(ctx, params)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate substitutes: %w", err)
 	}
@@ -199,7 +211,7 @@ func (s *AIService) GenerateSubstitutes(ctx context.Context, ingredient string) 
 }
 
 // ProcessNaturalLanguageQuery processes a natural language query and translates it
-// into structured search parameters
+// into structured search parameters.
 func (s *AIService) ProcessNaturalLanguageQuery(ctx context.Context, query string) (*model.SearchParams, error) {
 	prompt := fmt.Sprintf(`
 Analyze this recipe search query: "%s"
@@ -228,23 +240,22 @@ Extract the following parameters in JSON format:
 		}
 	}
 
-	req := openai.ChatCompletionRequest{
-		Model: s.config.CompletionModel,
-		Messages: []openai.ChatCompletionMessage{
-			{
-				Role:    openai.ChatMessageRoleSystem,
-				Content: "You are a helpful assistant that analyzes recipe search queries and extracts structured parameters.",
-			},
-			{
-				Role:    openai.ChatMessageRoleUser,
-				Content: prompt,
-			},
-		},
-		Temperature: 0.2,
-		MaxTokens:   500,
+	// Create messages
+	messages := []openai.ChatCompletionMessageParamUnion{
+		openai.SystemMessage("You are a helpful assistant that analyzes recipe search queries and extracts structured parameters."),
+		openai.UserMessage(prompt),
 	}
 
-	resp, err := s.openAIClient.CreateChatCompletion(ctx, req)
+	// Create chat completion params
+	params := openai.ChatCompletionNewParams{
+		Model:       s.config.CompletionModel,
+		Messages:    messages,
+		Temperature: openai.Float(0.2),
+		MaxTokens:   openai.Int(500),
+	}
+
+	// Create chat completion
+	resp, err := s.openAIClient.Chat.Completions.New(ctx, params)
 	if err != nil {
 		return nil, fmt.Errorf("failed to process query: %w", err)
 	}
@@ -261,25 +272,25 @@ Extract the following parameters in JSON format:
 	}
 
 	// Parse JSON
-	var params model.SearchParams
-	if err := json.Unmarshal([]byte(jsonStr), &params); err != nil {
+	var searchParams model.SearchParams
+	if err := json.Unmarshal([]byte(jsonStr), &searchParams); err != nil {
 		return nil, fmt.Errorf("failed to parse response JSON: %w", err)
 	}
 
 	// Cache the result
 	if s.cache != nil && s.config.CacheEnabled {
 		cacheKey := fmt.Sprintf("nlquery:%s", query)
-		if cached, err := json.Marshal(params); err == nil {
+		if cached, err := json.Marshal(searchParams); err == nil {
 			if err := s.cache.Set(ctx, cacheKey, cached, s.config.CacheTTL); err != nil {
 				log.Printf("Failed to cache query params: %v", err)
 			}
 		}
 	}
 
-	return &params, nil
+	return &searchParams, nil
 }
 
-// extractJSON extracts JSON from a string
+// extractJSON extracts JSON from a string.
 func extractJSON(input string) string {
 	startIdx := strings.Index(input, "{")
 	endIdx := strings.LastIndex(input, "}")

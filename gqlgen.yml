@@ -1,16 +1,16 @@
 # Where are all the schema files located? globs are supported eg  src/**/*.graphqls
 schema:
-  - schema/graphql/*.graphql
+  - schema/graphql/*.graphqls
 
 # Where should the generated server code go?
 exec:
-  filename: internal/graphql/generated.go
-  package: graphql
+  filename: internal/generated/exec.go
+  package: generated
 
 # Where should any generated models go?
 model:
-  filename: internal/graphql/models/models_gen.go
-  package: models
+  filename: internal/graphql/model/models_gen.go
+  package: model
 
 # Where should the resolver implementations go?
 resolver:
@@ -23,17 +23,22 @@ resolver:
 # struct_tag: json
 
 # Optional: turn on to use []Thing instead of []*Thing
-# omit_slice_element_pointers: false
+omit_slice_element_pointers: false
 
 # Optional: turn off to make struct-type struct fields not use pointers
 # e.g. type Thing struct { FieldA OtherThing } instead of { FieldA *OtherThing }
-# struct_fields_always_pointers: true
+struct_fields_always_pointers: true
 
 # Optional: turn off to make resolvers return values instead of pointers for structs
-# resolvers_always_return_pointers: true
+resolvers_always_return_pointers: true
 
 # Optional: set to speed up generation time by not performing a final validation pass.
 # skip_validation: true
+
+go_initialisms:
+  replace_defaults: false
+  initialisms:
+    - ID
 
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
@@ -60,56 +65,3 @@ models:
   DateTime:
     model:
       - github.com/99designs/gqlgen/graphql.Time
-
-  # Map GraphQL types to Go models
-  User:
-    model: github.com/carldunham/useful-cookery/internal/model.User
-    fields:
-      savedRecipes:
-        resolver: true
-      createdRecipes:
-        resolver: true
-      reviews:
-        resolver: true
-
-  Recipe:
-    model: github.com/carldunham/useful-cookery/internal/model.Recipe
-    fields:
-      author:
-        resolver: true
-      categories:
-        resolver: true
-      reviews:
-        resolver: true
-      savedBy:
-        resolver: true
-
-  Category:
-    model: github.com/carldunham/useful-cookery/internal/model.Category
-    fields:
-      recipes:
-        resolver: true
-
-  Review:
-    model: github.com/carldunham/useful-cookery/internal/model.Review
-    fields:
-      recipe:
-        resolver: true
-      author:
-        resolver: true
-
-  # Custom input types
-  RegisterInput:
-    model: github.com/carldunham/useful-cookery/internal/graphql/models.RegisterInput
-
-  LoginInput:
-    model: github.com/carldunham/useful-cookery/internal/graphql/models.LoginInput
-
-  UpdateUserInput:
-    model: github.com/carldunham/useful-cookery/internal/graphql/models.UpdateUserInput
-
-  RecipeInput:
-    model: github.com/carldunham/useful-cookery/internal/graphql/models.RecipeInput
-
-  RecipeFilter:
-    model: github.com/carldunham/useful-cookery/internal/graphql/models.RecipeFilter

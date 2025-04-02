@@ -1,0 +1,49 @@
+# Go binaries and build artifacts
+*.exe
+*.o
+*.a
+*.test
+out/
+bin/
+
+# React build output
+/build
+/dist
+
+# Node modules
+/node_modules
+
+# Logs and temp files
+*.log
+*.tmp
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+__debug_bin*
+
+# Environment files
+.env
+.env.*
+*.local
+
+# IDE and OS files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Coverage reports
+coverage/
+
+# Dependency lock files
+package-lock.json
+yarn.lock
+
+# Optional: Go specific - if you have a 'deploy' folder for binaries
+/deploy
+
+# Project specific
+useful-cookery-api
+useful-cookery-cli
