@@ -77,7 +77,10 @@ useful-cookery/
 - Logging with slog
 - Configuration with viper
 - Command-line support with cobra
-- Follow coding standards at https://google.github.io/styleguide/go/guide
+- Follow [Google coding standards](https://google.github.io/styleguide/go/guide)
+- Implement unit tests for each file, and keep them up to date
+- Use table-driven tests when possible
+- Put unit tests into _test packages, and only test exported types and functions
 
 ### Frontend (React)
 
