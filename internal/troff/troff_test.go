@@ -45,6 +45,9 @@ Test Organization, Test City`
 	assert.Contains(t, recipe.Description, "A simple test recipe", "Description should contain RZ description")
 	assert.Contains(t, recipe.Description, "This is a test recipe description", "Description should contain introductory text")
 
+	// Check notes
+	assert.Equal(t, "Some notes about the recipe.", recipe.Notes, "Notes should be stored in the Notes field")
+
 	// Check categories - D is for Dessert
 	assert.Len(t, recipe.Categories, 1, "Should have 1 category")
 	assert.Equal(t, "Dessert", recipe.Categories[0].Name, "Category should be 'Dessert'")
@@ -111,6 +114,9 @@ Test University, Amsterdam`
 	assert.Contains(t, recipe.Description, "Dutch egg cognac", "Description should contain RZ description")
 	assert.Contains(t, recipe.Description, "Advokaat is the Dutch word", "Description should contain introductory text")
 
+	// Check notes
+	assert.Equal(t, "This recipe is from the Netherlands.", recipe.Notes, "Notes should be stored in the Notes field")
+
 	// Check categories - L is for Beverage (Liquid)
 	assert.Len(t, recipe.Categories, 1, "Should have 1 category")
 	assert.Equal(t, "Beverage", recipe.Categories[0].Name, "Category should be 'Beverage'")
@@ -163,4 +169,40 @@ func TestParse_InvalidInput(t *testing.T) {
 	_, err = Parse(strings.NewReader(input))
 	// This should not error, but should handle the unclosed quote gracefully
 	assert.NoError(t, err, "Parse() should handle unclosed quote gracefully")
+}
+
+// TestParse_TokenParamHandling specifically tests the fix for the bug where
+// TokenParams were being incorrectly accumulated to the description for .RZ and .NX commands
+func TestParse_TokenParamHandling(t *testing.T) {
+	input := `.RH MOD.RECIPES-SOURCE RECIPE-ID D "22 Dec 83"
+.RZ "TEST RECIPE" "A simple test recipe"
+This is introduction text.
+.IH "4 servings"
+.IG "1 cup" "sugar"
+.PH
+.SK 1
+First step.
+.NX
+These are notes.
+.WR
+Author Name`
+
+	recipe, err := Parse(strings.NewReader(input))
+	require.NoError(t, err, "Parse() should not return an error")
+
+	// Check that the description contains only what it should
+	assert.Equal(t, "A simple test recipe\n\nThis is introduction text.", recipe.Description,
+		"Description should only contain the RZ description and introduction text")
+
+	// Check that notes are stored in the Notes field
+	assert.Equal(t, "These are notes.", recipe.Notes,
+		"Notes should be stored in the Notes field")
+
+	// Verify that the description doesn't contain any command parameters that should have been skipped
+	assert.NotContains(t, recipe.Description, "TEST RECIPE",
+		"Description should not contain the title parameter from RZ command")
+	assert.NotContains(t, recipe.Description, "4 servings",
+		"Description should not contain the yield parameter from IH command")
+	assert.NotContains(t, recipe.Description, "Author Name",
+		"Description should not contain the author information from WR command")
 }

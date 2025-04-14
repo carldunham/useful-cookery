@@ -53,6 +53,7 @@ type Recipe struct {
 	ID            string               `dgraph:"uid"           json:"uid"`
 	Title         string               `dgraph:"title"         json:"title"`
 	Description   string               `dgraph:"description"   json:"description,omitempty"`
+	Notes         string               `dgraph:"notes"         json:"notes,omitempty"`
 	Author        *User                `dgraph:"author"        json:"author,omitempty"`
 	Categories    []Category           `dgraph:"categories"    json:"categories,omitempty"`
 	Cuisine       string               `dgraph:"cuisine"       json:"cuisine,omitempty"`

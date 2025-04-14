@@ -81,8 +81,10 @@ func processTokens(tokens []Token, recipe *model.Recipe) error {
 	var notesText string
 	var stepIndex int
 
-	// Process each token
-	for i, token := range tokens {
+	// Process each token using a traditional for loop so we can control the index
+	for i := 0; i < len(tokens); i++ {
+		token := tokens[i]
+
 		switch {
 		case token.Type == TokenCommand:
 			cmd := token.Value
@@ -90,7 +92,7 @@ func processTokens(tokens []Token, recipe *model.Recipe) error {
 			// Handle different commands
 			switch cmd {
 			case "RH": // Recipe Header - must be first line with 4 arguments
-				if i+3 < len(tokens) &&
+				if i+4 < len(tokens) &&
 					tokens[i+1].Type == TokenParam &&
 					tokens[i+2].Type == TokenParam &&
 					tokens[i+3].Type == TokenParam &&
@@ -232,10 +234,7 @@ func processTokens(tokens []Token, recipe *model.Recipe) error {
 			case "WR": // Wrapup
 				inNotes = false
 				if len(notesText) > 0 {
-					if recipe.Description != "" {
-						recipe.Description += "\n\n"
-					}
-					recipe.Description += "NOTES: " + notesText
+					recipe.Notes = notesText
 				}
 
 				// Process author information from text following WR
