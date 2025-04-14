@@ -34,8 +34,8 @@ Test Organization, Test City`
 	recipe, err := troff.Parse(strings.NewReader(input))
 	require.NoError(t, err, "Parse() should not return an error")
 
-	// Check ID
-	assert.Equal(t, "RECIPE-ID", recipe.ID, "Recipe ID should match")
+	// Check OriginalID
+	assert.Equal(t, "RECIPE-ID", recipe.OriginalID, "Recipe OriginalID should match")
 
 	// Check title
 	assert.Equal(t, "TEST RECIPE", recipe.Title, "Recipe title should match")
@@ -106,8 +106,8 @@ Test University, Amsterdam`
 	recipe, err := troff.Parse(strings.NewReader(input))
 	require.NoError(t, err, "Parse() should not return an error")
 
-	// Check ID
-	assert.Equal(t, "ADVOKAAT", recipe.ID, "Recipe ID should match")
+	// Check OriginalID
+	assert.Equal(t, "ADVOKAAT", recipe.OriginalID, "Recipe OriginalID should match")
 
 	// Check title
 	assert.Equal(t, "ADVOKAAT", recipe.Title, "Recipe title should match")

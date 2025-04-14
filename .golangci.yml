@@ -16,6 +16,9 @@ linters:
       - path: cmd/cli
         linters:
           - forbidigo
+      - path: cmd/migration
+        linters:
+          - forbidigo
 
 linters-settings:
   goimports:

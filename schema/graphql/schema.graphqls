@@ -14,6 +14,7 @@ enum SkillLevel {
 type Query {
   # Recipe queries
   recipe(id: ID!): Recipe
+  recipeByOriginalId(originalId: String!): Recipe
   recipes(filter: RecipeFilter, order: RecipeOrder, first: Int, offset: Int): [Recipe!]!
 
   # User queries
@@ -90,6 +91,7 @@ input UserPreferencesInput {
 # Recipe filtering and ordering
 input RecipeFilter {
   search: String
+  originalId: String
   categories: [ID!]
   cuisine: String
   difficulty: SkillLevel
@@ -119,6 +121,7 @@ enum OrderDirection {
 input RecipeInput {
   title: String!
   description: String!
+  originalId: String
   categoryIDs: [ID!]
   cuisine: String
   prepTime: Int
@@ -196,6 +199,7 @@ type Category {
 
 type Recipe {
   id: ID!
+  originalId: String
   title: String!
   description: String
   author: User

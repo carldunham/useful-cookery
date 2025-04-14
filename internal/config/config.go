@@ -17,7 +17,7 @@ const (
 	DefaultReadTimeoutSeconds  = 30
 	DefaultWriteTimeoutSeconds = 30
 	DefaultIdleTimeoutSeconds  = 60
-	DefaultCacheTTLMinutes     = 1440 // 24 hours
+	DefaultCacheTTLMinutes     = 1440 // 24 hours.
 	DefaultMaxTokens           = 4000
 )
 

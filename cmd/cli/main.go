@@ -316,6 +316,7 @@ func listRecipes(ctx context.Context, dbClient *database.DGraphClient) error {
 	{
 		recipes(func: has(title)) {
 			uid
+			originalId
 			title
 			description
 			createdAt
@@ -339,7 +340,7 @@ func listRecipes(ctx context.Context, dbClient *database.DGraphClient) error {
 
 	fmt.Println("Recipes:")
 	for _, recipe := range result.Recipes {
-		fmt.Printf("- ID: %s, Title: %s\n", recipe.ID, recipe.Title)
+		fmt.Printf("- ID: %s, Original ID: %s, Title: %s\n", recipe.ID, recipe.OriginalID, recipe.Title)
 		if recipe.Description != "" {
 			fmt.Printf("  Description: %s\n", recipe.Description)
 		}

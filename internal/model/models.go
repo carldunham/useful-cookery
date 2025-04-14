@@ -51,6 +51,7 @@ type Category struct {
 // Recipe represents a recipe.
 type Recipe struct {
 	ID            string               `dgraph:"uid"           json:"uid"`
+	OriginalID    string               `dgraph:"originalID"    json:"originalID,omitempty"`
 	Title         string               `dgraph:"title"         json:"title"`
 	Description   string               `dgraph:"description"   json:"description,omitempty"`
 	Notes         string               `dgraph:"notes"         json:"notes,omitempty"`

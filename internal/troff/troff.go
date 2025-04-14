@@ -11,30 +11,6 @@ import (
 	"github.com/carldunham/useful-cookery/internal/model"
 )
 
-// Parser is the interface for parsing recipe files.
-type Parser interface {
-	Parse(r io.Reader) (model.Recipe, error)
-	ParseFile(filename string) (model.Recipe, error)
-}
-
-// RecipeParser implements the Parser interface for TROFF formatted recipe files.
-type RecipeParser struct{}
-
-// NewRecipeParser creates a new TROFF parser.
-func NewRecipeParser() *RecipeParser {
-	return &RecipeParser{}
-}
-
-// Parse converts a TROFF formatted recipe into a Recipe struct.
-func (p *RecipeParser) Parse(reader io.Reader) (model.Recipe, error) {
-	return Parse(reader)
-}
-
-// ParseFile parses a TROFF file and returns a Recipe.
-func (p *RecipeParser) ParseFile(filename string) (model.Recipe, error) {
-	return ParseFile(filename)
-}
-
 // ErrNilReader is returned when a nil reader is provided.
 var ErrNilReader = errors.New("nil reader provided")
 
@@ -101,7 +77,7 @@ func processTokens(tokens []Token, recipe *model.Recipe) {
 					tokens[tokenIndex+4].Type == TokenParam {
 					// First param is source, second is recipe ID, third is category code, fourth is date
 					// We'll store the recipe ID and category
-					recipe.ID = tokens[tokenIndex+2].Value
+					recipe.OriginalID = tokens[tokenIndex+2].Value
 
 					// Parse category code
 					categoryCode := tokens[tokenIndex+3].Value
@@ -186,9 +162,13 @@ func processTokens(tokens []Token, recipe *model.Recipe) {
 						unitValue += " (metric: " + metricQty + ")"
 					}
 
+					// Convert TROFF codes in the name and unit
+					processedName := ProcessText(name)
+					processedUnit := ProcessText(unitValue)
+
 					ingredient := model.DetailedIngredient{
-						Name: name,
-						Unit: unitValue,
+						Name: processedName,
+						Unit: processedUnit,
 					}
 
 					currentIngredientSet = append(currentIngredientSet, ingredient)
@@ -225,9 +205,12 @@ func processTokens(tokens []Token, recipe *model.Recipe) {
 						orderIndex = stepIndex
 					}
 
+					// Convert TROFF codes in the step description
+					processedDescription := ProcessText(stepDescription)
+
 					step := model.Step{
 						OrderIndex:  orderIndex,
-						Description: stepDescription,
+						Description: processedDescription,
 					}
 					currentSteps = append(currentSteps, step)
 					stepIndex++
@@ -268,12 +251,14 @@ func processTokens(tokens []Token, recipe *model.Recipe) {
 				if introductionText != "" {
 					introductionText += " "
 				}
-				introductionText += token.Value
+				// Convert TROFF codes in the introduction text
+				introductionText += ConvertCodes(token.Value)
 			} else if inNotes {
 				if notesText != "" {
 					notesText += " "
 				}
-				notesText += token.Value
+				// Convert TROFF codes in the notes text
+				notesText += ConvertCodes(token.Value)
 			}
 		}
 	}

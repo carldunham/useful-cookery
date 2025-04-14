@@ -1,6 +1,4 @@
-type User @auth(
-  query: { rule: "{$ROLE: { eq: \"ADMIN\" } } or { id: { eq: $USER_ID } }" }
-) {
+type User @auth(query: { rule: "{$ROLE: { eq: \"ADMIN\" } } or { id: { eq: $USER_ID } }" }) {
   id: ID!
   name: String! @search(by: [term])
   email: String! @search(by: [exact]) @id
@@ -42,6 +40,7 @@ type Category {
 
 type Recipe {
   id: ID!
+  originalId: String @search(by: [exact])
   title: String! @search(by: [term, fulltext])
   description: String @search(by: [fulltext])
   author: User @hasInverse(field: createdRecipes)
