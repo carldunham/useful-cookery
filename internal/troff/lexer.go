@@ -3,6 +3,7 @@ package troff
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"io"
 	"strings"
 	"unicode"
@@ -60,7 +61,9 @@ func (l *Lexer) Tokenize() ([]Token, error) {
 	return l.tokens, nil
 }
 
-// readNextToken reads the next token from input without using the tokens slice
+// readNextToken reads the next token from input without using the tokens slice.
+//
+//nolint:gocognit,nestif,cyclop,funlen // TODO: simplify.
 func (l *Lexer) readNextToken() (Token, error) {
 	for {
 		// If we're at the end of the current line or haven't read a line yet, read the next line
@@ -197,12 +200,12 @@ func (l *Lexer) readNextLine() error {
 
 	// If we hit EOF and there's no data, return EOF
 	if err == io.EOF && line == "" {
-		return err
+		return fmt.Errorf("failed to read line: %w", err)
 	}
 
 	// For other errors (except EOF with data), return the error
 	if err != nil && err != io.EOF {
-		return err
+		return fmt.Errorf("failed to read line: %w", err)
 	}
 
 	// Remove trailing newline
@@ -230,15 +233,16 @@ func (l *Lexer) readCommand() (Token, error) {
 	l.linePos++
 	l.column++
 
-	// Read the command (two alpha characters)
+	// TROFF commands are always two characters
+	const cmdLength = 2
 	start := l.linePos
-	for l.linePos < len(l.currentLine) && l.linePos-start < 2 && unicode.IsLetter(rune(l.currentLine[l.linePos])) {
+	for l.linePos < len(l.currentLine) && l.linePos-start < cmdLength && unicode.IsLetter(rune(l.currentLine[l.linePos])) {
 		l.linePos++
 		l.column++
 	}
 
 	// If we didn't read exactly two characters, it's not a valid command
-	if l.linePos-start != 2 {
+	if l.linePos-start != cmdLength {
 		return Token{Type: TokenUnknown, Value: l.currentLine[start-1 : l.linePos], Line: l.line, Column: start}, nil
 	}
 
@@ -259,7 +263,7 @@ func (l *Lexer) readParam() (Token, error) {
 	return l.readStandardParam()
 }
 
-// readQuotedParam reads a quoted parameter
+// readQuotedParam reads a quoted parameter.
 func (l *Lexer) readQuotedParam() (Token, error) {
 	start := l.linePos
 	quoteChar := rune(l.currentLine[l.linePos])
@@ -293,7 +297,9 @@ func (l *Lexer) readQuotedParam() (Token, error) {
 	return Token{Type: TokenParam, Value: param, Command: l.lastCommand, Line: l.line, Column: start}, nil
 }
 
-// readStandardParam reads a standard (non-quoted) parameter
+// readStandardParam reads a standard (non-quoted) parameter.
+//
+//nolint:cyclop // TODO: simplify.
 func (l *Lexer) readStandardParam() (Token, error) {
 	start := l.linePos
 	inQuote := false
@@ -311,20 +317,20 @@ func (l *Lexer) readStandardParam() (Token, error) {
 
 	// Read until whitespace or end of line, handling quotes
 	for l.linePos < len(l.currentLine) {
-		ch := rune(l.currentLine[l.linePos])
+		currentChar := rune(l.currentLine[l.linePos])
 
 		// Handle quotes
-		if (ch == '"' || ch == '\'') && (l.linePos == 0 || l.currentLine[l.linePos-1] != '\\') {
+		if (currentChar == '"' || currentChar == '\'') && (l.linePos == 0 || l.currentLine[l.linePos-1] != '\\') {
 			if !inQuote {
 				inQuote = true
-				quoteChar = ch
-			} else if ch == quoteChar {
+				quoteChar = currentChar
+			} else if currentChar == quoteChar {
 				inQuote = false
 			}
 		}
 
 		// Break on whitespace if not in quotes
-		if unicode.IsSpace(ch) && !inQuote {
+		if unicode.IsSpace(currentChar) && !inQuote {
 			break
 		}
 
@@ -332,11 +338,7 @@ func (l *Lexer) readStandardParam() (Token, error) {
 		l.column++
 	}
 
-	// If we're at the end of the line and still in a quote, the quote is unterminated
-	if inQuote && l.linePos >= len(l.currentLine) {
-		// For simplicity, we'll just treat it as a regular param
-		// In a more robust implementation, we might want to handle this differently
-	}
+	// If we're at the end of the line and still in a quote, we'll just treat it as a regular param
 
 	// If we didn't read anything, return a special value to signal readNextToken to try again
 	if l.linePos == start {
@@ -347,18 +349,10 @@ func (l *Lexer) readStandardParam() (Token, error) {
 	param := l.currentLine[start:l.linePos]
 
 	// Remove quotes if the parameter is quoted
-	if len(param) >= 2 && (param[0] == '"' && param[len(param)-1] == '"' || param[0] == '\'' && param[len(param)-1] == '\'') {
+	if len(param) >= 2 && ((param[0] == '"' && param[len(param)-1] == '"') ||
+		(param[0] == '\'' && param[len(param)-1] == '\'')) {
 		param = param[1 : len(param)-1]
 	}
 
 	return Token{Type: TokenParam, Value: param, Command: l.lastCommand, Line: l.line, Column: start}, nil
-}
-
-// skipWhitespacePos returns the position after skipping whitespace
-func (l *Lexer) skipWhitespacePos() int {
-	pos := 0
-	for pos < len(l.currentLine) && unicode.IsSpace(rune(l.currentLine[pos])) {
-		pos++
-	}
-	return pos
 }

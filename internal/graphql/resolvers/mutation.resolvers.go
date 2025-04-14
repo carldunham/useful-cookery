@@ -1,3 +1,4 @@
+//nolint:lll // Long function signatures are acceptable for GraphQL resolvers.
 package resolvers
 
 import (
@@ -59,11 +60,13 @@ func (r *Resolver) updateUser(ctx context.Context, input gqlmodel.UpdateUserInpu
 }
 
 // UpdateUser updates a user's information.
+//
+//nolint:cyclop,nestif // Complex function due to handling multiple user preference fields.
 func (r *UserResolver) updateUser(ctx context.Context, input gqlmodel.UpdateUserInput) (*domainmodel.User, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
-		return nil, errors.New("not authenticated")
+		return nil, ErrNotAuthenticated
 	}
 
 	// Update user fields
@@ -129,11 +132,13 @@ func (r *Resolver) createRecipe(ctx context.Context, input gqlmodel.RecipeInput)
 }
 
 // CreateRecipe creates a new recipe.
+//
+//nolint:cyclop,funlen // Complex function due to handling multiple recipe fields and relationships.
 func (r *RecipeResolver) createRecipe(ctx context.Context, input gqlmodel.RecipeInput) (*domainmodel.Recipe, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
-		return nil, errors.New("not authenticated")
+		return nil, ErrNotAuthenticated
 	}
 
 	// Create recipe
@@ -236,25 +241,27 @@ func (r *Resolver) updateRecipe(ctx context.Context, id string, input gqlmodel.R
 }
 
 // UpdateRecipe updates an existing recipe.
+//
+//nolint:gocognit,funlen,cyclop,varnamelen // Complex function due to multiple fields and validation.
 func (r *RecipeResolver) updateRecipe(ctx context.Context, id string, input gqlmodel.RecipeInput) (*domainmodel.Recipe, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
-		return nil, errors.New("not authenticated")
+		return nil, ErrNotAuthenticated
 	}
 
 	// Get existing recipe
 	recipe, err := r.DB.GetRecipe(ctx, id)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
-			return nil, errors.New("recipe not found")
+			return nil, ErrRecipeNotFound
 		}
 		return nil, fmt.Errorf("failed to get recipe: %w", err)
 	}
 
 	// Check if user has permission to update (author or admin)
 	if recipe.Author != nil && recipe.Author.ID != currentUser.ID && currentUser.Role != domainmodel.AdminRole {
-		return nil, errors.New("permission denied")
+		return nil, ErrPermissionDenied
 	}
 
 	// Update basic fields
@@ -351,29 +358,29 @@ func (r *Resolver) deleteRecipe(ctx context.Context, id string) (bool, error) {
 }
 
 // DeleteRecipe deletes a recipe.
-func (r *RecipeResolver) deleteRecipe(ctx context.Context, id string) (bool, error) {
+func (r *RecipeResolver) deleteRecipe(ctx context.Context, recipeID string) (bool, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
-		return false, errors.New("not authenticated")
+		return false, ErrNotAuthenticated
 	}
 
 	// Get recipe to check ownership
-	recipe, err := r.DB.GetRecipe(ctx, id)
+	recipe, err := r.DB.GetRecipe(ctx, recipeID)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
-			return false, errors.New("recipe not found")
+			return false, ErrRecipeNotFound
 		}
 		return false, fmt.Errorf("failed to get recipe: %w", err)
 	}
 
 	// Check if user has permission to delete (author or admin)
 	if recipe.Author != nil && recipe.Author.ID != currentUser.ID && currentUser.Role != domainmodel.AdminRole {
-		return false, errors.New("permission denied")
+		return false, ErrPermissionDenied
 	}
 
 	// Delete from database
-	err = r.DB.DeleteRecipe(ctx, id)
+	err = r.DB.DeleteRecipe(ctx, recipeID)
 	if err != nil {
 		return false, fmt.Errorf("failed to delete recipe: %w", err)
 	}
@@ -382,18 +389,20 @@ func (r *RecipeResolver) deleteRecipe(ctx context.Context, id string) (bool, err
 }
 
 // LikeRecipe adds a like to a recipe.
+//
+//nolint:varnamelen // Short parameter name 'id' is acceptable for recipe ID.
 func (r *Resolver) likeRecipe(ctx context.Context, id string) (*domainmodel.Recipe, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
-		return nil, errors.New("not authenticated")
+		return nil, ErrNotAuthenticated
 	}
 
 	// Get recipe
 	recipe, err := r.DB.GetRecipe(ctx, id)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
-			return nil, errors.New("recipe not found")
+			return nil, ErrRecipeNotFound
 		}
 		return nil, fmt.Errorf("failed to get recipe: %w", err)
 	}
@@ -412,18 +421,20 @@ func (r *Resolver) likeRecipe(ctx context.Context, id string) (*domainmodel.Reci
 }
 
 // SaveRecipe saves a recipe to the user's saved recipes list.
+//
+//nolint:varnamelen // Short parameter name 'id' is acceptable for recipe ID.
 func (r *Resolver) saveRecipe(ctx context.Context, id string) (*domainmodel.User, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
-		return nil, errors.New("not authenticated")
+		return nil, ErrNotAuthenticated
 	}
 
 	// Get recipe
 	recipe, err := r.DB.GetRecipe(ctx, id)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
-			return nil, errors.New("recipe not found")
+			return nil, ErrRecipeNotFound
 		}
 		return nil, fmt.Errorf("failed to get recipe: %w", err)
 	}
@@ -449,11 +460,13 @@ func (r *Resolver) saveRecipe(ctx context.Context, id string) (*domainmodel.User
 }
 
 // UnsaveRecipe removes a recipe from the user's saved recipes list.
+//
+//nolint:varnamelen // Short parameter name 'id' is acceptable for recipe ID.
 func (r *Resolver) unsaveRecipe(ctx context.Context, id string) (*domainmodel.User, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
-		return nil, errors.New("not authenticated")
+		return nil, ErrNotAuthenticated
 	}
 
 	// Find and remove recipe from saved recipes
@@ -469,7 +482,7 @@ func (r *Resolver) unsaveRecipe(ctx context.Context, id string) (*domainmodel.Us
 	}
 
 	if !recipeFound {
-		return nil, errors.New("recipe not found in saved recipes")
+		return nil, ErrRecipeNotFoundInSaved
 	}
 
 	currentUser.SavedRecipes = savedRecipes
@@ -489,14 +502,14 @@ func (r *Resolver) addReview(ctx context.Context, recipeID string, rating int, c
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
-		return nil, errors.New("not authenticated")
+		return nil, ErrNotAuthenticated
 	}
 
 	// Get recipe
 	recipe, err := r.DB.GetRecipe(ctx, recipeID)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
-			return nil, errors.New("recipe not found")
+			return nil, ErrRecipeNotFound
 		}
 		return nil, fmt.Errorf("failed to get recipe: %w", err)
 	}
@@ -530,25 +543,27 @@ func (r *Resolver) addReview(ctx context.Context, recipeID string, rating int, c
 }
 
 // UpdateReview updates an existing review.
+//
+//nolint:cyclop,varnamelen // Complex function due to permission checks and field updates.
 func (r *Resolver) updateReview(ctx context.Context, id string, rating *int, comment *string) (*domainmodel.Review, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
-		return nil, errors.New("not authenticated")
+		return nil, ErrNotAuthenticated
 	}
 
 	// Get review
 	review, err := r.DB.GetReview(ctx, id)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
-			return nil, errors.New("review not found")
+			return nil, ErrReviewNotFound
 		}
 		return nil, fmt.Errorf("failed to get review: %w", err)
 	}
 
 	// Check if user has permission to update (author or admin)
 	if review.Author != nil && review.Author.ID != currentUser.ID && currentUser.Role != domainmodel.AdminRole {
-		return nil, errors.New("permission denied")
+		return nil, ErrPermissionDenied
 	}
 
 	// Update review fields
@@ -575,25 +590,27 @@ func (r *Resolver) updateReview(ctx context.Context, id string, rating *int, com
 }
 
 // DeleteReview deletes a review.
+//
+//nolint:varnamelen // Short parameter name 'id' is acceptable for review ID.
 func (r *Resolver) deleteReview(ctx context.Context, id string) (bool, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
-		return false, errors.New("not authenticated")
+		return false, ErrNotAuthenticated
 	}
 
 	// Get review to check ownership
 	review, err := r.DB.GetReview(ctx, id)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
-			return false, errors.New("review not found")
+			return false, ErrReviewNotFound
 		}
 		return false, fmt.Errorf("failed to get review: %w", err)
 	}
 
 	// Check if user has permission to delete (author or admin)
 	if review.Author != nil && review.Author.ID != currentUser.ID && currentUser.Role != domainmodel.AdminRole {
-		return false, errors.New("permission denied")
+		return false, ErrPermissionDenied
 	}
 
 	// Delete from database
@@ -611,7 +628,7 @@ func (r *Resolver) deleteReview(ctx context.Context, id string) (bool, error) {
 }
 
 // updateRecipeRating calculates and updates a recipe's average rating.
-func (r *RecipeResolver) updateRecipeRating(ctx context.Context, recipe *domainmodel.Recipe) error {
+func (r *RecipeResolver) updateRecipeRating(_ context.Context, _ *domainmodel.Recipe) error {
 	// Implementation would recalculate the average rating based on all reviews
 	return nil
 }
@@ -621,12 +638,12 @@ func (r *Resolver) createCategory(ctx context.Context, name string, description 
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
-		return nil, errors.New("not authenticated")
+		return nil, ErrNotAuthenticated
 	}
 
 	// Check if user is admin
 	if currentUser.Role != domainmodel.AdminRole {
-		return nil, errors.New("permission denied")
+		return nil, ErrPermissionDenied
 	}
 
 	// Create category
@@ -651,23 +668,25 @@ func (r *Resolver) createCategory(ctx context.Context, name string, description 
 }
 
 // UpdateCategory updates an existing category.
+//
+//nolint:varnamelen // Short parameter name 'id' is acceptable for category ID.
 func (r *Resolver) updateCategory(ctx context.Context, id string, name *string, description *string) (*domainmodel.Category, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
-		return nil, errors.New("not authenticated")
+		return nil, ErrNotAuthenticated
 	}
 
 	// Check if user is admin
 	if currentUser.Role != domainmodel.AdminRole {
-		return nil, errors.New("permission denied")
+		return nil, ErrPermissionDenied
 	}
 
 	// Get category
 	category, err := r.DB.GetCategory(ctx, id)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
-			return nil, errors.New("category not found")
+			return nil, ErrCategoryNotFound
 		}
 		return nil, fmt.Errorf("failed to get category: %w", err)
 	}
@@ -691,20 +710,20 @@ func (r *Resolver) updateCategory(ctx context.Context, id string, name *string, 
 }
 
 // DeleteCategory deletes a category.
-func (r *Resolver) deleteCategory(ctx context.Context, id string) (bool, error) {
+func (r *Resolver) deleteCategory(ctx context.Context, categoryID string) (bool, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
 	if currentUser == nil {
-		return false, errors.New("not authenticated")
+		return false, ErrNotAuthenticated
 	}
 
 	// Check if user is admin
 	if currentUser.Role != domainmodel.AdminRole {
-		return false, errors.New("permission denied")
+		return false, ErrPermissionDenied
 	}
 
 	// Delete from database
-	err := r.DB.DeleteCategory(ctx, id)
+	err := r.DB.DeleteCategory(ctx, categoryID)
 	if err != nil {
 		return false, fmt.Errorf("failed to delete category: %w", err)
 	}

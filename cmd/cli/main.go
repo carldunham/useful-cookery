@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -27,6 +28,7 @@ const (
 	cmdListRecipes    = "list-recipes"
 )
 
+//nolint:cyclop,funlen // TODO: simplify.
 func main() {
 	// Define command line flags
 	var (
@@ -170,11 +172,12 @@ func loadConfig(configFile string) (*config.Config, error) {
 
 	// Read configuration file
 	if err := viper.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+		var configFileNotFound viper.ConfigFileNotFoundError
+		if !errors.As(err, &configFileNotFound) {
 			return nil, fmt.Errorf("failed to read config file: %w", err)
 		}
 		// Config file not found, using defaults and environment variables
-		fmt.Fprintln(os.Stderr, "Config file not found, using defaults and environment variables")
+		log.Println("Config file not found, using defaults and environment variables")
 	}
 
 	// Parse configuration
@@ -185,14 +188,17 @@ func loadConfig(configFile string) (*config.Config, error) {
 
 	// We don't need to modify the DGraph connection string
 	// The dgo.Open function expects a URL with the "dgraph://" scheme
-	fmt.Fprintf(os.Stderr, "Using DGraph connection string: %s\n", cfg.DGraph.ConnectionString)
+	log.Printf("Using DGraph connection string: %s", cfg.DGraph.ConnectionString)
 
 	return &cfg, nil
 }
 
 // createAdminUser creates the initial admin user.
 func createAdminUser(ctx context.Context, authService *auth.Service, email, password string) error {
-	return authService.CreateInitialAdminUser(ctx, email, password)
+	if err := authService.CreateInitialAdminUser(ctx, email, password); err != nil {
+		return fmt.Errorf("failed to create initial admin user: %w", err)
+	}
+	return nil
 }
 
 // createUser creates a new user.
@@ -223,7 +229,10 @@ func createCategory(ctx context.Context, dbClient *database.DGraphClient, name, 
 		UpdatedAt:   time.Now(),
 	}
 
-	return dbClient.CreateCategory(ctx, category)
+	if err := dbClient.CreateCategory(ctx, category); err != nil {
+		return fmt.Errorf("failed to create category: %w", err)
+	}
+	return nil
 }
 
 // createRecipe creates a new recipe.
@@ -235,10 +244,13 @@ func createRecipe(ctx context.Context, dbClient *database.DGraphClient, title, d
 		UpdatedAt:   time.Now(),
 	}
 
-	return dbClient.CreateRecipe(ctx, recipe)
+	if err := dbClient.CreateRecipe(ctx, recipe); err != nil {
+		return fmt.Errorf("failed to create recipe: %w", err)
+	}
+	return nil
 }
 
-// listUsers lists all users
+// listUsers lists all users.
 func listUsers(ctx context.Context, dbClient *database.DGraphClient) error {
 	// Get all users (no pagination)
 	users, err := dbClient.GetUsers(ctx, 0, 0)
@@ -259,7 +271,7 @@ func listUsers(ctx context.Context, dbClient *database.DGraphClient) error {
 	return nil
 }
 
-// listCategories lists all categories
+// listCategories lists all categories.
 func listCategories(ctx context.Context, dbClient *database.DGraphClient) error {
 	// Query for categories - use a more specific query to avoid getting users
 	query := `
@@ -297,10 +309,10 @@ func listCategories(ctx context.Context, dbClient *database.DGraphClient) error 
 	return nil
 }
 
-// listRecipes lists all recipes
+// listRecipes lists all recipes.
 func listRecipes(ctx context.Context, dbClient *database.DGraphClient) error {
 	// Query for recipes
-	q := `
+	query := `
 	{
 		recipes(func: has(title)) {
 			uid
@@ -315,7 +327,7 @@ func listRecipes(ctx context.Context, dbClient *database.DGraphClient) error {
 		Recipes []*model.Recipe `json:"recipes"`
 	}
 
-	err := dbClient.Query(ctx, q, nil, &result)
+	err := dbClient.Query(ctx, query, nil, &result)
 	if err != nil {
 		return fmt.Errorf("failed to query recipes: %w", err)
 	}
@@ -336,7 +348,9 @@ func listRecipes(ctx context.Context, dbClient *database.DGraphClient) error {
 	return nil
 }
 
-// printUsage prints the usage information
+// printUsage prints the usage information.
+//
+//nolint:lll // Sometimes the lines we print are long.
 func printUsage() {
 	fmt.Println("Useful Cookery CLI")
 	fmt.Println("\nUsage:")

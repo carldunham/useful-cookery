@@ -1,4 +1,4 @@
-package troff
+package troff_test
 
 import (
 	"strings"
@@ -6,9 +6,12 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
+	"github.com/carldunham/useful-cookery/internal/troff"
 )
 
 func TestParse_BasicRecipe(t *testing.T) {
+	t.Parallel()
 	input := `.RH MOD.RECIPES-SOURCE RECIPE-ID D "22 Dec 83"
 .RZ "TEST RECIPE" "A simple test recipe"
 This is a test recipe description.
@@ -28,7 +31,7 @@ John Doe
 john@example.com
 Test Organization, Test City`
 
-	recipe, err := Parse(strings.NewReader(input))
+	recipe, err := troff.Parse(strings.NewReader(input))
 	require.NoError(t, err, "Parse() should not return an error")
 
 	// Check ID
@@ -43,7 +46,8 @@ Test Organization, Test City`
 
 	// Check description
 	assert.Contains(t, recipe.Description, "A simple test recipe", "Description should contain RZ description")
-	assert.Contains(t, recipe.Description, "This is a test recipe description", "Description should contain introductory text")
+	assert.Contains(t, recipe.Description, "This is a test recipe description",
+		"Description should contain introductory text")
 
 	// Check notes
 	assert.Equal(t, "Some notes about the recipe.", recipe.Notes, "Notes should be stored in the Notes field")
@@ -67,7 +71,9 @@ Test Organization, Test City`
 	assert.Equal(t, "Bake for 30 minutes.", recipe.Steps[1].Description, "Second step description should match")
 }
 
+//nolint:funlen // TODO: simplify.
 func TestParse_RealRecipe(t *testing.T) {
+	t.Parallel()
 	// Using a simplified version of the Advokaat recipe
 	input := `.RH MOD.RECIPES-SOURCE ADVOKAAT L "22 Dec 83"
 .RZ "ADVOKAAT" "Dutch egg cognac"
@@ -97,7 +103,7 @@ Laurent Siklossy
 laurent@example.com
 Test University, Amsterdam`
 
-	recipe, err := Parse(strings.NewReader(input))
+	recipe, err := troff.Parse(strings.NewReader(input))
 	require.NoError(t, err, "Parse() should not return an error")
 
 	// Check ID
@@ -144,11 +150,13 @@ Test University, Amsterdam`
 	assert.Len(t, recipe.Steps, 5, "Should have 5 steps")
 	// Just check the first and last steps
 	assert.Equal(t, "Mix sugars.", recipe.Steps[0].Description, "First step description should match")
-	assert.Equal(t, "Bottle and let rest for two weeks to let the mixture thicken.", recipe.Steps[4].Description, "Last step description should match")
+	assert.Equal(t, "Bottle and let rest for two weeks to let the mixture thicken.",
+		recipe.Steps[4].Description, "Last step description should match")
 }
 
 func TestParse_EmptyInput(t *testing.T) {
-	recipe, err := Parse(strings.NewReader(""))
+	t.Parallel()
+	recipe, err := troff.Parse(strings.NewReader(""))
 	require.NoError(t, err, "Parse() should not return an error for empty input")
 
 	// Check that we get an empty recipe
@@ -158,22 +166,24 @@ func TestParse_EmptyInput(t *testing.T) {
 }
 
 func TestParse_InvalidInput(t *testing.T) {
+	t.Parallel()
 	// Test with a nil reader
-	_, err := Parse(nil)
-	assert.Error(t, err, "Parse() should return an error with nil reader")
+	_, err := troff.Parse(nil)
+	require.Error(t, err, "Parse() should return an error with nil reader")
 
 	// Test with malformed input (missing closing quotes)
 	input := `.RH MOD.RECIPES-SOURCE RECIPE-ID D "22 Dec 83"
 .RZ "TEST RECIPE" "A simple test recipe"
 .IG "1 cup sugar`
-	_, err = Parse(strings.NewReader(input))
+	_, err = troff.Parse(strings.NewReader(input))
 	// This should not error, but should handle the unclosed quote gracefully
 	assert.NoError(t, err, "Parse() should handle unclosed quote gracefully")
 }
 
 // TestParse_TokenParamHandling specifically tests the fix for the bug where
-// TokenParams were being incorrectly accumulated to the description for .RZ and .NX commands
+// TokenParams were being incorrectly accumulated to the description for .RZ and .NX commands.
 func TestParse_TokenParamHandling(t *testing.T) {
+	t.Parallel()
 	input := `.RH MOD.RECIPES-SOURCE RECIPE-ID D "22 Dec 83"
 .RZ "TEST RECIPE" "A simple test recipe"
 This is introduction text.
@@ -187,12 +197,12 @@ These are notes.
 .WR
 Author Name`
 
-	recipe, err := Parse(strings.NewReader(input))
+	recipe, err := troff.Parse(strings.NewReader(input))
 	require.NoError(t, err, "Parse() should not return an error")
 
 	// Check that the description contains only what it should
-	assert.Equal(t, "A simple test recipe\n\nThis is introduction text.", recipe.Description,
-		"Description should only contain the RZ description and introduction text")
+	assert.Equal(t, "A simple test recipe\n\nThis is introduction text.",
+		recipe.Description, "Description should only contain the RZ description and introduction text")
 
 	// Check that notes are stored in the Notes field
 	assert.Equal(t, "These are notes.", recipe.Notes,

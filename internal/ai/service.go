@@ -15,8 +15,25 @@ import (
 	"github.com/carldunham/useful-cookery/internal/model"
 )
 
-// AIService provides AI capabilities for the application.
-type AIService struct {
+// Error definitions.
+var (
+	ErrAPIKeyRequired       = errors.New("OpenAI API key is required")
+	ErrNoEmbeddingsReturned = errors.New("no embeddings returned from API")
+	ErrNotImplemented       = errors.New("not implemented")
+	ErrNoAPIResponse        = errors.New("no response from API")
+	ErrFailedToExtractJSON  = errors.New("failed to extract JSON from response")
+)
+
+// Constants for OpenAI API parameters.
+const (
+	SubstituteTemperature = 0.3
+	SubstituteMaxTokens   = 100
+	QueryTemperature      = 0.2
+	QueryMaxTokens        = 500
+)
+
+// Service provides AI capabilities for the application.
+type Service struct {
 	openAIClient openai.Client
 	config       *Config
 	cache        Cache
@@ -39,9 +56,9 @@ type Cache interface {
 }
 
 // NewAIService creates a new AI service.
-func NewAIService(config *Config, cache Cache) (*AIService, error) {
+func NewAIService(config *Config, cache Cache) (*Service, error) {
 	if config.OpenAIAPIKey == "" {
-		return nil, errors.New("OpenAI API key is required")
+		return nil, ErrAPIKeyRequired
 	}
 
 	openAIClient := openai.NewClient(option.WithAPIKey(config.OpenAIAPIKey))
@@ -58,7 +75,7 @@ func NewAIService(config *Config, cache Cache) (*AIService, error) {
 		config.MaxRequestTokens = 4000
 	}
 
-	return &AIService{
+	return &Service{
 		openAIClient: openAIClient,
 		config:       config,
 		cache:        cache,
@@ -66,10 +83,12 @@ func NewAIService(config *Config, cache Cache) (*AIService, error) {
 }
 
 // GenerateEmbedding creates vector embeddings for text using OpenAI.
-func (s *AIService) GenerateEmbedding(ctx context.Context, text string) ([]float32, error) {
+//
+//nolint:cyclop // TODO: simplify.
+func (s *Service) GenerateEmbedding(ctx context.Context, text string) ([]float32, error) {
 	if s.cache != nil && s.config.CacheEnabled {
 		// Check cache first
-		cacheKey := fmt.Sprintf("embedding:%s", text)
+		cacheKey := "embedding:" + text
 		cached, err := s.cache.Get(ctx, cacheKey)
 		if err == nil && cached != nil {
 			var embedding []float32
@@ -96,7 +115,7 @@ func (s *AIService) GenerateEmbedding(ctx context.Context, text string) ([]float
 	}
 
 	if len(resp.Data) == 0 {
-		return nil, errors.New("no embeddings returned from API")
+		return nil, ErrNoEmbeddingsReturned
 	}
 
 	// Convert embedding from []float64 to []float32
@@ -108,7 +127,7 @@ func (s *AIService) GenerateEmbedding(ctx context.Context, text string) ([]float
 
 	// Cache the result
 	if s.cache != nil && s.config.CacheEnabled {
-		cacheKey := fmt.Sprintf("embedding:%s", text)
+		cacheKey := "embedding:" + text
 		if cached, err := json.Marshal(embedding32); err == nil {
 			if err := s.cache.Set(ctx, cacheKey, cached, s.config.CacheTTL); err != nil {
 				log.Printf("Failed to cache embedding: %v", err)
@@ -120,7 +139,7 @@ func (s *AIService) GenerateEmbedding(ctx context.Context, text string) ([]float
 }
 
 // SearchRecipes performs semantic search on recipes.
-func (s *AIService) SearchRecipes(ctx context.Context, query string, limit int) ([]model.Recipe, error) {
+func (s *Service) SearchRecipes(_ context.Context, _ string, _ int) ([]model.Recipe, error) {
 	// Generate embedding for the query
 	// queryEmbedding, err := s.GenerateEmbedding(ctx, query)
 	// if err != nil {
@@ -129,23 +148,25 @@ func (s *AIService) SearchRecipes(ctx context.Context, query string, limit int) 
 
 	// In a real implementation, this would send the embedding to DGraph
 	// to perform vector search. For now, return a placeholder.
-	return []model.Recipe{}, errors.New("not implemented")
+	return []model.Recipe{}, ErrNotImplemented
 }
 
 // RecommendRecipes recommends recipes based on user preferences and ingredients.
-func (s *AIService) RecommendRecipes(
-	ctx context.Context,
-	userID string,
-	availableIngredients []string,
-	limit int,
+func (s *Service) RecommendRecipes(
+	_ context.Context,
+	_ string,
+	_ []string,
+	_ int,
 ) ([]model.Recipe, error) {
 	// In a real implementation, this would use a combination of
 	// collaborative filtering and content-based recommendations
-	return []model.Recipe{}, errors.New("not implemented")
+	return []model.Recipe{}, ErrNotImplemented
 }
 
 // GenerateSubstitutes generates ingredient substitutes.
-func (s *AIService) GenerateSubstitutes(ctx context.Context, ingredient string) ([]string, error) {
+//
+//nolint:cyclop // TODO: simplify.
+func (s *Service) GenerateSubstitutes(ctx context.Context, ingredient string) ([]string, error) {
 	prompt := fmt.Sprintf(
 		"Suggest 3 substitutes for %s in cooking recipes. Format as a comma-separated list with no explanations.",
 		ingredient,
@@ -153,7 +174,7 @@ func (s *AIService) GenerateSubstitutes(ctx context.Context, ingredient string) 
 
 	// Check cache first
 	if s.cache != nil && s.config.CacheEnabled {
-		cacheKey := fmt.Sprintf("substitute:%s", ingredient)
+		cacheKey := "substitute:" + ingredient
 		cached, err := s.cache.Get(ctx, cacheKey)
 		if err == nil && cached != nil {
 			var substitutes []string
@@ -173,8 +194,8 @@ func (s *AIService) GenerateSubstitutes(ctx context.Context, ingredient string) 
 	params := openai.ChatCompletionNewParams{
 		Model:       s.config.CompletionModel,
 		Messages:    messages,
-		Temperature: openai.Float(0.3),
-		MaxTokens:   openai.Int(100),
+		Temperature: openai.Float(SubstituteTemperature),
+		MaxTokens:   openai.Int(SubstituteMaxTokens),
 	}
 
 	// Create chat completion
@@ -184,7 +205,7 @@ func (s *AIService) GenerateSubstitutes(ctx context.Context, ingredient string) 
 	}
 
 	if len(resp.Choices) == 0 {
-		return nil, errors.New("no response from API")
+		return nil, ErrNoAPIResponse
 	}
 
 	// Parse response
@@ -199,7 +220,7 @@ func (s *AIService) GenerateSubstitutes(ctx context.Context, ingredient string) 
 
 	// Cache the result
 	if s.cache != nil && s.config.CacheEnabled {
-		cacheKey := fmt.Sprintf("substitute:%s", ingredient)
+		cacheKey := "substitute:" + ingredient
 		if cached, err := json.Marshal(substitutes); err == nil {
 			if err := s.cache.Set(ctx, cacheKey, cached, s.config.CacheTTL); err != nil {
 				log.Printf("Failed to cache substitutes: %v", err)
@@ -212,7 +233,9 @@ func (s *AIService) GenerateSubstitutes(ctx context.Context, ingredient string) 
 
 // ProcessNaturalLanguageQuery processes a natural language query and translates it
 // into structured search parameters.
-func (s *AIService) ProcessNaturalLanguageQuery(ctx context.Context, query string) (*model.SearchParams, error) {
+//
+//nolint:cyclop,funlen // TODO: simplify.
+func (s *Service) ProcessNaturalLanguageQuery(ctx context.Context, query string) (*model.SearchParams, error) {
 	prompt := fmt.Sprintf(`
 Analyze this recipe search query: "%s"
 
@@ -230,7 +253,7 @@ Extract the following parameters in JSON format:
 
 	// Check cache
 	if s.cache != nil && s.config.CacheEnabled {
-		cacheKey := fmt.Sprintf("nlquery:%s", query)
+		cacheKey := "nlquery:" + query
 		cached, err := s.cache.Get(ctx, cacheKey)
 		if err == nil && cached != nil {
 			var params model.SearchParams
@@ -242,7 +265,7 @@ Extract the following parameters in JSON format:
 
 	// Create messages
 	messages := []openai.ChatCompletionMessageParamUnion{
-		openai.SystemMessage("You are a helpful assistant that analyzes recipe search queries and extracts structured parameters."),
+		openai.SystemMessage("You are a helpful assistant that analyzes recipe search queries and extracts parameters."),
 		openai.UserMessage(prompt),
 	}
 
@@ -250,8 +273,8 @@ Extract the following parameters in JSON format:
 	params := openai.ChatCompletionNewParams{
 		Model:       s.config.CompletionModel,
 		Messages:    messages,
-		Temperature: openai.Float(0.2),
-		MaxTokens:   openai.Int(500),
+		Temperature: openai.Float(QueryTemperature),
+		MaxTokens:   openai.Int(QueryMaxTokens),
 	}
 
 	// Create chat completion
@@ -261,14 +284,14 @@ Extract the following parameters in JSON format:
 	}
 
 	if len(resp.Choices) == 0 {
-		return nil, errors.New("no response from API")
+		return nil, ErrNoAPIResponse
 	}
 
 	// Extract JSON from response
 	content := resp.Choices[0].Message.Content
 	jsonStr := extractJSON(content)
 	if jsonStr == "" {
-		return nil, errors.New("failed to extract JSON from response")
+		return nil, ErrFailedToExtractJSON
 	}
 
 	// Parse JSON
@@ -279,7 +302,7 @@ Extract the following parameters in JSON format:
 
 	// Cache the result
 	if s.cache != nil && s.config.CacheEnabled {
-		cacheKey := fmt.Sprintf("nlquery:%s", query)
+		cacheKey := "nlquery:" + query
 		if cached, err := json.Marshal(searchParams); err == nil {
 			if err := s.cache.Set(ctx, cacheKey, cached, s.config.CacheTTL); err != nil {
 				log.Printf("Failed to cache query params: %v", err)

@@ -4,14 +4,25 @@ linters:
   disable:
     - depguard
     - exhaustruct
-    - exportloopref # replaced by copyloopvar
     - godox # need my TODOs
     - gofumpt
     - nlreturn
+    - tenv # Replaced by usetesting.
     - wsl
     - tagliatelle
 
+  exclusions:
+    rules:
+      - path: cmd/cli
+        linters:
+          - forbidigo
+
 linters-settings:
+  forbidigo:
+    settings:
+      ignore:
+        - "github.com/carldunham/useful-cookery/cmd/cli"
+
   goimports:
     local-prefixes: github.com/carldunham/useful-cookery
 

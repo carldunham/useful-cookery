@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"strconv"
 
 	"github.com/dgraph-io/dgo/v240"
 	"github.com/dgraph-io/dgo/v240/protos/api"
@@ -18,6 +19,7 @@ var (
 	ErrNotFound      = errors.New("entity not found")
 	ErrInvalidID     = errors.New("invalid ID")
 	ErrAlreadyExists = errors.New("entity already exists")
+	ErrEmailRequired = errors.New("email is required")
 )
 
 // DGraphClient is a client for DGraph operations.
@@ -38,7 +40,7 @@ func NewDGraphClient(connString string) (*DGraphClient, error) {
 }
 
 // Query executes a GraphQL+ query against DGraph.
-func (c *DGraphClient) Query(ctx context.Context, q string, vars map[string]string, result interface{}) error {
+func (c *DGraphClient) Query(ctx context.Context, query string, vars map[string]string, result interface{}) error {
 	txn := c.client.NewTxn()
 	defer func() {
 		if err := txn.Discard(ctx); err != nil {
@@ -48,7 +50,7 @@ func (c *DGraphClient) Query(ctx context.Context, q string, vars map[string]stri
 
 	// Create request
 	req := &api.Request{
-		Query: q,
+		Query: query,
 		Vars:  vars,
 	}
 
@@ -59,7 +61,7 @@ func (c *DGraphClient) Query(ctx context.Context, q string, vars map[string]stri
 	}
 
 	// Unmarshal result
-	err = json.Unmarshal(resp.Json, result)
+	err = json.Unmarshal(resp.GetJson(), result)
 	if err != nil {
 		return fmt.Errorf("failed to unmarshal response: %w", err)
 	}
@@ -102,7 +104,7 @@ func (c *DGraphClient) GetUser(ctx context.Context, userID string) (*model.User,
 		return nil, ErrInvalidID
 	}
 
-	q := `
+	userQuery := `
 	query GetUser($id: string) {
 		user(func: uid($id)) {
 			uid
@@ -129,7 +131,7 @@ func (c *DGraphClient) GetUser(ctx context.Context, userID string) (*model.User,
 		Users []*model.User `json:"user"`
 	}
 
-	err := c.Query(ctx, q, vars, &result)
+	err := c.Query(ctx, userQuery, vars, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query user by ID: %w", err)
 	}
@@ -144,11 +146,11 @@ func (c *DGraphClient) GetUser(ctx context.Context, userID string) (*model.User,
 // GetUserByEmail fetches a user by email.
 func (c *DGraphClient) GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
 	if email == "" {
-		return nil, errors.New("email is required")
+		return nil, ErrEmailRequired
 	}
 
 	// TODO: use type(User) instead of has(email).
-	q := `
+	emailQuery := `
 	{
 		user(func: has(email)) {
 			uid
@@ -172,7 +174,7 @@ func (c *DGraphClient) GetUserByEmail(ctx context.Context, email string) (*model
 		Users []*model.User `json:"user"`
 	}
 
-	err := c.Query(ctx, q, nil, &result)
+	err := c.Query(ctx, emailQuery, nil, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query users: %w", err)
 	}
@@ -218,11 +220,9 @@ func (c *DGraphClient) GetUsers(ctx context.Context, limit, offset int) ([]*mode
 		}
 	}`
 
-	// TODO: implement limit and offset. Including them in the query results in
-	// "rpc error: code = Unknown desc = Type of variable limit not specified".
 	vars := map[string]string{
-		"$limit":  fmt.Sprintf("%d", limit),
-		"$offset": fmt.Sprintf("%d", offset),
+		"$limit":  strconv.Itoa(limit),
+		"$offset": strconv.Itoa(offset),
 	}
 
 	var result struct {
@@ -252,7 +252,7 @@ func (c *DGraphClient) GetCategory(ctx context.Context, categoryID string) (*mod
 		return nil, ErrInvalidID
 	}
 
-	q := `
+	categoryQuery := `
 	query GetCategory($id: string) {
 		category(func: uid($id)) {
 			uid
@@ -271,7 +271,7 @@ func (c *DGraphClient) GetCategory(ctx context.Context, categoryID string) (*mod
 		Categories []*model.Category `json:"category"`
 	}
 
-	err := c.Query(ctx, q, vars, &result)
+	err := c.Query(ctx, categoryQuery, vars, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query category by ID: %w", err)
 	}
@@ -316,13 +316,13 @@ func (c *DGraphClient) DeleteCategory(ctx context.Context, categoryID string) er
 
 	// Delete category
 	d := map[string]string{"uid": categoryID}
-	deleteJson, err := json.Marshal(d)
+	deleteJSON, err := json.Marshal(d)
 	if err != nil {
 		return fmt.Errorf("failed to marshal category deletion data: %w", err)
 	}
 
 	mu := &api.Mutation{
-		DeleteJson: deleteJson,
+		DeleteJson: deleteJSON,
 		CommitNow:  true,
 	}
 
@@ -349,7 +349,7 @@ func (c *DGraphClient) GetReview(ctx context.Context, reviewID string) (*model.R
 		return nil, ErrInvalidID
 	}
 
-	q := `
+	reviewQuery := `
 	query GetReview($id: string) {
 		review(func: uid($id)) {
 			uid
@@ -376,7 +376,7 @@ func (c *DGraphClient) GetReview(ctx context.Context, reviewID string) (*model.R
 		Reviews []*model.Review `json:"review"`
 	}
 
-	err := c.Query(ctx, q, vars, &result)
+	err := c.Query(ctx, reviewQuery, vars, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query review by ID: %w", err)
 	}
@@ -412,13 +412,13 @@ func (c *DGraphClient) DeleteReview(ctx context.Context, reviewID string) error 
 
 	// Delete review
 	d := map[string]string{"uid": reviewID}
-	deleteJson, err := json.Marshal(d)
+	deleteJSON, err := json.Marshal(d)
 	if err != nil {
 		return fmt.Errorf("failed to marshal review deletion data: %w", err)
 	}
 
 	mu := &api.Mutation{
-		DeleteJson: deleteJson,
+		DeleteJson: deleteJSON,
 		CommitNow:  true,
 	}
 
@@ -431,12 +431,14 @@ func (c *DGraphClient) DeleteReview(ctx context.Context, reviewID string) error 
 }
 
 // GetRecipe fetches a recipe by ID.
+//
+//nolint:funlen // TODO: simplify.
 func (c *DGraphClient) GetRecipe(ctx context.Context, recipeID string) (*model.Recipe, error) {
 	if recipeID == "" {
 		return nil, ErrInvalidID
 	}
 
-	q := `
+	recipeQuery := `
 	query GetRecipe($id: string) {
 		recipe(func: uid($id)) {
 			uid
@@ -513,7 +515,7 @@ func (c *DGraphClient) GetRecipe(ctx context.Context, recipeID string) (*model.R
 		Recipes []*model.Recipe `json:"recipe"`
 	}
 
-	err := c.Query(ctx, q, vars, &result)
+	err := c.Query(ctx, recipeQuery, vars, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query recipe by ID: %w", err)
 	}
@@ -526,7 +528,11 @@ func (c *DGraphClient) GetRecipe(ctx context.Context, recipeID string) (*model.R
 }
 
 // GetRecipes fetches recipes based on filters.
-func (c *DGraphClient) GetRecipes(ctx context.Context, filter map[string]string, first, offset int) ([]*model.Recipe, error) {
+//
+//nolint:funlen // TODO: simplify.
+func (c *DGraphClient) GetRecipes(
+	ctx context.Context, filter map[string]string, first, offset int,
+) ([]*model.Recipe, error) {
 	// Construct filter conditions
 	conditions := ""
 	vars := make(map[string]string)
@@ -556,7 +562,7 @@ func (c *DGraphClient) GetRecipes(ctx context.Context, filter map[string]string,
 		conditions = ", @filter(" + conditions[2:] + ")"
 	}
 
-	q := fmt.Sprintf(`
+	recipesQuery := fmt.Sprintf(`
 	query GetRecipes(%s) {
 		recipes(func: type(Recipe) %s, first: %d, offset: %d) {
 			uid
@@ -589,7 +595,7 @@ func (c *DGraphClient) GetRecipes(ctx context.Context, filter map[string]string,
 		Recipes []*model.Recipe `json:"recipes"`
 	}
 
-	err := c.Query(ctx, q, vars, &result)
+	err := c.Query(ctx, recipesQuery, vars, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query recipes: %w", err)
 	}
@@ -632,13 +638,13 @@ func (c *DGraphClient) DeleteRecipe(ctx context.Context, recipeID string) error 
 
 	// Delete recipe
 	d := map[string]string{"uid": recipeID}
-	deleteJson, err := json.Marshal(d)
+	deleteJSON, err := json.Marshal(d)
 	if err != nil {
 		return fmt.Errorf("failed to marshal recipe deletion data: %w", err)
 	}
 
 	mu := &api.Mutation{
-		DeleteJson: deleteJson,
+		DeleteJson: deleteJSON,
 		CommitNow:  true,
 	}
 

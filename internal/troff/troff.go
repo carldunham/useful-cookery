@@ -17,32 +17,35 @@ type Parser interface {
 	ParseFile(filename string) (model.Recipe, error)
 }
 
-// TROFFParser implements the Parser interface for TROFF formatted recipe files.
-type TROFFParser struct{}
+// RecipeParser implements the Parser interface for TROFF formatted recipe files.
+type RecipeParser struct{}
 
-// NewTROFFParser creates a new TROFF parser.
-func NewTROFFParser() *TROFFParser {
-	return &TROFFParser{}
+// NewRecipeParser creates a new TROFF parser.
+func NewRecipeParser() *RecipeParser {
+	return &RecipeParser{}
 }
 
 // Parse converts a TROFF formatted recipe into a Recipe struct.
-func (p *TROFFParser) Parse(r io.Reader) (model.Recipe, error) {
-	return Parse(r)
+func (p *RecipeParser) Parse(reader io.Reader) (model.Recipe, error) {
+	return Parse(reader)
 }
 
 // ParseFile parses a TROFF file and returns a Recipe.
-func (p *TROFFParser) ParseFile(filename string) (model.Recipe, error) {
+func (p *RecipeParser) ParseFile(filename string) (model.Recipe, error) {
 	return ParseFile(filename)
 }
 
+// ErrNilReader is returned when a nil reader is provided.
+var ErrNilReader = errors.New("nil reader provided")
+
 // Parse converts a TROFF formatted recipe into a Recipe struct using the lexer.
-func Parse(r io.Reader) (model.Recipe, error) {
-	if r == nil {
-		return model.Recipe{}, errors.New("nil reader provided")
+func Parse(reader io.Reader) (model.Recipe, error) {
+	if reader == nil {
+		return model.Recipe{}, ErrNilReader
 	}
 
 	// Create a lexer for the input
-	lexer := NewLexer(r)
+	lexer := NewLexer(reader)
 	tokens, err := lexer.Tokenize()
 	if err != nil {
 		return model.Recipe{}, fmt.Errorf("failed to tokenize content: %w", err)
@@ -51,10 +54,7 @@ func Parse(r io.Reader) (model.Recipe, error) {
 	recipe := model.Recipe{}
 
 	// Process tokens to build the recipe
-	err = processTokens(tokens, &recipe)
-	if err != nil {
-		return model.Recipe{}, fmt.Errorf("failed to process tokens: %w", err)
-	}
+	processTokens(tokens, &recipe)
 
 	return recipe, nil
 }
@@ -71,7 +71,9 @@ func ParseFile(filename string) (model.Recipe, error) {
 }
 
 // processTokens processes the tokens and builds a Recipe struct.
-func processTokens(tokens []Token, recipe *model.Recipe) error {
+//
+//nolint:gocognit,nestif,gocyclo,cyclop,funlen,maintidx // TODO: simplify.
+func processTokens(tokens []Token, recipe *model.Recipe) {
 	// Current state tracking
 	var currentIngredientSet []model.DetailedIngredient
 	var currentSteps []model.Step
@@ -82,8 +84,8 @@ func processTokens(tokens []Token, recipe *model.Recipe) error {
 	var stepIndex int
 
 	// Process each token using a traditional for loop so we can control the index
-	for i := 0; i < len(tokens); i++ {
-		token := tokens[i]
+	for tokenIndex := 0; tokenIndex < len(tokens); tokenIndex++ {
+		token := tokens[tokenIndex]
 
 		switch {
 		case token.Type == TokenCommand:
@@ -92,17 +94,17 @@ func processTokens(tokens []Token, recipe *model.Recipe) error {
 			// Handle different commands
 			switch cmd {
 			case "RH": // Recipe Header - must be first line with 4 arguments
-				if i+4 < len(tokens) &&
-					tokens[i+1].Type == TokenParam &&
-					tokens[i+2].Type == TokenParam &&
-					tokens[i+3].Type == TokenParam &&
-					tokens[i+4].Type == TokenParam {
+				if tokenIndex+4 < len(tokens) &&
+					tokens[tokenIndex+1].Type == TokenParam &&
+					tokens[tokenIndex+2].Type == TokenParam &&
+					tokens[tokenIndex+3].Type == TokenParam &&
+					tokens[tokenIndex+4].Type == TokenParam {
 					// First param is source, second is recipe ID, third is category code, fourth is date
 					// We'll store the recipe ID and category
-					recipe.ID = tokens[i+2].Value
+					recipe.ID = tokens[tokenIndex+2].Value
 
 					// Parse category code
-					categoryCode := tokens[i+3].Value
+					categoryCode := tokens[tokenIndex+3].Value
 					for _, code := range strings.Split(categoryCode, "") {
 						switch code {
 						case "M":
@@ -130,14 +132,16 @@ func processTokens(tokens []Token, recipe *model.Recipe) error {
 						}
 					}
 
-					i += 4 // Skip the parameters we just processed
+					tokenIndex += 4 // Skip the parameters we just processed
 				}
 
 			case "RZ": // Recipe Title and Description
-				if i+2 < len(tokens) && tokens[i+1].Type == TokenParam && tokens[i+2].Type == TokenParam {
-					recipe.Title = tokens[i+1].Value
-					recipe.Description = tokens[i+2].Value
-					i += 2 // Skip the parameters we just processed
+				if tokenIndex+2 < len(tokens) &&
+					tokens[tokenIndex+1].Type == TokenParam &&
+					tokens[tokenIndex+2].Type == TokenParam {
+					recipe.Title = tokens[tokenIndex+1].Value
+					recipe.Description = tokens[tokenIndex+2].Value
+					tokenIndex += 2 // Skip the parameters we just processed
 
 					// After RZ, introductory comments begin
 					inIntroduction = true
@@ -154,23 +158,25 @@ func processTokens(tokens []Token, recipe *model.Recipe) error {
 				}
 
 				// IH can have yield information
-				if i+1 < len(tokens) && tokens[i+1].Type == TokenParam {
+				if tokenIndex+1 < len(tokens) && tokens[tokenIndex+1].Type == TokenParam {
 					// Store yield information if needed
 					// For now we'll just skip it
-					i++
+					tokenIndex++
 				}
 
 			case "IG": // Ingredient
-				if i+2 < len(tokens) && tokens[i+1].Type == TokenParam && tokens[i+2].Type == TokenParam {
-					quantity := tokens[i+1].Value
-					name := tokens[i+2].Value
-					i += 2 // Skip the parameters we just processed
+				if tokenIndex+2 < len(tokens) &&
+					tokens[tokenIndex+1].Type == TokenParam &&
+					tokens[tokenIndex+2].Type == TokenParam {
+					quantity := tokens[tokenIndex+1].Value
+					name := tokens[tokenIndex+2].Value
+					tokenIndex += 2 // Skip the parameters we just processed
 
 					// Check for optional metric quantity
 					var metricQty string
-					if i+1 < len(tokens) && tokens[i+1].Type == TokenParam {
-						metricQty = tokens[i+1].Value
-						i++ // Skip the metric parameter
+					if tokenIndex+1 < len(tokens) && tokens[tokenIndex+1].Type == TokenParam {
+						metricQty = tokens[tokenIndex+1].Value
+						tokenIndex++ // Skip the metric parameter
 					}
 
 					// Create ingredient with proper types
@@ -192,22 +198,22 @@ func processTokens(tokens []Token, recipe *model.Recipe) error {
 				// Nothing specific to do here, just marks the start of procedure steps
 
 			case "SK": // Step
-				if i+1 < len(tokens) && tokens[i+1].Type == TokenParam {
+				if tokenIndex+1 < len(tokens) && tokens[tokenIndex+1].Type == TokenParam {
 					// The parameter is the step number
-					stepNumber := tokens[i+1].Value
-					i++ // Skip the step number parameter
+					stepNumber := tokens[tokenIndex+1].Value
+					tokenIndex++ // Skip the step number parameter
 
 					// Collect the step description from text following this command
 					var stepDescription string
-					for j := i + 1; j < len(tokens); j++ {
-						if tokens[j].Type == TokenCommand {
+					for nestedIndex := tokenIndex + 1; nestedIndex < len(tokens); nestedIndex++ {
+						if tokens[nestedIndex].Type == TokenCommand {
 							break
 						}
-						if tokens[j].Type == TokenParam {
+						if tokens[nestedIndex].Type == TokenParam {
 							if stepDescription != "" {
 								stepDescription += " "
 							}
-							stepDescription += tokens[j].Value
+							stepDescription += tokens[nestedIndex].Value
 						}
 					}
 
@@ -239,15 +245,15 @@ func processTokens(tokens []Token, recipe *model.Recipe) error {
 
 				// Process author information from text following WR
 				var authorInfo string
-				for j := i + 1; j < len(tokens); j++ {
-					if tokens[j].Type == TokenCommand {
+				for nestedIndex := tokenIndex + 1; nestedIndex < len(tokens); nestedIndex++ {
+					if tokens[nestedIndex].Type == TokenCommand {
 						break
 					}
-					if tokens[j].Type == TokenParam {
+					if tokens[nestedIndex].Type == TokenParam {
 						if authorInfo != "" {
 							authorInfo += " "
 						}
-						authorInfo += tokens[j].Value
+						authorInfo += tokens[nestedIndex].Value
 					}
 				}
 
@@ -280,15 +286,4 @@ func processTokens(tokens []Token, recipe *model.Recipe) error {
 	if len(currentSteps) > 0 {
 		recipe.Steps = currentSteps
 	}
-
-	return nil
-}
-
-// Helper function to split a string and trim each part
-func splitAndTrim(s, sep string) []string {
-	parts := make([]string, 0)
-	for _, part := range strings.Split(s, sep) {
-		parts = append(parts, strings.TrimSpace(part))
-	}
-	return parts
 }

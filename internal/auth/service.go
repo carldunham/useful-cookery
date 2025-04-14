@@ -18,10 +18,11 @@ import (
 
 // Errors.
 var (
-	ErrInvalidCredentials = errors.New("invalid credentials")
-	ErrInvalidToken       = errors.New("invalid token")
-	ErrExpiredToken       = errors.New("token expired")
-	ErrUserExists         = errors.New("user already exists")
+	ErrInvalidCredentials   = errors.New("invalid credentials")
+	ErrInvalidToken         = errors.New("invalid token")
+	ErrExpiredToken         = errors.New("token expired")
+	ErrUserExists           = errors.New("user already exists")
+	ErrUnexpectedSignMethod = errors.New("unexpected signing method")
 )
 
 // Claims represents JWT claims.
@@ -144,15 +145,16 @@ func (s *Service) VerifyToken(tokenString string) (*Claims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		// Validate signing method
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			return nil, fmt.Errorf("%w: %v", ErrUnexpectedSignMethod, token.Header["alg"])
 		}
 
 		return []byte(s.jwtSecret), nil
 	})
 
 	if err != nil {
-		if ve, ok := err.(*jwt.ValidationError); ok {
-			if ve.Errors&jwt.ValidationErrorExpired != 0 {
+		var validationErr *jwt.ValidationError
+		if errors.As(err, &validationErr) {
+			if validationErr.Errors&jwt.ValidationErrorExpired != 0 {
 				return nil, ErrExpiredToken
 			}
 		}
@@ -169,19 +171,19 @@ func (s *Service) VerifyToken(tokenString string) (*Claims, error) {
 
 // AuthMiddleware is an HTTP middleware for authentication.
 func (s *Service) AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
+	return func(writer http.ResponseWriter, request *http.Request) {
 		// Get Authorization header
-		authHeader := r.Header.Get("Authorization")
+		authHeader := request.Header.Get("Authorization")
 		if authHeader == "" {
 			// No token, continue without user info
-			next(w, r)
+			next(writer, request)
 			return
 		}
 
 		// Check if it's a Bearer token
 		parts := strings.Split(authHeader, " ")
 		if len(parts) != 2 || parts[0] != "Bearer" {
-			next(w, r)
+			next(writer, request)
 			return
 		}
 
@@ -189,24 +191,24 @@ func (s *Service) AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 		claims, err := s.VerifyToken(parts[1])
 		if err != nil {
 			// Invalid token, continue without user info
-			next(w, r)
+			next(writer, request)
 			return
 		}
 
 		// Get user from database
-		user, err := s.dbClient.GetUser(r.Context(), claims.UserID)
+		user, err := s.dbClient.GetUser(request.Context(), claims.UserID)
 		if err != nil || user == nil {
 			// User not found, continue without user info
-			next(w, r)
+			next(writer, request)
 			return
 		}
 
 		// Add user to context
-		ctx := context.WithValue(r.Context(), UserContextKey, user)
+		ctx := context.WithValue(request.Context(), UserContextKey, user)
 		ctx = context.WithValue(ctx, RoleContextKey, claims.Role)
 
 		// Continue with the new context
-		next(w, r.WithContext(ctx))
+		next(writer, request.WithContext(ctx))
 	}
 }
 

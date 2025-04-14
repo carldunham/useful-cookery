@@ -19,7 +19,7 @@ func NewSubscriptionResolver(r *Resolver) *SubscriptionResolver {
 }
 
 // recipeLikes handles the subscription for recipe likes.
-func (r *Resolver) recipeLikes(ctx context.Context, id string) (<-chan *int, error) {
+func (r *Resolver) recipeLikes(_ context.Context, _ string) (<-chan *int, error) {
 	// Create a channel for likes updates
 	likesChan := make(chan *int, 1)
 
@@ -30,7 +30,7 @@ func (r *Resolver) recipeLikes(ctx context.Context, id string) (<-chan *int, err
 }
 
 // newReview handles the subscription for new reviews.
-func (r *Resolver) newReview(ctx context.Context, recipeID string) (<-chan *domainmodel.Review, error) {
+func (r *Resolver) newReview(_ context.Context, _ string) (<-chan *domainmodel.Review, error) {
 	// Create a channel for new reviews
 	reviewChan := make(chan *domainmodel.Review, 1)
 

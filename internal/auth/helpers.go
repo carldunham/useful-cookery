@@ -43,7 +43,7 @@ func (s *Service) ValidatePassword(password, hash string) bool {
 func (s *Service) IsAdmin(ctx context.Context, userID string) (bool, error) {
 	user, err := s.dbClient.GetUser(ctx, userID)
 	if err != nil {
-		if err == database.ErrNotFound {
+		if errors.Is(err, database.ErrNotFound) {
 			return false, nil
 		}
 		return false, fmt.Errorf("failed to get user: %w", err)

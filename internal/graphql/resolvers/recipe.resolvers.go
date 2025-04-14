@@ -2,15 +2,21 @@ package resolvers
 
 import (
 	"context"
+	"errors"
 
 	gqlmodel "github.com/carldunham/useful-cookery/internal/graphql/model"
 	domainmodel "github.com/carldunham/useful-cookery/internal/model"
 )
 
+// Sentinel errors for recipe resolvers.
+var (
+	ErrInvalidSkillLevel = errors.New("invalid skill level")
+)
+
 // getDifficulty converts the string difficulty from the domain model to the GraphQL enum type.
-func (r *Resolver) difficulty(ctx context.Context, recipe *domainmodel.Recipe) (*gqlmodel.SkillLevel, error) {
+func (r *Resolver) difficulty(_ context.Context, recipe *domainmodel.Recipe) (*gqlmodel.SkillLevel, error) {
 	if recipe.Difficulty == "" {
-		return nil, nil
+		return nil, ErrInvalidSkillLevel
 	}
 
 	var skillLevel gqlmodel.SkillLevel
@@ -22,16 +28,16 @@ func (r *Resolver) difficulty(ctx context.Context, recipe *domainmodel.Recipe) (
 	case "ADVANCED":
 		skillLevel = gqlmodel.SkillLevelAdvanced
 	default:
-		return nil, nil
+		return nil, ErrInvalidSkillLevel
 	}
 
 	return &skillLevel, nil
 }
 
 // skillLevel converts the string skill level from the domain model to the GraphQL enum type.
-func (r *Resolver) skillLevel(ctx context.Context, prefs *domainmodel.UserPreferences) (*gqlmodel.SkillLevel, error) {
+func (r *Resolver) skillLevel(_ context.Context, prefs *domainmodel.UserPreferences) (*gqlmodel.SkillLevel, error) {
 	if prefs.SkillLevel == "" {
-		return nil, nil
+		return nil, ErrInvalidSkillLevel
 	}
 
 	var skillLevel gqlmodel.SkillLevel
@@ -43,7 +49,7 @@ func (r *Resolver) skillLevel(ctx context.Context, prefs *domainmodel.UserPrefer
 	case "ADVANCED":
 		skillLevel = gqlmodel.SkillLevelAdvanced
 	default:
-		return nil, nil
+		return nil, ErrInvalidSkillLevel
 	}
 
 	return &skillLevel, nil

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -9,6 +10,23 @@ import (
 
 	"github.com/openai/openai-go"
 	"github.com/spf13/viper"
+)
+
+// Default configuration values.
+const (
+	DefaultReadTimeoutSeconds  = 30
+	DefaultWriteTimeoutSeconds = 30
+	DefaultIdleTimeoutSeconds  = 60
+	DefaultCacheTTLMinutes     = 1440 // 24 hours
+	DefaultMaxTokens           = 4000
+)
+
+// Configuration errors.
+var (
+	ErrServerPortRequired    = errors.New("server port is required")
+	ErrDGraphConnStrRequired = errors.New("DGraph connection string is required")
+	ErrJWTSecretRequired     = errors.New("JWT secret is required")
+	ErrOpenAIAPIKeyRequired  = errors.New("OpenAI API key is required")
 )
 
 // Config holds the application configuration.
@@ -86,7 +104,8 @@ func Load() (*Config, error) {
 
 	// Read configuration file
 	if err := viper.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+		var configFileNotFoundErr viper.ConfigFileNotFoundError
+		if !errors.As(err, &configFileNotFoundErr) {
 			return nil, fmt.Errorf("failed to read config file: %w", err)
 		}
 		// Config file not found, using defaults and environment variables
@@ -113,9 +132,9 @@ func setDefaults() {
 	viper.SetDefault("server.port", "8080")
 	viper.SetDefault("server.cors_origin", "*")
 	viper.SetDefault("server.enable_playground", true)
-	viper.SetDefault("server.read_timeout_seconds", 30)
-	viper.SetDefault("server.write_timeout_seconds", 30)
-	viper.SetDefault("server.idle_timeout_seconds", 60)
+	viper.SetDefault("server.read_timeout_seconds", DefaultReadTimeoutSeconds)
+	viper.SetDefault("server.write_timeout_seconds", DefaultWriteTimeoutSeconds)
+	viper.SetDefault("server.idle_timeout_seconds", DefaultIdleTimeoutSeconds)
 
 	// DGraph defaults
 	viper.SetDefault("dgraph.connection_string", "localhost:9080")
@@ -133,8 +152,8 @@ func setDefaults() {
 	viper.SetDefault("ai.embedding_model", "text-embedding-ada-002")
 	viper.SetDefault("ai.completion_model", "gpt-3.5-turbo")
 	viper.SetDefault("ai.enable_cache", true)
-	viper.SetDefault("ai.cache_ttl_minutes", 1440) // 24 hours
-	viper.SetDefault("ai.max_tokens", 4000)
+	viper.SetDefault("ai.cache_ttl_minutes", DefaultCacheTTLMinutes) // 24 hours
+	viper.SetDefault("ai.max_tokens", DefaultMaxTokens)
 
 	// Storage defaults
 	viper.SetDefault("storage.type", "local")
@@ -145,22 +164,22 @@ func setDefaults() {
 func validateConfig(config *Config) error {
 	// Validate server config
 	if config.Server.Port == "" {
-		return fmt.Errorf("server port is required")
+		return ErrServerPortRequired
 	}
 
 	// Validate DGraph config
 	if config.DGraph.ConnectionString == "" {
-		return fmt.Errorf("DGraph connection string is required")
+		return ErrDGraphConnStrRequired
 	}
 
 	// Validate Auth config
 	if config.Auth.JWTSecret == "" {
-		return fmt.Errorf("JWT secret is required")
+		return ErrJWTSecretRequired
 	}
 
 	// Validate AI config
 	if config.AI.OpenAIKey == "" {
-		return fmt.Errorf("OpenAI API key is required")
+		return ErrOpenAIAPIKeyRequired
 	}
 
 	return nil

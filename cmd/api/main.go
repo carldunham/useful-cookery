@@ -26,6 +26,16 @@ import (
 	"github.com/carldunham/useful-cookery/internal/graphql/resolvers"
 )
 
+const (
+	// DefaultTimeoutSeconds is the default timeout for middleware.
+	DefaultTimeoutSeconds = 60
+	// DefaultCORSMaxAge is the default max age for CORS headers.
+	DefaultCORSMaxAge = 300
+	// ShutdownTimeoutSeconds is the timeout for graceful server shutdown.
+	ShutdownTimeoutSeconds = 30
+)
+
+//nolint:funlen // TODO: simplify.
 func main() {
 	// Load configuration
 	cfg, err := config.Load()
@@ -88,7 +98,7 @@ func main() {
 	router.Use(middleware.RealIP)
 	router.Use(middleware.Logger)
 	router.Use(middleware.Recoverer)
-	router.Use(middleware.Timeout(60 * time.Second))
+	router.Use(middleware.Timeout(DefaultTimeoutSeconds * time.Second))
 
 	// Add CORS middleware
 	router.Use(cors.Handler(cors.Options{
@@ -97,7 +107,7 @@ func main() {
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: true,
-		MaxAge:           300,
+		MaxAge:           DefaultCORSMaxAge,
 	}))
 
 	// Define routes
@@ -148,7 +158,7 @@ func main() {
 	logger.Println("Shutting down server...")
 
 	// Create context with timeout for shutdown
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), ShutdownTimeoutSeconds*time.Second)
 	defer cancel()
 
 	// Shutdown server

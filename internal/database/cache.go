@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -37,7 +38,7 @@ func NewRedisCache(addr, password string, db int) *RedisCache {
 func (c *RedisCache) Get(ctx context.Context, key string) ([]byte, error) {
 	val, err := c.client.Get(ctx, key).Bytes()
 	if err != nil {
-		if err == redis.Nil {
+		if errors.Is(err, redis.Nil) {
 			return nil, nil // Key not found, return nil value
 		}
 		return nil, fmt.Errorf("failed to get value from Redis: %w", err)
@@ -100,7 +101,7 @@ func NewInMemoryCache() *InMemoryCache {
 }
 
 // Get retrieves a value from the in-memory cache.
-func (c *InMemoryCache) Get(ctx context.Context, key string) ([]byte, error) {
+func (c *InMemoryCache) Get(_ context.Context, key string) ([]byte, error) {
 	item, ok := c.data[key]
 	if !ok {
 		return nil, nil
@@ -116,7 +117,7 @@ func (c *InMemoryCache) Get(ctx context.Context, key string) ([]byte, error) {
 }
 
 // Set stores a value in the in-memory cache.
-func (c *InMemoryCache) Set(ctx context.Context, key string, value []byte, ttl time.Duration) error {
+func (c *InMemoryCache) Set(_ context.Context, key string, value []byte, ttl time.Duration) error {
 	var expiration time.Time
 	if ttl > 0 {
 		expiration = time.Now().Add(ttl)
@@ -131,7 +132,7 @@ func (c *InMemoryCache) Set(ctx context.Context, key string, value []byte, ttl t
 }
 
 // Delete removes a value from the in-memory cache.
-func (c *InMemoryCache) Delete(ctx context.Context, key string) error {
+func (c *InMemoryCache) Delete(_ context.Context, key string) error {
 	delete(c.data, key)
 	return nil
 }

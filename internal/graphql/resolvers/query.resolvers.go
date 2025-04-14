@@ -32,7 +32,7 @@ func (r *RecipeResolver) getRecipe(ctx context.Context, id string) (*domainmodel
 	recipe, err := r.DB.GetRecipe(ctx, id)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
-			return nil, errors.New("recipe not found")
+			return nil, ErrRecipeNotFound
 		}
 		return nil, fmt.Errorf("failed to get recipe: %w", err)
 	}
@@ -43,7 +43,7 @@ func (r *RecipeResolver) getRecipe(ctx context.Context, id string) (*domainmodel
 func (r *RecipeResolver) getRecipes(
 	ctx context.Context,
 	filter *gqlmodel.RecipeFilter,
-	order *gqlmodel.RecipeOrder,
+	_ *gqlmodel.RecipeOrder,
 	first *int,
 	offset *int,
 ) ([]*domainmodel.Recipe, error) {
@@ -95,26 +95,26 @@ func (r *Resolver) user(ctx context.Context, id string) (*domainmodel.User, erro
 func (r *UserResolver) getCurrentUser(ctx context.Context) (*domainmodel.User, error) {
 	user := auth.GetUserFromContext(ctx)
 	if user == nil {
-		return nil, errors.New("not authenticated")
+		return nil, ErrNotAuthenticated
 	}
 	return user, nil
 }
 
 // GetUser returns a user by ID.
-func (r *UserResolver) getUser(ctx context.Context, id string) (*domainmodel.User, error) {
+func (r *UserResolver) getUser(ctx context.Context, userID string) (*domainmodel.User, error) {
 	// Check if the requester has permission to view the user
 	currentUser := auth.GetUserFromContext(ctx)
 	currentRole := auth.GetRoleFromContext(ctx)
 
 	// Allow admins to view any user, otherwise users can only view themselves
-	if currentUser == nil || (currentRole != string(domainmodel.AdminRole) && currentUser.ID != id) {
-		return nil, errors.New("permission denied")
+	if currentUser == nil || (currentRole != string(domainmodel.AdminRole) && currentUser.ID != userID) {
+		return nil, ErrPermissionDenied
 	}
 
-	user, err := r.DB.GetUser(ctx, id)
+	user, err := r.DB.GetUser(ctx, userID)
 	if err != nil {
 		if errors.Is(err, database.ErrNotFound) {
-			return nil, errors.New("user not found")
+			return nil, ErrUserNotFound
 		}
 		return nil, fmt.Errorf("failed to get user: %w", err)
 	}
@@ -123,13 +123,13 @@ func (r *UserResolver) getUser(ctx context.Context, id string) (*domainmodel.Use
 }
 
 // Categories returns all recipe categories.
-func (r *Resolver) categories(ctx context.Context) ([]*domainmodel.Category, error) {
+func (r *Resolver) categories(_ context.Context) ([]*domainmodel.Category, error) {
 	// Implementation would query the database for all categories
 	return []*domainmodel.Category{}, nil
 }
 
 // Category returns a category by ID.
-func (r *Resolver) category(ctx context.Context, id string) (*domainmodel.Category, error) {
+func (r *Resolver) category(_ context.Context, _ string) (*domainmodel.Category, error) {
 	// Implementation would query the database for the category
 	return &domainmodel.Category{}, nil
 }

@@ -1,9 +1,11 @@
+//nolint:lll // Long function signatures are acceptable for GraphQL resolvers.
 package resolvers
 
 import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 	"time"
 
@@ -12,14 +14,19 @@ import (
 	domainmodel "github.com/carldunham/useful-cookery/internal/model"
 )
 
+// Constants for search queries.
+const (
+	typeRecipe = "type(Recipe)"
+)
+
 // SearchResolver handles search-related resolvers.
 type SearchResolver struct {
 	DB        *database.DGraphClient
-	AIService *ai.AIService
+	AIService *ai.Service
 }
 
 // NewSearchResolver creates a new search resolver.
-func NewSearchResolver(db *database.DGraphClient, aiService *ai.AIService) *SearchResolver {
+func NewSearchResolver(db *database.DGraphClient, aiService *ai.Service) *SearchResolver {
 	return &SearchResolver{
 		DB:        db,
 		AIService: aiService,
@@ -79,6 +86,8 @@ func (r *SearchResolver) SearchRecipes(ctx context.Context, query string) ([]*do
 }
 
 // RecommendRecipes recommends recipes based on user preferences and available ingredients.
+//
+//nolint:cyclop // Complex function due to multiple recommendation strategies.
 func (r *SearchResolver) RecommendRecipes(
 	ctx context.Context,
 	userID *string,
@@ -155,9 +164,9 @@ func (r *SearchResolver) FindSubstitutes(ctx context.Context, ingredientName str
 }
 
 // basicTextSearch performs a basic text search.
-func (r *SearchResolver) basicTextSearch(ctx context.Context, query string) ([]*domainmodel.Recipe, error) {
+func (r *SearchResolver) basicTextSearch(ctx context.Context, searchText string) ([]*domainmodel.Recipe, error) {
 	// Basic text search implementation
-	q := `
+	queryStr := `
 	query SearchRecipes($searchText: string) {
 		recipes(func: alloftext(title, $searchText)) {
 			uid
@@ -166,14 +175,14 @@ func (r *SearchResolver) basicTextSearch(ctx context.Context, query string) ([]*
 	}`
 
 	variables := map[string]string{
-		"searchText": query,
+		"searchText": searchText,
 	}
 
 	var result struct {
 		Recipes []*domainmodel.Recipe `json:"recipes"`
 	}
 
-	err := r.DB.Query(ctx, q, variables, &result)
+	err := r.DB.Query(ctx, queryStr, variables, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute basic text search query: %w", err)
 	}
@@ -183,7 +192,7 @@ func (r *SearchResolver) basicTextSearch(ctx context.Context, query string) ([]*
 
 // getPopularRecipes returns popular recipes.
 func (r *SearchResolver) getPopularRecipes(ctx context.Context) ([]*domainmodel.Recipe, error) {
-	q := `
+	queryStr := `
 	query PopularRecipes() {
 		recipes(func: type(Recipe), orderasc: likes, first: 20) {
 			uid
@@ -195,7 +204,7 @@ func (r *SearchResolver) getPopularRecipes(ctx context.Context) ([]*domainmodel.
 		Recipes []*domainmodel.Recipe `json:"recipes"`
 	}
 
-	err := r.DB.Query(ctx, q, nil, &result)
+	err := r.DB.Query(ctx, queryStr, nil, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute popular recipes query: %w", err)
 	}
@@ -245,7 +254,7 @@ func (r *SearchResolver) findRecipesByIngredients(
 		}
 	}
 
-	q := fmt.Sprintf(`
+	queryStr := fmt.Sprintf(`
 	query RecipesByIngredients(%s) {
 		recipes(func: type(Recipe), @filter(%s), first: 20) {
 			uid
@@ -257,7 +266,7 @@ func (r *SearchResolver) findRecipesByIngredients(
 		Recipes []*domainmodel.Recipe `json:"recipes"`
 	}
 
-	err := r.DB.Query(ctx, q, variables, &result)
+	err := r.DB.Query(ctx, queryStr, variables, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute recipes by ingredients query: %w", err)
 	}
@@ -266,6 +275,8 @@ func (r *SearchResolver) findRecipesByIngredients(
 }
 
 // recommendBasedOnPreferences recommends recipes based on user preferences.
+//
+//nolint:cyclop,funlen // Complex function due to handling multiple user preference fields.
 func (r *SearchResolver) recommendBasedOnPreferences(
 	ctx context.Context,
 	user *domainmodel.User,
@@ -331,7 +342,7 @@ func (r *SearchResolver) recommendBasedOnPreferences(
 		filterClause = fmt.Sprintf("@filter(%s)", strings.Join(conditions, " AND "))
 	}
 
-	q := fmt.Sprintf(`
+	queryStr := fmt.Sprintf(`
 	query RecommendRecipes(%s) {
 		recipes(func: type(Recipe), %s, first: 20) {
 			uid
@@ -343,7 +354,7 @@ func (r *SearchResolver) recommendBasedOnPreferences(
 		Recipes []*domainmodel.Recipe `json:"recipes"`
 	}
 
-	err := r.DB.Query(ctx, q, variables, &result)
+	err := r.DB.Query(ctx, queryStr, variables, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute recommendation by preferences query: %w", err)
 	}
@@ -366,6 +377,8 @@ func buildVariableDeclarations(vars map[string]string) string {
 }
 
 // structuredSearch performs a search using structured parameters.
+//
+//nolint:cyclop,funlen // Complex function due to handling multiple search parameters.
 func (r *SearchResolver) structuredSearch(ctx context.Context, params *domainmodel.SearchParams) ([]*domainmodel.Recipe, error) {
 	// Build query conditions based on search parameters
 	var conditions []string
@@ -373,7 +386,7 @@ func (r *SearchResolver) structuredSearch(ctx context.Context, params *domainmod
 
 	// Add conditions for each parameter
 	if len(params.Ingredients) > 0 {
-		ingredientCondition := "type(Recipe)"
+		ingredientCondition := typeRecipe
 		for i, ing := range params.Ingredients {
 			varName := fmt.Sprintf("ing%d", i)
 			ingredientCondition = fmt.Sprintf("%s AND anyoftext(ingredients, $%s)", ingredientCondition, varName)
@@ -393,7 +406,7 @@ func (r *SearchResolver) structuredSearch(ctx context.Context, params *domainmod
 
 	// Add categories
 	if len(params.Categories) > 0 {
-		categoryCondition := "type(Recipe)"
+		categoryCondition := typeRecipe
 		for i, cat := range params.Categories {
 			varName := fmt.Sprintf("cat%d", i)
 			categoryCondition = fmt.Sprintf("%s AND anyoftext(categories, $%s)", categoryCondition, varName)
@@ -420,7 +433,7 @@ func (r *SearchResolver) structuredSearch(ctx context.Context, params *domainmod
 	// Add max prep time
 	if params.MaxPrepTime > 0 {
 		conditions = append(conditions, "le(prepTime, $maxPrepTime)")
-		variables["maxPrepTime"] = fmt.Sprintf("%d", params.MaxPrepTime)
+		variables["maxPrepTime"] = strconv.Itoa(params.MaxPrepTime)
 	}
 
 	// Add difficulty
@@ -438,7 +451,7 @@ func (r *SearchResolver) structuredSearch(ctx context.Context, params *domainmod
 		}
 	}
 
-	q := fmt.Sprintf(`
+	queryStr := fmt.Sprintf(`
 	query StructuredSearch(%s) {
 		recipes(func: type(Recipe), %s, first: 20) {
 			uid
@@ -450,7 +463,7 @@ func (r *SearchResolver) structuredSearch(ctx context.Context, params *domainmod
 		Recipes []*domainmodel.Recipe `json:"recipes"`
 	}
 
-	err := r.DB.Query(ctx, q, variables, &result)
+	err := r.DB.Query(ctx, queryStr, variables, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute structured search query: %w", err)
 	}
@@ -459,6 +472,8 @@ func (r *SearchResolver) structuredSearch(ctx context.Context, params *domainmod
 }
 
 // hybridSearch combines vector search with structured filters.
+//
+//nolint:cyclop,funlen // Complex function due to handling multiple search parameters and vector search.
 func (r *SearchResolver) hybridSearch(
 	ctx context.Context,
 	embedding []float32,
@@ -486,7 +501,7 @@ func (r *SearchResolver) hybridSearch(
 
 	// Add conditions for each parameter
 	if len(params.Ingredients) > 0 {
-		ingredientCondition := "type(Recipe)"
+		ingredientCondition := typeRecipe
 		for i, ing := range params.Ingredients {
 			varName := fmt.Sprintf("ing%d", i)
 			ingredientCondition = fmt.Sprintf("%s AND anyoftext(ingredients, $%s)", ingredientCondition, varName)
@@ -506,7 +521,7 @@ func (r *SearchResolver) hybridSearch(
 
 	// Add categories
 	if len(params.Categories) > 0 {
-		categoryCondition := "type(Recipe)"
+		categoryCondition := typeRecipe
 		for i, cat := range params.Categories {
 			varName := fmt.Sprintf("cat%d", i)
 			categoryCondition = fmt.Sprintf("%s AND anyoftext(categories, $%s)", categoryCondition, varName)
@@ -533,7 +548,7 @@ func (r *SearchResolver) hybridSearch(
 	// Add max prep time
 	if params.MaxPrepTime > 0 {
 		conditions = append(conditions, "le(prepTime, $maxPrepTime)")
-		variables["maxPrepTime"] = fmt.Sprintf("%d", params.MaxPrepTime)
+		variables["maxPrepTime"] = strconv.Itoa(params.MaxPrepTime)
 	}
 
 	// Add difficulty
@@ -549,7 +564,7 @@ func (r *SearchResolver) hybridSearch(
 	}
 
 	// Construct DGraph query with vector search and filters
-	q := fmt.Sprintf(`
+	queryStr := fmt.Sprintf(`
 	query HybridSearch(%s) {
 		recipes(func: vector(embeddings, $embeddings, $distance), %s, first: 20) {
 			uid
@@ -561,7 +576,7 @@ func (r *SearchResolver) hybridSearch(
 		Recipes []*domainmodel.Recipe `json:"recipes"`
 	}
 
-	err := r.DB.Query(ctx, q, variables, &result)
+	err := r.DB.Query(ctx, queryStr, variables, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute hybrid search query: %w", err)
 	}
