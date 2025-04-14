@@ -40,7 +40,7 @@ clean:
 # Run tests
 test:
 	@echo "Running tests..."
-	$(GOTEST) -v ./...
+	$(GOTEST) ./...
 
 # Run linting
 lint:
