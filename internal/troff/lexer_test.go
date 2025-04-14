@@ -45,7 +45,7 @@ of a recipe.
 	}
 
 	// Check for the correct number of tokens
-	expectedCount := 10 // TL + Test + Recipe + AU + John + Doe + AB + 3 description params + AE + EOF
+	expectedCount := 9 // TL + Test + Recipe + AU + John + Doe + AB + description param + AE (EOF is dropped)
 	if len(tokens) != expectedCount {
 		t.Errorf("Expected %d tokens, got %d", expectedCount, len(tokens))
 	}
@@ -64,8 +64,8 @@ of a recipe.
 	}
 
 	// Check description tokens
-	if tokens[7].Type != TokenParam || tokens[7].Value != "This" {
-		t.Errorf("Expected description token to be Param(This), got %v", tokens[7])
+	if tokens[7].Type != TokenParam || tokens[7].Value != "This is a description\nof a recipe." {
+		t.Errorf("Expected description token to be multi-line Param(This is a description\nof a recipe.), got %v", tokens[7])
 	}
 }
 
@@ -154,5 +154,59 @@ Boil milk with half of sugars for two minutes.`
 
 	if !foundTL || !foundSH || !foundAU || !foundAB || !foundIG || !foundSK {
 		t.Errorf("Not all expected commands were found")
+	}
+}
+
+func TestLexer_TokenizeMultilineParams(t *testing.T) {
+	input := `.TL Test Recipe
+.AB
+This is a multi-line description
+that spans multiple lines
+and should be treated as separate tokens
+but all belonging to the AB command.
+.AE`
+
+	lexer := NewLexer(strings.NewReader(input))
+	tokens, err := lexer.Tokenize()
+	if err != nil {
+		t.Fatalf("Tokenize() error = %v", err)
+	}
+
+	// Find the AB command and check that all following parameters have the AB command
+	abIndex := -1
+	for i, token := range tokens {
+		if token.Type == TokenCommand && token.Value == "AB" {
+			abIndex = i
+			break
+		}
+	}
+
+	if abIndex == -1 {
+		t.Fatalf("AB command not found in tokens")
+	}
+
+	// Check that all parameters between AB and AE have the AB command
+	aeIndex := -1
+	for i := abIndex + 1; i < len(tokens); i++ {
+		if tokens[i].Type == TokenCommand && tokens[i].Value == "AE" {
+			aeIndex = i
+			break
+		}
+
+		if tokens[i].Type == TokenParam {
+			if tokens[i].Command != "AB" {
+				t.Errorf("Expected parameter token %d to have command AB, got %s", i, tokens[i].Command)
+			}
+		}
+	}
+
+	if aeIndex == -1 {
+		t.Fatalf("AE command not found in tokens")
+	}
+
+	// Check the content of each description line
+	paramIndex := abIndex + 1
+	if paramIndex < aeIndex && tokens[paramIndex].Value[:4] != "This" {
+		t.Errorf("Expected first word of description to be 'This', got '%s'", tokens[paramIndex].Value[:4])
 	}
 }

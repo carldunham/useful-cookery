@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/carldunham/useful-cookery/internal/model"
@@ -74,130 +75,200 @@ func processTokens(tokens []Token, recipe *model.Recipe) error {
 	// Current state tracking
 	var currentIngredientSet []model.DetailedIngredient
 	var currentSteps []model.Step
-	var inDescription bool
-	var descriptionText string
+	var inIntroduction bool
+	var introductionText string
+	var inNotes bool
+	var notesText string
 	var stepIndex int
 
 	// Process each token
-	for i := 0; i < len(tokens); i++ {
-		token := tokens[i]
-
+	for i, token := range tokens {
 		switch {
 		case token.Type == TokenCommand:
 			cmd := token.Value
 
 			// Handle different commands
 			switch cmd {
-			case "TL": // Title
-				if i+1 < len(tokens) && tokens[i+1].Type == TokenParam {
-					recipe.Title = tokens[i+1].Value
-					i++ // Skip the parameter we just processed
-				}
+			case "RH": // Recipe Header - must be first line with 4 arguments
+				if i+3 < len(tokens) &&
+					tokens[i+1].Type == TokenParam &&
+					tokens[i+2].Type == TokenParam &&
+					tokens[i+3].Type == TokenParam &&
+					tokens[i+4].Type == TokenParam {
+					// First param is source, second is recipe ID, third is category code, fourth is date
+					// We'll store the recipe ID and category
+					recipe.ID = tokens[i+2].Value
 
-			case "SH": // Section Header
-				// Check if we have a parameter for the section
-				if i+1 < len(tokens) && tokens[i+1].Type == TokenParam {
-					sectionName := tokens[i+1].Value
-					i++ // Skip the parameter we just processed
-
-					// Handle special sections
-					if sectionName == "CATEGORY" {
-						// Process category parameters
-						categories := []model.Category{}
-						for j := i + 1; j < len(tokens); j++ {
-							if tokens[j].Type == TokenParam && tokens[j].Command == token.Value {
-								categoryNames := tokens[j].Value
-								for _, name := range splitAndTrim(categoryNames, ",") {
-									if name != "" {
-										categories = append(categories, model.Category{Name: name})
-									}
-								}
-								i = j // Skip the parameters we just processed
-								break
-							} else if tokens[j].Type == TokenCommand {
-								break
-							}
+					// Parse category code
+					categoryCode := tokens[i+3].Value
+					for _, code := range strings.Split(categoryCode, "") {
+						switch code {
+						case "M":
+							recipe.Categories = append(recipe.Categories, model.Category{Name: "Main dish"})
+						case "A":
+							recipe.Categories = append(recipe.Categories, model.Category{Name: "Appetizer or snack"})
+						case "B":
+							recipe.Categories = append(recipe.Categories, model.Category{Name: "Bread/pasta"})
+						case "L":
+							recipe.Categories = append(recipe.Categories, model.Category{Name: "Beverage"})
+						case "C":
+							recipe.Categories = append(recipe.Categories, model.Category{Name: "Cookie or cake"})
+						case "S":
+							recipe.Categories = append(recipe.Categories, model.Category{Name: "Sauce"})
+						case "SL":
+							recipe.Categories = append(recipe.Categories, model.Category{Name: "Salad"})
+						case "SP":
+							recipe.Categories = append(recipe.Categories, model.Category{Name: "Soup"})
+						case "D":
+							recipe.Categories = append(recipe.Categories, model.Category{Name: "Dessert"})
+						case "V":
+							recipe.Categories = append(recipe.Categories, model.Category{Name: "Vegetable dish"})
+						case "O":
+							recipe.Categories = append(recipe.Categories, model.Category{Name: "Other"})
 						}
-						recipe.Categories = categories
 					}
+
+					i += 4 // Skip the parameters we just processed
 				}
 
-			case "AU": // Author
+			case "RZ": // Recipe Title and Description
+				if i+2 < len(tokens) && tokens[i+1].Type == TokenParam && tokens[i+2].Type == TokenParam {
+					recipe.Title = tokens[i+1].Value
+					recipe.Description = tokens[i+2].Value
+					i += 2 // Skip the parameters we just processed
+
+					// After RZ, introductory comments begin
+					inIntroduction = true
+					introductionText = ""
+				}
+
+			case "IH": // Ingredients Header
+				inIntroduction = false // End of introduction
+				if len(introductionText) > 0 {
+					if recipe.Description != "" {
+						recipe.Description += "\n\n"
+					}
+					recipe.Description += introductionText
+				}
+
+				// IH can have yield information
 				if i+1 < len(tokens) && tokens[i+1].Type == TokenParam {
-					recipe.Author = &model.User{Name: tokens[i+1].Value}
-					i++ // Skip the parameter we just processed
+					// Store yield information if needed
+					// For now we'll just skip it
+					i++
 				}
-
-			case "AB": // Abstract (Description) start
-				inDescription = true
-				descriptionText = ""
-
-			case "AE": // Abstract (Description) end
-				inDescription = false
-				recipe.Description = descriptionText
 
 			case "IG": // Ingredient
-				if i+1 < len(tokens) && tokens[i+1].Type == TokenParam {
-					_ = tokens[i+1].Value // quantity (stored for future use if needed)
-					i++                   // Skip the quantity parameter
+				if i+2 < len(tokens) && tokens[i+1].Type == TokenParam && tokens[i+2].Type == TokenParam {
+					quantity := tokens[i+1].Value
+					name := tokens[i+2].Value
+					i += 2 // Skip the parameters we just processed
 
-					// Get the ingredient name
+					// Check for optional metric quantity
+					var metricQty string
 					if i+1 < len(tokens) && tokens[i+1].Type == TokenParam {
-						name := tokens[i+1].Value
-						i++ // Skip the name parameter
-
-						// Check for optional metric quantity
-						var unit string
-						if i+1 < len(tokens) && tokens[i+1].Type == TokenParam {
-							unit = tokens[i+1].Value
-							i++ // Skip the unit parameter
-						}
-
-						ingredient := model.DetailedIngredient{
-							Name: name,
-							Unit: unit,
-						}
-
-						// Try to parse the quantity as a float
-						currentIngredientSet = append(currentIngredientSet, ingredient)
+						metricQty = tokens[i+1].Value
+						i++ // Skip the metric parameter
 					}
+
+					// Create ingredient with proper types
+					// If we have metric quantity, append it to the unit field
+					unitValue := quantity
+					if metricQty != "" {
+						unitValue += " (metric: " + metricQty + ")"
+					}
+
+					ingredient := model.DetailedIngredient{
+						Name: name,
+						Unit: unitValue,
+					}
+
+					currentIngredientSet = append(currentIngredientSet, ingredient)
 				}
+
+			case "PH": // Procedure Header
+				// Nothing specific to do here, just marks the start of procedure steps
 
 			case "SK": // Step
 				if i+1 < len(tokens) && tokens[i+1].Type == TokenParam {
 					// The parameter is the step number
+					stepNumber := tokens[i+1].Value
 					i++ // Skip the step number parameter
 
-					// Collect the step description from subsequent parameters
+					// Collect the step description from text following this command
 					var stepDescription string
 					for j := i + 1; j < len(tokens); j++ {
-						if tokens[j].Type == TokenParam && tokens[j].Command == token.Value {
+						if tokens[j].Type == TokenCommand {
+							break
+						}
+						if tokens[j].Type == TokenParam {
 							if stepDescription != "" {
 								stepDescription += " "
 							}
 							stepDescription += tokens[j].Value
-							i = j // Skip the parameters we just processed
-						} else if tokens[j].Type == TokenCommand {
-							break
 						}
 					}
 
+					// Try to parse step number
+					var orderIndex int
+					if num, err := strconv.Atoi(stepNumber); err == nil {
+						orderIndex = num - 1 // Convert to 0-based index
+					} else {
+						orderIndex = stepIndex
+					}
+
 					step := model.Step{
-						OrderIndex:  stepIndex,
+						OrderIndex:  orderIndex,
 						Description: stepDescription,
 					}
 					currentSteps = append(currentSteps, step)
 					stepIndex++
 				}
+
+			case "NX": // Notes Header
+				inNotes = true
+				notesText = ""
+
+			case "WR": // Wrapup
+				inNotes = false
+				if len(notesText) > 0 {
+					if recipe.Description != "" {
+						recipe.Description += "\n\n"
+					}
+					recipe.Description += "NOTES: " + notesText
+				}
+
+				// Process author information from text following WR
+				var authorInfo string
+				for j := i + 1; j < len(tokens); j++ {
+					if tokens[j].Type == TokenCommand {
+						break
+					}
+					if tokens[j].Type == TokenParam {
+						if authorInfo != "" {
+							authorInfo += " "
+						}
+						authorInfo += tokens[j].Value
+					}
+				}
+
+				if authorInfo != "" {
+					recipe.Author = &model.User{Name: authorInfo}
+				}
 			}
 
 		case token.Type == TokenParam:
 			// Handle parameters based on context
-			if inDescription {
-				if descriptionText != "" {
-					descriptionText += " "
+			if inIntroduction {
+				if introductionText != "" {
+					introductionText += " "
 				}
-				descriptionText += token.Value
+				introductionText += token.Value
+			} else if inNotes {
+				if notesText != "" {
+					notesText += " "
+				}
+				notesText += token.Value
 			}
 		}
 	}

@@ -6,51 +6,57 @@ import (
 )
 
 func TestParse_BasicRecipe(t *testing.T) {
-	input := `.TL Test Recipe
-.AU John Doe
-.AB
+	input := `.RH MOD.RECIPES-SOURCE RECIPE-ID D "22 Dec 83"
+.RZ "TEST RECIPE" "A simple test recipe"
 This is a test recipe description.
 It has multiple lines.
-.AE
-.SH CATEGORY
-Dessert, Test
+.IH "4 servings"
 .IG "1 cup" "sugar" "200g"
 .IG "2" "eggs"
+.PH
 .SK 1
 Mix ingredients.
 .SK 2
-Bake for 30 minutes.`
+Bake for 30 minutes.
+.NX
+Some notes about the recipe.
+.WR
+John Doe
+john@example.com
+Test Organization, Test City`
 
 	recipe, err := Parse(strings.NewReader(input))
 	if err != nil {
 		t.Fatalf("Parse() error = %v", err)
 	}
 
+	// Check ID
+	if recipe.ID != "RECIPE-ID" {
+		t.Errorf("Expected ID 'RECIPE-ID', got '%s'", recipe.ID)
+	}
+
 	// Check title
-	if recipe.Title != "Test Recipe" {
-		t.Errorf("Expected title 'Test Recipe', got '%s'", recipe.Title)
+	if recipe.Title != "TEST RECIPE" {
+		t.Errorf("Expected title 'TEST RECIPE', got '%s'", recipe.Title)
 	}
 
 	// Check author
-	if recipe.Author == nil || recipe.Author.Name != "John Doe" {
-		t.Errorf("Expected author 'John Doe', got '%v'", recipe.Author)
+	if recipe.Author == nil || !strings.Contains(recipe.Author.Name, "John Doe") {
+		t.Errorf("Expected author containing 'John Doe', got '%v'", recipe.Author)
 	}
 
 	// Check description
-	expectedDesc := "This is a test recipe description. It has multiple lines."
-	if recipe.Description != expectedDesc {
-		t.Errorf("Expected description '%s', got '%s'", expectedDesc, recipe.Description)
+	if !strings.Contains(recipe.Description, "A simple test recipe") ||
+		!strings.Contains(recipe.Description, "This is a test recipe description") {
+		t.Errorf("Expected description to contain both the RZ description and introductory text, got '%s'", recipe.Description)
 	}
 
-	// Check categories
-	if len(recipe.Categories) != 2 {
-		t.Errorf("Expected 2 categories, got %d", len(recipe.Categories))
+	// Check categories - D is for Dessert
+	if len(recipe.Categories) != 1 {
+		t.Errorf("Expected 1 category, got %d", len(recipe.Categories))
 	} else {
 		if recipe.Categories[0].Name != "Dessert" {
-			t.Errorf("Expected first category 'Dessert', got '%s'", recipe.Categories[0].Name)
-		}
-		if recipe.Categories[1].Name != "Test" {
-			t.Errorf("Expected second category 'Test', got '%s'", recipe.Categories[1].Name)
+			t.Errorf("Expected category 'Dessert', got '%s'", recipe.Categories[0].Name)
 		}
 	}
 
@@ -58,12 +64,13 @@ Bake for 30 minutes.`
 	if len(recipe.Ingredients) != 2 {
 		t.Errorf("Expected 2 ingredients, got %d", len(recipe.Ingredients))
 	} else {
-		if recipe.Ingredients[0].Name != "sugar" || recipe.Ingredients[0].Unit != "200g" {
-			t.Errorf("Expected first ingredient 'sugar' with unit '200g', got '%s' with unit '%s'",
+		if recipe.Ingredients[0].Name != "sugar" || !strings.Contains(recipe.Ingredients[0].Unit, "1 cup") {
+			t.Errorf("Expected first ingredient 'sugar' with unit containing '1 cup', got '%s' with unit '%s'",
 				recipe.Ingredients[0].Name, recipe.Ingredients[0].Unit)
 		}
-		if recipe.Ingredients[1].Name != "eggs" {
-			t.Errorf("Expected second ingredient 'eggs', got '%s'", recipe.Ingredients[1].Name)
+		if recipe.Ingredients[1].Name != "eggs" || !strings.Contains(recipe.Ingredients[1].Unit, "2") {
+			t.Errorf("Expected second ingredient 'eggs' with unit containing '2', got '%s' with unit '%s'",
+				recipe.Ingredients[1].Name, recipe.Ingredients[1].Unit)
 		}
 	}
 
@@ -84,19 +91,17 @@ Bake for 30 minutes.`
 
 func TestParse_RealRecipe(t *testing.T) {
 	// Using a simplified version of the Advokaat recipe
-	input := `.TL Advokaat
-.AU Laurent Siklossy
-.AB
+	input := `.RH MOD.RECIPES-SOURCE ADVOKAAT L "22 Dec 83"
+.RZ "ADVOKAAT" "Dutch egg cognac"
 Advokaat is the Dutch word for "egg cognac".
 It is highly recommended for A. I. (Alcohol Imbibing) meetings.
-.AE
-.SH CATEGORY
-Drinks, Desserts
+.IH "1 bottle" "750 ml"
 .IG "1 1/2 cups" "sugar" "300 g"
 .IG "2 Tbsp" "vanilla sugar" "25 g"
 .IG "2 cups" "milk" "500 ml"
 .IG "9" "egg yolks"
 .IG "1 1/2 cups" "95% grain alcohol" "350 ml"
+.PH
 .SK 1
 Mix sugars.
 .SK 2
@@ -106,44 +111,59 @@ Mix well the yolks with the other half of the sugars.
 .SK 4
 Using mixer add to milk. Then add alcohol slowly.
 .SK 5
-Bottle and let rest for two weeks to let the mixture thicken.`
+Bottle and let rest for two weeks to let the mixture thicken.
+.NX
+This recipe is from the Netherlands.
+.WR
+Laurent Siklossy
+laurent@example.com
+Test University, Amsterdam`
 
 	recipe, err := Parse(strings.NewReader(input))
 	if err != nil {
 		t.Fatalf("Parse() error = %v", err)
 	}
 
-	// Check basic fields
-	if recipe.Title != "Advokaat" {
-		t.Errorf("Expected title 'Advokaat', got '%s'", recipe.Title)
+	// Check ID
+	if recipe.ID != "ADVOKAAT" {
+		t.Errorf("Expected ID 'ADVOKAAT', got '%s'", recipe.ID)
 	}
 
-	if recipe.Author == nil || recipe.Author.Name != "Laurent Siklossy" {
-		t.Errorf("Expected author 'Laurent Siklossy', got '%v'", recipe.Author)
+	// Check title
+	if recipe.Title != "ADVOKAAT" {
+		t.Errorf("Expected title 'ADVOKAAT', got '%s'", recipe.Title)
 	}
 
-	// Check categories
-	expectedCategories := []string{"Drinks", "Desserts"}
-	if len(recipe.Categories) != len(expectedCategories) {
-		t.Errorf("Expected %d categories, got %d", len(expectedCategories), len(recipe.Categories))
+	// Check author
+	if recipe.Author == nil || !strings.Contains(recipe.Author.Name, "Laurent Siklossy") {
+		t.Errorf("Expected author containing 'Laurent Siklossy', got '%v'", recipe.Author)
+	}
+
+	// Check description
+	if !strings.Contains(recipe.Description, "Dutch egg cognac") ||
+		!strings.Contains(recipe.Description, "Advokaat is the Dutch word") {
+		t.Errorf("Expected description to contain both the RZ description and introductory text, got '%s'", recipe.Description)
+	}
+
+	// Check categories - L is for Beverage (Liquid)
+	if len(recipe.Categories) != 1 {
+		t.Errorf("Expected 1 category, got %d", len(recipe.Categories))
 	} else {
-		for i, cat := range expectedCategories {
-			if recipe.Categories[i].Name != cat {
-				t.Errorf("Expected category '%s', got '%s'", cat, recipe.Categories[i].Name)
-			}
+		if recipe.Categories[0].Name != "Beverage" {
+			t.Errorf("Expected category 'Beverage', got '%s'", recipe.Categories[0].Name)
 		}
 	}
 
 	// Check ingredients
 	expectedIngredients := []struct {
-		name string
-		unit string
+		name             string
+		quantityContains string
 	}{
-		{"sugar", "300 g"},
-		{"vanilla sugar", "25 g"},
-		{"milk", "500 ml"},
-		{"egg yolks", ""},
-		{"95% grain alcohol", "350 ml"},
+		{"sugar", "1 1/2 cups"},
+		{"vanilla sugar", "2 Tbsp"},
+		{"milk", "2 cups"},
+		{"egg yolks", "9"},
+		{"95% grain alcohol", "1 1/2 cups"},
 	}
 
 	if len(recipe.Ingredients) != len(expectedIngredients) {
@@ -153,9 +173,9 @@ Bottle and let rest for two weeks to let the mixture thicken.`
 			if recipe.Ingredients[i].Name != ing.name {
 				t.Errorf("Expected ingredient '%s', got '%s'", ing.name, recipe.Ingredients[i].Name)
 			}
-			if recipe.Ingredients[i].Unit != ing.unit {
-				t.Errorf("Expected unit '%s' for ingredient '%s', got '%s'",
-					ing.unit, ing.name, recipe.Ingredients[i].Unit)
+			if !strings.Contains(recipe.Ingredients[i].Unit, ing.quantityContains) {
+				t.Errorf("Expected unit for '%s' to contain '%s', got '%s'",
+					ing.name, ing.quantityContains, recipe.Ingredients[i].Unit)
 			}
 		}
 	}
@@ -203,7 +223,8 @@ func TestParse_InvalidInput(t *testing.T) {
 	}
 
 	// Test with malformed input (missing closing quotes)
-	input := `.TL Test Recipe
+	input := `.RH MOD.RECIPES-SOURCE RECIPE-ID D "22 Dec 83"
+.RZ "TEST RECIPE" "A simple test recipe"
 .IG "1 cup sugar`
 	_, err = Parse(strings.NewReader(input))
 	// This should not error, but should handle the unclosed quote gracefully
