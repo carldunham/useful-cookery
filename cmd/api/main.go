@@ -26,6 +26,8 @@ import (
 	"github.com/carldunham/useful-cookery/internal/graphql/resolvers"
 )
 
+//go:generate go tool github.com/99designs/gqlgen generate
+
 const (
 	// DefaultTimeoutSeconds is the default timeout for middleware.
 	DefaultTimeoutSeconds = 60

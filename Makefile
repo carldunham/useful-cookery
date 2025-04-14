@@ -2,9 +2,11 @@
 
 # Go parameters
 GOCMD=go
+GOGEN=$(GOCMD) generate
 GOBUILD=$(GOCMD) build
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
+GOTOOL=$(GOCMD) tool
 GOMOD=$(GOCMD) mod
 GORUN=$(GOCMD) run
 
@@ -19,7 +21,7 @@ MODELS_GEN=./internal/graphql/models/models_gen.go
 GQLGEN=github.com/99designs/gqlgen
 GOLANGCI_LINT=github.com/golangci/golangci-lint/cmd/golangci-lint
 
-.PHONY: all build clean test lint generate deps tidy help
+.PHONY: all build clean test lint generate tidy help
 
 all: generate lint test build
 
@@ -41,20 +43,14 @@ test:
 	$(GOTEST) -v ./...
 
 # Run linting
-lint: deps
+lint:
 	@echo "Running linter..."
-	$(GORUN) $(GOLANGCI_LINT) run ./...
+	$(GOTOOL) $(GOLANGCI_LINT) run ./...
 
-# Generate code with gqlgen
-generate: deps
-	@echo "Generating code with gqlgen..."
-	$(GORUN) $(GQLGEN) generate
-
-# Install dependencies
-deps:
-	@echo "Installing dependencies..."
-	$(GOGET) $(GQLGEN)
-	$(GOGET) $(GOLANGCI_LINT)
+# Generate code as needed
+generate:
+	@echo "Generating Go code..."
+	$(GOGEN)
 
 # Tidy up dependencies
 tidy:
@@ -78,7 +74,6 @@ help:
 	@echo "  make test         Run tests"
 	@echo "  make lint         Run linter"
 	@echo "  make generate     Generate code with gqlgen"
-	@echo "  make deps         Install dependencies"
 	@echo "  make tidy         Tidy up dependencies"
 	@echo "  make run          Run the application"
 	@echo "  make help         Show this help message"
