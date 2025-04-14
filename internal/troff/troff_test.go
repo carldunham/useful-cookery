@@ -3,6 +3,9 @@ package troff
 import (
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestParse_BasicRecipe(t *testing.T) {
@@ -26,67 +29,39 @@ john@example.com
 Test Organization, Test City`
 
 	recipe, err := Parse(strings.NewReader(input))
-	if err != nil {
-		t.Fatalf("Parse() error = %v", err)
-	}
+	require.NoError(t, err, "Parse() should not return an error")
 
 	// Check ID
-	if recipe.ID != "RECIPE-ID" {
-		t.Errorf("Expected ID 'RECIPE-ID', got '%s'", recipe.ID)
-	}
+	assert.Equal(t, "RECIPE-ID", recipe.ID, "Recipe ID should match")
 
 	// Check title
-	if recipe.Title != "TEST RECIPE" {
-		t.Errorf("Expected title 'TEST RECIPE', got '%s'", recipe.Title)
-	}
+	assert.Equal(t, "TEST RECIPE", recipe.Title, "Recipe title should match")
 
 	// Check author
-	if recipe.Author == nil || !strings.Contains(recipe.Author.Name, "John Doe") {
-		t.Errorf("Expected author containing 'John Doe', got '%v'", recipe.Author)
-	}
+	require.NotNil(t, recipe.Author, "Recipe author should not be nil")
+	assert.Contains(t, recipe.Author.Name, "John Doe", "Author name should contain 'John Doe'")
 
 	// Check description
-	if !strings.Contains(recipe.Description, "A simple test recipe") ||
-		!strings.Contains(recipe.Description, "This is a test recipe description") {
-		t.Errorf("Expected description to contain both the RZ description and introductory text, got '%s'", recipe.Description)
-	}
+	assert.Contains(t, recipe.Description, "A simple test recipe", "Description should contain RZ description")
+	assert.Contains(t, recipe.Description, "This is a test recipe description", "Description should contain introductory text")
 
 	// Check categories - D is for Dessert
-	if len(recipe.Categories) != 1 {
-		t.Errorf("Expected 1 category, got %d", len(recipe.Categories))
-	} else {
-		if recipe.Categories[0].Name != "Dessert" {
-			t.Errorf("Expected category 'Dessert', got '%s'", recipe.Categories[0].Name)
-		}
-	}
+	assert.Len(t, recipe.Categories, 1, "Should have 1 category")
+	assert.Equal(t, "Dessert", recipe.Categories[0].Name, "Category should be 'Dessert'")
 
 	// Check ingredients
-	if len(recipe.Ingredients) != 2 {
-		t.Errorf("Expected 2 ingredients, got %d", len(recipe.Ingredients))
-	} else {
-		if recipe.Ingredients[0].Name != "sugar" || !strings.Contains(recipe.Ingredients[0].Unit, "1 cup") {
-			t.Errorf("Expected first ingredient 'sugar' with unit containing '1 cup', got '%s' with unit '%s'",
-				recipe.Ingredients[0].Name, recipe.Ingredients[0].Unit)
-		}
-		if recipe.Ingredients[1].Name != "eggs" || !strings.Contains(recipe.Ingredients[1].Unit, "2") {
-			t.Errorf("Expected second ingredient 'eggs' with unit containing '2', got '%s' with unit '%s'",
-				recipe.Ingredients[1].Name, recipe.Ingredients[1].Unit)
-		}
-	}
+	assert.Len(t, recipe.Ingredients, 2, "Should have 2 ingredients")
+	assert.Equal(t, "sugar", recipe.Ingredients[0].Name, "First ingredient should be 'sugar'")
+	assert.Contains(t, recipe.Ingredients[0].Unit, "1 cup", "First ingredient unit should contain '1 cup'")
+	assert.Equal(t, "eggs", recipe.Ingredients[1].Name, "Second ingredient should be 'eggs'")
+	assert.Contains(t, recipe.Ingredients[1].Unit, "2", "Second ingredient unit should contain '2'")
 
 	// Check steps
-	if len(recipe.Steps) != 2 {
-		t.Errorf("Expected 2 steps, got %d", len(recipe.Steps))
-	} else {
-		if recipe.Steps[0].OrderIndex != 0 || recipe.Steps[0].Description != "Mix ingredients." {
-			t.Errorf("Expected first step with index 0 and description 'Mix ingredients.', got index %d and description '%s'",
-				recipe.Steps[0].OrderIndex, recipe.Steps[0].Description)
-		}
-		if recipe.Steps[1].OrderIndex != 1 || recipe.Steps[1].Description != "Bake for 30 minutes." {
-			t.Errorf("Expected second step with index 1 and description 'Bake for 30 minutes.', got index %d and description '%s'",
-				recipe.Steps[1].OrderIndex, recipe.Steps[1].Description)
-		}
-	}
+	assert.Len(t, recipe.Steps, 2, "Should have 2 steps")
+	assert.Equal(t, 0, recipe.Steps[0].OrderIndex, "First step should have index 0")
+	assert.Equal(t, "Mix ingredients.", recipe.Steps[0].Description, "First step description should match")
+	assert.Equal(t, 1, recipe.Steps[1].OrderIndex, "Second step should have index 1")
+	assert.Equal(t, "Bake for 30 minutes.", recipe.Steps[1].Description, "Second step description should match")
 }
 
 func TestParse_RealRecipe(t *testing.T) {
@@ -120,39 +95,25 @@ laurent@example.com
 Test University, Amsterdam`
 
 	recipe, err := Parse(strings.NewReader(input))
-	if err != nil {
-		t.Fatalf("Parse() error = %v", err)
-	}
+	require.NoError(t, err, "Parse() should not return an error")
 
 	// Check ID
-	if recipe.ID != "ADVOKAAT" {
-		t.Errorf("Expected ID 'ADVOKAAT', got '%s'", recipe.ID)
-	}
+	assert.Equal(t, "ADVOKAAT", recipe.ID, "Recipe ID should match")
 
 	// Check title
-	if recipe.Title != "ADVOKAAT" {
-		t.Errorf("Expected title 'ADVOKAAT', got '%s'", recipe.Title)
-	}
+	assert.Equal(t, "ADVOKAAT", recipe.Title, "Recipe title should match")
 
 	// Check author
-	if recipe.Author == nil || !strings.Contains(recipe.Author.Name, "Laurent Siklossy") {
-		t.Errorf("Expected author containing 'Laurent Siklossy', got '%v'", recipe.Author)
-	}
+	require.NotNil(t, recipe.Author, "Recipe author should not be nil")
+	assert.Contains(t, recipe.Author.Name, "Laurent Siklossy", "Author name should contain 'Laurent Siklossy'")
 
 	// Check description
-	if !strings.Contains(recipe.Description, "Dutch egg cognac") ||
-		!strings.Contains(recipe.Description, "Advokaat is the Dutch word") {
-		t.Errorf("Expected description to contain both the RZ description and introductory text, got '%s'", recipe.Description)
-	}
+	assert.Contains(t, recipe.Description, "Dutch egg cognac", "Description should contain RZ description")
+	assert.Contains(t, recipe.Description, "Advokaat is the Dutch word", "Description should contain introductory text")
 
 	// Check categories - L is for Beverage (Liquid)
-	if len(recipe.Categories) != 1 {
-		t.Errorf("Expected 1 category, got %d", len(recipe.Categories))
-	} else {
-		if recipe.Categories[0].Name != "Beverage" {
-			t.Errorf("Expected category 'Beverage', got '%s'", recipe.Categories[0].Name)
-		}
-	}
+	assert.Len(t, recipe.Categories, 1, "Should have 1 category")
+	assert.Equal(t, "Beverage", recipe.Categories[0].Name, "Category should be 'Beverage'")
 
 	// Check ingredients
 	expectedIngredients := []struct {
@@ -166,61 +127,34 @@ Test University, Amsterdam`
 		{"95% grain alcohol", "1 1/2 cups"},
 	}
 
-	if len(recipe.Ingredients) != len(expectedIngredients) {
-		t.Errorf("Expected %d ingredients, got %d", len(expectedIngredients), len(recipe.Ingredients))
-	} else {
-		for i, ing := range expectedIngredients {
-			if recipe.Ingredients[i].Name != ing.name {
-				t.Errorf("Expected ingredient '%s', got '%s'", ing.name, recipe.Ingredients[i].Name)
-			}
-			if !strings.Contains(recipe.Ingredients[i].Unit, ing.quantityContains) {
-				t.Errorf("Expected unit for '%s' to contain '%s', got '%s'",
-					ing.name, ing.quantityContains, recipe.Ingredients[i].Unit)
-			}
-		}
+	assert.Len(t, recipe.Ingredients, len(expectedIngredients), "Should have correct number of ingredients")
+
+	for i, ing := range expectedIngredients {
+		assert.Equal(t, ing.name, recipe.Ingredients[i].Name, "Ingredient name should match")
+		assert.Contains(t, recipe.Ingredients[i].Unit, ing.quantityContains, "Ingredient unit should contain quantity")
 	}
 
 	// Check steps
-	if len(recipe.Steps) != 5 {
-		t.Errorf("Expected 5 steps, got %d", len(recipe.Steps))
-	} else {
-		// Just check the first and last steps
-		if recipe.Steps[0].Description != "Mix sugars." {
-			t.Errorf("Expected first step 'Mix sugars.', got '%s'", recipe.Steps[0].Description)
-		}
-		if recipe.Steps[4].Description != "Bottle and let rest for two weeks to let the mixture thicken." {
-			t.Errorf("Expected last step 'Bottle and let rest for two weeks to let the mixture thicken.', got '%s'",
-				recipe.Steps[4].Description)
-		}
-	}
+	assert.Len(t, recipe.Steps, 5, "Should have 5 steps")
+	// Just check the first and last steps
+	assert.Equal(t, "Mix sugars.", recipe.Steps[0].Description, "First step description should match")
+	assert.Equal(t, "Bottle and let rest for two weeks to let the mixture thicken.", recipe.Steps[4].Description, "Last step description should match")
 }
 
 func TestParse_EmptyInput(t *testing.T) {
 	recipe, err := Parse(strings.NewReader(""))
-	if err != nil {
-		t.Fatalf("Parse() error = %v", err)
-	}
+	require.NoError(t, err, "Parse() should not return an error for empty input")
 
 	// Check that we get an empty recipe
-	if recipe.Title != "" {
-		t.Errorf("Expected empty title, got '%s'", recipe.Title)
-	}
-
-	if len(recipe.Ingredients) != 0 {
-		t.Errorf("Expected 0 ingredients, got %d", len(recipe.Ingredients))
-	}
-
-	if len(recipe.Steps) != 0 {
-		t.Errorf("Expected 0 steps, got %d", len(recipe.Steps))
-	}
+	assert.Empty(t, recipe.Title, "Title should be empty")
+	assert.Empty(t, recipe.Ingredients, "Ingredients should be empty")
+	assert.Empty(t, recipe.Steps, "Steps should be empty")
 }
 
 func TestParse_InvalidInput(t *testing.T) {
 	// Test with a nil reader
 	_, err := Parse(nil)
-	if err == nil {
-		t.Errorf("Expected error with nil reader, got nil")
-	}
+	assert.Error(t, err, "Parse() should return an error with nil reader")
 
 	// Test with malformed input (missing closing quotes)
 	input := `.RH MOD.RECIPES-SOURCE RECIPE-ID D "22 Dec 83"
@@ -228,7 +162,5 @@ func TestParse_InvalidInput(t *testing.T) {
 .IG "1 cup sugar`
 	_, err = Parse(strings.NewReader(input))
 	// This should not error, but should handle the unclosed quote gracefully
-	if err != nil {
-		t.Errorf("Expected no error with unclosed quote, got %v", err)
-	}
+	assert.NoError(t, err, "Parse() should handle unclosed quote gracefully")
 }

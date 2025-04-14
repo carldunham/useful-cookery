@@ -3,31 +3,27 @@ package troff
 import (
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestLexer_TokenizeCommand(t *testing.T) {
 	input := ".TL Test Recipe"
 	lexer := NewLexer(strings.NewReader(input))
 	tokens, err := lexer.Tokenize()
-	if err != nil {
-		t.Fatalf("Tokenize() error = %v", err)
-	}
+	require.NoError(t, err, "Tokenize() should not return an error")
 
-	if len(tokens) != 3 { // TL command + "Test" param + "Recipe" param + EOF
-		t.Errorf("Expected 3 tokens, got %d", len(tokens))
-	}
+	assert.Len(t, tokens, 3, "Should have 3 tokens") // TL command + "Test" param + "Recipe" param + EOF
 
-	if tokens[0].Type != TokenCommand || tokens[0].Value != "TL" {
-		t.Errorf("Expected first token to be Command(TL), got %v", tokens[0])
-	}
+	assert.Equal(t, TokenCommand, tokens[0].Type, "First token should be a Command")
+	assert.Equal(t, "TL", tokens[0].Value, "First token should be TL command")
 
-	if tokens[1].Type != TokenParam || tokens[1].Value != "Test" {
-		t.Errorf("Expected second token to be Param(Test), got %v", tokens[1])
-	}
+	assert.Equal(t, TokenParam, tokens[1].Type, "Second token should be a Param")
+	assert.Equal(t, "Test", tokens[1].Value, "Second token should be 'Test' param")
 
-	if tokens[2].Type != TokenParam || tokens[2].Value != "Recipe" {
-		t.Errorf("Expected third token to be Param(Recipe), got %v", tokens[2])
-	}
+	assert.Equal(t, TokenParam, tokens[2].Type, "Third token should be a Param")
+	assert.Equal(t, "Recipe", tokens[2].Value, "Third token should be 'Recipe' param")
 }
 
 func TestLexer_TokenizeMultipleLines(t *testing.T) {
@@ -40,62 +36,46 @@ of a recipe.
 
 	lexer := NewLexer(strings.NewReader(input))
 	tokens, err := lexer.Tokenize()
-	if err != nil {
-		t.Fatalf("Tokenize() error = %v", err)
-	}
+	require.NoError(t, err, "Tokenize() should not return an error")
 
 	// Check for the correct number of tokens
 	expectedCount := 9 // TL + Test + Recipe + AU + John + Doe + AB + description param + AE (EOF is dropped)
-	if len(tokens) != expectedCount {
-		t.Errorf("Expected %d tokens, got %d", expectedCount, len(tokens))
-	}
+	assert.Len(t, tokens, expectedCount, "Should have correct number of tokens")
 
 	// Check for specific tokens
-	if tokens[0].Type != TokenCommand || tokens[0].Value != "TL" {
-		t.Errorf("Expected first token to be Command(TL), got %v", tokens[0])
-	}
+	assert.Equal(t, TokenCommand, tokens[0].Type, "First token should be a Command")
+	assert.Equal(t, "TL", tokens[0].Value, "First token should be TL command")
 
-	if tokens[3].Type != TokenCommand || tokens[3].Value != "AU" {
-		t.Errorf("Expected fourth token to be Command(AU), got %v", tokens[3])
-	}
+	assert.Equal(t, TokenCommand, tokens[3].Type, "Fourth token should be a Command")
+	assert.Equal(t, "AU", tokens[3].Value, "Fourth token should be AU command")
 
-	if tokens[6].Type != TokenCommand || tokens[6].Value != "AB" {
-		t.Errorf("Expected seventh token to be Command(AB), got %v", tokens[6])
-	}
+	assert.Equal(t, TokenCommand, tokens[6].Type, "Seventh token should be a Command")
+	assert.Equal(t, "AB", tokens[6].Value, "Seventh token should be AB command")
 
 	// Check description tokens
-	if tokens[7].Type != TokenParam || tokens[7].Value != "This is a description\nof a recipe." {
-		t.Errorf("Expected description token to be multi-line Param(This is a description\nof a recipe.), got %v", tokens[7])
-	}
+	assert.Equal(t, TokenParam, tokens[7].Type, "Description token should be a Param")
+	assert.Equal(t, "This is a description\nof a recipe.", tokens[7].Value, "Description token should contain multi-line text")
 }
 
 func TestLexer_TokenizeQuotedParams(t *testing.T) {
 	input := `.IG "1 1/2 cups" "sugar" "300 g"`
 	lexer := NewLexer(strings.NewReader(input))
 	tokens, err := lexer.Tokenize()
-	if err != nil {
-		t.Fatalf("Tokenize() error = %v", err)
-	}
+	require.NoError(t, err, "Tokenize() should not return an error")
 
-	if len(tokens) != 4 { // IG + 3 params + EOF
-		t.Errorf("Expected 4 tokens, got %d", len(tokens))
-	}
+	assert.Len(t, tokens, 4, "Should have 4 tokens") // IG + 3 params + EOF
 
-	if tokens[0].Type != TokenCommand || tokens[0].Value != "IG" {
-		t.Errorf("Expected first token to be Command(IG), got %v", tokens[0])
-	}
+	assert.Equal(t, TokenCommand, tokens[0].Type, "First token should be a Command")
+	assert.Equal(t, "IG", tokens[0].Value, "First token should be IG command")
 
-	if tokens[1].Type != TokenParam || tokens[1].Value != "1 1/2 cups" {
-		t.Errorf("Expected second token to be Param(1 1/2 cups), got %v", tokens[1])
-	}
+	assert.Equal(t, TokenParam, tokens[1].Type, "Second token should be a Param")
+	assert.Equal(t, "1 1/2 cups", tokens[1].Value, "Second token should be '1 1/2 cups' param")
 
-	if tokens[2].Type != TokenParam || tokens[2].Value != "sugar" {
-		t.Errorf("Expected third token to be Param(sugar), got %v", tokens[2])
-	}
+	assert.Equal(t, TokenParam, tokens[2].Type, "Third token should be a Param")
+	assert.Equal(t, "sugar", tokens[2].Value, "Third token should be 'sugar' param")
 
-	if tokens[3].Type != TokenParam || tokens[3].Value != "300 g" {
-		t.Errorf("Expected fourth token to be Param(300 g), got %v", tokens[3])
-	}
+	assert.Equal(t, TokenParam, tokens[3].Type, "Fourth token should be a Param")
+	assert.Equal(t, "300 g", tokens[3].Value, "Fourth token should be '300 g' param")
 }
 
 func TestLexer_TokenizeComplexInput(t *testing.T) {
@@ -116,14 +96,10 @@ Boil milk with half of sugars for two minutes.`
 
 	lexer := NewLexer(strings.NewReader(input))
 	tokens, err := lexer.Tokenize()
-	if err != nil {
-		t.Fatalf("Tokenize() error = %v", err)
-	}
+	require.NoError(t, err, "Tokenize() should not return an error")
 
 	// Just check that we have a reasonable number of tokens
-	if len(tokens) < 20 {
-		t.Errorf("Expected at least 20 tokens, got %d", len(tokens))
-	}
+	assert.GreaterOrEqual(t, len(tokens), 20, "Should have at least 20 tokens")
 
 	// Check a few key tokens
 	foundTL := false
@@ -152,9 +128,12 @@ Boil milk with half of sugars for two minutes.`
 		}
 	}
 
-	if !foundTL || !foundSH || !foundAU || !foundAB || !foundIG || !foundSK {
-		t.Errorf("Not all expected commands were found")
-	}
+	assert.True(t, foundTL, "Should find TL command")
+	assert.True(t, foundSH, "Should find SH command")
+	assert.True(t, foundAU, "Should find AU command")
+	assert.True(t, foundAB, "Should find AB command")
+	assert.True(t, foundIG, "Should find IG command")
+	assert.True(t, foundSK, "Should find SK command")
 }
 
 func TestLexer_TokenizeMultilineParams(t *testing.T) {
@@ -168,9 +147,7 @@ but all belonging to the AB command.
 
 	lexer := NewLexer(strings.NewReader(input))
 	tokens, err := lexer.Tokenize()
-	if err != nil {
-		t.Fatalf("Tokenize() error = %v", err)
-	}
+	require.NoError(t, err, "Tokenize() should not return an error")
 
 	// Find the AB command and check that all following parameters have the AB command
 	abIndex := -1
@@ -181,9 +158,7 @@ but all belonging to the AB command.
 		}
 	}
 
-	if abIndex == -1 {
-		t.Fatalf("AB command not found in tokens")
-	}
+	require.NotEqual(t, -1, abIndex, "AB command should be found in tokens")
 
 	// Check that all parameters between AB and AE have the AB command
 	aeIndex := -1
@@ -194,19 +169,16 @@ but all belonging to the AB command.
 		}
 
 		if tokens[i].Type == TokenParam {
-			if tokens[i].Command != "AB" {
-				t.Errorf("Expected parameter token %d to have command AB, got %s", i, tokens[i].Command)
-			}
+			assert.Equal(t, "AB", tokens[i].Command, "Parameter token should have AB command")
 		}
 	}
 
-	if aeIndex == -1 {
-		t.Fatalf("AE command not found in tokens")
-	}
+	require.NotEqual(t, -1, aeIndex, "AE command should be found in tokens")
 
 	// Check the content of each description line
 	paramIndex := abIndex + 1
-	if paramIndex < aeIndex && tokens[paramIndex].Value[:4] != "This" {
-		t.Errorf("Expected first word of description to be 'This', got '%s'", tokens[paramIndex].Value[:4])
+	if paramIndex < aeIndex {
+		assert.True(t, len(tokens[paramIndex].Value) >= 4, "Description should have at least 4 characters")
+		assert.Equal(t, "This", tokens[paramIndex].Value[:4], "First word of description should be 'This'")
 	}
 }
