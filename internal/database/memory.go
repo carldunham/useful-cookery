@@ -1,4 +1,4 @@
-package strategies
+package database
 
 import (
 	"context"
@@ -38,7 +38,7 @@ var ErrRawQueriesNotSupported = errors.New("raw queries not supported in in-memo
 
 // Query executes a query against the in-memory database.
 // This is a simplified implementation that doesn't support all DGraph query features.
-func (db *InMemoryDatabase) Query(_ context.Context, _ string, _ map[string]string, _ interface{}) error {
+func (db *InMemoryDatabase) Query(_ context.Context, _ string, _ map[string]string, _ any) error {
 	return ErrRawQueriesNotSupported
 }
 

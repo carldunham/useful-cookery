@@ -1,4 +1,4 @@
-package strategies
+package database
 
 import (
 	"context"
@@ -40,7 +40,7 @@ func NewDGraphDatabase(options dbtypes.DatabaseOptions) (*DGraphDatabase, error)
 }
 
 // Query executes a GraphQL+ query against DGraph.
-func (db *DGraphDatabase) Query(ctx context.Context, query string, vars map[string]string, result interface{}) error {
+func (db *DGraphDatabase) Query(ctx context.Context, query string, vars map[string]string, result any) error {
 	txn := db.client.NewTxn()
 	defer func() {
 		if err := txn.Discard(ctx); err != nil {
@@ -70,7 +70,7 @@ func (db *DGraphDatabase) Query(ctx context.Context, query string, vars map[stri
 }
 
 // Mutate executes a mutation against DGraph.
-func (db *DGraphDatabase) Mutate(ctx context.Context, data interface{}) (*api.Response, error) {
+func (db *DGraphDatabase) Mutate(ctx context.Context, data any) (*api.Response, error) {
 	txn := db.client.NewTxn()
 	defer func() {
 		if err := txn.Discard(ctx); err != nil {
@@ -657,6 +657,7 @@ func (db *DGraphDatabase) DeleteRecipe(ctx context.Context, recipeID string) err
 }
 
 // BuildVarDeclarations creates a string of variable declarations for DGraph queries.
+// This function is exported for testing purposes.
 func BuildVarDeclarations(vars map[string]string) string {
 	if len(vars) == 0 {
 		return ""

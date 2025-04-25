@@ -1,12 +1,12 @@
-package strategies_test
+package database_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
+	"github.com/carldunham/useful-cookery/internal/database"
 	"github.com/carldunham/useful-cookery/internal/database/dbtypes"
-	"github.com/carldunham/useful-cookery/internal/database/strategies"
 	"github.com/carldunham/useful-cookery/internal/model"
 )
 
@@ -22,7 +22,7 @@ func TestQueryValidation(t *testing.T) {
 	options := dbtypes.DatabaseOptions{
 		ConnectionString: "dgraph://localhost:9080",
 	}
-	db, err := strategies.NewDGraphDatabase(options)
+	db, err := database.NewDGraphDatabase(options)
 	if err != nil {
 		t.Fatalf("Failed to create DGraph database: %v", err)
 	}
@@ -36,7 +36,7 @@ func TestQueryValidation(t *testing.T) {
 func TestGetUserValidation(t *testing.T) {
 	t.Parallel()
 	// Create a new DGraphDatabase
-	db := &strategies.DGraphDatabase{}
+	db := &database.DGraphDatabase{}
 
 	// Test with empty user ID
 	_, err := db.GetUser(t.Context(), "")
@@ -47,7 +47,7 @@ func TestGetUserValidation(t *testing.T) {
 func TestGetUserByEmailValidation(t *testing.T) {
 	t.Parallel()
 	// Create a new DGraphDatabase
-	db := &strategies.DGraphDatabase{}
+	db := &database.DGraphDatabase{}
 
 	// Test with empty email
 	_, err := db.GetUserByEmail(t.Context(), "")
@@ -58,7 +58,7 @@ func TestGetUserByEmailValidation(t *testing.T) {
 func TestGetCategoryValidation(t *testing.T) {
 	t.Parallel()
 	// Create a new DGraphDatabase
-	db := &strategies.DGraphDatabase{}
+	db := &database.DGraphDatabase{}
 
 	// Test with empty category ID
 	_, err := db.GetCategory(t.Context(), "")
@@ -69,7 +69,7 @@ func TestGetCategoryValidation(t *testing.T) {
 func TestDeleteCategoryValidation(t *testing.T) {
 	t.Parallel()
 	// Create a new DGraphDatabase
-	db := &strategies.DGraphDatabase{}
+	db := &database.DGraphDatabase{}
 
 	// Test with empty category ID
 	err := db.DeleteCategory(t.Context(), "")
@@ -80,7 +80,7 @@ func TestDeleteCategoryValidation(t *testing.T) {
 func TestGetReviewValidation(t *testing.T) {
 	t.Parallel()
 	// Create a new DGraphDatabase
-	db := &strategies.DGraphDatabase{}
+	db := &database.DGraphDatabase{}
 
 	// Test with empty review ID
 	_, err := db.GetReview(t.Context(), "")
@@ -91,7 +91,7 @@ func TestGetReviewValidation(t *testing.T) {
 func TestDeleteReviewValidation(t *testing.T) {
 	t.Parallel()
 	// Create a new DGraphDatabase
-	db := &strategies.DGraphDatabase{}
+	db := &database.DGraphDatabase{}
 
 	// Test with empty review ID
 	err := db.DeleteReview(t.Context(), "")
@@ -102,7 +102,7 @@ func TestDeleteReviewValidation(t *testing.T) {
 func TestGetRecipeValidation(t *testing.T) {
 	t.Parallel()
 	// Create a new DGraphDatabase
-	db := &strategies.DGraphDatabase{}
+	db := &database.DGraphDatabase{}
 
 	// Test with empty recipe ID
 	_, err := db.GetRecipe(t.Context(), "")
@@ -113,7 +113,7 @@ func TestGetRecipeValidation(t *testing.T) {
 func TestDeleteRecipeValidation(t *testing.T) {
 	t.Parallel()
 	// Create a new DGraphDatabase
-	db := &strategies.DGraphDatabase{}
+	db := &database.DGraphDatabase{}
 
 	// Test with empty recipe ID
 	err := db.DeleteRecipe(t.Context(), "")
@@ -132,7 +132,7 @@ func TestCreateCategoryMutation(t *testing.T) {
 	options := dbtypes.DatabaseOptions{
 		ConnectionString: "dgraph://localhost:9080",
 	}
-	db, err := strategies.NewDGraphDatabase(options)
+	db, err := database.NewDGraphDatabase(options)
 	if err != nil {
 		t.Fatalf("Failed to create DGraph database: %v", err)
 	}
@@ -163,7 +163,7 @@ func TestUpdateCategoryMutation(t *testing.T) {
 	options := dbtypes.DatabaseOptions{
 		ConnectionString: "dgraph://localhost:9080",
 	}
-	db, err := strategies.NewDGraphDatabase(options)
+	db, err := database.NewDGraphDatabase(options)
 	if err != nil {
 		t.Fatalf("Failed to create DGraph database: %v", err)
 	}
@@ -195,7 +195,7 @@ func TestCreateReviewMutation(t *testing.T) {
 	options := dbtypes.DatabaseOptions{
 		ConnectionString: "dgraph://localhost:9080",
 	}
-	db, err := strategies.NewDGraphDatabase(options)
+	db, err := database.NewDGraphDatabase(options)
 	if err != nil {
 		t.Fatalf("Failed to create DGraph database: %v", err)
 	}
@@ -226,7 +226,7 @@ func TestUpdateReviewMutation(t *testing.T) {
 	options := dbtypes.DatabaseOptions{
 		ConnectionString: "dgraph://localhost:9080",
 	}
-	db, err := strategies.NewDGraphDatabase(options)
+	db, err := database.NewDGraphDatabase(options)
 	if err != nil {
 		t.Fatalf("Failed to create DGraph database: %v", err)
 	}
@@ -258,7 +258,7 @@ func TestCreateRecipeMutation(t *testing.T) {
 	options := dbtypes.DatabaseOptions{
 		ConnectionString: "dgraph://localhost:9080",
 	}
-	db, err := strategies.NewDGraphDatabase(options)
+	db, err := database.NewDGraphDatabase(options)
 	if err != nil {
 		t.Fatalf("Failed to create DGraph database: %v", err)
 	}
@@ -289,7 +289,7 @@ func TestUpdateRecipeMutation(t *testing.T) {
 	options := dbtypes.DatabaseOptions{
 		ConnectionString: "dgraph://localhost:9080",
 	}
-	db, err := strategies.NewDGraphDatabase(options)
+	db, err := database.NewDGraphDatabase(options)
 	if err != nil {
 		t.Fatalf("Failed to create DGraph database: %v", err)
 	}
@@ -321,7 +321,7 @@ func TestGetRecipesMutation(t *testing.T) {
 	options := dbtypes.DatabaseOptions{
 		ConnectionString: "dgraph://localhost:9080",
 	}
-	db, err := strategies.NewDGraphDatabase(options)
+	db, err := database.NewDGraphDatabase(options)
 	if err != nil {
 		t.Fatalf("Failed to create DGraph database: %v", err)
 	}
@@ -354,7 +354,7 @@ func TestGetUsersMutation(t *testing.T) {
 	options := dbtypes.DatabaseOptions{
 		ConnectionString: "dgraph://localhost:9080",
 	}
-	db, err := strategies.NewDGraphDatabase(options)
+	db, err := database.NewDGraphDatabase(options)
 	if err != nil {
 		t.Fatalf("Failed to create DGraph database: %v", err)
 	}
@@ -379,7 +379,7 @@ func TestQueryMutation(t *testing.T) {
 	options := dbtypes.DatabaseOptions{
 		ConnectionString: "dgraph://localhost:9080",
 	}
-	db, err := strategies.NewDGraphDatabase(options)
+	db, err := database.NewDGraphDatabase(options)
 	if err != nil {
 		t.Fatalf("Failed to create DGraph database: %v", err)
 	}
@@ -416,7 +416,7 @@ func TestMutateMutation(t *testing.T) {
 	options := dbtypes.DatabaseOptions{
 		ConnectionString: "dgraph://localhost:9080",
 	}
-	db, err := strategies.NewDGraphDatabase(options)
+	db, err := database.NewDGraphDatabase(options)
 	if err != nil {
 		t.Fatalf("Failed to create DGraph database: %v", err)
 	}

@@ -18,5 +18,5 @@ type Database interface {
 	GetUsers(ctx context.Context, limit, offset int) ([]*model.User, error)
 
 	// Query operations
-	Query(ctx context.Context, query string, vars map[string]string, result interface{}) error
+	Query(ctx context.Context, query string, vars map[string]string, result any) error
 }

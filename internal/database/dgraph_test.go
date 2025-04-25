@@ -1,4 +1,4 @@
-package strategies_test
+package database_test
 
 import (
 	"testing"
@@ -6,12 +6,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
+	"github.com/carldunham/useful-cookery/internal/database"
 	"github.com/carldunham/useful-cookery/internal/database/dbtypes"
-	"github.com/carldunham/useful-cookery/internal/database/strategies"
 )
 
-// TestNewDGraphDatabase tests the NewDGraphDatabase function.
-func TestNewDGraphDatabase(t *testing.T) {
+// TestDGraphDatabaseCreation tests the NewDGraphDatabase function.
+func TestDGraphDatabaseCreation(t *testing.T) {
 	t.Parallel()
 	// Skip this test in short mode
 	if testing.Short() {
@@ -22,31 +22,31 @@ func TestNewDGraphDatabase(t *testing.T) {
 	options := dbtypes.DatabaseOptions{
 		ConnectionString: "dgraph://localhost:9080",
 	}
-	db, err := strategies.NewDGraphDatabase(options)
+	db, err := database.NewDGraphDatabase(options)
 	require.NoError(t, err)
 	assert.NotNil(t, db)
 
 	// Test with invalid connection string
 	options.ConnectionString = "invalid"
-	_, err = strategies.NewDGraphDatabase(options)
+	_, err = database.NewDGraphDatabase(options)
 	assert.Error(t, err)
 }
 
-// TestBuildVarDeclarations tests the buildVarDeclarations function.
-func TestBuildVarDeclarations(t *testing.T) {
+// TestBuildVarDeclarationsFunction tests the BuildVarDeclarations function.
+func TestBuildVarDeclarationsFunction(t *testing.T) {
 	t.Parallel()
 	// Test with empty vars
-	result := strategies.BuildVarDeclarations(nil)
+	result := database.BuildVarDeclarations(nil)
 	assert.Empty(t, result)
 
-	result = strategies.BuildVarDeclarations(map[string]string{})
+	result = database.BuildVarDeclarations(map[string]string{})
 	assert.Empty(t, result)
 
 	// Test with one var
 	vars := map[string]string{
 		"var1": "value1",
 	}
-	result = strategies.BuildVarDeclarations(vars)
+	result = database.BuildVarDeclarations(vars)
 	assert.Equal(t, "$var1: string", result)
 
 	// Test with multiple vars
@@ -55,7 +55,7 @@ func TestBuildVarDeclarations(t *testing.T) {
 		"var2": "value2",
 		"var3": "value3",
 	}
-	result = strategies.BuildVarDeclarations(vars)
+	result = database.BuildVarDeclarations(vars)
 	// The order of vars in the result is not guaranteed, so we need to check for each var
 	assert.Contains(t, result, "$var1: string")
 	assert.Contains(t, result, "$var2: string")

@@ -63,25 +63,21 @@ func main() {
 	// Create database based on type
 	var gqlDB graphql.Database
 	var authDB graphql.AuthDatabase
-	switch cfg.Database.Type {
-	case "dgraph", "":
-		dgraphDB, err := database.NewDGraphDatabase(dbOptions)
-		if err == nil {
-			gqlDB = dgraphDB
-			authDB = dgraphDB
-		}
-	case "memory":
-		memoryDB, err := database.NewInMemoryDatabase(dbOptions)
-		if err == nil {
-			gqlDB = memoryDB
-			authDB = memoryDB
-		}
-	default:
-		logger.Fatalf("Unsupported database type: %s", cfg.Database.Type)
-	}
+
+	db, err := database.CreateDatabase(database.Type(cfg.Database.Type), dbOptions)
 	if err != nil {
 		logger.Fatalf("Failed to connect to database: %v", err)
 	}
+
+	// Cast the database to the required interfaces
+	var ok bool
+	if gqlDB, ok = db.(graphql.Database); !ok {
+		logger.Fatalf("Database does not implement graphql.Database interface")
+	}
+	if authDB, ok = db.(graphql.AuthDatabase); !ok {
+		logger.Fatalf("Database does not implement graphql.AuthDatabase interface")
+	}
+
 	logger.Println("Connected to database")
 
 	// Initialize AI service

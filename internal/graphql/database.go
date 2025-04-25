@@ -37,5 +37,5 @@ type Database interface {
 	DeleteRecipe(ctx context.Context, recipeID string) error
 
 	// Raw query operations
-	Query(ctx context.Context, query string, vars map[string]string, result interface{}) error
+	Query(ctx context.Context, query string, vars map[string]string, result any) error
 }

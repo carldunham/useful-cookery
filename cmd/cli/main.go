@@ -29,7 +29,7 @@ const (
 	cmdListRecipes    = "list-recipes"
 )
 
-//nolint:cyclop,funlen,gocognit // TODO: simplify.
+//nolint:cyclop,funlen // TODO: simplify.
 func main() {
 	// Define command line flags
 	var (
@@ -80,25 +80,21 @@ func main() {
 	// Create database based on type
 	var db cli.Database
 	var authDB cli.AuthDatabase
-	switch cfg.Database.Type {
-	case "dgraph", "":
-		dgraphDB, err := database.NewDGraphDatabase(dbOptions)
-		if err == nil {
-			db = dgraphDB
-			authDB = dgraphDB
-		}
-	case "memory":
-		memoryDB, err := database.NewInMemoryDatabase(dbOptions)
-		if err == nil {
-			db = memoryDB
-			authDB = memoryDB
-		}
-	default:
-		log.Fatalf("Unsupported database type: %s", cfg.Database.Type)
-	}
+
+	dbInstance, err := database.CreateDatabase(database.Type(cfg.Database.Type), dbOptions)
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
+
+	// Cast the database to the required interfaces
+	var ok bool
+	if db, ok = dbInstance.(cli.Database); !ok {
+		log.Fatalf("Database does not implement cli.Database interface")
+	}
+	if authDB, ok = dbInstance.(cli.AuthDatabase); !ok {
+		log.Fatalf("Database does not implement cli.AuthDatabase interface")
+	}
+
 	log.Println("Connected to database")
 
 	// Initialize auth service

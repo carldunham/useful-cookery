@@ -141,7 +141,7 @@ func (s *Service) generateToken(userID string, role model.Role) (string, error) 
 // VerifyToken verifies and parses a JWT token.
 func (s *Service) VerifyToken(tokenString string) (*Claims, error) {
 	// Parse token
-	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (any, error) {
 		// Validate signing method
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("%w: %v", ErrUnexpectedSignMethod, token.Header["alg"])

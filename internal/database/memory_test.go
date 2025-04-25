@@ -1,19 +1,19 @@
-package strategies_test
+package database_test
 
 import (
 	"errors"
 	"testing"
 	"time"
 
+	"github.com/carldunham/useful-cookery/internal/database"
 	"github.com/carldunham/useful-cookery/internal/database/dbtypes"
-	"github.com/carldunham/useful-cookery/internal/database/strategies"
 	"github.com/carldunham/useful-cookery/internal/model"
 )
 
-func TestNewInMemoryDatabase(t *testing.T) {
+func TestInMemoryDatabaseCreation(t *testing.T) {
 	t.Parallel()
 	// Create a new in-memory database
-	db, err := strategies.NewInMemoryDatabase(dbtypes.DatabaseOptions{})
+	db, err := database.NewInMemoryDatabase(dbtypes.DatabaseOptions{})
 	if err != nil {
 		t.Fatalf("Failed to create in-memory database: %v", err)
 	}
@@ -30,7 +30,7 @@ func TestNewInMemoryDatabase(t *testing.T) {
 func TestInMemoryDatabase_User(t *testing.T) {
 	t.Parallel()
 	// Create a new in-memory database
-	db, err := strategies.NewInMemoryDatabase(dbtypes.DatabaseOptions{})
+	db, err := database.NewInMemoryDatabase(dbtypes.DatabaseOptions{})
 	if err != nil {
 		t.Fatalf("Failed to create in-memory database: %v", err)
 	}
@@ -127,7 +127,7 @@ func TestInMemoryDatabase_User(t *testing.T) {
 func TestInMemoryDatabase_Category(t *testing.T) {
 	t.Parallel()
 	// Create a new in-memory database
-	db, err := strategies.NewInMemoryDatabase(dbtypes.DatabaseOptions{})
+	db, err := database.NewInMemoryDatabase(dbtypes.DatabaseOptions{})
 	if err != nil {
 		t.Fatalf("Failed to create in-memory database: %v", err)
 	}
@@ -209,7 +209,7 @@ func TestInMemoryDatabase_Category(t *testing.T) {
 func TestInMemoryDatabase_Recipe(t *testing.T) {
 	t.Parallel()
 	// Create a new in-memory database
-	db, err := strategies.NewInMemoryDatabase(dbtypes.DatabaseOptions{})
+	db, err := database.NewInMemoryDatabase(dbtypes.DatabaseOptions{})
 	if err != nil {
 		t.Fatalf("Failed to create in-memory database: %v", err)
 	}
@@ -300,7 +300,7 @@ func TestInMemoryDatabase_Recipe(t *testing.T) {
 func TestInMemoryDatabase_Review(t *testing.T) {
 	t.Parallel()
 	// Create a new in-memory database
-	db, err := strategies.NewInMemoryDatabase(dbtypes.DatabaseOptions{})
+	db, err := database.NewInMemoryDatabase(dbtypes.DatabaseOptions{})
 	if err != nil {
 		t.Fatalf("Failed to create in-memory database: %v", err)
 	}
@@ -392,7 +392,7 @@ func TestInMemoryDatabase_Review(t *testing.T) {
 func TestInMemoryDatabase_Query(t *testing.T) {
 	t.Parallel()
 	// Create a new in-memory database
-	db, err := strategies.NewInMemoryDatabase(dbtypes.DatabaseOptions{})
+	db, err := database.NewInMemoryDatabase(dbtypes.DatabaseOptions{})
 	if err != nil {
 		t.Fatalf("Failed to create in-memory database: %v", err)
 	}

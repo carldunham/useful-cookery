@@ -310,21 +310,14 @@ func connectToDatabase() (Database, error) {
 	}
 
 	// Create database based on type
-	var db Database
-	switch cfg.Database.Type {
-	case "dgraph", "":
-		dgraphDB, err := database.NewDGraphDatabase(dbOptions)
-		if err != nil {
-			return nil, fmt.Errorf("failed to connect to database: %w", err)
-		}
-		db = dgraphDB
-	case "memory":
-		memoryDB, err := database.NewInMemoryDatabase(dbOptions)
-		if err != nil {
-			return nil, fmt.Errorf("failed to connect to database: %w", err)
-		}
-		db = memoryDB
-	default:
+	dbInstance, err := database.CreateDatabase(database.Type(cfg.Database.Type), dbOptions)
+	if err != nil {
+		return nil, fmt.Errorf("failed to connect to database: %w", err)
+	}
+
+	// Cast the database to the required interface
+	db, ok := dbInstance.(Database)
+	if !ok {
 		return nil, fmt.Errorf("%w: %s", errUnsupportedDBType, cfg.Database.Type)
 	}
 
