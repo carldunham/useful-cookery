@@ -1,9 +1,8 @@
-package database
+package strategies
 
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"strconv"
@@ -11,37 +10,38 @@ import (
 	"github.com/dgraph-io/dgo/v240"
 	"github.com/dgraph-io/dgo/v240/protos/api"
 
+	"github.com/carldunham/useful-cookery/internal/database/dbtypes"
 	"github.com/carldunham/useful-cookery/internal/model"
 )
 
-// Common errors.
-var (
-	ErrNotFound      = errors.New("entity not found")
-	ErrInvalidID     = errors.New("invalid ID")
-	ErrAlreadyExists = errors.New("entity already exists")
-	ErrEmailRequired = errors.New("email is required")
-)
-
-// DGraphClient is a client for DGraph operations.
-type DGraphClient struct {
+// DGraphDatabase implements database operations using DGraph.
+type DGraphDatabase struct {
 	client *dgo.Dgraph
+	cache  dbtypes.Cache
 }
 
-// NewDGraphClient creates a new DGraph client.
-func NewDGraphClient(connString string) (*DGraphClient, error) {
-	dgraphClient, err := dgo.Open(connString)
+// NewDGraphDatabase creates a new DGraph database instance.
+func NewDGraphDatabase(options dbtypes.DatabaseOptions) (*DGraphDatabase, error) {
+	dgraphClient, err := dgo.Open(options.ConnectionString)
 	if err != nil {
 		return nil, fmt.Errorf("creating client: %w", err)
 	}
 
-	return &DGraphClient{
+	db := &DGraphDatabase{
 		client: dgraphClient,
-	}, nil
+	}
+
+	// Set up cache if enabled
+	if options.CacheEnabled && options.Cache != nil {
+		db.cache = options.Cache
+	}
+
+	return db, nil
 }
 
 // Query executes a GraphQL+ query against DGraph.
-func (c *DGraphClient) Query(ctx context.Context, query string, vars map[string]string, result interface{}) error {
-	txn := c.client.NewTxn()
+func (db *DGraphDatabase) Query(ctx context.Context, query string, vars map[string]string, result interface{}) error {
+	txn := db.client.NewTxn()
 	defer func() {
 		if err := txn.Discard(ctx); err != nil {
 			log.Printf("error discarding Query transaction: %v", err)
@@ -70,8 +70,8 @@ func (c *DGraphClient) Query(ctx context.Context, query string, vars map[string]
 }
 
 // Mutate executes a mutation against DGraph.
-func (c *DGraphClient) Mutate(ctx context.Context, data interface{}) (*api.Response, error) {
-	txn := c.client.NewTxn()
+func (db *DGraphDatabase) Mutate(ctx context.Context, data interface{}) (*api.Response, error) {
+	txn := db.client.NewTxn()
 	defer func() {
 		if err := txn.Discard(ctx); err != nil {
 			log.Printf("error discarding Mutation transaction: %v", err)
@@ -99,9 +99,9 @@ func (c *DGraphClient) Mutate(ctx context.Context, data interface{}) (*api.Respo
 }
 
 // GetUser fetches a user by ID.
-func (c *DGraphClient) GetUser(ctx context.Context, userID string) (*model.User, error) {
+func (db *DGraphDatabase) GetUser(ctx context.Context, userID string) (*model.User, error) {
 	if userID == "" {
-		return nil, ErrInvalidID
+		return nil, dbtypes.ErrInvalidID
 	}
 
 	userQuery := `
@@ -131,22 +131,22 @@ func (c *DGraphClient) GetUser(ctx context.Context, userID string) (*model.User,
 		Users []*model.User `json:"user"`
 	}
 
-	err := c.Query(ctx, userQuery, vars, &result)
+	err := db.Query(ctx, userQuery, vars, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query user by ID: %w", err)
 	}
 
 	if len(result.Users) == 0 {
-		return nil, ErrNotFound
+		return nil, dbtypes.ErrNotFound
 	}
 
 	return result.Users[0], nil
 }
 
 // GetUserByEmail fetches a user by email.
-func (c *DGraphClient) GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
+func (db *DGraphDatabase) GetUserByEmail(ctx context.Context, email string) (*model.User, error) {
 	if email == "" {
-		return nil, ErrEmailRequired
+		return nil, dbtypes.ErrEmailRequired
 	}
 
 	// TODO: use type(User) instead of has(email).
@@ -174,7 +174,7 @@ func (c *DGraphClient) GetUserByEmail(ctx context.Context, email string) (*model
 		Users []*model.User `json:"user"`
 	}
 
-	err := c.Query(ctx, emailQuery, nil, &result)
+	err := db.Query(ctx, emailQuery, nil, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query users: %w", err)
 	}
@@ -186,19 +186,19 @@ func (c *DGraphClient) GetUserByEmail(ctx context.Context, email string) (*model
 		}
 	}
 
-	return nil, ErrNotFound
+	return nil, dbtypes.ErrNotFound
 }
 
 // CreateUser creates a new user.
-func (c *DGraphClient) CreateUser(ctx context.Context, user *model.User) error {
+func (db *DGraphDatabase) CreateUser(ctx context.Context, user *model.User) error {
 	// Check if user already exists
-	existingUser, err := c.GetUserByEmail(ctx, user.Email)
+	existingUser, err := db.GetUserByEmail(ctx, user.Email)
 	if err == nil && existingUser != nil {
-		return ErrAlreadyExists
+		return dbtypes.ErrAlreadyExists
 	}
 
 	// Create user
-	_, err = c.Mutate(ctx, user)
+	_, err = db.Mutate(ctx, user)
 	if err != nil {
 		return fmt.Errorf("failed to create user: %w", err)
 	}
@@ -207,7 +207,7 @@ func (c *DGraphClient) CreateUser(ctx context.Context, user *model.User) error {
 }
 
 // GetUsers fetches a list of users with pagination.
-func (c *DGraphClient) GetUsers(ctx context.Context, limit, offset int) ([]*model.User, error) {
+func (db *DGraphDatabase) GetUsers(ctx context.Context, limit, offset int) ([]*model.User, error) {
 	query := `
 	query GetUsers($limit: int, $offset: int) {
 		users(func: has(email), first: $limit, offset: $offset) {
@@ -229,7 +229,7 @@ func (c *DGraphClient) GetUsers(ctx context.Context, limit, offset int) ([]*mode
 		Users []*model.User `json:"users"`
 	}
 
-	err := c.Query(ctx, query, vars, &result)
+	err := db.Query(ctx, query, vars, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query users: %w", err)
 	}
@@ -238,8 +238,8 @@ func (c *DGraphClient) GetUsers(ctx context.Context, limit, offset int) ([]*mode
 }
 
 // UpdateUser updates a user.
-func (c *DGraphClient) UpdateUser(ctx context.Context, user *model.User) error {
-	_, err := c.Mutate(ctx, user)
+func (db *DGraphDatabase) UpdateUser(ctx context.Context, user *model.User) error {
+	_, err := db.Mutate(ctx, user)
 	if err != nil {
 		return fmt.Errorf("failed to update user: %w", err)
 	}
@@ -247,9 +247,9 @@ func (c *DGraphClient) UpdateUser(ctx context.Context, user *model.User) error {
 }
 
 // GetCategory fetches a category by ID.
-func (c *DGraphClient) GetCategory(ctx context.Context, categoryID string) (*model.Category, error) {
+func (db *DGraphDatabase) GetCategory(ctx context.Context, categoryID string) (*model.Category, error) {
 	if categoryID == "" {
-		return nil, ErrInvalidID
+		return nil, dbtypes.ErrInvalidID
 	}
 
 	categoryQuery := `
@@ -271,21 +271,21 @@ func (c *DGraphClient) GetCategory(ctx context.Context, categoryID string) (*mod
 		Categories []*model.Category `json:"category"`
 	}
 
-	err := c.Query(ctx, categoryQuery, vars, &result)
+	err := db.Query(ctx, categoryQuery, vars, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query category by ID: %w", err)
 	}
 
 	if len(result.Categories) == 0 {
-		return nil, ErrNotFound
+		return nil, dbtypes.ErrNotFound
 	}
 
 	return result.Categories[0], nil
 }
 
 // CreateCategory creates a new category.
-func (c *DGraphClient) CreateCategory(ctx context.Context, category *model.Category) error {
-	_, err := c.Mutate(ctx, category)
+func (db *DGraphDatabase) CreateCategory(ctx context.Context, category *model.Category) error {
+	_, err := db.Mutate(ctx, category)
 	if err != nil {
 		return fmt.Errorf("failed to create category: %w", err)
 	}
@@ -293,8 +293,8 @@ func (c *DGraphClient) CreateCategory(ctx context.Context, category *model.Categ
 }
 
 // UpdateCategory updates an existing category.
-func (c *DGraphClient) UpdateCategory(ctx context.Context, category *model.Category) error {
-	_, err := c.Mutate(ctx, category)
+func (db *DGraphDatabase) UpdateCategory(ctx context.Context, category *model.Category) error {
+	_, err := db.Mutate(ctx, category)
 	if err != nil {
 		return fmt.Errorf("failed to update category: %w", err)
 	}
@@ -302,12 +302,12 @@ func (c *DGraphClient) UpdateCategory(ctx context.Context, category *model.Categ
 }
 
 // DeleteCategory deletes a category.
-func (c *DGraphClient) DeleteCategory(ctx context.Context, categoryID string) error {
+func (db *DGraphDatabase) DeleteCategory(ctx context.Context, categoryID string) error {
 	if categoryID == "" {
-		return ErrInvalidID
+		return dbtypes.ErrInvalidID
 	}
 
-	txn := c.client.NewTxn()
+	txn := db.client.NewTxn()
 	defer func() {
 		if err := txn.Discard(ctx); err != nil {
 			log.Printf("error discarding DeleteCategory transaction: %v", err)
@@ -335,8 +335,8 @@ func (c *DGraphClient) DeleteCategory(ctx context.Context, categoryID string) er
 }
 
 // CreateReview creates a new review.
-func (c *DGraphClient) CreateReview(ctx context.Context, review *model.Review) error {
-	_, err := c.Mutate(ctx, review)
+func (db *DGraphDatabase) CreateReview(ctx context.Context, review *model.Review) error {
+	_, err := db.Mutate(ctx, review)
 	if err != nil {
 		return fmt.Errorf("failed to create review: %w", err)
 	}
@@ -344,9 +344,9 @@ func (c *DGraphClient) CreateReview(ctx context.Context, review *model.Review) e
 }
 
 // GetReview fetches a review by ID.
-func (c *DGraphClient) GetReview(ctx context.Context, reviewID string) (*model.Review, error) {
+func (db *DGraphDatabase) GetReview(ctx context.Context, reviewID string) (*model.Review, error) {
 	if reviewID == "" {
-		return nil, ErrInvalidID
+		return nil, dbtypes.ErrInvalidID
 	}
 
 	reviewQuery := `
@@ -376,21 +376,21 @@ func (c *DGraphClient) GetReview(ctx context.Context, reviewID string) (*model.R
 		Reviews []*model.Review `json:"review"`
 	}
 
-	err := c.Query(ctx, reviewQuery, vars, &result)
+	err := db.Query(ctx, reviewQuery, vars, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query review by ID: %w", err)
 	}
 
 	if len(result.Reviews) == 0 {
-		return nil, ErrNotFound
+		return nil, dbtypes.ErrNotFound
 	}
 
 	return result.Reviews[0], nil
 }
 
 // UpdateReview updates an existing review.
-func (c *DGraphClient) UpdateReview(ctx context.Context, review *model.Review) error {
-	_, err := c.Mutate(ctx, review)
+func (db *DGraphDatabase) UpdateReview(ctx context.Context, review *model.Review) error {
+	_, err := db.Mutate(ctx, review)
 	if err != nil {
 		return fmt.Errorf("failed to update review: %w", err)
 	}
@@ -398,12 +398,12 @@ func (c *DGraphClient) UpdateReview(ctx context.Context, review *model.Review) e
 }
 
 // DeleteReview deletes a review.
-func (c *DGraphClient) DeleteReview(ctx context.Context, reviewID string) error {
+func (db *DGraphDatabase) DeleteReview(ctx context.Context, reviewID string) error {
 	if reviewID == "" {
-		return ErrInvalidID
+		return dbtypes.ErrInvalidID
 	}
 
-	txn := c.client.NewTxn()
+	txn := db.client.NewTxn()
 	defer func() {
 		if err := txn.Discard(ctx); err != nil {
 			log.Printf("error discarding DeleteReview transaction: %v", err)
@@ -432,10 +432,10 @@ func (c *DGraphClient) DeleteReview(ctx context.Context, reviewID string) error 
 
 // GetRecipe fetches a recipe by ID.
 //
-//nolint:funlen // TODO: simplify.
-func (c *DGraphClient) GetRecipe(ctx context.Context, recipeID string) (*model.Recipe, error) {
+//nolint:funlen // This function is necessarily long due to the complex query structure
+func (db *DGraphDatabase) GetRecipe(ctx context.Context, recipeID string) (*model.Recipe, error) {
 	if recipeID == "" {
-		return nil, ErrInvalidID
+		return nil, dbtypes.ErrInvalidID
 	}
 
 	recipeQuery := `
@@ -515,13 +515,13 @@ func (c *DGraphClient) GetRecipe(ctx context.Context, recipeID string) (*model.R
 		Recipes []*model.Recipe `json:"recipe"`
 	}
 
-	err := c.Query(ctx, recipeQuery, vars, &result)
+	err := db.Query(ctx, recipeQuery, vars, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query recipe by ID: %w", err)
 	}
 
 	if len(result.Recipes) == 0 {
-		return nil, ErrNotFound
+		return nil, dbtypes.ErrNotFound
 	}
 
 	return result.Recipes[0], nil
@@ -529,8 +529,8 @@ func (c *DGraphClient) GetRecipe(ctx context.Context, recipeID string) (*model.R
 
 // GetRecipes fetches recipes based on filters.
 //
-//nolint:funlen // TODO: simplify.
-func (c *DGraphClient) GetRecipes(
+//nolint:funlen // This function is necessarily long due to the complex filter handling
+func (db *DGraphDatabase) GetRecipes(
 	ctx context.Context, filter map[string]string, first, offset int,
 ) ([]*model.Recipe, error) {
 	// Construct filter conditions
@@ -589,13 +589,13 @@ func (c *DGraphClient) GetRecipes(
 			averageRating
 			createdAt
 		}
-	}`, buildVarDeclarations(vars), conditions, first, offset)
+	}`, BuildVarDeclarations(vars), conditions, first, offset)
 
 	var result struct {
 		Recipes []*model.Recipe `json:"recipes"`
 	}
 
-	err := c.Query(ctx, recipesQuery, vars, &result)
+	err := db.Query(ctx, recipesQuery, vars, &result)
 	if err != nil {
 		return nil, fmt.Errorf("failed to query recipes: %w", err)
 	}
@@ -604,8 +604,8 @@ func (c *DGraphClient) GetRecipes(
 }
 
 // CreateRecipe creates a new recipe.
-func (c *DGraphClient) CreateRecipe(ctx context.Context, recipe *model.Recipe) error {
-	_, err := c.Mutate(ctx, recipe)
+func (db *DGraphDatabase) CreateRecipe(ctx context.Context, recipe *model.Recipe) error {
+	_, err := db.Mutate(ctx, recipe)
 	if err != nil {
 		return fmt.Errorf("failed to create recipe: %w", err)
 	}
@@ -614,8 +614,8 @@ func (c *DGraphClient) CreateRecipe(ctx context.Context, recipe *model.Recipe) e
 }
 
 // UpdateRecipe updates an existing recipe.
-func (c *DGraphClient) UpdateRecipe(ctx context.Context, recipe *model.Recipe) error {
-	_, err := c.Mutate(ctx, recipe)
+func (db *DGraphDatabase) UpdateRecipe(ctx context.Context, recipe *model.Recipe) error {
+	_, err := db.Mutate(ctx, recipe)
 	if err != nil {
 		return fmt.Errorf("failed to update recipe: %w", err)
 	}
@@ -624,12 +624,12 @@ func (c *DGraphClient) UpdateRecipe(ctx context.Context, recipe *model.Recipe) e
 }
 
 // DeleteRecipe deletes a recipe.
-func (c *DGraphClient) DeleteRecipe(ctx context.Context, recipeID string) error {
+func (db *DGraphDatabase) DeleteRecipe(ctx context.Context, recipeID string) error {
 	if recipeID == "" {
-		return ErrInvalidID
+		return dbtypes.ErrInvalidID
 	}
 
-	txn := c.client.NewTxn()
+	txn := db.client.NewTxn()
 	defer func() {
 		if err := txn.Discard(ctx); err != nil {
 			log.Printf("error discarding DeleteRecipe transaction: %v", err)
@@ -656,8 +656,8 @@ func (c *DGraphClient) DeleteRecipe(ctx context.Context, recipeID string) error 
 	return nil
 }
 
-// buildVarDeclarations creates a string of variable declarations for DGraph queries.
-func buildVarDeclarations(vars map[string]string) string {
+// BuildVarDeclarations creates a string of variable declarations for DGraph queries.
+func BuildVarDeclarations(vars map[string]string) string {
 	if len(vars) == 0 {
 		return ""
 	}

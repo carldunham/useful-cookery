@@ -23,6 +23,7 @@ import (
 	"github.com/carldunham/useful-cookery/internal/config"
 	"github.com/carldunham/useful-cookery/internal/database"
 	"github.com/carldunham/useful-cookery/internal/generated"
+	"github.com/carldunham/useful-cookery/internal/graphql"
 	"github.com/carldunham/useful-cookery/internal/graphql/resolvers"
 )
 
@@ -37,7 +38,7 @@ const (
 	ShutdownTimeoutSeconds = 30
 )
 
-//nolint:funlen // TODO: simplify.
+//nolint:funlen,cyclop // TODO: simplify.
 func main() {
 	// Load configuration
 	cfg, err := config.Load()
@@ -49,15 +50,39 @@ func main() {
 	logger := log.New(os.Stdout, "", log.LstdFlags)
 	logger.Printf("Starting Useful Cookery API server on port %s", cfg.Server.Port)
 
-	// Connect to DGraph
-	dgraphClient, err := database.NewDGraphClient(cfg.DGraph.ConnectionString)
-	if err != nil {
-		logger.Fatalf("Failed to connect to DGraph: %v", err)
-	}
-	logger.Println("Connected to DGraph")
-
 	// Initialize cache
 	cache := database.NewRedisCache(cfg.Redis.Addr, cfg.Redis.Password, cfg.Redis.DB)
+
+	// Initialize database
+	dbOptions := database.Options{
+		ConnectionString: cfg.Database.ConnectionString,
+		CacheEnabled:     true,
+		Cache:            cache,
+	}
+
+	// Create database based on type
+	var gqlDB graphql.Database
+	var authDB graphql.AuthDatabase
+	switch cfg.Database.Type {
+	case "dgraph", "":
+		dgraphDB, err := database.NewDGraphDatabase(dbOptions)
+		if err == nil {
+			gqlDB = dgraphDB
+			authDB = dgraphDB
+		}
+	case "memory":
+		memoryDB, err := database.NewInMemoryDatabase(dbOptions)
+		if err == nil {
+			gqlDB = memoryDB
+			authDB = memoryDB
+		}
+	default:
+		logger.Fatalf("Unsupported database type: %s", cfg.Database.Type)
+	}
+	if err != nil {
+		logger.Fatalf("Failed to connect to database: %v", err)
+	}
+	logger.Println("Connected to database")
 
 	// Initialize AI service
 	aiConfig := &ai.Config{
@@ -79,11 +104,11 @@ func main() {
 	authService := auth.NewService(
 		cfg.Auth.JWTSecret,
 		cfg.Auth.TokenExpiry,
-		dgraphClient,
+		authDB,
 	)
 
 	// Initialize GraphQL resolvers
-	resolver := resolvers.NewRootResolver(dgraphClient, aiService, authService)
+	resolver := resolvers.NewRootResolver(gqlDB, aiService, authService)
 
 	// Create GraphQL handler
 	gqlHandler := handler.New(generated.NewExecutableSchema(generated.Config{

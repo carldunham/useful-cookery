@@ -9,10 +9,14 @@ server:
   write_timeout_seconds: 30
   idle_timeout_seconds: 60
 
-# DGraph configuration
+# Database configuration
+database:
+  type: "dgraph" # Options: dgraph, memory
+  connection_string: "dgraph://localhost:9080"
+
+# DGraph configuration (for backward compatibility)
 dgraph:
-  hosts:
-    - "localhost:9080"
+  connection_string: "dgraph://localhost:9080"
 
 # Redis configuration
 redis:

@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/carldunham/useful-cookery/internal/auth"
-	"github.com/carldunham/useful-cookery/internal/database"
+	"github.com/carldunham/useful-cookery/internal/graphql"
 	gqlmodel "github.com/carldunham/useful-cookery/internal/graphql/model"
 	domainmodel "github.com/carldunham/useful-cookery/internal/model"
 )
@@ -242,7 +242,7 @@ func (r *Resolver) updateRecipe(ctx context.Context, id string, input gqlmodel.R
 
 // UpdateRecipe updates an existing recipe.
 //
-//nolint:gocognit,funlen,cyclop,varnamelen // Complex function due to multiple fields and validation.
+//nolint:gocognit,funlen,cyclop // Complex function due to multiple fields and validation.
 func (r *RecipeResolver) updateRecipe(ctx context.Context, id string, input gqlmodel.RecipeInput) (*domainmodel.Recipe, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
@@ -253,7 +253,7 @@ func (r *RecipeResolver) updateRecipe(ctx context.Context, id string, input gqlm
 	// Get existing recipe
 	recipe, err := r.DB.GetRecipe(ctx, id)
 	if err != nil {
-		if errors.Is(err, database.ErrNotFound) {
+		if errors.Is(err, graphql.ErrRecipeNotFound) {
 			return nil, ErrRecipeNotFound
 		}
 		return nil, fmt.Errorf("failed to get recipe: %w", err)
@@ -368,7 +368,7 @@ func (r *RecipeResolver) deleteRecipe(ctx context.Context, recipeID string) (boo
 	// Get recipe to check ownership
 	recipe, err := r.DB.GetRecipe(ctx, recipeID)
 	if err != nil {
-		if errors.Is(err, database.ErrNotFound) {
+		if errors.Is(err, graphql.ErrRecipeNotFound) {
 			return false, ErrRecipeNotFound
 		}
 		return false, fmt.Errorf("failed to get recipe: %w", err)
@@ -389,8 +389,6 @@ func (r *RecipeResolver) deleteRecipe(ctx context.Context, recipeID string) (boo
 }
 
 // LikeRecipe adds a like to a recipe.
-//
-//nolint:varnamelen // Short parameter name 'id' is acceptable for recipe ID.
 func (r *Resolver) likeRecipe(ctx context.Context, id string) (*domainmodel.Recipe, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
@@ -401,7 +399,7 @@ func (r *Resolver) likeRecipe(ctx context.Context, id string) (*domainmodel.Reci
 	// Get recipe
 	recipe, err := r.DB.GetRecipe(ctx, id)
 	if err != nil {
-		if errors.Is(err, database.ErrNotFound) {
+		if errors.Is(err, graphql.ErrRecipeNotFound) {
 			return nil, ErrRecipeNotFound
 		}
 		return nil, fmt.Errorf("failed to get recipe: %w", err)
@@ -421,8 +419,6 @@ func (r *Resolver) likeRecipe(ctx context.Context, id string) (*domainmodel.Reci
 }
 
 // SaveRecipe saves a recipe to the user's saved recipes list.
-//
-//nolint:varnamelen // Short parameter name 'id' is acceptable for recipe ID.
 func (r *Resolver) saveRecipe(ctx context.Context, id string) (*domainmodel.User, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
@@ -433,7 +429,7 @@ func (r *Resolver) saveRecipe(ctx context.Context, id string) (*domainmodel.User
 	// Get recipe
 	recipe, err := r.DB.GetRecipe(ctx, id)
 	if err != nil {
-		if errors.Is(err, database.ErrNotFound) {
+		if errors.Is(err, graphql.ErrRecipeNotFound) {
 			return nil, ErrRecipeNotFound
 		}
 		return nil, fmt.Errorf("failed to get recipe: %w", err)
@@ -460,8 +456,6 @@ func (r *Resolver) saveRecipe(ctx context.Context, id string) (*domainmodel.User
 }
 
 // UnsaveRecipe removes a recipe from the user's saved recipes list.
-//
-//nolint:varnamelen // Short parameter name 'id' is acceptable for recipe ID.
 func (r *Resolver) unsaveRecipe(ctx context.Context, id string) (*domainmodel.User, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
@@ -508,7 +502,7 @@ func (r *Resolver) addReview(ctx context.Context, recipeID string, rating int, c
 	// Get recipe
 	recipe, err := r.DB.GetRecipe(ctx, recipeID)
 	if err != nil {
-		if errors.Is(err, database.ErrNotFound) {
+		if errors.Is(err, graphql.ErrRecipeNotFound) {
 			return nil, ErrRecipeNotFound
 		}
 		return nil, fmt.Errorf("failed to get recipe: %w", err)
@@ -544,7 +538,7 @@ func (r *Resolver) addReview(ctx context.Context, recipeID string, rating int, c
 
 // UpdateReview updates an existing review.
 //
-//nolint:cyclop,varnamelen // Complex function due to permission checks and field updates.
+//nolint:cyclop // Complex function due to permission checks and field updates.
 func (r *Resolver) updateReview(ctx context.Context, id string, rating *int, comment *string) (*domainmodel.Review, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
@@ -555,7 +549,7 @@ func (r *Resolver) updateReview(ctx context.Context, id string, rating *int, com
 	// Get review
 	review, err := r.DB.GetReview(ctx, id)
 	if err != nil {
-		if errors.Is(err, database.ErrNotFound) {
+		if errors.Is(err, graphql.ErrReviewNotFound) {
 			return nil, ErrReviewNotFound
 		}
 		return nil, fmt.Errorf("failed to get review: %w", err)
@@ -590,8 +584,6 @@ func (r *Resolver) updateReview(ctx context.Context, id string, rating *int, com
 }
 
 // DeleteReview deletes a review.
-//
-//nolint:varnamelen // Short parameter name 'id' is acceptable for review ID.
 func (r *Resolver) deleteReview(ctx context.Context, id string) (bool, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
@@ -602,7 +594,7 @@ func (r *Resolver) deleteReview(ctx context.Context, id string) (bool, error) {
 	// Get review to check ownership
 	review, err := r.DB.GetReview(ctx, id)
 	if err != nil {
-		if errors.Is(err, database.ErrNotFound) {
+		if errors.Is(err, graphql.ErrReviewNotFound) {
 			return false, ErrReviewNotFound
 		}
 		return false, fmt.Errorf("failed to get review: %w", err)
@@ -668,8 +660,6 @@ func (r *Resolver) createCategory(ctx context.Context, name string, description 
 }
 
 // UpdateCategory updates an existing category.
-//
-//nolint:varnamelen // Short parameter name 'id' is acceptable for category ID.
 func (r *Resolver) updateCategory(ctx context.Context, id string, name *string, description *string) (*domainmodel.Category, error) {
 	// Get current user from context
 	currentUser := auth.GetUserFromContext(ctx)
@@ -685,7 +675,7 @@ func (r *Resolver) updateCategory(ctx context.Context, id string, name *string, 
 	// Get category
 	category, err := r.DB.GetCategory(ctx, id)
 	if err != nil {
-		if errors.Is(err, database.ErrNotFound) {
+		if errors.Is(err, graphql.ErrCategoryNotFound) {
 			return nil, ErrCategoryNotFound
 		}
 		return nil, fmt.Errorf("failed to get category: %w", err)

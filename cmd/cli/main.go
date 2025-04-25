@@ -13,6 +13,7 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/carldunham/useful-cookery/internal/auth"
+	"github.com/carldunham/useful-cookery/internal/cli"
 	"github.com/carldunham/useful-cookery/internal/config"
 	"github.com/carldunham/useful-cookery/internal/database"
 	"github.com/carldunham/useful-cookery/internal/model"
@@ -28,7 +29,7 @@ const (
 	cmdListRecipes    = "list-recipes"
 )
 
-//nolint:cyclop,funlen // TODO: simplify.
+//nolint:cyclop,funlen,gocognit // TODO: simplify.
 func main() {
 	// Define command line flags
 	var (
@@ -71,18 +72,40 @@ func main() {
 		log.Fatalf("Failed to load configuration: %v", err)
 	}
 
-	// Connect to DGraph
-	dgraphClient, err := database.NewDGraphClient(cfg.DGraph.ConnectionString)
-	if err != nil {
-		log.Fatalf("Failed to connect to DGraph: %v", err)
+	// Initialize database
+	dbOptions := database.Options{
+		ConnectionString: cfg.Database.ConnectionString,
 	}
-	log.Println("Connected to DGraph")
+
+	// Create database based on type
+	var db cli.Database
+	var authDB cli.AuthDatabase
+	switch cfg.Database.Type {
+	case "dgraph", "":
+		dgraphDB, err := database.NewDGraphDatabase(dbOptions)
+		if err == nil {
+			db = dgraphDB
+			authDB = dgraphDB
+		}
+	case "memory":
+		memoryDB, err := database.NewInMemoryDatabase(dbOptions)
+		if err == nil {
+			db = memoryDB
+			authDB = memoryDB
+		}
+	default:
+		log.Fatalf("Unsupported database type: %s", cfg.Database.Type)
+	}
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+	log.Println("Connected to database")
 
 	// Initialize auth service
 	authService := auth.NewService(
 		cfg.Auth.JWTSecret,
 		cfg.Auth.TokenExpiry,
-		dgraphClient,
+		authDB,
 	)
 
 	// Create context
@@ -112,7 +135,7 @@ func main() {
 		if name == "" {
 			log.Fatalf("Name is required for creating category")
 		}
-		if err := createCategory(ctx, dgraphClient, name, desc); err != nil {
+		if err := createCategory(ctx, db, name, desc); err != nil {
 			log.Fatalf("Failed to create category: %v", err)
 		}
 		log.Printf("Category created successfully: %s", name)
@@ -121,23 +144,23 @@ func main() {
 		if title == "" {
 			log.Fatalf("Title is required for creating recipe")
 		}
-		if err := createRecipe(ctx, dgraphClient, title, desc); err != nil {
+		if err := createRecipe(ctx, db, title, desc); err != nil {
 			log.Fatalf("Failed to create recipe: %v", err)
 		}
 		log.Printf("Recipe created successfully: %s", title)
 
 	case cmdListUsers:
-		if err := listUsers(ctx, dgraphClient); err != nil {
+		if err := listUsers(ctx, db); err != nil {
 			log.Fatalf("Failed to list users: %v", err)
 		}
 
 	case cmdListCategories:
-		if err := listCategories(ctx, dgraphClient); err != nil {
+		if err := listCategories(ctx, db); err != nil {
 			log.Fatalf("Failed to list categories: %v", err)
 		}
 
 	case cmdListRecipes:
-		if err := listRecipes(ctx, dgraphClient); err != nil {
+		if err := listRecipes(ctx, db); err != nil {
 			log.Fatalf("Failed to list recipes: %v", err)
 		}
 
@@ -161,7 +184,15 @@ func loadConfig(configFile string) (*config.Config, error) {
 	}
 
 	// Set default values
-	viper.SetDefault("dgraph.connection_string", "localhost:9080")
+	// Database defaults
+	viper.SetDefault("database.type", "dgraph")
+	viper.SetDefault("database.connection_string", "dgraph://localhost:9080")
+
+	// DGraph defaults (for backward compatibility)
+	viper.SetDefault("dgraph.type", "dgraph")
+	viper.SetDefault("dgraph.connection_string", "dgraph://localhost:9080")
+
+	// Auth defaults
 	viper.SetDefault("auth.jwt_secret", "change-me-in-production")
 	viper.SetDefault("auth.token_expiry", "24h")
 
@@ -186,9 +217,8 @@ func loadConfig(configFile string) (*config.Config, error) {
 		return nil, fmt.Errorf("failed to parse config: %w", err)
 	}
 
-	// We don't need to modify the DGraph connection string
-	// The dgo.Open function expects a URL with the "dgraph://" scheme
-	log.Printf("Using DGraph connection string: %s", cfg.DGraph.ConnectionString)
+	// Log database connection info
+	log.Printf("Using database type: %s, connection string: %s", cfg.Database.Type, cfg.Database.ConnectionString)
 
 	return &cfg, nil
 }
@@ -221,7 +251,7 @@ func createUser(ctx context.Context, authService *auth.Service, name, email, pas
 }
 
 // createCategory creates a new category.
-func createCategory(ctx context.Context, dbClient *database.DGraphClient, name, description string) error {
+func createCategory(ctx context.Context, db cli.Database, name, description string) error {
 	category := &model.Category{
 		Name:        name,
 		Description: description,
@@ -229,14 +259,14 @@ func createCategory(ctx context.Context, dbClient *database.DGraphClient, name, 
 		UpdatedAt:   time.Now(),
 	}
 
-	if err := dbClient.CreateCategory(ctx, category); err != nil {
+	if err := db.CreateCategory(ctx, category); err != nil {
 		return fmt.Errorf("failed to create category: %w", err)
 	}
 	return nil
 }
 
 // createRecipe creates a new recipe.
-func createRecipe(ctx context.Context, dbClient *database.DGraphClient, title, description string) error {
+func createRecipe(ctx context.Context, db cli.Database, title, description string) error {
 	recipe := &model.Recipe{
 		Title:       title,
 		Description: description,
@@ -244,16 +274,16 @@ func createRecipe(ctx context.Context, dbClient *database.DGraphClient, title, d
 		UpdatedAt:   time.Now(),
 	}
 
-	if err := dbClient.CreateRecipe(ctx, recipe); err != nil {
+	if err := db.CreateRecipe(ctx, recipe); err != nil {
 		return fmt.Errorf("failed to create recipe: %w", err)
 	}
 	return nil
 }
 
 // listUsers lists all users.
-func listUsers(ctx context.Context, dbClient *database.DGraphClient) error {
+func listUsers(ctx context.Context, db cli.Database) error {
 	// Get all users (no pagination)
-	users, err := dbClient.GetUsers(ctx, 0, 0)
+	users, err := db.GetUsers(ctx, 0, 0)
 	if err != nil {
 		return fmt.Errorf("failed to query users: %w", err)
 	}
@@ -272,7 +302,7 @@ func listUsers(ctx context.Context, dbClient *database.DGraphClient) error {
 }
 
 // listCategories lists all categories.
-func listCategories(ctx context.Context, dbClient *database.DGraphClient) error {
+func listCategories(ctx context.Context, db cli.Database) error {
 	// Query for categories - use a more specific query to avoid getting users
 	query := `
 	{
@@ -288,7 +318,7 @@ func listCategories(ctx context.Context, dbClient *database.DGraphClient) error 
 		Categories []*model.Category `json:"categories"`
 	}
 
-	err := dbClient.Query(ctx, query, nil, &result)
+	err := db.Query(ctx, query, nil, &result)
 	if err != nil {
 		return fmt.Errorf("failed to query categories: %w", err)
 	}
@@ -310,7 +340,7 @@ func listCategories(ctx context.Context, dbClient *database.DGraphClient) error 
 }
 
 // listRecipes lists all recipes.
-func listRecipes(ctx context.Context, dbClient *database.DGraphClient) error {
+func listRecipes(ctx context.Context, db cli.Database) error {
 	// Query for recipes
 	query := `
 	{
@@ -328,7 +358,7 @@ func listRecipes(ctx context.Context, dbClient *database.DGraphClient) error {
 		Recipes []*model.Recipe `json:"recipes"`
 	}
 
-	err := dbClient.Query(ctx, query, nil, &result)
+	err := db.Query(ctx, query, nil, &result)
 	if err != nil {
 		return fmt.Errorf("failed to query recipes: %w", err)
 	}

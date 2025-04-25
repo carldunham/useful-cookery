@@ -78,9 +78,29 @@ useful-cookery/
 - Configuration with viper
 - Command-line support with cobra
 - Follow [Google coding standards](https://google.github.io/styleguide/go/guide)
+- Use golangci-lint with the project's configuration to catch common issues
 - Implement unit tests for each file, and keep them up to date
-- Use table-driven tests when possible
+- Prefer using table-driven tests to reduce test function complexity
 - Put unit tests into _test packages, and only test exported types and functions
+- Avoid stuttering in type names (e.g., avoid `package.PackageThing`, prefer `package.Thing`)
+- Return concrete types from functions rather than interfaces
+- Always wrap errors from external packages with additional context using `fmt.Errorf("context: %w", err)`
+- For creating new static errors, use `errors.New()` instead of `fmt.Errorf()`
+- When comparing errors, use `errors.Is(err, targetErr)` instead of direct comparison (`err == targetErr` or `err != targetErr`)
+- In tests, use `t.Context()` instead of `context.Background()` for better test context handling
+- Add `t.Parallel()` to test functions when they can safely run in parallel
+- Ensure all comments end with a period for consistency
+- Keep function cyclomatic complexity below 10 to maintain readability
+- Keep function length below 60 lines to maintain readability
+- Avoid variable names that are too short for their scope, with exceptions for standard Go idioms like `db`, `tx`, `id`, `ok`, and `err`
+- Use interfaces for defining behavior, not for returning values
+- Prefer dependency injection through interfaces, but have factory functions return concrete implementations
+- Keep interfaces focused and small (under 10 methods) when possible; if a larger interface is necessary, document the reason
+- Extract complex nested logic into separate helper functions to improve readability and reduce nesting depth
+- When refactoring is not feasible, use `//nolint` directives sparingly and always with explanatory comments
+- For test functions, it's acceptable to have higher complexity and length to ensure comprehensive test coverage
+- When implementing database operations, prefer multiple smaller functions over fewer large ones
+- Document any intentional deviations from linting rules in the code with clear explanations
 
 ### Frontend (React)
 

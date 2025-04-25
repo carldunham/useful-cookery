@@ -18,6 +18,12 @@ import (
 	"github.com/carldunham/useful-cookery/internal/troff"
 )
 
+// Database defines the database operations needed by the migration tool.
+type Database interface {
+	GetRecipe(ctx context.Context, recipeID string) (*model.Recipe, error)
+	CreateRecipe(ctx context.Context, recipe *model.Recipe) error
+}
+
 // Constants.
 const (
 	filePermission = 0600 // Read/write permissions for owner only
@@ -33,7 +39,8 @@ var (
 	outputPath   string
 
 	// Error definitions.
-	errMaxErrorsReached = errors.New("maximum error count reached, terminating")
+	errMaxErrorsReached  = errors.New("maximum error count reached, terminating")
+	errUnsupportedDBType = errors.New("unsupported database type for migration")
 
 	// Root command.
 	rootCmd = &cobra.Command{
@@ -154,14 +161,14 @@ func runSave(_ *cobra.Command, args []string) error {
 	}
 
 	// Connect to the database.
-	dbClient, err := connectToDatabase()
+	db, err := connectToDatabase()
 	if err != nil {
 		return fmt.Errorf("failed to connect to database: %w", err)
 	}
 
 	// Check if recipe already exists.
 	if skipExisting {
-		existingRecipe, err := dbClient.GetRecipe(context.Background(), recipe.ID)
+		existingRecipe, err := db.GetRecipe(context.Background(), recipe.ID)
 		if err == nil && existingRecipe != nil {
 			fmt.Println("Recipe already exists, skipping", "id", recipe.ID)
 			return nil
@@ -174,7 +181,7 @@ func runSave(_ *cobra.Command, args []string) error {
 	recipe.UpdatedAt = now
 
 	// Save the recipe to the database.
-	if err := dbClient.CreateRecipe(context.Background(), &recipe); err != nil {
+	if err := db.CreateRecipe(context.Background(), &recipe); err != nil {
 		return fmt.Errorf("failed to save recipe to database: %w", err)
 	}
 
@@ -189,10 +196,10 @@ func runBatch(_ *cobra.Command, args []string) error {
 	dirPath := args[0]
 
 	// Connect to the database.
-	var dbClient *database.DGraphClient
+	var db Database
 	var err error
 	if !dryRun {
-		dbClient, err = connectToDatabase()
+		db, err = connectToDatabase()
 		if err != nil {
 			return fmt.Errorf("failed to connect to database: %w", err)
 		}
@@ -242,7 +249,7 @@ func runBatch(_ *cobra.Command, args []string) error {
 
 		// Check if recipe already exists.
 		if skipExisting {
-			existingRecipe, err := dbClient.GetRecipe(context.Background(), recipe.ID)
+			existingRecipe, err := db.GetRecipe(context.Background(), recipe.ID)
 			if err == nil && existingRecipe != nil {
 				if verbose {
 					fmt.Println("Recipe already exists, skipping", "originalID", recipe.OriginalID, "path", filePath)
@@ -258,7 +265,7 @@ func runBatch(_ *cobra.Command, args []string) error {
 		recipe.UpdatedAt = now
 
 		// Save the recipe to the database.
-		if err := dbClient.CreateRecipe(context.Background(), &recipe); err != nil {
+		if err := db.CreateRecipe(context.Background(), &recipe); err != nil {
 			slog.Error("Failed to save recipe to database", "path", filePath, "error", err)
 			errorCount++
 			if maxErrors > 0 && errorCount >= maxErrors {
@@ -282,20 +289,46 @@ func runBatch(_ *cobra.Command, args []string) error {
 }
 
 // connectToDatabase connects to the database.
-func connectToDatabase() (*database.DGraphClient, error) {
+//
+//nolint:ireturn // Intentionally returning interface for database abstraction
+func connectToDatabase() (Database, error) {
 	// Load configuration.
 	cfg, err := config.Load()
 	if err != nil {
 		return nil, fmt.Errorf("failed to load configuration: %w", err)
 	}
 
-	// Connect to DGraph.
-	dbClient, err := database.NewDGraphClient(cfg.DGraph.ConnectionString)
-	if err != nil {
-		return nil, fmt.Errorf("failed to connect to DGraph: %w", err)
+	// Initialize database options
+	dbOptions := database.Options{
+		ConnectionString: cfg.Database.ConnectionString,
 	}
 
-	return dbClient, nil
+	// If Database connection string is not set, fall back to DGraph connection string
+	// for backward compatibility
+	if dbOptions.ConnectionString == "" {
+		dbOptions.ConnectionString = cfg.DGraph.ConnectionString
+	}
+
+	// Create database based on type
+	var db Database
+	switch cfg.Database.Type {
+	case "dgraph", "":
+		dgraphDB, err := database.NewDGraphDatabase(dbOptions)
+		if err != nil {
+			return nil, fmt.Errorf("failed to connect to database: %w", err)
+		}
+		db = dgraphDB
+	case "memory":
+		memoryDB, err := database.NewInMemoryDatabase(dbOptions)
+		if err != nil {
+			return nil, fmt.Errorf("failed to connect to database: %w", err)
+		}
+		db = memoryDB
+	default:
+		return nil, fmt.Errorf("%w: %s", errUnsupportedDBType, cfg.Database.Type)
+	}
+
+	return db, nil
 }
 
 // printRecipe logs a recipe in a readable format.

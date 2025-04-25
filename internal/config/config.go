@@ -23,20 +23,23 @@ const (
 
 // Configuration errors.
 var (
-	ErrServerPortRequired    = errors.New("server port is required")
-	ErrDGraphConnStrRequired = errors.New("DGraph connection string is required")
-	ErrJWTSecretRequired     = errors.New("JWT secret is required")
-	ErrOpenAIAPIKeyRequired  = errors.New("OpenAI API key is required")
+	ErrServerPortRequired      = errors.New("server port is required")
+	ErrDGraphConnStrRequired   = errors.New("DGraph connection string is required")
+	ErrDatabaseConnStrRequired = errors.New("database connection string is required")
+	ErrDatabaseTypeRequired    = errors.New("database type is required")
+	ErrJWTSecretRequired       = errors.New("JWT secret is required")
+	ErrOpenAIAPIKeyRequired    = errors.New("OpenAI API key is required")
 )
 
 // Config holds the application configuration.
 type Config struct {
-	Server  ServerConfig  `mapstructure:"server"`
-	DGraph  DGraphConfig  `mapstructure:"dgraph"`
-	Redis   RedisConfig   `mapstructure:"redis"`
-	Auth    AuthConfig    `mapstructure:"auth"`
-	AI      AIConfig      `mapstructure:"ai"`
-	Storage StorageConfig `mapstructure:"storage"`
+	Server   ServerConfig   `mapstructure:"server"`
+	Database DatabaseConfig `mapstructure:"database"`
+	DGraph   DatabaseConfig `mapstructure:"dgraph"` // For backward compatibility
+	Redis    RedisConfig    `mapstructure:"redis"`
+	Auth     AuthConfig     `mapstructure:"auth"`
+	AI       AIConfig       `mapstructure:"ai"`
+	Storage  StorageConfig  `mapstructure:"storage"`
 }
 
 // ServerConfig holds server-related configuration.
@@ -49,8 +52,9 @@ type ServerConfig struct {
 	IdleTimeoutSeconds  int    `mapstructure:"idle_timeout_seconds"`
 }
 
-// DGraphConfig holds DGraph-related configuration.
-type DGraphConfig struct {
+// DatabaseConfig holds database-related configuration.
+type DatabaseConfig struct {
+	Type             string `mapstructure:"type"`
 	ConnectionString string `mapstructure:"connection_string"`
 }
 
@@ -136,8 +140,13 @@ func setDefaults() {
 	viper.SetDefault("server.write_timeout_seconds", DefaultWriteTimeoutSeconds)
 	viper.SetDefault("server.idle_timeout_seconds", DefaultIdleTimeoutSeconds)
 
-	// DGraph defaults
-	viper.SetDefault("dgraph.connection_string", "localhost:9080")
+	// Database defaults
+	viper.SetDefault("database.type", "dgraph")
+	viper.SetDefault("database.connection_string", "dgraph://localhost:9080")
+
+	// DGraph defaults (for backward compatibility)
+	viper.SetDefault("dgraph.type", "dgraph")
+	viper.SetDefault("dgraph.connection_string", "dgraph://localhost:9080")
 
 	// Redis defaults
 	viper.SetDefault("redis.addr", "localhost:6379")
@@ -167,9 +176,19 @@ func validateConfig(config *Config) error {
 		return ErrServerPortRequired
 	}
 
-	// Validate DGraph config
-	if config.DGraph.ConnectionString == "" {
-		return ErrDGraphConnStrRequired
+	// Validate database config
+	if config.Database.Type == "" {
+		return ErrDatabaseTypeRequired
+	}
+	if config.Database.ConnectionString == "" {
+		// Check if we have a DGraph connection string for backward compatibility
+		if config.DGraph.ConnectionString != "" {
+			// Copy DGraph connection string to Database
+			config.Database.ConnectionString = config.DGraph.ConnectionString
+			config.Database.Type = "dgraph"
+		} else {
+			return ErrDatabaseConnStrRequired
+		}
 	}
 
 	// Validate Auth config

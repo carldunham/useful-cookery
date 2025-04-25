@@ -7,7 +7,6 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/carldunham/useful-cookery/internal/database"
 	"github.com/carldunham/useful-cookery/internal/model"
 )
 
@@ -17,7 +16,7 @@ var (
 
 // UpdateUser updates a user in the database.
 func (s *Service) UpdateUser(ctx context.Context, user *model.User) error {
-	err := s.dbClient.UpdateUser(ctx, user)
+	err := s.db.UpdateUser(ctx, user)
 	if err != nil {
 		return fmt.Errorf("failed to update user: %w", err)
 	}
@@ -41,9 +40,9 @@ func (s *Service) ValidatePassword(password, hash string) bool {
 
 // IsAdmin checks if a user has admin privileges.
 func (s *Service) IsAdmin(ctx context.Context, userID string) (bool, error) {
-	user, err := s.dbClient.GetUser(ctx, userID)
+	user, err := s.db.GetUser(ctx, userID)
 	if err != nil {
-		if errors.Is(err, database.ErrNotFound) {
+		if errors.Is(err, ErrNotFound) {
 			return false, nil
 		}
 		return false, fmt.Errorf("failed to get user: %w", err)
@@ -55,7 +54,7 @@ func (s *Service) IsAdmin(ctx context.Context, userID string) (bool, error) {
 // CreateInitialAdminUser creates an admin user if no users exist.
 func (s *Service) CreateInitialAdminUser(ctx context.Context, email, password string) error {
 	// Check if any users exist
-	users, err := s.dbClient.GetUsers(ctx, 1, 0)
+	users, err := s.db.GetUsers(ctx, 1, 0)
 	if err != nil {
 		return fmt.Errorf("failed to check existing users: %w", err)
 	}
@@ -72,13 +71,13 @@ func (s *Service) CreateInitialAdminUser(ctx context.Context, email, password st
 	}
 
 	// Update role to ADMIN
-	admin, err := s.dbClient.GetUserByEmail(ctx, email)
+	admin, err := s.db.GetUserByEmail(ctx, email)
 	if err != nil {
 		return fmt.Errorf("failed to get admin user by email: %w", err)
 	}
 
 	admin.Role = model.AdminRole
-	err = s.dbClient.UpdateUser(ctx, admin)
+	err = s.db.UpdateUser(ctx, admin)
 	if err != nil {
 		return fmt.Errorf("failed to update admin role: %w", err)
 	}
@@ -88,7 +87,7 @@ func (s *Service) CreateInitialAdminUser(ctx context.Context, email, password st
 // CheckPermissionForRecipe checks if a user has permission to modify a recipe.
 func (s *Service) CheckPermissionForRecipe(ctx context.Context, userID, recipeID string) (bool, error) {
 	// Get recipe
-	recipe, err := s.dbClient.GetRecipe(ctx, recipeID)
+	recipe, err := s.db.GetRecipe(ctx, recipeID)
 	if err != nil {
 		return false, fmt.Errorf("failed to get recipe: %w", err)
 	}

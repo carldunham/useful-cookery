@@ -5,7 +5,7 @@ import (
 
 	"github.com/carldunham/useful-cookery/internal/ai"
 	"github.com/carldunham/useful-cookery/internal/auth"
-	"github.com/carldunham/useful-cookery/internal/database"
+	"github.com/carldunham/useful-cookery/internal/graphql"
 )
 
 // This file will not be regenerated automatically.
@@ -25,7 +25,7 @@ var (
 
 // Resolver is the root resolver for GraphQL operations.
 type Resolver struct {
-	DB                   *database.DGraphClient
+	DB                   graphql.Database
 	AIService            *ai.Service
 	AuthService          *auth.Service
 	RecipeResolver       *RecipeResolver
@@ -35,18 +35,18 @@ type Resolver struct {
 }
 
 // NewRootResolver creates a new root resolver.
-func NewRootResolver(dbClient *database.DGraphClient, aiService *ai.Service, authService *auth.Service) *Resolver {
+func NewRootResolver(db graphql.Database, aiService *ai.Service, authService *auth.Service) *Resolver {
 	// Create the root resolver first (needed for circular dependencies)
 	resolver := &Resolver{
-		DB:          dbClient,
+		DB:          db,
 		AIService:   aiService,
 		AuthService: authService,
 	}
 
 	// Create specialized resolvers
-	resolver.RecipeResolver = NewRecipeResolver(dbClient)
-	resolver.UserResolver = NewUserResolver(dbClient, authService)
-	resolver.SearchResolver = NewSearchResolver(dbClient, aiService)
+	resolver.RecipeResolver = NewRecipeResolver(db)
+	resolver.UserResolver = NewUserResolver(db, authService)
+	resolver.SearchResolver = NewSearchResolver(db, aiService)
 	resolver.SubscriptionResolver = NewSubscriptionResolver(resolver)
 
 	return resolver
@@ -54,26 +54,26 @@ func NewRootResolver(dbClient *database.DGraphClient, aiService *ai.Service, aut
 
 // RecipeResolver handles recipe-related resolvers.
 type RecipeResolver struct {
-	DB *database.DGraphClient
+	DB graphql.Database
 }
 
 // NewRecipeResolver creates a new recipe resolver.
-func NewRecipeResolver(dbClient *database.DGraphClient) *RecipeResolver {
+func NewRecipeResolver(db graphql.Database) *RecipeResolver {
 	return &RecipeResolver{
-		DB: dbClient,
+		DB: db,
 	}
 }
 
 // UserResolver handles user-related resolvers.
 type UserResolver struct {
-	DB          *database.DGraphClient
+	DB          graphql.Database
 	AuthService *auth.Service
 }
 
 // NewUserResolver creates a new user resolver.
-func NewUserResolver(dbClient *database.DGraphClient, authService *auth.Service) *UserResolver {
+func NewUserResolver(db graphql.Database, authService *auth.Service) *UserResolver {
 	return &UserResolver{
-		DB:          dbClient,
+		DB:          db,
 		AuthService: authService,
 	}
 }

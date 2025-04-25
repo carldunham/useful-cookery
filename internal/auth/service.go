@@ -12,7 +12,6 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/carldunham/useful-cookery/internal/database"
 	"github.com/carldunham/useful-cookery/internal/model"
 )
 
@@ -36,22 +35,22 @@ type Claims struct {
 type Service struct {
 	jwtSecret   string
 	tokenExpiry time.Duration
-	dbClient    *database.DGraphClient
+	db          Database
 }
 
 // NewService creates a new auth service.
-func NewService(jwtSecret string, tokenExpiry time.Duration, dbClient *database.DGraphClient) *Service {
+func NewService(jwtSecret string, tokenExpiry time.Duration, db Database) *Service {
 	return &Service{
 		jwtSecret:   jwtSecret,
 		tokenExpiry: tokenExpiry,
-		dbClient:    dbClient,
+		db:          db,
 	}
 }
 
 // RegisterUser registers a new user.
 func (s *Service) RegisterUser(ctx context.Context, name, email, password string) (*model.User, error) {
 	// Check if user already exists
-	existingUser, err := s.dbClient.GetUserByEmail(ctx, email)
+	existingUser, err := s.db.GetUserByEmail(ctx, email)
 	if err == nil && existingUser != nil {
 		return nil, ErrUserExists
 	}
@@ -73,7 +72,7 @@ func (s *Service) RegisterUser(ctx context.Context, name, email, password string
 	}
 
 	// Save user to database
-	err = s.dbClient.CreateUser(ctx, user)
+	err = s.db.CreateUser(ctx, user)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create user: %w", err)
 	}
@@ -86,7 +85,7 @@ func (s *Service) RegisterUser(ctx context.Context, name, email, password string
 
 // Login authenticates a user.
 func (s *Service) Login(ctx context.Context, email, password string) (string, *model.User, error) {
-	user, err := s.dbClient.GetUserByEmail(ctx, email)
+	user, err := s.db.GetUserByEmail(ctx, email)
 	if err != nil || user == nil {
 		log.Printf("Login: getting user: %v", err)
 		return "", nil, ErrInvalidCredentials
@@ -196,7 +195,7 @@ func (s *Service) AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		// Get user from database
-		user, err := s.dbClient.GetUser(request.Context(), claims.UserID)
+		user, err := s.db.GetUser(request.Context(), claims.UserID)
 		if err != nil || user == nil {
 			// User not found, continue without user info
 			next(writer, request)

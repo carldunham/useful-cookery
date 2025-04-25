@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/carldunham/useful-cookery/internal/ai"
-	"github.com/carldunham/useful-cookery/internal/database"
+	"github.com/carldunham/useful-cookery/internal/graphql"
 	domainmodel "github.com/carldunham/useful-cookery/internal/model"
 )
 
@@ -21,12 +21,12 @@ const (
 
 // SearchResolver handles search-related resolvers.
 type SearchResolver struct {
-	DB        *database.DGraphClient
+	DB        graphql.Database
 	AIService *ai.Service
 }
 
 // NewSearchResolver creates a new search resolver.
-func NewSearchResolver(db *database.DGraphClient, aiService *ai.Service) *SearchResolver {
+func NewSearchResolver(db graphql.Database, aiService *ai.Service) *SearchResolver {
 	return &SearchResolver{
 		DB:        db,
 		AIService: aiService,

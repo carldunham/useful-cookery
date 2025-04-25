@@ -24,6 +24,17 @@ linters-settings:
   goimports:
     local-prefixes: github.com/carldunham/useful-cookery
 
+  varnamelen:
+    # The minimum length of a variable name that is considered "long enough" and won't trigger the linter.
+    min-name-length: 3
+    # List of variable names that should be ignored completely.
+    ignore-names:
+      - db
+      - tx
+      - id
+      - ok
+      - err
+
   gci:
     custom-order: true
     sections:

@@ -9,14 +9,7 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
-// Cache interface defines common caching operations.
-type Cache interface {
-	Get(ctx context.Context, key string) ([]byte, error)
-	Set(ctx context.Context, key string, value []byte, ttl time.Duration) error
-	Delete(ctx context.Context, key string) error
-}
-
-// RedisCache implements the Cache interface using Redis.
+// RedisCache implements the dbtypes.Cache interface using Redis.
 type RedisCache struct {
 	client *redis.Client
 }
@@ -82,10 +75,20 @@ func (c *RedisCache) Ping(ctx context.Context) error {
 	return nil
 }
 
-// InMemoryCache implements the Cache interface using a map.
+// InMemoryCache implements the dbtypes.Cache interface using a map.
 // Used for testing or when Redis is not available.
 type InMemoryCache struct {
 	data map[string]cacheItem
+}
+
+// Close is a no-op for InMemoryCache but implemented to match RedisCache interface.
+func (c *InMemoryCache) Close() error {
+	return nil
+}
+
+// Ping is a no-op for InMemoryCache but implemented to match RedisCache interface.
+func (c *InMemoryCache) Ping(_ context.Context) error {
+	return nil
 }
 
 type cacheItem struct {
