@@ -21,6 +21,9 @@ const (
 
 	// DatabaseTypeInMemory represents an in-memory database (for testing).
 	DatabaseTypeInMemory = dbtypes.DatabaseTypeInMemory
+
+	// DatabaseTypePostgres represents a PostgreSQL database.
+	DatabaseTypePostgres = dbtypes.DatabaseTypePostgres
 )
 
 // Common errors.

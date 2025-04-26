@@ -37,5 +37,8 @@ const (
 	// DatabaseTypeInMemory represents an in-memory database (for testing).
 	DatabaseTypeInMemory DatabaseType = "memory"
 
+	// DatabaseTypePostgres represents a PostgreSQL database.
+	DatabaseTypePostgres DatabaseType = "postgres"
+
 	// Add more database types as needed.
 )

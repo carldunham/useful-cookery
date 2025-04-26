@@ -21,6 +21,9 @@ func TestTypeAliases(t *testing.T) {
 	if database.DatabaseTypeInMemory != dbtypes.DatabaseTypeInMemory {
 		t.Errorf("DatabaseTypeInMemory has unexpected value: %s", database.DatabaseTypeInMemory)
 	}
+	if database.DatabaseTypePostgres != dbtypes.DatabaseTypePostgres {
+		t.Errorf("DatabaseTypePostgres has unexpected value: %s", database.DatabaseTypePostgres)
+	}
 
 	// Test that the error variables are defined correctly
 	if !errors.Is(database.ErrNotFound, dbtypes.ErrNotFound) {

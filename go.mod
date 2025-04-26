@@ -28,6 +28,7 @@ require (
 	github.com/Antonboom/testifylint v1.5.2 // indirect
 	github.com/BurntSushi/toml v1.4.1-0.20240526193622-a339e1f7089c // indirect
 	github.com/Crocmagnon/fatcontext v0.7.1 // indirect
+	github.com/DATA-DOG/go-sqlmock v1.5.2 // indirect
 	github.com/Djarvur/go-err113 v0.0.0-20210108212216-aea10b59be24 // indirect
 	github.com/GaijinEntertainment/go-exhaustruct/v3 v3.3.1 // indirect
 	github.com/Masterminds/semver/v3 v3.3.0 // indirect
@@ -117,6 +118,7 @@ require (
 	github.com/ldez/tagliatelle v0.7.1 // indirect
 	github.com/ldez/usetesting v0.4.2 // indirect
 	github.com/leonklingele/grouper v1.1.2 // indirect
+	github.com/lib/pq v1.10.9 // indirect
 	github.com/macabu/inamedparam v0.1.3 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/maratori/testableexamples v1.0.0 // indirect

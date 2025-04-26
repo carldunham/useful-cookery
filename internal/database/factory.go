@@ -16,6 +16,8 @@ func CreateDatabase(dbType dbtypes.DatabaseType, options dbtypes.DatabaseOptions
 		return NewDGraphDatabase(options)
 	case dbtypes.DatabaseTypeInMemory:
 		return NewInMemoryDatabase(options)
+	case dbtypes.DatabaseTypePostgres:
+		return NewPostgresDatabase(options)
 	default:
 		return nil, ErrUnsupportedDatabaseType
 	}
