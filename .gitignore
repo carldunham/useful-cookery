@@ -41,9 +41,6 @@ coverage/
 package-lock.json
 yarn.lock
 
-# Optional: Go specific - if you have a 'deploy' folder for binaries
-/deploy
-
 # Project specific
 useful-cookery-api
 useful-cookery-cli

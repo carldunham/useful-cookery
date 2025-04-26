@@ -110,16 +110,24 @@ type ComplexityRoot struct {
 		Sugar    func(childComplexity int) int
 	}
 
+	PageInfo struct {
+		EndCursor       func(childComplexity int) int
+		HasNextPage     func(childComplexity int) int
+		HasPreviousPage func(childComplexity int) int
+		StartCursor     func(childComplexity int) int
+	}
+
 	Query struct {
-		Categories       func(childComplexity int) int
-		Category         func(childComplexity int, id string) int
-		FindSubstitutes  func(childComplexity int, ingredientName string) int
-		Me               func(childComplexity int) int
-		Recipe           func(childComplexity int, id string) int
-		Recipes          func(childComplexity int, filter *model.RecipeFilter, order *model.RecipeOrder, first *int, offset *int) int
-		RecommendRecipes func(childComplexity int, userID *string, availableIngredients []string) int
-		SearchRecipes    func(childComplexity int, query string) int
-		User             func(childComplexity int, id string) int
+		Categories         func(childComplexity int) int
+		Category           func(childComplexity int, id string) int
+		FindSubstitutes    func(childComplexity int, ingredientName string) int
+		Me                 func(childComplexity int) int
+		Recipe             func(childComplexity int, id string) int
+		RecipeByOriginalID func(childComplexity int, originalID string) int
+		Recipes            func(childComplexity int, filter *model.RecipeFilter, order *model.RecipeOrder, first *int, after *string, offset *int) int
+		RecommendRecipes   func(childComplexity int, userID *string, availableIngredients []string, first *int, after *string) int
+		SearchRecipes      func(childComplexity int, query string, first *int, after *string) int
+		User               func(childComplexity int, id string) int
 	}
 
 	Recipe struct {
@@ -136,6 +144,7 @@ type ComplexityRoot struct {
 		Ingredients   func(childComplexity int) int
 		Likes         func(childComplexity int) int
 		NutritionInfo func(childComplexity int) int
+		OriginalID    func(childComplexity int) int
 		PrepTime      func(childComplexity int) int
 		Reviews       func(childComplexity int) int
 		SavedBy       func(childComplexity int) int
@@ -144,6 +153,17 @@ type ComplexityRoot struct {
 		Tags          func(childComplexity int) int
 		Title         func(childComplexity int) int
 		UpdatedAt     func(childComplexity int) int
+	}
+
+	RecipeConnection struct {
+		Edges      func(childComplexity int) int
+		PageInfo   func(childComplexity int) int
+		TotalCount func(childComplexity int) int
+	}
+
+	RecipeEdge struct {
+		Cursor func(childComplexity int) int
+		Node   func(childComplexity int) int
 	}
 
 	Review struct {
@@ -210,13 +230,14 @@ type MutationResolver interface {
 }
 type QueryResolver interface {
 	Recipe(ctx context.Context, id string) (*model1.Recipe, error)
-	Recipes(ctx context.Context, filter *model.RecipeFilter, order *model.RecipeOrder, first *int, offset *int) ([]*model1.Recipe, error)
+	RecipeByOriginalID(ctx context.Context, originalID string) (*model1.Recipe, error)
+	Recipes(ctx context.Context, filter *model.RecipeFilter, order *model.RecipeOrder, first *int, after *string, offset *int) (*model.RecipeConnection, error)
 	Me(ctx context.Context) (*model1.User, error)
 	User(ctx context.Context, id string) (*model1.User, error)
 	Categories(ctx context.Context) ([]*model1.Category, error)
 	Category(ctx context.Context, id string) (*model1.Category, error)
-	SearchRecipes(ctx context.Context, query string) ([]*model1.Recipe, error)
-	RecommendRecipes(ctx context.Context, userID *string, availableIngredients []string) ([]*model1.Recipe, error)
+	SearchRecipes(ctx context.Context, query string, first *int, after *string) (*model.RecipeConnection, error)
+	RecommendRecipes(ctx context.Context, userID *string, availableIngredients []string, first *int, after *string) (*model.RecipeConnection, error)
 	FindSubstitutes(ctx context.Context, ingredientName string) ([]string, error)
 }
 type RecipeResolver interface {
@@ -604,6 +625,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.NutritionInfo.Sugar(childComplexity), true
 
+	case "PageInfo.endCursor":
+		if e.complexity.PageInfo.EndCursor == nil {
+			break
+		}
+
+		return e.complexity.PageInfo.EndCursor(childComplexity), true
+
+	case "PageInfo.hasNextPage":
+		if e.complexity.PageInfo.HasNextPage == nil {
+			break
+		}
+
+		return e.complexity.PageInfo.HasNextPage(childComplexity), true
+
+	case "PageInfo.hasPreviousPage":
+		if e.complexity.PageInfo.HasPreviousPage == nil {
+			break
+		}
+
+		return e.complexity.PageInfo.HasPreviousPage(childComplexity), true
+
+	case "PageInfo.startCursor":
+		if e.complexity.PageInfo.StartCursor == nil {
+			break
+		}
+
+		return e.complexity.PageInfo.StartCursor(childComplexity), true
+
 	case "Query.categories":
 		if e.complexity.Query.Categories == nil {
 			break
@@ -654,6 +703,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Recipe(childComplexity, args["id"].(string)), true
 
+	case "Query.recipeByOriginalId":
+		if e.complexity.Query.RecipeByOriginalID == nil {
+			break
+		}
+
+		args, err := ec.field_Query_recipeByOriginalId_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.RecipeByOriginalID(childComplexity, args["originalId"].(string)), true
+
 	case "Query.recipes":
 		if e.complexity.Query.Recipes == nil {
 			break
@@ -664,7 +725,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Recipes(childComplexity, args["filter"].(*model.RecipeFilter), args["order"].(*model.RecipeOrder), args["first"].(*int), args["offset"].(*int)), true
+		return e.complexity.Query.Recipes(childComplexity, args["filter"].(*model.RecipeFilter), args["order"].(*model.RecipeOrder), args["first"].(*int), args["after"].(*string), args["offset"].(*int)), true
 
 	case "Query.recommendRecipes":
 		if e.complexity.Query.RecommendRecipes == nil {
@@ -676,7 +737,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.RecommendRecipes(childComplexity, args["userID"].(*string), args["availableIngredients"].([]string)), true
+		return e.complexity.Query.RecommendRecipes(childComplexity, args["userID"].(*string), args["availableIngredients"].([]string), args["first"].(*int), args["after"].(*string)), true
 
 	case "Query.searchRecipes":
 		if e.complexity.Query.SearchRecipes == nil {
@@ -688,7 +749,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.SearchRecipes(childComplexity, args["query"].(string)), true
+		return e.complexity.Query.SearchRecipes(childComplexity, args["query"].(string), args["first"].(*int), args["after"].(*string)), true
 
 	case "Query.user":
 		if e.complexity.Query.User == nil {
@@ -793,6 +854,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Recipe.NutritionInfo(childComplexity), true
 
+	case "Recipe.originalId":
+		if e.complexity.Recipe.OriginalID == nil {
+			break
+		}
+
+		return e.complexity.Recipe.OriginalID(childComplexity), true
+
 	case "Recipe.prepTime":
 		if e.complexity.Recipe.PrepTime == nil {
 			break
@@ -848,6 +916,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Recipe.UpdatedAt(childComplexity), true
+
+	case "RecipeConnection.edges":
+		if e.complexity.RecipeConnection.Edges == nil {
+			break
+		}
+
+		return e.complexity.RecipeConnection.Edges(childComplexity), true
+
+	case "RecipeConnection.pageInfo":
+		if e.complexity.RecipeConnection.PageInfo == nil {
+			break
+		}
+
+		return e.complexity.RecipeConnection.PageInfo(childComplexity), true
+
+	case "RecipeConnection.totalCount":
+		if e.complexity.RecipeConnection.TotalCount == nil {
+			break
+		}
+
+		return e.complexity.RecipeConnection.TotalCount(childComplexity), true
+
+	case "RecipeEdge.cursor":
+		if e.complexity.RecipeEdge.Cursor == nil {
+			break
+		}
+
+		return e.complexity.RecipeEdge.Cursor(childComplexity), true
+
+	case "RecipeEdge.node":
+		if e.complexity.RecipeEdge.Node == nil {
+			break
+		}
+
+		return e.complexity.RecipeEdge.Node(childComplexity), true
 
 	case "Review.author":
 		if e.complexity.Review.Author == nil {
@@ -1207,10 +1310,30 @@ enum SkillLevel {
   ADVANCED
 }
 
+# Pagination types following Relay Connection spec
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type RecipeEdge {
+  node: Recipe!
+  cursor: String!
+}
+
+type RecipeConnection {
+  edges: [RecipeEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type Query {
   # Recipe queries
   recipe(id: ID!): Recipe
-  recipes(filter: RecipeFilter, order: RecipeOrder, first: Int, offset: Int): [Recipe!]!
+  recipeByOriginalId(originalId: String!): Recipe
+  recipes(filter: RecipeFilter, order: RecipeOrder, first: Int, after: String, offset: Int): RecipeConnection!
 
   # User queries
   me: User
@@ -1221,8 +1344,8 @@ type Query {
   category(id: ID!): Category
 
   # AI-powered queries
-  searchRecipes(query: String!): [Recipe!]!
-  recommendRecipes(userID: ID, availableIngredients: [String!]): [Recipe!]!
+  searchRecipes(query: String!, first: Int, after: String): RecipeConnection!
+  recommendRecipes(userID: ID, availableIngredients: [String!], first: Int, after: String): RecipeConnection!
   findSubstitutes(ingredientName: String!): [String!]!
 }
 
@@ -1286,6 +1409,7 @@ input UserPreferencesInput {
 # Recipe filtering and ordering
 input RecipeFilter {
   search: String
+  originalId: String
   categories: [ID!]
   cuisine: String
   difficulty: SkillLevel
@@ -1315,6 +1439,7 @@ enum OrderDirection {
 input RecipeInput {
   title: String!
   description: String!
+  originalId: String
   categoryIDs: [ID!]
   cuisine: String
   prepTime: Int
@@ -1392,6 +1517,7 @@ type Category {
 
 type Recipe {
   id: ID!
+  originalId: String
   title: String!
   description: String
   author: User
@@ -2178,6 +2304,34 @@ func (ec *executionContext) field_Query_findSubstitutes_argsIngredientName(
 	return zeroVal, nil
 }
 
+func (ec *executionContext) field_Query_recipeByOriginalId_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
+	var err error
+	args := map[string]any{}
+	arg0, err := ec.field_Query_recipeByOriginalId_argsOriginalID(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["originalId"] = arg0
+	return args, nil
+}
+func (ec *executionContext) field_Query_recipeByOriginalId_argsOriginalID(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (string, error) {
+	if _, ok := rawArgs["originalId"]; !ok {
+		var zeroVal string
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("originalId"))
+	if tmp, ok := rawArgs["originalId"]; ok {
+		return ec.unmarshalNString2string(ctx, tmp)
+	}
+
+	var zeroVal string
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Query_recipe_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -2224,11 +2378,16 @@ func (ec *executionContext) field_Query_recipes_args(ctx context.Context, rawArg
 		return nil, err
 	}
 	args["first"] = arg2
-	arg3, err := ec.field_Query_recipes_argsOffset(ctx, rawArgs)
+	arg3, err := ec.field_Query_recipes_argsAfter(ctx, rawArgs)
 	if err != nil {
 		return nil, err
 	}
-	args["offset"] = arg3
+	args["after"] = arg3
+	arg4, err := ec.field_Query_recipes_argsOffset(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["offset"] = arg4
 	return args, nil
 }
 func (ec *executionContext) field_Query_recipes_argsFilter(
@@ -2285,6 +2444,24 @@ func (ec *executionContext) field_Query_recipes_argsFirst(
 	return zeroVal, nil
 }
 
+func (ec *executionContext) field_Query_recipes_argsAfter(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (*string, error) {
+	if _, ok := rawArgs["after"]; !ok {
+		var zeroVal *string
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+	if tmp, ok := rawArgs["after"]; ok {
+		return ec.unmarshalOString2ᚖstring(ctx, tmp)
+	}
+
+	var zeroVal *string
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Query_recipes_argsOffset(
 	ctx context.Context,
 	rawArgs map[string]any,
@@ -2316,6 +2493,16 @@ func (ec *executionContext) field_Query_recommendRecipes_args(ctx context.Contex
 		return nil, err
 	}
 	args["availableIngredients"] = arg1
+	arg2, err := ec.field_Query_recommendRecipes_argsFirst(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["first"] = arg2
+	arg3, err := ec.field_Query_recommendRecipes_argsAfter(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["after"] = arg3
 	return args, nil
 }
 func (ec *executionContext) field_Query_recommendRecipes_argsUserID(
@@ -2354,6 +2541,42 @@ func (ec *executionContext) field_Query_recommendRecipes_argsAvailableIngredient
 	return zeroVal, nil
 }
 
+func (ec *executionContext) field_Query_recommendRecipes_argsFirst(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (*int, error) {
+	if _, ok := rawArgs["first"]; !ok {
+		var zeroVal *int
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+	if tmp, ok := rawArgs["first"]; ok {
+		return ec.unmarshalOInt2ᚖint(ctx, tmp)
+	}
+
+	var zeroVal *int
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_recommendRecipes_argsAfter(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (*string, error) {
+	if _, ok := rawArgs["after"]; !ok {
+		var zeroVal *string
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+	if tmp, ok := rawArgs["after"]; ok {
+		return ec.unmarshalOString2ᚖstring(ctx, tmp)
+	}
+
+	var zeroVal *string
+	return zeroVal, nil
+}
+
 func (ec *executionContext) field_Query_searchRecipes_args(ctx context.Context, rawArgs map[string]any) (map[string]any, error) {
 	var err error
 	args := map[string]any{}
@@ -2362,6 +2585,16 @@ func (ec *executionContext) field_Query_searchRecipes_args(ctx context.Context, 
 		return nil, err
 	}
 	args["query"] = arg0
+	arg1, err := ec.field_Query_searchRecipes_argsFirst(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["first"] = arg1
+	arg2, err := ec.field_Query_searchRecipes_argsAfter(ctx, rawArgs)
+	if err != nil {
+		return nil, err
+	}
+	args["after"] = arg2
 	return args, nil
 }
 func (ec *executionContext) field_Query_searchRecipes_argsQuery(
@@ -2379,6 +2612,42 @@ func (ec *executionContext) field_Query_searchRecipes_argsQuery(
 	}
 
 	var zeroVal string
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_searchRecipes_argsFirst(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (*int, error) {
+	if _, ok := rawArgs["first"]; !ok {
+		var zeroVal *int
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+	if tmp, ok := rawArgs["first"]; ok {
+		return ec.unmarshalOInt2ᚖint(ctx, tmp)
+	}
+
+	var zeroVal *int
+	return zeroVal, nil
+}
+
+func (ec *executionContext) field_Query_searchRecipes_argsAfter(
+	ctx context.Context,
+	rawArgs map[string]any,
+) (*string, error) {
+	if _, ok := rawArgs["after"]; !ok {
+		var zeroVal *string
+		return zeroVal, nil
+	}
+
+	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+	if tmp, ok := rawArgs["after"]; ok {
+		return ec.unmarshalOString2ᚖstring(ctx, tmp)
+	}
+
+	var zeroVal *string
 	return zeroVal, nil
 }
 
@@ -2863,6 +3132,8 @@ func (ec *executionContext) fieldContext_Category_recipes(_ context.Context, fie
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Recipe_id(ctx, field)
+			case "originalId":
+				return ec.fieldContext_Recipe_originalId(ctx, field)
 			case "title":
 				return ec.fieldContext_Recipe_title(ctx, field)
 			case "description":
@@ -3654,6 +3925,8 @@ func (ec *executionContext) fieldContext_Mutation_createRecipe(ctx context.Conte
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Recipe_id(ctx, field)
+			case "originalId":
+				return ec.fieldContext_Recipe_originalId(ctx, field)
 			case "title":
 				return ec.fieldContext_Recipe_title(ctx, field)
 			case "description":
@@ -3753,6 +4026,8 @@ func (ec *executionContext) fieldContext_Mutation_updateRecipe(ctx context.Conte
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Recipe_id(ctx, field)
+			case "originalId":
+				return ec.fieldContext_Recipe_originalId(ctx, field)
 			case "title":
 				return ec.fieldContext_Recipe_title(ctx, field)
 			case "description":
@@ -3907,6 +4182,8 @@ func (ec *executionContext) fieldContext_Mutation_likeRecipe(ctx context.Context
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Recipe_id(ctx, field)
+			case "originalId":
+				return ec.fieldContext_Recipe_originalId(ctx, field)
 			case "title":
 				return ec.fieldContext_Recipe_title(ctx, field)
 			case "description":
@@ -4788,6 +5065,176 @@ func (ec *executionContext) fieldContext_NutritionInfo_sodium(_ context.Context,
 	return fc, nil
 }
 
+func (ec *executionContext) _PageInfo_hasNextPage(ctx context.Context, field graphql.CollectedField, obj *model.PageInfo) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PageInfo_hasNextPage(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HasNextPage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PageInfo_hasNextPage(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PageInfo",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PageInfo_hasPreviousPage(ctx context.Context, field graphql.CollectedField, obj *model.PageInfo) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PageInfo_hasPreviousPage(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HasPreviousPage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PageInfo_hasPreviousPage(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PageInfo",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PageInfo_startCursor(ctx context.Context, field graphql.CollectedField, obj *model.PageInfo) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PageInfo_startCursor(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StartCursor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PageInfo_startCursor(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PageInfo",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PageInfo_endCursor(ctx context.Context, field graphql.CollectedField, obj *model.PageInfo) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PageInfo_endCursor(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EndCursor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_PageInfo_endCursor(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "PageInfo",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query_recipe(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query_recipe(ctx, field)
 	if err != nil {
@@ -4826,6 +5273,8 @@ func (ec *executionContext) fieldContext_Query_recipe(ctx context.Context, field
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Recipe_id(ctx, field)
+			case "originalId":
+				return ec.fieldContext_Recipe_originalId(ctx, field)
 			case "title":
 				return ec.fieldContext_Recipe_title(ctx, field)
 			case "description":
@@ -4884,8 +5333,8 @@ func (ec *executionContext) fieldContext_Query_recipe(ctx context.Context, field
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_recipes(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_recipes(ctx, field)
+func (ec *executionContext) _Query_recipeByOriginalId(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_recipeByOriginalId(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -4898,24 +5347,21 @@ func (ec *executionContext) _Query_recipes(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Recipes(rctx, fc.Args["filter"].(*model.RecipeFilter), fc.Args["order"].(*model.RecipeOrder), fc.Args["first"].(*int), fc.Args["offset"].(*int))
+		return ec.resolvers.Query().RecipeByOriginalID(rctx, fc.Args["originalId"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model1.Recipe)
+	res := resTmp.(*model1.Recipe)
 	fc.Result = res
-	return ec.marshalNRecipe2ᚕᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋmodelᚐRecipeᚄ(ctx, field.Selections, res)
+	return ec.marshalORecipe2ᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋmodelᚐRecipe(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_recipes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_recipeByOriginalId(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -4925,6 +5371,8 @@ func (ec *executionContext) fieldContext_Query_recipes(ctx context.Context, fiel
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Recipe_id(ctx, field)
+			case "originalId":
+				return ec.fieldContext_Recipe_originalId(ctx, field)
 			case "title":
 				return ec.fieldContext_Recipe_title(ctx, field)
 			case "description":
@@ -4967,6 +5415,69 @@ func (ec *executionContext) fieldContext_Query_recipes(ctx context.Context, fiel
 				return ec.fieldContext_Recipe_updatedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Recipe", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_recipeByOriginalId_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_recipes(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_recipes(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Recipes(rctx, fc.Args["filter"].(*model.RecipeFilter), fc.Args["order"].(*model.RecipeOrder), fc.Args["first"].(*int), fc.Args["after"].(*string), fc.Args["offset"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.RecipeConnection)
+	fc.Result = res
+	return ec.marshalNRecipeConnection2ᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋgraphqlᚋmodelᚐRecipeConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_recipes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "edges":
+				return ec.fieldContext_RecipeConnection_edges(ctx, field)
+			case "pageInfo":
+				return ec.fieldContext_RecipeConnection_pageInfo(ctx, field)
+			case "totalCount":
+				return ec.fieldContext_RecipeConnection_totalCount(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type RecipeConnection", field.Name)
 		},
 	}
 	defer func() {
@@ -5250,7 +5761,7 @@ func (ec *executionContext) _Query_searchRecipes(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().SearchRecipes(rctx, fc.Args["query"].(string))
+		return ec.resolvers.Query().SearchRecipes(rctx, fc.Args["query"].(string), fc.Args["first"].(*int), fc.Args["after"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5262,9 +5773,9 @@ func (ec *executionContext) _Query_searchRecipes(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model1.Recipe)
+	res := resTmp.(*model.RecipeConnection)
 	fc.Result = res
-	return ec.marshalNRecipe2ᚕᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋmodelᚐRecipeᚄ(ctx, field.Selections, res)
+	return ec.marshalNRecipeConnection2ᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋgraphqlᚋmodelᚐRecipeConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_searchRecipes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5275,50 +5786,14 @@ func (ec *executionContext) fieldContext_Query_searchRecipes(ctx context.Context
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Recipe_id(ctx, field)
-			case "title":
-				return ec.fieldContext_Recipe_title(ctx, field)
-			case "description":
-				return ec.fieldContext_Recipe_description(ctx, field)
-			case "author":
-				return ec.fieldContext_Recipe_author(ctx, field)
-			case "categories":
-				return ec.fieldContext_Recipe_categories(ctx, field)
-			case "cuisine":
-				return ec.fieldContext_Recipe_cuisine(ctx, field)
-			case "prepTime":
-				return ec.fieldContext_Recipe_prepTime(ctx, field)
-			case "cookTime":
-				return ec.fieldContext_Recipe_cookTime(ctx, field)
-			case "servings":
-				return ec.fieldContext_Recipe_servings(ctx, field)
-			case "difficulty":
-				return ec.fieldContext_Recipe_difficulty(ctx, field)
-			case "ingredients":
-				return ec.fieldContext_Recipe_ingredients(ctx, field)
-			case "steps":
-				return ec.fieldContext_Recipe_steps(ctx, field)
-			case "nutritionInfo":
-				return ec.fieldContext_Recipe_nutritionInfo(ctx, field)
-			case "images":
-				return ec.fieldContext_Recipe_images(ctx, field)
-			case "tags":
-				return ec.fieldContext_Recipe_tags(ctx, field)
-			case "likes":
-				return ec.fieldContext_Recipe_likes(ctx, field)
-			case "reviews":
-				return ec.fieldContext_Recipe_reviews(ctx, field)
-			case "averageRating":
-				return ec.fieldContext_Recipe_averageRating(ctx, field)
-			case "savedBy":
-				return ec.fieldContext_Recipe_savedBy(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_Recipe_createdAt(ctx, field)
-			case "updatedAt":
-				return ec.fieldContext_Recipe_updatedAt(ctx, field)
+			case "edges":
+				return ec.fieldContext_RecipeConnection_edges(ctx, field)
+			case "pageInfo":
+				return ec.fieldContext_RecipeConnection_pageInfo(ctx, field)
+			case "totalCount":
+				return ec.fieldContext_RecipeConnection_totalCount(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type Recipe", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type RecipeConnection", field.Name)
 		},
 	}
 	defer func() {
@@ -5349,7 +5824,7 @@ func (ec *executionContext) _Query_recommendRecipes(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().RecommendRecipes(rctx, fc.Args["userID"].(*string), fc.Args["availableIngredients"].([]string))
+		return ec.resolvers.Query().RecommendRecipes(rctx, fc.Args["userID"].(*string), fc.Args["availableIngredients"].([]string), fc.Args["first"].(*int), fc.Args["after"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5361,9 +5836,9 @@ func (ec *executionContext) _Query_recommendRecipes(ctx context.Context, field g
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model1.Recipe)
+	res := resTmp.(*model.RecipeConnection)
 	fc.Result = res
-	return ec.marshalNRecipe2ᚕᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋmodelᚐRecipeᚄ(ctx, field.Selections, res)
+	return ec.marshalNRecipeConnection2ᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋgraphqlᚋmodelᚐRecipeConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_recommendRecipes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5374,50 +5849,14 @@ func (ec *executionContext) fieldContext_Query_recommendRecipes(ctx context.Cont
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_Recipe_id(ctx, field)
-			case "title":
-				return ec.fieldContext_Recipe_title(ctx, field)
-			case "description":
-				return ec.fieldContext_Recipe_description(ctx, field)
-			case "author":
-				return ec.fieldContext_Recipe_author(ctx, field)
-			case "categories":
-				return ec.fieldContext_Recipe_categories(ctx, field)
-			case "cuisine":
-				return ec.fieldContext_Recipe_cuisine(ctx, field)
-			case "prepTime":
-				return ec.fieldContext_Recipe_prepTime(ctx, field)
-			case "cookTime":
-				return ec.fieldContext_Recipe_cookTime(ctx, field)
-			case "servings":
-				return ec.fieldContext_Recipe_servings(ctx, field)
-			case "difficulty":
-				return ec.fieldContext_Recipe_difficulty(ctx, field)
-			case "ingredients":
-				return ec.fieldContext_Recipe_ingredients(ctx, field)
-			case "steps":
-				return ec.fieldContext_Recipe_steps(ctx, field)
-			case "nutritionInfo":
-				return ec.fieldContext_Recipe_nutritionInfo(ctx, field)
-			case "images":
-				return ec.fieldContext_Recipe_images(ctx, field)
-			case "tags":
-				return ec.fieldContext_Recipe_tags(ctx, field)
-			case "likes":
-				return ec.fieldContext_Recipe_likes(ctx, field)
-			case "reviews":
-				return ec.fieldContext_Recipe_reviews(ctx, field)
-			case "averageRating":
-				return ec.fieldContext_Recipe_averageRating(ctx, field)
-			case "savedBy":
-				return ec.fieldContext_Recipe_savedBy(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_Recipe_createdAt(ctx, field)
-			case "updatedAt":
-				return ec.fieldContext_Recipe_updatedAt(ctx, field)
+			case "edges":
+				return ec.fieldContext_RecipeConnection_edges(ctx, field)
+			case "pageInfo":
+				return ec.fieldContext_RecipeConnection_pageInfo(ctx, field)
+			case "totalCount":
+				return ec.fieldContext_RecipeConnection_totalCount(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type Recipe", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type RecipeConnection", field.Name)
 		},
 	}
 	defer func() {
@@ -5659,6 +6098,47 @@ func (ec *executionContext) fieldContext_Recipe_id(_ context.Context, field grap
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Recipe_originalId(ctx context.Context, field graphql.CollectedField, obj *model1.Recipe) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Recipe_originalId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.OriginalID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Recipe_originalId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Recipe",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -6613,6 +7093,288 @@ func (ec *executionContext) fieldContext_Recipe_updatedAt(_ context.Context, fie
 	return fc, nil
 }
 
+func (ec *executionContext) _RecipeConnection_edges(ctx context.Context, field graphql.CollectedField, obj *model.RecipeConnection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RecipeConnection_edges(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Edges, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.RecipeEdge)
+	fc.Result = res
+	return ec.marshalNRecipeEdge2ᚕᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋgraphqlᚋmodelᚐRecipeEdgeᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RecipeConnection_edges(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RecipeConnection",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "node":
+				return ec.fieldContext_RecipeEdge_node(ctx, field)
+			case "cursor":
+				return ec.fieldContext_RecipeEdge_cursor(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type RecipeEdge", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RecipeConnection_pageInfo(ctx context.Context, field graphql.CollectedField, obj *model.RecipeConnection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RecipeConnection_pageInfo(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PageInfo, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.PageInfo)
+	fc.Result = res
+	return ec.marshalNPageInfo2ᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋgraphqlᚋmodelᚐPageInfo(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RecipeConnection_pageInfo(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RecipeConnection",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "hasNextPage":
+				return ec.fieldContext_PageInfo_hasNextPage(ctx, field)
+			case "hasPreviousPage":
+				return ec.fieldContext_PageInfo_hasPreviousPage(ctx, field)
+			case "startCursor":
+				return ec.fieldContext_PageInfo_startCursor(ctx, field)
+			case "endCursor":
+				return ec.fieldContext_PageInfo_endCursor(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type PageInfo", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RecipeConnection_totalCount(ctx context.Context, field graphql.CollectedField, obj *model.RecipeConnection) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RecipeConnection_totalCount(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalCount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RecipeConnection_totalCount(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RecipeConnection",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RecipeEdge_node(ctx context.Context, field graphql.CollectedField, obj *model.RecipeEdge) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RecipeEdge_node(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Node, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model1.Recipe)
+	fc.Result = res
+	return ec.marshalNRecipe2ᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋmodelᚐRecipe(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RecipeEdge_node(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RecipeEdge",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Recipe_id(ctx, field)
+			case "originalId":
+				return ec.fieldContext_Recipe_originalId(ctx, field)
+			case "title":
+				return ec.fieldContext_Recipe_title(ctx, field)
+			case "description":
+				return ec.fieldContext_Recipe_description(ctx, field)
+			case "author":
+				return ec.fieldContext_Recipe_author(ctx, field)
+			case "categories":
+				return ec.fieldContext_Recipe_categories(ctx, field)
+			case "cuisine":
+				return ec.fieldContext_Recipe_cuisine(ctx, field)
+			case "prepTime":
+				return ec.fieldContext_Recipe_prepTime(ctx, field)
+			case "cookTime":
+				return ec.fieldContext_Recipe_cookTime(ctx, field)
+			case "servings":
+				return ec.fieldContext_Recipe_servings(ctx, field)
+			case "difficulty":
+				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "ingredients":
+				return ec.fieldContext_Recipe_ingredients(ctx, field)
+			case "steps":
+				return ec.fieldContext_Recipe_steps(ctx, field)
+			case "nutritionInfo":
+				return ec.fieldContext_Recipe_nutritionInfo(ctx, field)
+			case "images":
+				return ec.fieldContext_Recipe_images(ctx, field)
+			case "tags":
+				return ec.fieldContext_Recipe_tags(ctx, field)
+			case "likes":
+				return ec.fieldContext_Recipe_likes(ctx, field)
+			case "reviews":
+				return ec.fieldContext_Recipe_reviews(ctx, field)
+			case "averageRating":
+				return ec.fieldContext_Recipe_averageRating(ctx, field)
+			case "savedBy":
+				return ec.fieldContext_Recipe_savedBy(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Recipe_createdAt(ctx, field)
+			case "updatedAt":
+				return ec.fieldContext_Recipe_updatedAt(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Recipe", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RecipeEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *model.RecipeEdge) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RecipeEdge_cursor(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Cursor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RecipeEdge_cursor(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RecipeEdge",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Review_id(ctx context.Context, field graphql.CollectedField, obj *model1.Review) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Review_id(ctx, field)
 	if err != nil {
@@ -6698,6 +7460,8 @@ func (ec *executionContext) fieldContext_Review_recipe(_ context.Context, field 
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Recipe_id(ctx, field)
+			case "originalId":
+				return ec.fieldContext_Recipe_originalId(ctx, field)
 			case "title":
 				return ec.fieldContext_Recipe_title(ctx, field)
 			case "description":
@@ -7616,6 +8380,8 @@ func (ec *executionContext) fieldContext_User_savedRecipes(_ context.Context, fi
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Recipe_id(ctx, field)
+			case "originalId":
+				return ec.fieldContext_Recipe_originalId(ctx, field)
 			case "title":
 				return ec.fieldContext_Recipe_title(ctx, field)
 			case "description":
@@ -7701,6 +8467,8 @@ func (ec *executionContext) fieldContext_User_createdRecipes(_ context.Context, 
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Recipe_id(ctx, field)
+			case "originalId":
+				return ec.fieldContext_Recipe_originalId(ctx, field)
 			case "title":
 				return ec.fieldContext_Recipe_title(ctx, field)
 			case "description":
@@ -10229,7 +10997,7 @@ func (ec *executionContext) unmarshalInputRecipeFilter(ctx context.Context, obj 
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"search", "categories", "cuisine", "difficulty", "maxPrepTime", "ingredients", "authorID"}
+	fieldsInOrder := [...]string{"search", "originalId", "categories", "cuisine", "difficulty", "maxPrepTime", "ingredients", "authorID"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -10243,6 +11011,13 @@ func (ec *executionContext) unmarshalInputRecipeFilter(ctx context.Context, obj 
 				return it, err
 			}
 			it.Search = data
+		case "originalId":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("originalId"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.OriginalID = data
 		case "categories":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categories"))
 			data, err := ec.unmarshalOID2ᚕstringᚄ(ctx, v)
@@ -10298,7 +11073,7 @@ func (ec *executionContext) unmarshalInputRecipeInput(ctx context.Context, obj a
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"title", "description", "categoryIDs", "cuisine", "prepTime", "cookTime", "servings", "difficulty", "ingredients", "steps", "nutritionInfo", "tags", "images"}
+	fieldsInOrder := [...]string{"title", "description", "originalId", "categoryIDs", "cuisine", "prepTime", "cookTime", "servings", "difficulty", "ingredients", "steps", "nutritionInfo", "tags", "images"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -10319,6 +11094,13 @@ func (ec *executionContext) unmarshalInputRecipeInput(ctx context.Context, obj a
 				return it, err
 			}
 			it.Description = data
+		case "originalId":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("originalId"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.OriginalID = data
 		case "categoryIDs":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categoryIDs"))
 			data, err := ec.unmarshalOID2ᚕstringᚄ(ctx, v)
@@ -11027,6 +11809,54 @@ func (ec *executionContext) _NutritionInfo(ctx context.Context, sel ast.Selectio
 	return out
 }
 
+var pageInfoImplementors = []string{"PageInfo"}
+
+func (ec *executionContext) _PageInfo(ctx context.Context, sel ast.SelectionSet, obj *model.PageInfo) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, pageInfoImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PageInfo")
+		case "hasNextPage":
+			out.Values[i] = ec._PageInfo_hasNextPage(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "hasPreviousPage":
+			out.Values[i] = ec._PageInfo_hasPreviousPage(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "startCursor":
+			out.Values[i] = ec._PageInfo_startCursor(ctx, field, obj)
+		case "endCursor":
+			out.Values[i] = ec._PageInfo_endCursor(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var queryImplementors = []string{"Query"}
 
 func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -11056,6 +11886,25 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_recipe(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "recipeByOriginalId":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_recipeByOriginalId(ctx, field)
 				return res
 			}
 
@@ -11279,6 +12128,8 @@ func (ec *executionContext) _Recipe(ctx context.Context, sel ast.SelectionSet, o
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
+		case "originalId":
+			out.Values[i] = ec._Recipe_originalId(ctx, field, obj)
 		case "title":
 			out.Values[i] = ec._Recipe_title(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -11353,6 +12204,99 @@ func (ec *executionContext) _Recipe(ctx context.Context, sel ast.SelectionSet, o
 			out.Values[i] = ec._Recipe_createdAt(ctx, field, obj)
 		case "updatedAt":
 			out.Values[i] = ec._Recipe_updatedAt(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var recipeConnectionImplementors = []string{"RecipeConnection"}
+
+func (ec *executionContext) _RecipeConnection(ctx context.Context, sel ast.SelectionSet, obj *model.RecipeConnection) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, recipeConnectionImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RecipeConnection")
+		case "edges":
+			out.Values[i] = ec._RecipeConnection_edges(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "pageInfo":
+			out.Values[i] = ec._RecipeConnection_pageInfo(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "totalCount":
+			out.Values[i] = ec._RecipeConnection_totalCount(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var recipeEdgeImplementors = []string{"RecipeEdge"}
+
+func (ec *executionContext) _RecipeEdge(ctx context.Context, sel ast.SelectionSet, obj *model.RecipeEdge) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, recipeEdgeImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RecipeEdge")
+		case "node":
+			out.Values[i] = ec._RecipeEdge_node(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "cursor":
+			out.Values[i] = ec._RecipeEdge_cursor(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12144,11 +13088,45 @@ func (ec *executionContext) marshalNOrderDirection2githubᚗcomᚋcarldunhamᚋu
 	return v
 }
 
+func (ec *executionContext) marshalNPageInfo2ᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋgraphqlᚋmodelᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v *model.PageInfo) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._PageInfo(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNRecipe2githubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋmodelᚐRecipe(ctx context.Context, sel ast.SelectionSet, v model1.Recipe) graphql.Marshaler {
 	return ec._Recipe(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNRecipe2ᚕᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋmodelᚐRecipeᚄ(ctx context.Context, sel ast.SelectionSet, v []*model1.Recipe) graphql.Marshaler {
+func (ec *executionContext) marshalNRecipe2ᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋmodelᚐRecipe(ctx context.Context, sel ast.SelectionSet, v *model1.Recipe) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Recipe(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNRecipeConnection2githubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋgraphqlᚋmodelᚐRecipeConnection(ctx context.Context, sel ast.SelectionSet, v model.RecipeConnection) graphql.Marshaler {
+	return ec._RecipeConnection(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNRecipeConnection2ᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋgraphqlᚋmodelᚐRecipeConnection(ctx context.Context, sel ast.SelectionSet, v *model.RecipeConnection) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._RecipeConnection(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNRecipeEdge2ᚕᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋgraphqlᚋmodelᚐRecipeEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.RecipeEdge) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -12172,7 +13150,7 @@ func (ec *executionContext) marshalNRecipe2ᚕᚖgithubᚗcomᚋcarldunhamᚋuse
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNRecipe2ᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋmodelᚐRecipe(ctx, sel, v[i])
+			ret[i] = ec.marshalNRecipeEdge2ᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋgraphqlᚋmodelᚐRecipeEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -12192,14 +13170,14 @@ func (ec *executionContext) marshalNRecipe2ᚕᚖgithubᚗcomᚋcarldunhamᚋuse
 	return ret
 }
 
-func (ec *executionContext) marshalNRecipe2ᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋmodelᚐRecipe(ctx context.Context, sel ast.SelectionSet, v *model1.Recipe) graphql.Marshaler {
+func (ec *executionContext) marshalNRecipeEdge2ᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋgraphqlᚋmodelᚐRecipeEdge(ctx context.Context, sel ast.SelectionSet, v *model.RecipeEdge) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
 		}
 		return graphql.Null
 	}
-	return ec._Recipe(ctx, sel, v)
+	return ec._RecipeEdge(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNRecipeInput2githubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋgraphqlᚋmodelᚐRecipeInput(ctx context.Context, v any) (model.RecipeInput, error) {

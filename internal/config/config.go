@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
 
@@ -24,7 +25,6 @@ const (
 // Configuration errors.
 var (
 	ErrServerPortRequired      = errors.New("server port is required")
-	ErrDGraphConnStrRequired   = errors.New("DGraph connection string is required")
 	ErrDatabaseConnStrRequired = errors.New("database connection string is required")
 	ErrDatabaseTypeRequired    = errors.New("database type is required")
 	ErrJWTSecretRequired       = errors.New("JWT secret is required")
@@ -35,7 +35,6 @@ var (
 type Config struct {
 	Server   ServerConfig   `mapstructure:"server"`
 	Database DatabaseConfig `mapstructure:"database"`
-	DGraph   DatabaseConfig `mapstructure:"dgraph"` // For backward compatibility
 	Redis    RedisConfig    `mapstructure:"redis"`
 	Auth     AuthConfig     `mapstructure:"auth"`
 	AI       AIConfig       `mapstructure:"ai"`
@@ -122,12 +121,45 @@ func Load() (*Config, error) {
 		return nil, fmt.Errorf("failed to parse config: %w", err)
 	}
 
+	// Process environment variable placeholders in strings
+	processEnvPlaceholders(&config)
+
 	// Validate configuration
 	if err := validateConfig(&config); err != nil {
 		return nil, fmt.Errorf("invalid configuration: %w", err)
 	}
 
 	return &config, nil
+}
+
+// processEnvPlaceholders replaces ${ENV_VAR} placeholders with actual environment variable values.
+func processEnvPlaceholders(config *Config) {
+	// Process database connection string
+	config.Database.ConnectionString = replaceEnvVars(config.Database.ConnectionString)
+
+	// Process JWT secret
+	config.Auth.JWTSecret = replaceEnvVars(config.Auth.JWTSecret)
+
+	// Process OpenAI key
+	config.AI.OpenAIKey = replaceEnvVars(config.AI.OpenAIKey)
+}
+
+// replaceEnvVars replaces ${ENV_VAR} placeholders with actual environment variable values.
+func replaceEnvVars(input string) string {
+	re := regexp.MustCompile(`\${([^}]+)}`)
+	return re.ReplaceAllStringFunc(input, func(match string) string {
+		// Extract environment variable name (remove ${ and })
+		envVar := match[2 : len(match)-1]
+
+		// Get environment variable value
+		value := os.Getenv(envVar)
+		if value == "" {
+			fmt.Fprintf(os.Stderr, "Warning: Environment variable %s not set\n", envVar)
+			return match // Return original placeholder if env var not set
+		}
+
+		return value
+	})
 }
 
 // setDefaults sets default values for configuration.
@@ -141,12 +173,11 @@ func setDefaults() {
 	viper.SetDefault("server.idle_timeout_seconds", DefaultIdleTimeoutSeconds)
 
 	// Database defaults
-	viper.SetDefault("database.type", "dgraph")
-	viper.SetDefault("database.connection_string", "dgraph://localhost:9080")
-
-	// DGraph defaults (for backward compatibility)
-	viper.SetDefault("dgraph.type", "dgraph")
-	viper.SetDefault("dgraph.connection_string", "dgraph://localhost:9080")
+	viper.SetDefault("database.type", "postgres")
+	viper.SetDefault(
+		"database.connection_string",
+		"postgres://postgres:postgres@localhost:5432/useful_cookery?sslmode=disable",
+	)
 
 	// Redis defaults
 	viper.SetDefault("redis.addr", "localhost:6379")
@@ -181,14 +212,7 @@ func validateConfig(config *Config) error {
 		return ErrDatabaseTypeRequired
 	}
 	if config.Database.ConnectionString == "" {
-		// Check if we have a DGraph connection string for backward compatibility
-		if config.DGraph.ConnectionString != "" {
-			// Copy DGraph connection string to Database
-			config.Database.ConnectionString = config.DGraph.ConnectionString
-			config.Database.Type = "dgraph"
-		} else {
-			return ErrDatabaseConnStrRequired
-		}
+		return ErrDatabaseConnStrRequired
 	}
 
 	// Validate Auth config

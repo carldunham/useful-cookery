@@ -44,11 +44,30 @@ type NutritionInfoInput struct {
 	Sodium   *int     `json:"sodium,omitempty"`
 }
 
+type PageInfo struct {
+	HasNextPage     bool    `json:"hasNextPage"`
+	HasPreviousPage bool    `json:"hasPreviousPage"`
+	StartCursor     *string `json:"startCursor,omitempty"`
+	EndCursor       *string `json:"endCursor,omitempty"`
+}
+
 type Query struct {
+}
+
+type RecipeConnection struct {
+	Edges      []*RecipeEdge `json:"edges"`
+	PageInfo   *PageInfo     `json:"pageInfo"`
+	TotalCount int           `json:"totalCount"`
+}
+
+type RecipeEdge struct {
+	Node   *model.Recipe `json:"node"`
+	Cursor string        `json:"cursor"`
 }
 
 type RecipeFilter struct {
 	Search      *string     `json:"search,omitempty"`
+	OriginalID  *string     `json:"originalId,omitempty"`
 	Categories  []string    `json:"categories,omitempty"`
 	Cuisine     *string     `json:"cuisine,omitempty"`
 	Difficulty  *SkillLevel `json:"difficulty,omitempty"`
@@ -60,6 +79,7 @@ type RecipeFilter struct {
 type RecipeInput struct {
 	Title         string              `json:"title"`
 	Description   string              `json:"description"`
+	OriginalID    *string             `json:"originalId,omitempty"`
 	CategoryIDs   []string            `json:"categoryIDs,omitempty"`
 	Cuisine       *string             `json:"cuisine,omitempty"`
 	PrepTime      *int                `json:"prepTime,omitempty"`

@@ -151,7 +151,7 @@ func main() {
 
 	// GraphQL playground
 	if cfg.Server.EnablePlayground {
-		router.Get("/playground", playground.Handler("GraphQL playground", "/graphql"))
+		router.Get("/playground", playground.Handler("GraphQL playground", "/api/graphql"))
 		logger.Println("GraphQL Playground available at /playground")
 	}
 

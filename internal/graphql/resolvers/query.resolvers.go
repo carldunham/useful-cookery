@@ -22,9 +22,10 @@ func (r *Resolver) recipes(
 	filter *gqlmodel.RecipeFilter,
 	order *gqlmodel.RecipeOrder,
 	first *int,
+	after *string,
 	offset *int,
-) ([]*domainmodel.Recipe, error) {
-	return r.RecipeResolver.getRecipes(ctx, filter, order, first, offset)
+) (*gqlmodel.RecipeConnection, error) {
+	return r.RecipeResolver.getRecipes(ctx, filter, order, first, after, offset)
 }
 
 // GetRecipe returns a recipe by ID.
@@ -40,13 +41,16 @@ func (r *RecipeResolver) getRecipe(ctx context.Context, id string) (*domainmodel
 }
 
 // GetRecipes returns recipes based on filters.
+//
+//nolint:cyclop // This function is necessarily complex due to pagination and filter handling
 func (r *RecipeResolver) getRecipes(
 	ctx context.Context,
 	filter *gqlmodel.RecipeFilter,
 	_ *gqlmodel.RecipeOrder,
 	first *int,
+	after *string,
 	offset *int,
-) ([]*domainmodel.Recipe, error) {
+) (*gqlmodel.RecipeConnection, error) {
 	// Default values
 	limitVal := 20
 	offsetVal := 0
@@ -54,7 +58,18 @@ func (r *RecipeResolver) getRecipes(
 	if first != nil {
 		limitVal = *first
 	}
-	if offset != nil {
+
+	// If after cursor is provided, decode it to get the offset
+	if after != nil {
+		var err error
+		offsetVal, err = DecodeCursor(*after)
+		if err != nil {
+			return nil, fmt.Errorf("invalid cursor: %w", err)
+		}
+		// Increment by 1 to get the next item after the cursor
+		offsetVal++
+	} else if offset != nil {
+		// Use offset parameter if provided and no cursor
 		offsetVal = *offset
 	}
 
@@ -73,12 +88,20 @@ func (r *RecipeResolver) getRecipes(
 		// Other filters would be handled similarly
 	}
 
+	// Get total count for pagination info
+	totalCount, err := r.DB.CountRecipes(ctx, filterMap)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get total count: %w", err)
+	}
+
+	// Get paginated recipes
 	recipes, err := r.DB.GetRecipes(ctx, filterMap, limitVal, offsetVal)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get recipes: %w", err)
 	}
 
-	return recipes, nil
+	// Create connection
+	return CreateRecipeConnection(recipes, totalCount, limitVal, offsetVal), nil
 }
 
 // Me returns the currently authenticated user.
@@ -135,8 +158,13 @@ func (r *Resolver) category(_ context.Context, _ string) (*domainmodel.Category,
 }
 
 // SearchRecipes performs a natural language search for recipes.
-func (r *Resolver) searchRecipes(ctx context.Context, query string) ([]*domainmodel.Recipe, error) {
-	return r.SearchResolver.SearchRecipes(ctx, query)
+func (r *Resolver) searchRecipes(
+	ctx context.Context,
+	query string,
+	first *int,
+	after *string,
+) (*gqlmodel.RecipeConnection, error) {
+	return r.SearchResolver.SearchRecipes(ctx, query, first, after)
 }
 
 // RecommendRecipes recommends recipes based on user preferences and ingredients.
@@ -144,8 +172,10 @@ func (r *Resolver) recommendRecipes(
 	ctx context.Context,
 	userID *string,
 	availableIngredients []string,
-) ([]*domainmodel.Recipe, error) {
-	return r.SearchResolver.RecommendRecipes(ctx, userID, availableIngredients)
+	first *int,
+	after *string,
+) (*gqlmodel.RecipeConnection, error) {
+	return r.SearchResolver.RecommendRecipes(ctx, userID, availableIngredients, first, after)
 }
 
 // FindSubstitutes finds substitutes for an ingredient.

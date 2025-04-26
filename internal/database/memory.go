@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"errors"
+	"sort"
 	"sync"
 	"time"
 
@@ -407,6 +408,28 @@ func (db *InMemoryDatabase) GetRecipes(
 	return filteredRecipes[offset:end], nil
 }
 
+// CountRecipes returns the total count of recipes matching the given filters.
+func (db *InMemoryDatabase) CountRecipes(_ context.Context, filter map[string]string) (int, error) {
+	db.mu.RLock()
+	defer db.mu.RUnlock()
+
+	// Convert map to slice
+	allRecipes := make([]*model.Recipe, 0, len(db.recipes))
+	for _, recipe := range db.recipes {
+		allRecipes = append(allRecipes, recipe)
+	}
+
+	// Apply filters
+	count := 0
+	for _, recipe := range allRecipes {
+		if matchesFilter(recipe, filter) {
+			count++
+		}
+	}
+
+	return count, nil
+}
+
 // updateReviewRating updates the recipe's average rating when a review is updated.
 func updateReviewRating(db *InMemoryDatabase, review, existingReview *model.Review) {
 	// Skip if review doesn't have a recipe or recipe ID, or if rating hasn't changed
@@ -510,11 +533,11 @@ func matchesFilter(recipe *model.Recipe, filter map[string]string) bool {
 		}
 
 		switch key {
-		case "title":
+		case FilterKeyTitle:
 			if recipe.Title != value {
 				return false
 			}
-		case "category":
+		case FilterKeyCategory:
 			found := false
 			for _, category := range recipe.Categories {
 				if category.Name == value {
@@ -525,11 +548,11 @@ func matchesFilter(recipe *model.Recipe, filter map[string]string) bool {
 			if !found {
 				return false
 			}
-		case "cuisine":
+		case FilterKeyCuisine:
 			if recipe.Cuisine != value {
 				return false
 			}
-		case "authorID":
+		case FilterKeyAuthorID:
 			if recipe.Author == nil || recipe.Author.ID != value {
 				return false
 			}
@@ -603,4 +626,46 @@ func (db *InMemoryDatabase) DeleteRecipe(_ context.Context, recipeID string) err
 	delete(db.recipes, recipeID)
 
 	return nil
+}
+
+// GetPopularRecipes returns popular recipes for InMemoryDatabase.
+func (db *InMemoryDatabase) GetPopularRecipes(_ context.Context, limit, offset int) ([]*model.Recipe, error) {
+	db.mu.RLock()
+	defer db.mu.RUnlock()
+
+	if limit <= 0 {
+		limit = 10 // Default limit
+	}
+
+	if offset < 0 {
+		offset = 0
+	}
+
+	// Copy recipes to a slice
+	recipes := make([]*model.Recipe, 0, len(db.recipes))
+	for _, recipe := range db.recipes {
+		recipes = append(recipes, recipe)
+	}
+
+	// Sort by likes and average rating
+	sort.Slice(recipes, func(i, j int) bool {
+		if recipes[i].Likes != recipes[j].Likes {
+			return recipes[i].Likes > recipes[j].Likes
+		}
+		return recipes[i].AverageRating > recipes[j].AverageRating
+	})
+
+	// Apply pagination
+	if offset >= len(recipes) {
+		return []*model.Recipe{}, nil
+	}
+
+	end := offset + limit
+	if end > len(recipes) {
+		end = len(recipes)
+	}
+
+	recipes = recipes[offset:end]
+
+	return recipes, nil
 }

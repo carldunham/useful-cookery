@@ -289,9 +289,7 @@ func runBatch(_ *cobra.Command, args []string) error {
 }
 
 // connectToDatabase connects to the database.
-//
-//nolint:ireturn // Intentionally returning interface for database abstraction
-func connectToDatabase() (Database, error) {
+func connectToDatabase() (Database, error) { //nolint:ireturn // Intentionally returning the Database abstraction
 	// Load configuration.
 	cfg, err := config.Load()
 	if err != nil {
@@ -301,12 +299,6 @@ func connectToDatabase() (Database, error) {
 	// Initialize database options
 	dbOptions := database.Options{
 		ConnectionString: cfg.Database.ConnectionString,
-	}
-
-	// If Database connection string is not set, fall back to DGraph connection string
-	// for backward compatibility
-	if dbOptions.ConnectionString == "" {
-		dbOptions.ConnectionString = cfg.DGraph.ConnectionString
 	}
 
 	// Create database based on type

@@ -11,11 +11,30 @@ enum SkillLevel {
   ADVANCED
 }
 
+# Pagination types following Relay Connection spec
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type RecipeEdge {
+  node: Recipe!
+  cursor: String!
+}
+
+type RecipeConnection {
+  edges: [RecipeEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
 type Query {
   # Recipe queries
   recipe(id: ID!): Recipe
   recipeByOriginalId(originalId: String!): Recipe
-  recipes(filter: RecipeFilter, order: RecipeOrder, first: Int, offset: Int): [Recipe!]!
+  recipes(filter: RecipeFilter, order: RecipeOrder, first: Int, after: String, offset: Int): RecipeConnection!
 
   # User queries
   me: User
@@ -26,8 +45,8 @@ type Query {
   category(id: ID!): Category
 
   # AI-powered queries
-  searchRecipes(query: String!): [Recipe!]!
-  recommendRecipes(userID: ID, availableIngredients: [String!]): [Recipe!]!
+  searchRecipes(query: String!, first: Int, after: String): RecipeConnection!
+  recommendRecipes(userID: ID, availableIngredients: [String!], first: Int, after: String): RecipeConnection!
   findSubstitutes(ingredientName: String!): [String!]!
 }
 

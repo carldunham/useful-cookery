@@ -1147,6 +1147,57 @@ func (db *PostgresDatabase) GetRecipes(
 	return recipes, nil
 }
 
+// CountRecipes returns the total count of recipes matching the given filters.
+func (db *PostgresDatabase) CountRecipes(ctx context.Context, filter map[string]string) (int, error) {
+	// Build query with filters
+	query := `
+		SELECT COUNT(*)
+		FROM recipes r
+		WHERE 1=1
+	`
+	args := make([]interface{}, 0)
+	argIndex := 1
+
+	// Apply filters
+	for key, value := range filter {
+		if value == "" {
+			continue
+		}
+
+		switch key {
+		case "title":
+			query += fmt.Sprintf(" AND r.title ILIKE $%d", argIndex)
+			args = append(args, "%"+value+"%")
+			argIndex++
+		case "cuisine":
+			query += fmt.Sprintf(" AND r.cuisine ILIKE $%d", argIndex)
+			args = append(args, "%"+value+"%")
+			argIndex++
+		case "category":
+			query += fmt.Sprintf(` AND r.id IN (
+				SELECT recipe_id FROM recipe_categories rc
+				JOIN categories c ON rc.category_id = c.id
+				WHERE c.name ILIKE $%d
+			)`, argIndex)
+			args = append(args, "%"+value+"%")
+			argIndex++
+		case "authorID":
+			query += fmt.Sprintf(" AND r.author_id = $%d", argIndex)
+			args = append(args, value)
+			argIndex++
+		}
+	}
+
+	// Execute query
+	var count int
+	err := db.DB.QueryRowContext(ctx, query, args...).Scan(&count)
+	if err != nil {
+		return 0, fmt.Errorf("counting recipes: %w", err)
+	}
+
+	return count, nil
+}
+
 // CreateRecipe creates a new recipe.
 func (db *PostgresDatabase) CreateRecipe(ctx context.Context, recipe *model.Recipe) error {
 	// Generate ID if not provided
@@ -1248,4 +1299,76 @@ func (db *PostgresDatabase) DeleteRecipe(ctx context.Context, recipeID string) e
 	}
 
 	return nil
+}
+
+// GetPopularRecipes returns popular recipes for PostgreSQL.
+//
+//nolint:funlen // This function is necessarily long due to the query and result processing
+func (db *PostgresDatabase) GetPopularRecipes(ctx context.Context, limit, offset int) ([]*model.Recipe, error) {
+	if limit <= 0 {
+		limit = 10 // Default limit
+	}
+
+	if offset < 0 {
+		offset = 0
+	}
+
+	query := `
+		SELECT r.id, r.title, r.description, r.cuisine, r.created_at,
+		       u.id, u.name
+		FROM recipes r
+		LEFT JOIN users u ON r.author_id = u.id
+		ORDER BY r.likes DESC, r.average_rating DESC
+		LIMIT $1 OFFSET $2
+	`
+
+	rows, err := db.DB.QueryContext(ctx, query, limit, offset)
+	if err != nil {
+		return nil, fmt.Errorf("querying popular recipes: %w", err)
+	}
+	defer rows.Close()
+
+	var recipes []*model.Recipe
+	for rows.Next() {
+		var (
+			recipe     model.Recipe
+			cuisine    sql.NullString
+			authorID   sql.NullString
+			authorName sql.NullString
+		)
+
+		err := rows.Scan(
+			&recipe.ID,
+			&recipe.Title,
+			&recipe.Description,
+			&cuisine,
+			&recipe.CreatedAt,
+			&authorID,
+			&authorName,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("scanning recipe row: %w", err)
+		}
+
+		// Set nullable fields
+		if cuisine.Valid {
+			recipe.Cuisine = cuisine.String
+		}
+
+		// Set author if present
+		if authorID.Valid && authorName.Valid {
+			recipe.Author = &model.User{
+				ID:   authorID.String,
+				Name: authorName.String,
+			}
+		}
+
+		recipes = append(recipes, &recipe)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterating recipe rows: %w", err)
+	}
+
+	return recipes, nil
 }

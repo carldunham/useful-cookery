@@ -18,7 +18,7 @@ This branch (`cd/5/rewrite`) represents a complete rewrite of the original appli
 ## Technology Stack
 
 - **Backend**: Go
-- **Database**: DGraph
+- **Database**: Multiple options supported (DGraph, PostgreSQL, in-memory)
 - **API**: GraphQL
 - **Frontend**: React
 - **AI Integration**: External APIs initially, with plans for RAG and fine-tuning
@@ -29,13 +29,13 @@ This branch (`cd/5/rewrite`) represents a complete rewrite of the original appli
 useful-cookery/
 ├── cmd/                    # Application entry points
 │   ├── api/                # GraphQL API server
-│   ├── migration/          # TROFF to DGraph migration tool
+│   ├── migration/          # TROFF to database migration tool
 │   └── cli/                # Command-line utilities
 ├── internal/               # Private application code
 │   ├── auth/               # Authentication services
 │   ├── models/             # Data models
 │   ├── parser/             # TROFF parser
-│   ├── database/           # DGraph interface
+│   ├── database/           # Database abstraction layer
 │   ├── ai/                 # AI service integrations
 │   └── graphql/            # GraphQL resolvers
 ├── ui/                     # Frontend React application
@@ -47,7 +47,8 @@ useful-cookery/
 ## Getting Started
 
 1. Clone the repository
-2. Set up DGraph (see docs/dgraph-setup.md)
+2. Configure database (options include DGraph, PostgreSQL, or in-memory)
+   - For DGraph setup, see docs/dgraph-setup.md
 3. Configure environment (cp .env.example .env)
 4. Run the API server: `go run cmd/api/main.go`
 5. Run the UI: `cd ui && npm start`

@@ -6,6 +6,7 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/carldunham/useful-cookery/internal/generated"
 	"github.com/carldunham/useful-cookery/internal/graphql/model"
@@ -92,9 +93,14 @@ func (r *queryResolver) Recipe(ctx context.Context, id string) (*model1.Recipe, 
 	return r.recipe(ctx, id)
 }
 
+// RecipeByOriginalID is the resolver for the recipeByOriginalId field.
+func (r *queryResolver) RecipeByOriginalID(ctx context.Context, originalID string) (*model1.Recipe, error) {
+	panic(fmt.Errorf("not implemented: RecipeByOriginalID - recipeByOriginalId"))
+}
+
 // Recipes is the resolver for the recipes field.
-func (r *queryResolver) Recipes(ctx context.Context, filter *model.RecipeFilter, order *model.RecipeOrder, first *int, offset *int) ([]*model1.Recipe, error) {
-	return r.recipes(ctx, filter, order, first, offset)
+func (r *queryResolver) Recipes(ctx context.Context, filter *model.RecipeFilter, order *model.RecipeOrder, first *int, after *string, offset *int) (*model.RecipeConnection, error) {
+	return r.recipes(ctx, filter, order, first, after, offset)
 }
 
 // Me is the resolver for the me field.
@@ -118,13 +124,13 @@ func (r *queryResolver) Category(ctx context.Context, id string) (*model1.Catego
 }
 
 // SearchRecipes is the resolver for the searchRecipes field.
-func (r *queryResolver) SearchRecipes(ctx context.Context, query string) ([]*model1.Recipe, error) {
-	return r.searchRecipes(ctx, query)
+func (r *queryResolver) SearchRecipes(ctx context.Context, query string, first *int, after *string) (*model.RecipeConnection, error) {
+	return r.searchRecipes(ctx, query, first, after)
 }
 
 // RecommendRecipes is the resolver for the recommendRecipes field.
-func (r *queryResolver) RecommendRecipes(ctx context.Context, userID *string, availableIngredients []string) ([]*model1.Recipe, error) {
-	return r.recommendRecipes(ctx, userID, availableIngredients)
+func (r *queryResolver) RecommendRecipes(ctx context.Context, userID *string, availableIngredients []string, first *int, after *string) (*model.RecipeConnection, error) {
+	return r.recommendRecipes(ctx, userID, availableIngredients, first, after)
 }
 
 // FindSubstitutes is the resolver for the findSubstitutes field.

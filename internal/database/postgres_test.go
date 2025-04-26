@@ -13,9 +13,7 @@ import (
 )
 
 // createMockDB creates a mock database for testing.
-//
-//nolint:ireturn // This function returns an interface from a third-party library
-func createMockDB(t *testing.T) (*sql.DB, sqlmock.Sqlmock) {
+func createMockDB(t *testing.T) (*sql.DB, sqlmock.Sqlmock) { //nolint:ireturn // Third-party interface
 	t.Helper()
 	db, mock, err := sqlmock.New()
 	require.NoError(t, err)

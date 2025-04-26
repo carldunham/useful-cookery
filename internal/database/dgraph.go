@@ -527,6 +527,14 @@ func (db *DGraphDatabase) GetRecipe(ctx context.Context, recipeID string) (*mode
 	return result.Recipes[0], nil
 }
 
+// Filter key constants.
+const (
+	FilterKeyTitle    = "title"
+	FilterKeyCategory = "category"
+	FilterKeyCuisine  = "cuisine"
+	FilterKeyAuthorID = "authorID"
+)
+
 // GetRecipes fetches recipes based on filters.
 //
 //nolint:funlen // This function is necessarily long due to the complex filter handling
@@ -543,16 +551,16 @@ func (db *DGraphDatabase) GetRecipes(
 		}
 
 		switch key {
-		case "title":
+		case FilterKeyTitle:
 			conditions += ", anyoftext(title, $title)"
 			vars["title"] = value
-		case "category":
+		case FilterKeyCategory:
 			conditions += ", type(Recipe) AND anyoftext(categories, $category)"
 			vars["category"] = value
-		case "cuisine":
+		case FilterKeyCuisine:
 			conditions += ", eq(cuisine, $cuisine)"
 			vars["cuisine"] = value
-		case "authorID":
+		case FilterKeyAuthorID:
 			conditions += ", uid_in(author, $authorID)"
 			vars["authorID"] = value
 		}
@@ -601,6 +609,63 @@ func (db *DGraphDatabase) GetRecipes(
 	}
 
 	return result.Recipes, nil
+}
+
+// CountRecipes returns the total count of recipes matching the given filters.
+func (db *DGraphDatabase) CountRecipes(ctx context.Context, filter map[string]string) (int, error) {
+	// Construct filter conditions
+	conditions := ""
+	vars := make(map[string]string)
+
+	for key, value := range filter {
+		if value == "" {
+			continue
+		}
+
+		switch key {
+		case FilterKeyTitle:
+			conditions += ", anyoftext(title, $title)"
+			vars["title"] = value
+		case FilterKeyCategory:
+			conditions += ", type(Recipe) AND anyoftext(categories, $category)"
+			vars["category"] = value
+		case FilterKeyCuisine:
+			conditions += ", eq(cuisine, $cuisine)"
+			vars["cuisine"] = value
+		case FilterKeyAuthorID:
+			conditions += ", uid_in(author, $authorID)"
+			vars["authorID"] = value
+		}
+	}
+
+	if conditions != "" {
+		conditions = ", @filter(" + conditions[2:] + ")"
+	}
+
+	// Use count function to get total count
+	countQuery := fmt.Sprintf(`
+	query CountRecipes(%s) {
+		count(func: type(Recipe) %s) {
+			count(uid)
+		}
+	}`, BuildVarDeclarations(vars), conditions)
+
+	var result struct {
+		Count []struct {
+			Count int `json:"count"`
+		} `json:"count"`
+	}
+
+	err := db.Query(ctx, countQuery, vars, &result)
+	if err != nil {
+		return 0, fmt.Errorf("failed to count recipes: %w", err)
+	}
+
+	if len(result.Count) == 0 {
+		return 0, nil
+	}
+
+	return result.Count[0].Count, nil
 }
 
 // CreateRecipe creates a new recipe.
@@ -654,6 +719,36 @@ func (db *DGraphDatabase) DeleteRecipe(ctx context.Context, recipeID string) err
 	}
 
 	return nil
+}
+
+// GetPopularRecipes returns popular recipes for DGraph.
+func (db *DGraphDatabase) GetPopularRecipes(ctx context.Context, limit, offset int) ([]*model.Recipe, error) {
+	if limit <= 0 {
+		limit = 10 // Default limit
+	}
+
+	if offset < 0 {
+		offset = 0
+	}
+
+	queryStr := fmt.Sprintf(`
+	query PopularRecipes() {
+		recipes(func: type(Recipe), orderasc: likes, first: %d, offset: %d) {
+			uid
+			expand(_all_)
+		}
+	}`, limit, offset)
+
+	var result struct {
+		Recipes []*model.Recipe `json:"recipes"`
+	}
+
+	err := db.Query(ctx, queryStr, nil, &result)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute popular recipes query: %w", err)
+	}
+
+	return result.Recipes, nil
 }
 
 // BuildVarDeclarations creates a string of variable declarations for DGraph queries.

@@ -32,6 +32,8 @@ type Database interface {
 	// Recipe operations
 	GetRecipe(ctx context.Context, recipeID string) (*model.Recipe, error)
 	GetRecipes(ctx context.Context, filter map[string]string, first, offset int) ([]*model.Recipe, error)
+	CountRecipes(ctx context.Context, filter map[string]string) (int, error)
+	GetPopularRecipes(ctx context.Context, limit, offset int) ([]*model.Recipe, error)
 	CreateRecipe(ctx context.Context, recipe *model.Recipe) error
 	UpdateRecipe(ctx context.Context, recipe *model.Recipe) error
 	DeleteRecipe(ctx context.Context, recipeID string) error

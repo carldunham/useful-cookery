@@ -11,12 +11,8 @@ server:
 
 # Database configuration
 database:
-  type: "dgraph" # Options: dgraph, memory
-  connection_string: "dgraph://localhost:9080"
-
-# DGraph configuration (for backward compatibility)
-dgraph:
-  connection_string: "dgraph://localhost:9080"
+  type: "postgres" # Options: postgres, memory, dgraph
+  connection_string: "postgres://postgres:postgres@localhost:5432/useful_cookery?sslmode=disable"
 
 # Redis configuration
 redis:
