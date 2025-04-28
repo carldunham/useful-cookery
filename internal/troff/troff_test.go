@@ -154,6 +154,63 @@ Test University, Amsterdam`
 		recipe.Steps[4].Description, "Last step description should match")
 }
 
+// TestParse_RecipeWithRatings tests parsing a recipe with ratings information
+func TestParse_RecipeWithRatings(t *testing.T) {
+	t.Parallel()
+	input := `.RH MOD.RECIPES-SOURCE RECIPE-ID D "22 Dec 83"
+.RZ "CHOCOLATE CAKE" "A delicious chocolate cake"
+This is a classic chocolate cake recipe.
+.SH "RATING"
+<i>Difficulty</i>
+Easy to moderate
+<i>Time</i>
+45 minutes preparation, 35 minutes baking
+<i>Precision</i>
+Measure carefully
+.IH "8 servings"
+.IG "2 cups" "flour" "250g"
+.IG "1 cup" "sugar" "200g"
+.IG "1/2 cup" "cocoa powder" "50g"
+.PH
+.SK 1
+Preheat oven to 350°F.
+.SK 2
+Mix dry ingredients.
+.SK 3
+Bake for 35 minutes.
+.NX
+Best served warm with ice cream.
+.WR
+Jane Smith
+jane@example.com`
+
+	recipe, err := troff.Parse(strings.NewReader(input))
+	require.NoError(t, err, "Parse() should not return an error")
+
+	// Check basic fields
+	assert.Equal(t, "CHOCOLATE CAKE", recipe.Title, "Recipe title should match")
+	assert.Equal(t, "RECIPE-ID", recipe.OriginalID, "Recipe OriginalID should match")
+
+	// Check ratings fields
+	assert.Equal(t, "Easy to moderate", recipe.Difficulty, "Difficulty should be parsed correctly")
+	assert.Equal(t, 45, recipe.PrepTime, "Prep time should be parsed correctly")
+	assert.Equal(t, 8, recipe.Servings, "Servings should be parsed correctly")
+
+	// Check that precision is stored in tags
+	assert.Contains(t, recipe.Tags, "Precision: Measure carefully", "Precision should be stored in tags")
+
+	// Check ingredients with quantity parsing
+	assert.Len(t, recipe.Ingredients, 3, "Should have 3 ingredients")
+
+	// Check first ingredient with numeric quantity
+	assert.Equal(t, "flour", recipe.Ingredients[0].Name, "First ingredient should be 'flour'")
+	assert.Equal(t, 2.0, recipe.Ingredients[0].Quantity, "First ingredient quantity should be 2.0")
+
+	// Check ingredient with fraction
+	assert.Equal(t, "cocoa powder", recipe.Ingredients[2].Name, "Third ingredient should be 'cocoa powder'")
+	assert.Equal(t, 0.5, recipe.Ingredients[2].Quantity, "Third ingredient quantity should be 0.5")
+}
+
 func TestParse_EmptyInput(t *testing.T) {
 	t.Parallel()
 	recipe, err := troff.Parse(strings.NewReader(""))

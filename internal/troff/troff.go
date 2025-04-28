@@ -135,8 +135,26 @@ func processTokens(tokens []Token, recipe *model.Recipe) {
 
 				// IH can have yield information
 				if tokenIndex+1 < len(tokens) && tokens[tokenIndex+1].Type == TokenParam {
-					// Store yield information if needed
-					// For now we'll just skip it
+					// Parse yield information (e.g., "4 servings")
+					yieldInfo := tokens[tokenIndex+1].Value
+
+					// Try to extract servings number
+					servingsStr := ""
+					for _, c := range yieldInfo {
+						if c >= '0' && c <= '9' {
+							servingsStr += string(c)
+						} else if len(servingsStr) > 0 {
+							break
+						}
+					}
+
+					if servingsStr != "" {
+						servings, err := strconv.Atoi(servingsStr)
+						if err == nil {
+							recipe.Servings = servings
+						}
+					}
+
 					tokenIndex++
 				}
 
@@ -166,9 +184,40 @@ func processTokens(tokens []Token, recipe *model.Recipe) {
 					processedName := ProcessText(name)
 					processedUnit := ProcessText(unitValue)
 
+					// Try to extract numeric quantity if possible
+					var quantityValue float64
+					quantityStr := ""
+					for _, c := range quantity {
+						if (c >= '0' && c <= '9') || c == '.' || c == '/' {
+							quantityStr += string(c)
+						} else if c != ' ' && len(quantityStr) > 0 {
+							break
+						}
+					}
+
+					if quantityStr != "" {
+						// Handle fractions like 1/2
+						if strings.Contains(quantityStr, "/") {
+							parts := strings.Split(quantityStr, "/")
+							if len(parts) == 2 {
+								num, errNum := strconv.ParseFloat(parts[0], 64)
+								den, errDen := strconv.ParseFloat(parts[1], 64)
+								if errNum == nil && errDen == nil && den != 0 {
+									quantityValue = num / den
+								}
+							}
+						} else {
+							parsedQty, err := strconv.ParseFloat(quantityStr, 64)
+							if err == nil {
+								quantityValue = parsedQty
+							}
+						}
+					}
+
 					ingredient := model.DetailedIngredient{
-						Name: processedName,
-						Unit: processedUnit,
+						Name:     processedName,
+						Unit:     processedUnit,
+						Quantity: quantityValue,
 					}
 
 					currentIngredientSet = append(currentIngredientSet, ingredient)
@@ -214,6 +263,69 @@ func processTokens(tokens []Token, recipe *model.Recipe) {
 					}
 					currentSteps = append(currentSteps, step)
 					stepIndex++
+				}
+
+			case "SH": // Section Header
+				if tokenIndex+1 < len(tokens) && tokens[tokenIndex+1].Type == TokenParam {
+					sectionName := tokens[tokenIndex+1].Value
+					tokenIndex++
+
+					if sectionName == "RATING" {
+						// Initialize tags array if needed
+						if recipe.Tags == nil {
+							recipe.Tags = []string{}
+						}
+
+						// Skip to the next token which should contain all the rating information
+						if tokenIndex+1 < len(tokens) && tokens[tokenIndex+1].Type == TokenParam {
+							// Get the rating content
+							ratingContent := tokens[tokenIndex+1].Value
+
+							// Split the content by newlines
+							lines := strings.Split(ratingContent, "\n")
+
+							// Process the lines
+							for i := 0; i < len(lines); i++ {
+								line := lines[i]
+
+								// Check for difficulty
+								if strings.Contains(line, "<i>Difficulty</i>") && i+1 < len(lines) {
+									recipe.Difficulty = ProcessText(lines[i+1])
+								}
+
+								// Check for time
+								if strings.Contains(line, "<i>Time</i>") && i+1 < len(lines) {
+									timeValue := ProcessText(lines[i+1])
+
+									// Extract numbers from the time string
+									numStr := ""
+									for _, c := range timeValue {
+										if c >= '0' && c <= '9' {
+											numStr += string(c)
+										} else if len(numStr) > 0 {
+											break
+										}
+									}
+
+									if numStr != "" {
+										minutes, err := strconv.Atoi(numStr)
+										if err == nil {
+											recipe.PrepTime = minutes
+										}
+									}
+								}
+
+								// Check for precision
+								if strings.Contains(line, "<i>Precision</i>") && i+1 < len(lines) {
+									precisionValue := ProcessText(lines[i+1])
+									recipe.Tags = append(recipe.Tags, "Precision: "+precisionValue)
+								}
+							}
+
+							// Skip the rating content token
+							tokenIndex++
+						}
+					}
 				}
 
 			case "NX": // Notes Header
