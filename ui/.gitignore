@@ -1,0 +1,6 @@
+# React build output
+/build
+/dist
+
+# Node modules
+/node_modules

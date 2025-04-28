@@ -6,13 +6,6 @@
 out/
 bin/
 
-# React build output
-/build
-/dist
-
-# Node modules
-/node_modules
-
 # Logs and temp files
 *.log
 *.tmp

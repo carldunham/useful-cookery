@@ -1,86 +1,12 @@
 import React, { useState } from "react";
-import { useQuery, useLazyQuery } from "@apollo/client";
-import { gql } from "@apollo/client";
-import RecipeCard from "./RecipeCard";
-import SearchFilters from "./SearchFilters";
+import RecipeCard from "../components/RecipeCard";
+import SearchFilters from "../components/SearchFilters";
 import { useDebounce } from "../hooks/useDebounce";
+// Import the generated hooks
+// Note: These hooks will be generated with the prefix "Example" once the code generator is run
+import { useExampleSearchRecipesLazyQuery, useExampleRecommendRecipesQuery } from "../generated/graphql";
 
-// GraphQL query definitions
-const SEARCH_RECIPES = gql`
-  query SearchRecipes($query: String!, $first: Int, $after: String) {
-    searchRecipes(query: $query, first: $first, after: $after) {
-      edges {
-        node {
-          id
-          title
-          description
-          prepTime
-          cookTime
-          difficulty
-          averageRating
-          likes
-          images {
-            url
-            alt
-          }
-          author {
-            name
-          }
-          categories {
-            name
-          }
-        }
-        cursor
-      }
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
-        startCursor
-        endCursor
-      }
-      totalCount
-    }
-  }
-`;
-
-const RECOMMEND_RECIPES = gql`
-  query RecommendRecipes($userID: ID, $availableIngredients: [String!], $first: Int, $after: String) {
-    recommendRecipes(userID: $userID, availableIngredients: $availableIngredients, first: $first, after: $after) {
-      edges {
-        node {
-          id
-          title
-          description
-          prepTime
-          cookTime
-          difficulty
-          averageRating
-          likes
-          images {
-            url
-            alt
-          }
-          author {
-            name
-          }
-          categories {
-            name
-          }
-        }
-        cursor
-      }
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
-        startCursor
-        endCursor
-      }
-      totalCount
-    }
-  }
-`;
-
-const RecipeSearch = ({ userID }) => {
+const RecipeSearchWithGeneratedHooks = ({ userID }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [availableIngredients, setAvailableIngredients] = useState([]);
   const [activeTab, setActiveTab] = useState("search"); // 'search' or 'recommend'
@@ -93,25 +19,23 @@ const RecipeSearch = ({ userID }) => {
   const [searchAfter, setSearchAfter] = useState(null);
   const [recommendAfter, setRecommendAfter] = useState(null);
 
-  // Lazy query for search
-  const [executeSearch, { loading: searchLoading, error: searchError, data: searchData }] = useLazyQuery(
-    SEARCH_RECIPES,
-    {
+  // Lazy query for search using generated hook
+  const [executeSearch, { loading: searchLoading, error: searchError, data: searchData }] =
+    useExampleSearchRecipesLazyQuery({
       variables: {
         query: debouncedSearchQuery,
         first: pageSize,
         after: searchAfter,
       },
       skip: !debouncedSearchQuery,
-    }
-  );
+    });
 
-  // Get recommendations
+  // Get recommendations using generated hook
   const {
     loading: recommendLoading,
     error: recommendError,
     data: recommendData,
-  } = useQuery(RECOMMEND_RECIPES, {
+  } = useExampleRecommendRecipesQuery({
     variables: {
       userID,
       availableIngredients: availableIngredients.length > 0 ? availableIngredients : undefined,
@@ -263,4 +187,4 @@ const RecipeSearch = ({ userID }) => {
   );
 };
 
-export default RecipeSearch;
+export default RecipeSearchWithGeneratedHooks;

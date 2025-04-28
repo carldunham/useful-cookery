@@ -1,34 +1,17 @@
 import React, { useState } from "react";
 import { useQuery, useLazyQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import RecipeCard from "./RecipeCard";
-import SearchFilters from "./SearchFilters";
+import RecipeCardWithFragment, { RECIPE_CARD_FRAGMENT } from "./RecipeCardWithFragment";
+import SearchFilters from "../components/SearchFilters";
 import { useDebounce } from "../hooks/useDebounce";
 
-// GraphQL query definitions
+// GraphQL query definitions using fragments
 const SEARCH_RECIPES = gql`
-  query SearchRecipes($query: String!, $first: Int, $after: String) {
+  query ExampleSearchRecipes($query: String!, $first: Int, $after: String) {
     searchRecipes(query: $query, first: $first, after: $after) {
       edges {
         node {
-          id
-          title
-          description
-          prepTime
-          cookTime
-          difficulty
-          averageRating
-          likes
-          images {
-            url
-            alt
-          }
-          author {
-            name
-          }
-          categories {
-            name
-          }
+          ...RecipeCardFragment
         }
         cursor
       }
@@ -41,31 +24,15 @@ const SEARCH_RECIPES = gql`
       totalCount
     }
   }
+  ${RECIPE_CARD_FRAGMENT}
 `;
 
 const RECOMMEND_RECIPES = gql`
-  query RecommendRecipes($userID: ID, $availableIngredients: [String!], $first: Int, $after: String) {
+  query ExampleRecommendRecipes($userID: ID, $availableIngredients: [String!], $first: Int, $after: String) {
     recommendRecipes(userID: $userID, availableIngredients: $availableIngredients, first: $first, after: $after) {
       edges {
         node {
-          id
-          title
-          description
-          prepTime
-          cookTime
-          difficulty
-          averageRating
-          likes
-          images {
-            url
-            alt
-          }
-          author {
-            name
-          }
-          categories {
-            name
-          }
+          ...RecipeCardFragment
         }
         cursor
       }
@@ -78,9 +45,10 @@ const RECOMMEND_RECIPES = gql`
       totalCount
     }
   }
+  ${RECIPE_CARD_FRAGMENT}
 `;
 
-const RecipeSearch = ({ userID }) => {
+const RecipeSearchWithFragments = ({ userID }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [availableIngredients, setAvailableIngredients] = useState([]);
   const [activeTab, setActiveTab] = useState("search"); // 'search' or 'recommend'
@@ -245,7 +213,7 @@ const RecipeSearch = ({ userID }) => {
               </div>
               <div className="recipe-grid">
                 {getRecipesToDisplay().map(recipe => (
-                  <RecipeCard key={recipe.id} recipe={recipe} />
+                  <RecipeCardWithFragment key={recipe.id} recipe={recipe} />
                 ))}
               </div>
               {getCurrentPageInfo()?.hasNextPage && (
@@ -263,4 +231,4 @@ const RecipeSearch = ({ userID }) => {
   );
 };
 
-export default RecipeSearch;
+export default RecipeSearchWithFragments;

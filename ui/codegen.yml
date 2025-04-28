@@ -1,0 +1,18 @@
+overwrite: true
+schema: "../schema/graphql/schema.graphqls"
+documents: "src/**/*.{js,jsx,ts,tsx}"
+generates:
+  src/generated/graphql.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHooks: true
+      withComponent: false
+      withHOC: false
+      skipTypename: false
+      avoidOptionals: true
+      preResolveTypes: true
+      scalars:
+        DateTime: string
