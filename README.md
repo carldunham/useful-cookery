@@ -31,6 +31,8 @@ useful-cookery/
 │   ├── api/                # GraphQL API server
 │   ├── migration/          # TROFF to database migration tool
 │   └── cli/                # Command-line utilities
+├── db/                     # Database migrations
+│   └── migrations/         # SQL migration files
 ├── internal/               # Private application code
 │   ├── auth/               # Authentication services
 │   ├── models/             # Data models
@@ -49,9 +51,32 @@ useful-cookery/
 1. Clone the repository
 2. Configure database (options include DGraph, PostgreSQL, or in-memory)
    - For DGraph setup, see docs/dgraph-setup.md
+   - For PostgreSQL, run database migrations: `make migrate-up`
 3. Configure environment (cp .env.example .env)
 4. Run the API server: `go run cmd/api/main.go`
 5. Run the UI: `cd ui && npm run dev`
+
+## Database Migrations
+
+The project uses [golang-migrate](https://github.com/golang-migrate/migrate) for managing database schema migrations. Migration files are stored in the `db/migrations` directory.
+
+### Using Migrations
+
+```bash
+# Create a new migration
+make migrate-create
+
+# Apply migrations
+make migrate-up
+
+# Revert migrations
+make migrate-down
+
+# Check migration status
+make migrate-status
+```
+
+For more details, see [db/README.md](db/README.md).
 
 ## Development Roadmap
 

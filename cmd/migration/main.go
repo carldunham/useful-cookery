@@ -1,4 +1,5 @@
-// Package main implements a command-line tool for migrating TROFF recipes to the database.
+// Package main implements a command-line tool for migrating TROFF recipes to the database
+// and managing database schema migrations.
 package main
 
 import (
@@ -8,8 +9,12 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/spf13/cobra"
 
 	"github.com/carldunham/useful-cookery/internal/config"
@@ -27,16 +32,19 @@ type Database interface {
 // Constants.
 const (
 	filePermission = 0600 // Read/write permissions for owner only
+	migrationsPath = "file://db/migrations"
 )
 
 //nolint:gochecknoglobals // Using cobra command pattern which requires globals.
 var (
 	// Global flags.
-	verbose      bool
-	dryRun       bool
-	skipExisting bool
-	maxErrors    int
-	outputPath   string
+	verbose       bool
+	dryRun        bool
+	skipExisting  bool
+	maxErrors     int
+	outputPath    string
+	migrationName string
+	steps         int
 
 	// Error definitions.
 	errMaxErrorsReached  = errors.New("maximum error count reached, terminating")
@@ -45,8 +53,15 @@ var (
 	// Root command.
 	rootCmd = &cobra.Command{
 		Use:   "migration",
-		Short: "TROFF recipe migration tool",
-		Long:  "A tool for converting TROFF recipes to structured data and saving them to the database",
+		Short: "Migration tool",
+		Long:  "A tool for converting TROFF recipes to structured data and managing database schema migrations",
+	}
+
+	// TROFF recipe migration commands
+	troffCmd = &cobra.Command{
+		Use:   "troff",
+		Short: "TROFF recipe migration commands",
+		Long:  "Commands for converting TROFF recipes to structured data and saving them to the database",
 	}
 
 	// Test command.
@@ -75,6 +90,46 @@ var (
 		Args:  cobra.ExactArgs(1),
 		RunE:  runBatch,
 	}
+
+	// Database schema migration commands
+	dbCmd = &cobra.Command{
+		Use:   "db",
+		Short: "Database schema migration commands",
+		Long:  "Commands for managing database schema migrations",
+	}
+
+	// Create migration command
+	createCmd = &cobra.Command{
+		Use:   "create [name]",
+		Short: "Create a new migration",
+		Long:  "Create a new empty migration with up and down files",
+		Args:  cobra.ExactArgs(1),
+		RunE:  runCreate,
+	}
+
+	// Up command
+	upCmd = &cobra.Command{
+		Use:   "up",
+		Short: "Run migrations up",
+		Long:  "Apply all or a limited number of up migrations",
+		RunE:  runUp,
+	}
+
+	// Down command
+	downCmd = &cobra.Command{
+		Use:   "down",
+		Short: "Run migrations down",
+		Long:  "Apply all or a limited number of down migrations",
+		RunE:  runDown,
+	}
+
+	// Status command
+	statusCmd = &cobra.Command{
+		Use:   "status",
+		Short: "Show migration status",
+		Long:  "Show the current migration version and dirty state",
+		RunE:  runStatus,
+	}
 )
 
 func main() {
@@ -86,9 +141,11 @@ func main() {
 
 	// Add global flags.
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose output")
-	rootCmd.PersistentFlags().BoolVar(&dryRun, "dry-run", false,
+
+	// Add TROFF command flags
+	troffCmd.PersistentFlags().BoolVar(&dryRun, "dry-run", false,
 		"Don't actually save to database, just parse and validate")
-	rootCmd.PersistentFlags().BoolVar(&skipExisting, "skip-existing", false,
+	troffCmd.PersistentFlags().BoolVar(&skipExisting, "skip-existing", false,
 		"Skip recipes that already exist in the database (by ID)")
 
 	// Add command-specific flags.
@@ -97,10 +154,24 @@ func main() {
 	batchCmd.Flags().IntVar(&maxErrors, "max-errors", 1,
 		"Maximum number of errors to tolerate before terminating (0 = don't terminate on errors)")
 
-	// Add commands to root.
-	rootCmd.AddCommand(testCmd)
-	rootCmd.AddCommand(saveCmd)
-	rootCmd.AddCommand(batchCmd)
+	// Add database migration command flags
+	upCmd.Flags().IntVarP(&steps, "steps", "n", 0, "Number of migrations to apply (0 = all)")
+	downCmd.Flags().IntVarP(&steps, "steps", "n", 0, "Number of migrations to apply (0 = all)")
+
+	// Add TROFF commands to troff command
+	troffCmd.AddCommand(testCmd)
+	troffCmd.AddCommand(saveCmd)
+	troffCmd.AddCommand(batchCmd)
+
+	// Add database migration commands to db command
+	dbCmd.AddCommand(createCmd)
+	dbCmd.AddCommand(upCmd)
+	dbCmd.AddCommand(downCmd)
+	dbCmd.AddCommand(statusCmd)
+
+	// Add commands to root
+	rootCmd.AddCommand(troffCmd)
+	rootCmd.AddCommand(dbCmd)
 
 	if err := rootCmd.Execute(); err != nil {
 		slog.Error("Command execution failed", "error", err)
@@ -399,4 +470,169 @@ func formatRecipeAsText(recipe model.Recipe) string {
 	}
 
 	return result
+}
+
+// runCreate creates a new migration file.
+func runCreate(_ *cobra.Command, args []string) error {
+	name := args[0]
+
+	// Create migrations directory if it doesn't exist
+	if err := os.MkdirAll("db/migrations", 0755); err != nil {
+		return fmt.Errorf("failed to create migrations directory: %w", err)
+	}
+
+	// Get current timestamp for versioning
+	timestamp := time.Now().Unix()
+
+	// Create migration file names
+	upFile := fmt.Sprintf("db/migrations/%d_%s.up.sql", timestamp, name)
+	downFile := fmt.Sprintf("db/migrations/%d_%s.down.sql", timestamp, name)
+
+	// Create empty migration files
+	if err := os.WriteFile(upFile, []byte("-- Migration Up\n\n"), filePermission); err != nil {
+		return fmt.Errorf("failed to create up migration file: %w", err)
+	}
+
+	if err := os.WriteFile(downFile, []byte("-- Migration Down\n\n"), filePermission); err != nil {
+		return fmt.Errorf("failed to create down migration file: %w", err)
+	}
+
+	fmt.Printf("Created migration files:\n  %s\n  %s\n", upFile, downFile)
+	return nil
+}
+
+// getDatabaseURL gets the database URL from the config.
+func getDatabaseURL() (string, error) {
+	// Load configuration
+	cfg, err := config.Load()
+	if err != nil {
+		return "", fmt.Errorf("failed to load configuration: %w", err)
+	}
+
+	// Check database type
+	if cfg.Database.Type != "postgres" {
+		return "", fmt.Errorf("migrations only supported for postgres database type, got: %s", cfg.Database.Type)
+	}
+
+	return cfg.Database.ConnectionString, nil
+}
+
+// createMigrate creates a new migrate instance.
+func createMigrate() (*migrate.Migrate, error) {
+	dbURL, err := getDatabaseURL()
+	if err != nil {
+		return nil, err
+	}
+
+	// Create migrate instance
+	m, err := migrate.New(migrationsPath, dbURL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create migrate instance: %w", err)
+	}
+
+	return m, nil
+}
+
+// runUp runs migrations up.
+func runUp(_ *cobra.Command, _ []string) error {
+	m, err := createMigrate()
+	if err != nil {
+		return err
+	}
+	defer m.Close()
+
+	if steps > 0 {
+		if err := m.Steps(steps); err != nil && err != migrate.ErrNoChange {
+			return fmt.Errorf("failed to apply migrations: %w", err)
+		}
+		fmt.Printf("Applied %d migrations\n", steps)
+	} else {
+		if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+			return fmt.Errorf("failed to apply migrations: %w", err)
+		}
+		fmt.Println("Applied all migrations")
+	}
+
+	return nil
+}
+
+// runDown runs migrations down.
+func runDown(_ *cobra.Command, _ []string) error {
+	m, err := createMigrate()
+	if err != nil {
+		return err
+	}
+	defer m.Close()
+
+	if steps > 0 {
+		if err := m.Steps(-steps); err != nil && err != migrate.ErrNoChange {
+			return fmt.Errorf("failed to revert migrations: %w", err)
+		}
+		fmt.Printf("Reverted %d migrations\n", steps)
+	} else {
+		if err := m.Down(); err != nil && err != migrate.ErrNoChange {
+			return fmt.Errorf("failed to revert migrations: %w", err)
+		}
+		fmt.Println("Reverted all migrations")
+	}
+
+	return nil
+}
+
+// runStatus shows the current migration version.
+func runStatus(_ *cobra.Command, _ []string) error {
+	m, err := createMigrate()
+	if err != nil {
+		return err
+	}
+	defer m.Close()
+
+	version, dirty, err := m.Version()
+	if err != nil {
+		if err == migrate.ErrNilVersion {
+			fmt.Println("No migrations applied")
+			return nil
+		}
+		return fmt.Errorf("failed to get migration version: %w", err)
+	}
+
+	// Get migration level (name) from the migration files
+	migrationName, err := getMigrationName(version)
+	if err != nil {
+		slog.Warn("Could not determine migration name", "error", err)
+	}
+
+	fmt.Printf("Current migration version: %d\n", version)
+	if migrationName != "" {
+		fmt.Printf("Migration level: %s\n", migrationName)
+	}
+	fmt.Printf("Dirty: %t\n", dirty)
+
+	return nil
+}
+
+// getMigrationName extracts the migration name from the migration files for a given version.
+func getMigrationName(version uint) (string, error) {
+	// List migration files
+	files, err := os.ReadDir("db/migrations")
+	if err != nil {
+		return "", fmt.Errorf("failed to read migrations directory: %w", err)
+	}
+
+	// Look for a file with the matching version number
+	for _, file := range files {
+		var fileVersion uint
+		parts := strings.Split(file.Name(), "_")
+		if len(parts) > 0 {
+			fmt.Sscanf(parts[0], "%d", &fileVersion)
+			if fileVersion == version && strings.HasSuffix(file.Name(), ".up.sql") {
+				// Extract the name part from the filename
+				namePart := strings.Join(parts[1:], "_")
+				namePart = strings.TrimSuffix(namePart, ".up.sql")
+				return namePart, nil
+			}
+		}
+	}
+
+	return "", fmt.Errorf("no migration file found for version %d", version)
 }

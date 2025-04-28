@@ -20,17 +20,19 @@ MODELS_GEN=./internal/graphql/models/models_gen.go
 # Docker parameters
 API_IMAGE=useful-cookery-api
 UI_IMAGE=useful-cookery-ui
+MIGRATIONS_IMAGE=useful-cookery-migrations
 IMAGE_TAG=local
 K3D_CLUSTER=useful-cookery
 K8S_NAMESPACE=useful-cookery-local
 API_DEPLOYMENT=useful-cookery-api
 UI_DEPLOYMENT=useful-cookery-ui
+MIGRATIONS_JOB=useful-cookery-migrations
 
 # Tools
 GQLGEN=github.com/99designs/gqlgen
 GOLANGCI_LINT=github.com/golangci/golangci-lint/cmd/golangci-lint
 
-.PHONY: all build clean test lint fix generate tidy help deploy-api-local deploy-ui-local deploy-local
+.PHONY: all build clean test lint fix generate tidy help deploy-api-local deploy-ui-local deploy-migrations-local deploy-local migrate-create migrate-up migrate-down migrate-status
 
 all: generate lint test build
 
@@ -107,9 +109,14 @@ help:
 	@echo "  make generate     Generate code with gqlgen"
 	@echo "  make tidy         Tidy up dependencies"
 	@echo "  make run          Run the application"
-	@echo "  make deploy-api-local  Build and deploy API locally"
-	@echo "  make deploy-ui-local   Build and deploy UI locally"
-	@echo "  make deploy-local      Build and deploy both API and UI locally"
+	@echo "  make deploy-api-local        Build and deploy API locally"
+	@echo "  make deploy-ui-local         Build and deploy UI locally"
+	@echo "  make deploy-migrations-local Build and deploy migrations locally"
+	@echo "  make deploy-local            Build and deploy all components locally"
+	@echo "  make migrate-create          Create a new database migration"
+	@echo "  make migrate-up              Apply database migrations"
+	@echo "  make migrate-down            Revert database migrations"
+	@echo "  make migrate-status          Show current migration status"
 	@echo "  make help         Show this help message"
 
 # Build and deploy API locally
@@ -134,14 +141,48 @@ deploy-ui-local:
 	@echo "Restarting UI deployment..."
 	kubectl rollout restart deployment $(UI_DEPLOYMENT) -n $(K8S_NAMESPACE)
 
-# Build and deploy both API and UI locally
+# Build and deploy migrations locally
+deploy-migrations-local:
+	@echo "Building migrations Docker image..."
+	docker build -t $(MIGRATIONS_IMAGE):$(IMAGE_TAG) -f Dockerfile.migrations .
+	@echo "Importing migrations image to k3d..."
+	k3d image import $(MIGRATIONS_IMAGE):$(IMAGE_TAG) -c $(K3D_CLUSTER)
+	@echo "Deploying migrations to local Kubernetes..."
+	kubectl apply -k deploy/kubernetes/overlays/local
+	@echo "Running migrations job..."
+	kubectl delete job $(MIGRATIONS_JOB) -n $(K8S_NAMESPACE) --ignore-not-found
+	kubectl wait --for=condition=complete job/$(MIGRATIONS_JOB) -n $(K8S_NAMESPACE) --timeout=60s || true
+
+# Build and deploy all components locally
 deploy-local:
-	@echo "Building API and UI Docker images..."
+	@echo "Building all Docker images..."
 	docker build -t $(API_IMAGE):$(IMAGE_TAG) -f Dockerfile.api .
 	docker build -t $(UI_IMAGE):$(IMAGE_TAG) -f Dockerfile.ui .
+	docker build -t $(MIGRATIONS_IMAGE):$(IMAGE_TAG) -f Dockerfile.migrations .
 	@echo "Importing images to k3d..."
-	k3d image import $(API_IMAGE):$(IMAGE_TAG) $(UI_IMAGE):$(IMAGE_TAG) -c $(K3D_CLUSTER)
+	k3d image import $(API_IMAGE):$(IMAGE_TAG) $(UI_IMAGE):$(IMAGE_TAG) $(MIGRATIONS_IMAGE):$(IMAGE_TAG) -c $(K3D_CLUSTER)
 	@echo "Deploying to local Kubernetes..."
+	kubectl apply -k deploy/kubernetes/overlays/local
+	@echo "Running migrations job..."
+	kubectl delete job $(MIGRATIONS_JOB) -n $(K8S_NAMESPACE) --ignore-not-found
 	kubectl apply -k deploy/kubernetes/overlays/local
 	@echo "Restarting deployments..."
 	kubectl rollout restart deployment $(API_DEPLOYMENT) $(UI_DEPLOYMENT) -n $(K8S_NAMESPACE)
+
+# Database migration commands
+migrate-create:
+	@echo "Creating new migration..."
+	@read -p "Enter migration name: " name; \
+	$(GORUN) ./cmd/migration/main.go db create $$name
+
+migrate-up:
+	@echo "Applying database migrations..."
+	$(GORUN) ./cmd/migration/main.go db up
+
+migrate-down:
+	@echo "Reverting database migrations..."
+	$(GORUN) ./cmd/migration/main.go db down
+
+migrate-status:
+	@echo "Checking migration status..."
+	$(GORUN) ./cmd/migration/main.go db status

@@ -80,174 +80,23 @@ func (db *PostgresDatabase) Close() error {
 	return nil
 }
 
-// initSchema initializes the database schema if it doesn't exist.
-//
-//nolint:cyclop,funlen // This function is necessarily complex and long due to the database schema creation
+// initSchema checks if the database schema exists.
 func (db *PostgresDatabase) initSchema() error {
-	// Create users table
-	_, err := db.DB.Exec(`
-		CREATE TABLE IF NOT EXISTS users (
-			id TEXT PRIMARY KEY,
-			name TEXT NOT NULL,
-			email TEXT UNIQUE NOT NULL,
-			password TEXT NOT NULL,
-			role TEXT NOT NULL,
-			preferences JSONB,
-			created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-			updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+	// Check if at least one of our tables exists
+	var exists bool
+	err := db.DB.QueryRow(`
+		SELECT EXISTS (
+			SELECT FROM information_schema.tables
+			WHERE table_name = 'users'
 		)
-	`)
+	`).Scan(&exists)
+
 	if err != nil {
-		return fmt.Errorf("creating users table: %w", err)
+		return fmt.Errorf("checking schema: %w", err)
 	}
 
-	// Create categories table
-	_, err = db.DB.Exec(`
-		CREATE TABLE IF NOT EXISTS categories (
-			id TEXT PRIMARY KEY,
-			name TEXT NOT NULL,
-			description TEXT,
-			created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-			updated_at TIMESTAMP NOT NULL DEFAULT NOW()
-		)
-	`)
-	if err != nil {
-		return fmt.Errorf("creating categories table: %w", err)
-	}
-
-	// Create recipes table
-	_, err = db.DB.Exec(`
-		CREATE TABLE IF NOT EXISTS recipes (
-			id TEXT PRIMARY KEY,
-			original_id TEXT,
-			title TEXT NOT NULL,
-			description TEXT,
-			notes TEXT,
-			author_id TEXT REFERENCES users(id),
-			cuisine TEXT,
-			prep_time INTEGER,
-			cook_time INTEGER,
-			servings INTEGER,
-			difficulty TEXT,
-			nutrition_info JSONB,
-			tags TEXT[],
-			likes INTEGER DEFAULT 0,
-			average_rating FLOAT DEFAULT 0,
-			created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-			updated_at TIMESTAMP NOT NULL DEFAULT NOW()
-		)
-	`)
-	if err != nil {
-		return fmt.Errorf("creating recipes table: %w", err)
-	}
-
-	// Create recipe_categories junction table
-	_, err = db.DB.Exec(`
-		CREATE TABLE IF NOT EXISTS recipe_categories (
-			recipe_id TEXT REFERENCES recipes(id) ON DELETE CASCADE,
-			category_id TEXT REFERENCES categories(id) ON DELETE CASCADE,
-			PRIMARY KEY (recipe_id, category_id)
-		)
-	`)
-	if err != nil {
-		return fmt.Errorf("creating recipe_categories table: %w", err)
-	}
-
-	// Create ingredients table
-	_, err = db.DB.Exec(`
-		CREATE TABLE IF NOT EXISTS ingredients (
-			id TEXT PRIMARY KEY,
-			recipe_id TEXT REFERENCES recipes(id) ON DELETE CASCADE,
-			name TEXT NOT NULL,
-			quantity FLOAT,
-			unit TEXT,
-			preparation TEXT,
-			substitutes TEXT[],
-			is_optional BOOLEAN DEFAULT FALSE
-		)
-	`)
-	if err != nil {
-		return fmt.Errorf("creating ingredients table: %w", err)
-	}
-
-	// Create steps table
-	_, err = db.DB.Exec(`
-		CREATE TABLE IF NOT EXISTS steps (
-			id TEXT PRIMARY KEY,
-			recipe_id TEXT REFERENCES recipes(id) ON DELETE CASCADE,
-			order_index INTEGER NOT NULL,
-			description TEXT NOT NULL,
-			time_estimate INTEGER
-		)
-	`)
-	if err != nil {
-		return fmt.Errorf("creating steps table: %w", err)
-	}
-
-	// Create images table
-	_, err = db.DB.Exec(`
-		CREATE TABLE IF NOT EXISTS images (
-			id TEXT PRIMARY KEY,
-			url TEXT NOT NULL,
-			alt TEXT,
-			width INTEGER,
-			height INTEGER
-		)
-	`)
-	if err != nil {
-		return fmt.Errorf("creating images table: %w", err)
-	}
-
-	// Create recipe_images junction table
-	_, err = db.DB.Exec(`
-		CREATE TABLE IF NOT EXISTS recipe_images (
-			recipe_id TEXT REFERENCES recipes(id) ON DELETE CASCADE,
-			image_id TEXT REFERENCES images(id) ON DELETE CASCADE,
-			PRIMARY KEY (recipe_id, image_id)
-		)
-	`)
-	if err != nil {
-		return fmt.Errorf("creating recipe_images table: %w", err)
-	}
-
-	// Create step_images junction table
-	_, err = db.DB.Exec(`
-		CREATE TABLE IF NOT EXISTS step_images (
-			step_id TEXT REFERENCES steps(id) ON DELETE CASCADE,
-			image_id TEXT REFERENCES images(id) ON DELETE CASCADE,
-			PRIMARY KEY (step_id, image_id)
-		)
-	`)
-	if err != nil {
-		return fmt.Errorf("creating step_images table: %w", err)
-	}
-
-	// Create reviews table
-	_, err = db.DB.Exec(`
-		CREATE TABLE IF NOT EXISTS reviews (
-			id TEXT PRIMARY KEY,
-			recipe_id TEXT REFERENCES recipes(id) ON DELETE CASCADE,
-			author_id TEXT REFERENCES users(id) ON DELETE CASCADE,
-			rating INTEGER NOT NULL,
-			comment TEXT,
-			created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-			updated_at TIMESTAMP NOT NULL DEFAULT NOW()
-		)
-	`)
-	if err != nil {
-		return fmt.Errorf("creating reviews table: %w", err)
-	}
-
-	// Create saved_recipes junction table
-	_, err = db.DB.Exec(`
-		CREATE TABLE IF NOT EXISTS saved_recipes (
-			user_id TEXT REFERENCES users(id) ON DELETE CASCADE,
-			recipe_id TEXT REFERENCES recipes(id) ON DELETE CASCADE,
-			PRIMARY KEY (user_id, recipe_id)
-		)
-	`)
-	if err != nil {
-		return fmt.Errorf("creating saved_recipes table: %w", err)
+	if !exists {
+		return fmt.Errorf("database schema not initialized, please run migrations first")
 	}
 
 	return nil

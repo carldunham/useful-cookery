@@ -140,3 +140,5 @@ echo -e "${YELLOW}docker build -t useful-cookery-ui:local -f Dockerfile.ui .${NC
 echo -e "${YELLOW}k3d image import useful-cookery-api:local useful-cookery-ui:local -c useful-cookery${NC}"
 echo -e "${YELLOW}kubectl apply -k deploy/kubernetes/overlays/local${NC}"
 echo -e "${GREEN}Then access the application at http://useful-cookery.local${NC}"
+echo -e "${GREEN}To run database migrations:${NC}"
+echo -e "${YELLOW}make migrate-up${NC}"

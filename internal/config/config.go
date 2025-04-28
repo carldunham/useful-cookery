@@ -176,7 +176,7 @@ func setDefaults() {
 	viper.SetDefault("database.type", "postgres")
 	viper.SetDefault(
 		"database.connection_string",
-		"postgres://postgres:postgres@localhost:5432/useful_cookery?sslmode=disable",
+		"postgres://postgres:postgres@localhost:5432/useful-cookery?sslmode=disable",
 	)
 
 	// Redis defaults
