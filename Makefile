@@ -48,8 +48,10 @@ clean:
 
 # Run tests
 test:
-	@echo "Running tests..."
+	@echo "Running Go tests..."
 	$(GOTEST) ./...
+	@echo "Running UI tests..."
+	cd ui && npm run test -- --watchAll=false --passWithNoTests
 
 # Run linting
 lint:
@@ -99,7 +101,7 @@ help:
 	@echo "  make              Run generate, lint, test, and build"
 	@echo "  make build        Build the application"
 	@echo "  make clean        Clean build artifacts"
-	@echo "  make test         Run tests"
+	@echo "  make test         Run Go and UI tests"
 	@echo "  make lint         Run all linters (Go, UI, Markdown, project)"
 	@echo "  make fix          Fix linting issues and format code"
 	@echo "  make generate     Generate code with gqlgen"

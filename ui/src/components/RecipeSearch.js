@@ -105,6 +105,9 @@ const RecipeSearch = ({ userID }) => {
   const [searchAfter, setSearchAfter] = useState(null);
   const [recommendAfter, setRecommendAfter] = useState(null);
 
+  // State to accumulate search results
+  const [accumulatedSearchResults, setAccumulatedSearchResults] = useState([]);
+
   // Lazy query for search
   const [executeSearch, { loading: searchLoading, error: searchError, data: searchData }] =
     useLazyQuery(SEARCH_RECIPES, {
@@ -114,6 +117,20 @@ const RecipeSearch = ({ userID }) => {
         after: searchAfter,
       },
       skip: !debouncedSearchQuery,
+      onCompleted: (data) => {
+        if (data?.searchRecipes?.edges) {
+          if (searchAfter) {
+            // Append new results to accumulated results
+            setAccumulatedSearchResults([
+              ...accumulatedSearchResults,
+              ...data.searchRecipes.edges.map((edge) => edge.node),
+            ]);
+          } else {
+            // Reset accumulated results for new search
+            setAccumulatedSearchResults(data.searchRecipes.edges.map((edge) => edge.node));
+          }
+        }
+      },
     });
 
   // Get recommendations
@@ -135,6 +152,7 @@ const RecipeSearch = ({ userID }) => {
   const handleSearchChange = (e) => {
     const newQuery = e.target.value;
     setSearchQuery(newQuery);
+    setSearchAfter(null); // Reset pagination for new search
 
     if (newQuery.length >= 3) {
       executeSearch();
@@ -154,7 +172,7 @@ const RecipeSearch = ({ userID }) => {
   // Determine which recipes to display
   const getRecipesToDisplay = () => {
     if (activeTab === "search") {
-      return searchData?.searchRecipes?.edges?.map((edge) => edge.node) || [];
+      return accumulatedSearchResults;
     } else {
       return recommendData?.recommendRecipes?.edges?.map((edge) => edge.node) || [];
     }
