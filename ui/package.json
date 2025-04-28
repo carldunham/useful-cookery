@@ -19,13 +19,32 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "generate": "graphql-codegen --config codegen.yml"
+    "generate": "graphql-codegen --config codegen.yml",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx,.json src/",
+    "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx,.json src/ --fix",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+    "lint:md": "markdownlint \"**/*.md\" --ignore node_modules",
+    "lint:md:fix": "markdownlint \"**/*.md\" --ignore node_modules --fix"
   },
+  "type": "module",
   "devDependencies": {
+    "@eslint/js": "^9.25.1",
     "@graphql-codegen/cli": "^5.0.5",
     "@graphql-codegen/typescript": "^4.1.6",
     "@graphql-codegen/typescript-operations": "^4.6.0",
-    "@graphql-codegen/typescript-react-apollo": "^4.3.2"
+    "@graphql-codegen/typescript-react-apollo": "^4.3.2",
+    "@typescript-eslint/eslint-plugin": "^8.31.0",
+    "@typescript-eslint/parser": "^8.31.0",
+    "eslint": "^9.25.1",
+    "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-json": "^4.0.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-prettier": "^5.2.6",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "markdownlint-cli": "^0.44.0",
+    "prettier": "^3.5.3"
   },
   "eslintConfig": {
     "extends": [

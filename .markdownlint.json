@@ -1,0 +1,9 @@
+{
+  "default": true,
+  "line-length": false,
+  "no-inline-html": false,
+  "first-line-h1": false,
+  "no-duplicate-header": {
+    "allow_different_nesting": true
+  }
+}

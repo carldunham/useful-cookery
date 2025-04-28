@@ -1,10 +1,14 @@
 import React, { useState } from "react";
+
 import RecipeCard from "../components/RecipeCard";
 import SearchFilters from "../components/SearchFilters";
+import {
+  useExampleSearchRecipesLazyQuery,
+  useExampleRecommendRecipesQuery,
+} from "../generated/graphql";
 import { useDebounce } from "../hooks/useDebounce";
 // Import the generated hooks
 // Note: These hooks will be generated with the prefix "Example" once the code generator is run
-import { useExampleSearchRecipesLazyQuery, useExampleRecommendRecipesQuery } from "../generated/graphql";
 
 const RecipeSearchWithGeneratedHooks = ({ userID }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -46,7 +50,7 @@ const RecipeSearchWithGeneratedHooks = ({ userID }) => {
   });
 
   // Handle search input change
-  const handleSearchChange = e => {
+  const handleSearchChange = (e) => {
     const newQuery = e.target.value;
     setSearchQuery(newQuery);
 
@@ -56,21 +60,21 @@ const RecipeSearchWithGeneratedHooks = ({ userID }) => {
   };
 
   // Handle ingredient changes
-  const handleIngredientChange = ingredients => {
+  const handleIngredientChange = (ingredients) => {
     setAvailableIngredients(ingredients);
   };
 
   // Handle tab change
-  const handleTabChange = tab => {
+  const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
 
   // Determine which recipes to display
   const getRecipesToDisplay = () => {
     if (activeTab === "search") {
-      return searchData?.searchRecipes?.edges?.map(edge => edge.node) || [];
+      return searchData?.searchRecipes?.edges?.map((edge) => edge.node) || [];
     } else {
-      return recommendData?.recommendRecipes?.edges?.map(edge => edge.node) || [];
+      return recommendData?.recommendRecipes?.edges?.map((edge) => edge.node) || [];
     }
   };
 
@@ -120,7 +124,10 @@ const RecipeSearchWithGeneratedHooks = ({ userID }) => {
   return (
     <div className="recipe-search">
       <div className="search-tabs">
-        <button className={`tab ${activeTab === "search" ? "active" : ""}`} onClick={() => handleTabChange("search")}>
+        <button
+          className={`tab ${activeTab === "search" ? "active" : ""}`}
+          onClick={() => handleTabChange("search")}
+        >
           Search Recipes
         </button>
         <button
@@ -168,7 +175,7 @@ const RecipeSearchWithGeneratedHooks = ({ userID }) => {
                 Showing {getRecipesToDisplay().length} of {getTotalCount()} recipes
               </div>
               <div className="recipe-grid">
-                {getRecipesToDisplay().map(recipe => (
+                {getRecipesToDisplay().map((recipe) => (
                   <RecipeCard key={recipe.id} recipe={recipe} />
                 ))}
               </div>

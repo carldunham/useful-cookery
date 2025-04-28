@@ -1,9 +1,11 @@
-import React, { useState } from "react";
 import { useQuery, useLazyQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import RecipeCardWithFragment, { RECIPE_CARD_FRAGMENT } from "./RecipeCardWithFragment";
+import React, { useState } from "react";
+
 import SearchFilters from "../components/SearchFilters";
 import { useDebounce } from "../hooks/useDebounce";
+
+import RecipeCardWithFragment, { RECIPE_CARD_FRAGMENT } from "./RecipeCardWithFragment";
 
 // GraphQL query definitions using fragments
 const SEARCH_RECIPES = gql`
@@ -28,8 +30,18 @@ const SEARCH_RECIPES = gql`
 `;
 
 const RECOMMEND_RECIPES = gql`
-  query ExampleRecommendRecipes($userID: ID, $availableIngredients: [String!], $first: Int, $after: String) {
-    recommendRecipes(userID: $userID, availableIngredients: $availableIngredients, first: $first, after: $after) {
+  query ExampleRecommendRecipes(
+    $userID: ID
+    $availableIngredients: [String!]
+    $first: Int
+    $after: String
+  ) {
+    recommendRecipes(
+      userID: $userID
+      availableIngredients: $availableIngredients
+      first: $first
+      after: $after
+    ) {
       edges {
         node {
           ...RecipeCardFragment
@@ -62,17 +74,15 @@ const RecipeSearchWithFragments = ({ userID }) => {
   const [recommendAfter, setRecommendAfter] = useState(null);
 
   // Lazy query for search
-  const [executeSearch, { loading: searchLoading, error: searchError, data: searchData }] = useLazyQuery(
-    SEARCH_RECIPES,
-    {
+  const [executeSearch, { loading: searchLoading, error: searchError, data: searchData }] =
+    useLazyQuery(SEARCH_RECIPES, {
       variables: {
         query: debouncedSearchQuery,
         first: pageSize,
         after: searchAfter,
       },
       skip: !debouncedSearchQuery,
-    }
-  );
+    });
 
   // Get recommendations
   const {
@@ -90,7 +100,7 @@ const RecipeSearchWithFragments = ({ userID }) => {
   });
 
   // Handle search input change
-  const handleSearchChange = e => {
+  const handleSearchChange = (e) => {
     const newQuery = e.target.value;
     setSearchQuery(newQuery);
 
@@ -100,21 +110,21 @@ const RecipeSearchWithFragments = ({ userID }) => {
   };
 
   // Handle ingredient changes
-  const handleIngredientChange = ingredients => {
+  const handleIngredientChange = (ingredients) => {
     setAvailableIngredients(ingredients);
   };
 
   // Handle tab change
-  const handleTabChange = tab => {
+  const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
 
   // Determine which recipes to display
   const getRecipesToDisplay = () => {
     if (activeTab === "search") {
-      return searchData?.searchRecipes?.edges?.map(edge => edge.node) || [];
+      return searchData?.searchRecipes?.edges?.map((edge) => edge.node) || [];
     } else {
-      return recommendData?.recommendRecipes?.edges?.map(edge => edge.node) || [];
+      return recommendData?.recommendRecipes?.edges?.map((edge) => edge.node) || [];
     }
   };
 
@@ -164,7 +174,10 @@ const RecipeSearchWithFragments = ({ userID }) => {
   return (
     <div className="recipe-search">
       <div className="search-tabs">
-        <button className={`tab ${activeTab === "search" ? "active" : ""}`} onClick={() => handleTabChange("search")}>
+        <button
+          className={`tab ${activeTab === "search" ? "active" : ""}`}
+          onClick={() => handleTabChange("search")}
+        >
           Search Recipes
         </button>
         <button
@@ -212,7 +225,7 @@ const RecipeSearchWithFragments = ({ userID }) => {
                 Showing {getRecipesToDisplay().length} of {getTotalCount()} recipes
               </div>
               <div className="recipe-grid">
-                {getRecipesToDisplay().map(recipe => (
+                {getRecipesToDisplay().map((recipe) => (
                   <RecipeCardWithFragment key={recipe.id} recipe={recipe} />
                 ))}
               </div>

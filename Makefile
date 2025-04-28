@@ -30,7 +30,7 @@ UI_DEPLOYMENT=useful-cookery-ui
 GQLGEN=github.com/99designs/gqlgen
 GOLANGCI_LINT=github.com/golangci/golangci-lint/cmd/golangci-lint
 
-.PHONY: all build clean test lint generate tidy help deploy-api-local deploy-ui-local deploy-local
+.PHONY: all build clean test lint fix generate tidy help deploy-api-local deploy-ui-local deploy-local
 
 all: generate lint test build
 
@@ -53,8 +53,27 @@ test:
 
 # Run linting
 lint:
-	@echo "Running linter..."
+	@echo "Running Go linter..."
 	$(GOTOOL) $(GOLANGCI_LINT) run ./...
+	@echo "Running UI linter..."
+	cd ui && npm run lint
+	@echo "Running Markdown linter..."
+	npm run lint:md
+	@echo "Running project linter..."
+	npm run lint
+
+# Fix linting issues
+fix:
+	@echo "Fixing Go linting issues..."
+	$(GOTOOL) $(GOLANGCI_LINT) run --fix ./...
+	@echo "Fixing UI linting issues..."
+	cd ui && npm run lint:fix
+	@echo "Fixing Markdown linting issues..."
+	npm run lint:md:fix
+	@echo "Fixing project linting issues..."
+	npm run lint:fix
+	@echo "Formatting code..."
+	npm run format:all
 
 # Generate code as needed
 generate:
@@ -81,7 +100,8 @@ help:
 	@echo "  make build        Build the application"
 	@echo "  make clean        Clean build artifacts"
 	@echo "  make test         Run tests"
-	@echo "  make lint         Run linter"
+	@echo "  make lint         Run all linters (Go, UI, Markdown, project)"
+	@echo "  make fix          Fix linting issues and format code"
 	@echo "  make generate     Generate code with gqlgen"
 	@echo "  make tidy         Tidy up dependencies"
 	@echo "  make run          Run the application"

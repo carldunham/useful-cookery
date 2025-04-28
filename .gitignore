@@ -6,6 +6,10 @@
 out/
 bin/
 
+# Node modules
+/node_modules
+
+
 # Logs and temp files
 *.log
 *.tmp

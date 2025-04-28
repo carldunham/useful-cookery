@@ -1,14 +1,27 @@
 import React from "react";
 
 const RecipeCard = ({ recipe }) => {
-  const { title, description, prepTime, cookTime, difficulty, averageRating, images, author, categories } = recipe;
+  const {
+    title,
+    description,
+    prepTime,
+    cookTime,
+    difficulty,
+    averageRating,
+    images,
+    author,
+    categories,
+  } = recipe;
 
   // Default image if none provided
-  const imageUrl = images && images.length > 0 ? images[0].url : "https://via.placeholder.com/300x200?text=No+Image";
+  const imageUrl =
+    images && images.length > 0
+      ? images[0].url
+      : "https://via.placeholder.com/300x200?text=No+Image";
   const imageAlt = images && images.length > 0 ? images[0].alt : "Recipe image";
 
   // Format categories
-  const categoryNames = categories ? categories.map(cat => cat.name).join(", ") : "";
+  const categoryNames = categories ? categories.map((cat) => cat.name).join(", ") : "";
 
   // Calculate total time
   const totalTime = prepTime && cookTime ? prepTime + cookTime : null;
@@ -25,7 +38,9 @@ const RecipeCard = ({ recipe }) => {
         <div className="recipe-meta">
           {difficulty && <span className="recipe-difficulty">Difficulty: {difficulty}</span>}
           {totalTime && <span className="recipe-time">Time: {totalTime} min</span>}
-          {averageRating && <span className="recipe-rating">Rating: {averageRating.toFixed(1)}/5</span>}
+          {averageRating && (
+            <span className="recipe-rating">Rating: {averageRating.toFixed(1)}/5</span>
+          )}
         </div>
         {categoryNames && <p className="recipe-categories">Categories: {categoryNames}</p>}
         <button className="view-recipe-btn">View Recipe</button>

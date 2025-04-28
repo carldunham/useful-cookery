@@ -24,9 +24,9 @@ You can set up the GraphQL Code Generator using the provided setup script:
 This script will:
 
 1. Install the required dependencies
-2. Add the generate script to package.json if it doesn't exist
-3. Create the generated directory
-4. Run the code generator
+1. Add the generate script to package.json if it doesn't exist
+1. Create the generated directory
+1. Run the code generator
 
 Alternatively, you can set it up manually:
 
@@ -37,7 +37,7 @@ cd ui
 npm install --save-dev @graphql-codegen/cli @graphql-codegen/typescript @graphql-codegen/typescript-operations @graphql-codegen/typescript-react-apollo
 ```
 
-2. Create a `codegen.yml` configuration file in the `ui` directory:
+1. Create a `codegen.yml` configuration file in the `ui` directory:
 
 ```yaml
 overwrite: true
@@ -60,7 +60,7 @@ generates:
         DateTime: string
 ```
 
-3. Add a script to `package.json`:
+1. Add a script to `package.json`:
 
 ```json
 "scripts": {
@@ -68,7 +68,7 @@ generates:
 }
 ```
 
-4. Run the generator:
+1. Run the generator:
 
 ```bash
 npm run generate
@@ -115,18 +115,18 @@ This will fail if the generated code is not committed, indicating that the queri
 When making schema changes:
 
 1. Update the GraphQL schema files
-2. Run the code generator to update the TypeScript types and hooks
-3. The TypeScript compiler will show errors where the UI code is not compatible with the new schema
-4. Fix the UI code to work with the new schema
-5. Commit both the schema changes and the UI changes together
+1. Run the code generator to update the TypeScript types and hooks
+1. The TypeScript compiler will show errors where the UI code is not compatible with the new schema
+1. Fix the UI code to work with the new schema
+1. Commit both the schema changes and the UI changes together
 
 ### 5. Consider Schema Versioning
 
 For larger changes, consider versioning your schema to allow for a gradual transition:
 
 1. Add new fields/types alongside existing ones
-2. Update the UI to use the new fields/types
-3. Once all clients are updated, remove the old fields/types
+1. Update the UI to use the new fields/types
+1. Once all clients are updated, remove the old fields/types
 
 ## Additional Recommendations
 

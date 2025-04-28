@@ -36,13 +36,13 @@ const SearchFilters = ({ onIngredientsChange }) => {
     }
   };
 
-  const handleRemoveIngredient = ingredient => {
-    const newIngredients = ingredients.filter(item => item !== ingredient);
+  const handleRemoveIngredient = (ingredient) => {
+    const newIngredients = ingredients.filter((item) => item !== ingredient);
     setIngredients(newIngredients);
     onIngredientsChange(newIngredients);
   };
 
-  const handleQuickAdd = ingredient => {
+  const handleQuickAdd = (ingredient) => {
     if (!ingredients.includes(ingredient)) {
       const newIngredients = [...ingredients, ingredient];
       setIngredients(newIngredients);
@@ -50,7 +50,7 @@ const SearchFilters = ({ onIngredientsChange }) => {
     }
   };
 
-  const handleKeyDown = e => {
+  const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
       handleAddIngredient();
@@ -63,7 +63,7 @@ const SearchFilters = ({ onIngredientsChange }) => {
         <input
           type="text"
           value={inputValue}
-          onChange={e => setInputValue(e.target.value)}
+          onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Add an ingredient you have"
           className="ingredient-input-field"
@@ -76,7 +76,7 @@ const SearchFilters = ({ onIngredientsChange }) => {
       <div className="quick-add-ingredients">
         <p>Quick add:</p>
         <div className="quick-add-buttons">
-          {commonIngredients.slice(0, 10).map(ingredient => (
+          {commonIngredients.slice(0, 10).map((ingredient) => (
             <button
               key={ingredient}
               onClick={() => handleQuickAdd(ingredient)}
@@ -93,10 +93,13 @@ const SearchFilters = ({ onIngredientsChange }) => {
         <div className="selected-ingredients">
           <p>Your ingredients:</p>
           <div className="ingredient-tags">
-            {ingredients.map(ingredient => (
+            {ingredients.map((ingredient) => (
               <div key={ingredient} className="ingredient-tag">
                 {ingredient}
-                <button onClick={() => handleRemoveIngredient(ingredient)} className="remove-ingredient-btn">
+                <button
+                  onClick={() => handleRemoveIngredient(ingredient)}
+                  className="remove-ingredient-btn"
+                >
                   ×
                 </button>
               </div>
