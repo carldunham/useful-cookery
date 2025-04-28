@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: useful-cookery-ui
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        - name: ui
+          image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/useful-cookery-ui:${IMAGE_TAG}
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          env:
+            - name: REACT_APP_API_URL
+              value: "https://api.useful-cookery.com/graphql"
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - useful-cookery
+                    - key: component
+                      operator: In
+                      values:
+                        - ui
+                topologyKey: "kubernetes.io/hostname"

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: useful-cookery-api
+spec:
+  replicas: 1
+  template:
+    spec:
+      containers:
+        - name: api
+          image: useful-cookery-api:local
+          imagePullPolicy: Never
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: useful-cookery-secrets
+                  key: jwt.secret
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: useful-cookery-secrets
+                  key: openai.api_key
