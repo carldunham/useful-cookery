@@ -17,9 +17,10 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
-          env:
-            - name: REACT_APP_API_URL
-              value: "https://api.useful-cookery.com/graphql"
+          # Environment variables can be added here if needed
+          # env:
+          #   - name: VITE_SOME_ENV_VAR
+          #     value: "some-value"
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:

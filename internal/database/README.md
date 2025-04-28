@@ -27,7 +27,7 @@ The database type and connection string are specified in the application configu
 
 ```yaml
 database:
-  type: dgraph  # or "memory" for in-memory database
+  type: dgraph # or "memory" for in-memory database
   connection_string: localhost:9080
 ```
 

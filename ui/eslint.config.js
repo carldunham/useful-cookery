@@ -7,6 +7,7 @@ import importPlugin from "eslint-plugin-import";
 import jsxA11yPlugin from "eslint-plugin-jsx-a11y";
 import prettierPlugin from "eslint-plugin-prettier";
 import jsonPlugin from "eslint-plugin-json";
+import unusedImportsPlugin from "eslint-plugin-unused-imports";
 
 // Create a configuration that combines the old and new formats
 export default [
@@ -87,13 +88,19 @@ export default [
       "jsx-a11y": jsxA11yPlugin,
       prettier: prettierPlugin,
       json: jsonPlugin,
+      "unused-imports": unusedImportsPlugin,
     },
     rules: {
       "prettier/prettier": "error",
       "react/react-in-jsx-scope": "off", // Not needed in React 17+
       "react/prop-types": "off", // Not needed when using TypeScript
-      "no-unused-vars": "off", // TypeScript has its own unused vars rule
-      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+      "no-unused-vars": "off", // Turn off the base rule
+      "@typescript-eslint/no-unused-vars": "off", // Turn off the TypeScript rule
+      "unused-imports/no-unused-imports": "error", // Report unused imports
+      "unused-imports/no-unused-vars": [
+        "error",
+        { vars: "all", varsIgnorePattern: "^_", args: "after-used", argsIgnorePattern: "^_" }
+      ],
       "import/order": [
         "error",
         {

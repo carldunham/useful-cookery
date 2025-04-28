@@ -2,12 +2,13 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
 import React, { act } from "react";
+import { describe, test, expect, vi, beforeEach } from "vitest";
 
 import SearchFilters from "../SearchFilters";
 
 describe("SearchFilters", () => {
   // Mock callback function
-  const mockOnIngredientsChange = jest.fn();
+  const mockOnIngredientsChange = vi.fn();
 
   beforeEach(() => {
     // Clear mock calls between tests

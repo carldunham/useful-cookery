@@ -11,16 +11,15 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.15.0",
-    "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "test:nowatch": "react-scripts test --watchAll=false",
-    "test:coverage": "react-scripts test --watchAll=false --coverage",
-    "eject": "react-scripts eject",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:nowatch": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "generate": "graphql-codegen --config codegen.yml",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx,.json src/",
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx,.json src/ --fix",
@@ -37,6 +36,7 @@
     "@graphql-codegen/typescript-react-apollo": "^4.3.2",
     "@typescript-eslint/eslint-plugin": "^8.31.0",
     "@typescript-eslint/parser": "^8.31.0",
+    "@vitejs/plugin-react": "^4.4.1",
     "eslint": "^9.25.1",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-import": "^2.31.0",
@@ -45,14 +45,12 @@
     "eslint-plugin-prettier": "^5.2.6",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "jsdom": "^24.0.0",
     "markdownlint-cli": "^0.44.0",
-    "prettier": "^3.5.3"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "prettier": "^3.5.3",
+    "vite": "^6.3.3",
+    "vitest": "^3.1.2"
   },
   "browserslist": {
     "production": [

@@ -43,9 +43,10 @@ spec:
               port: http
             initialDelaySeconds: 15
             periodSeconds: 20
-          env:
-            - name: REACT_APP_API_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: useful-cookery-config
-                  key: api.url
+          # Environment variables can be added here if needed
+          # env:
+          #   - name: VITE_SOME_ENV_VAR
+          #     valueFrom:
+          #       configMapKeyRef:
+          #         name: useful-cookery-config
+          #         key: some.key

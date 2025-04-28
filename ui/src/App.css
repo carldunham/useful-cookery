@@ -70,7 +70,9 @@ footer {
   text-align: left;
 }
 
-.loading, .error, .no-results {
+.loading,
+.error,
+.no-results {
   margin: 40px 0;
   font-size: 18px;
   color: #666;

@@ -51,7 +51,7 @@ test:
 	@echo "Running Go tests..."
 	$(GOTEST) ./...
 	@echo "Running UI tests..."
-	cd ui && npm run test -- --watchAll=false --passWithNoTests
+	cd ui && npm run test:nowatch
 
 # Run linting
 lint:

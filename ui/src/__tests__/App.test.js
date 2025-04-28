@@ -1,14 +1,17 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { render, screen } from "@testing-library/react";
-import React, { act } from "react";
+import React from "react";
 import "@testing-library/jest-dom";
+import { describe, test, expect, vi } from "vitest";
 
 import App from "../App";
 
 // Mock the RecipeSearch component to simplify testing
-jest.mock("../components/RecipeSearch", () => {
-  return function MockRecipeSearch({ userID }) {
-    return <div data-testid="recipe-search">Recipe Search (User ID: {userID})</div>;
+vi.mock("../components/RecipeSearch", () => {
+  return {
+    default: function MockRecipeSearch({ userID }) {
+      return <div data-testid="recipe-search">Recipe Search (User ID: {userID})</div>;
+    },
   };
 });
 

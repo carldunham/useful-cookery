@@ -62,7 +62,7 @@ When the schema changes to use Relay Connections, client code needs to be update
    const recipes = data?.recipes || [];
 
    // After
-   const recipes = data?.recipes?.edges?.map(edge => edge.node) || [];
+   const recipes = data?.recipes?.edges?.map((edge) => edge.node) || [];
    const pageInfo = data?.recipes?.pageInfo;
    const totalCount = data?.recipes?.totalCount;
    ```
@@ -74,7 +74,8 @@ When the schema changes to use Relay Connections, client code needs to be update
      fetchMore({
        variables: {
          after: pageInfo.endCursor,
-         first: 10
+         first: 10,
        },
      });
    };
+   ```

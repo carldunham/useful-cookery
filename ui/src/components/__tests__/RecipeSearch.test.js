@@ -4,29 +4,34 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React, { act } from "react";
 import "@testing-library/jest-dom";
+import { describe, test, expect, vi } from "vitest";
 
 import RecipeSearch from "../RecipeSearch";
 
 // Mock the SearchFilters component to simplify testing
-jest.mock("../SearchFilters", () => {
-  return function MockSearchFilters({ onIngredientsChange }) {
-    return (
-      <div data-testid="search-filters">
-        <button
-          onClick={() => onIngredientsChange(["tomato", "cheese"])}
-          data-testid="mock-add-ingredients"
-        >
-          Add Ingredients
-        </button>
-      </div>
-    );
+vi.mock("../SearchFilters", () => {
+  return {
+    default: function MockSearchFilters({ onIngredientsChange }) {
+      return (
+        <div data-testid="search-filters">
+          <button
+            onClick={() => onIngredientsChange(["tomato", "cheese"])}
+            data-testid="mock-add-ingredients"
+          >
+            Add Ingredients
+          </button>
+        </div>
+      );
+    },
   };
 });
 
 // Mock the RecipeCard component
-jest.mock("../RecipeCard", () => {
-  return function MockRecipeCard({ recipe }) {
-    return <div data-testid="recipe-card">{recipe.title}</div>;
+vi.mock("../RecipeCard", () => {
+  return {
+    default: function MockRecipeCard({ recipe }) {
+      return <div data-testid="recipe-card">{recipe.title}</div>;
+    },
   };
 });
 

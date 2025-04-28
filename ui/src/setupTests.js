@@ -1,24 +1,25 @@
-// jest-dom adds custom jest matchers for asserting on DOM nodes.
+// @testing-library/jest-dom adds custom matchers for asserting on DOM nodes.
 // allows you to do things like:
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom";
+import { vi, afterEach } from "vitest";
 
 // Mock the fetch API
-global.fetch = jest.fn();
+global.fetch = vi.fn();
 
 // Mock window.matchMedia which is not implemented in JSDOM
 Object.defineProperty(window, "matchMedia", {
   writable: true,
-  value: jest.fn().mockImplementation((query) => ({
+  value: vi.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
+    addListener: vi.fn(), // deprecated
+    removeListener: vi.fn(), // deprecated
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
   })),
 });
 
@@ -28,9 +29,9 @@ class MockIntersectionObserver {
     this.callback = callback;
   }
 
-  observe = jest.fn();
-  unobserve = jest.fn();
-  disconnect = jest.fn();
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
 }
 
 Object.defineProperty(window, "IntersectionObserver", {
@@ -40,5 +41,5 @@ Object.defineProperty(window, "IntersectionObserver", {
 
 // Reset all mocks after each test
 afterEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });

@@ -81,7 +81,7 @@ useful-cookery/
 - Use golangci-lint with the project's configuration to catch common issues
 - Implement unit tests for each file, and keep them up to date
 - Prefer using table-driven tests to reduce test function complexity
-- Put unit tests into _test packages, and only test exported types and functions
+- Put unit tests into \_test packages, and only test exported types and functions
 - Avoid stuttering in type names (e.g., avoid `package.PackageThing`, prefer `package.Thing`)
 - Return concrete types from functions rather than interfaces
   - When a function must return an interface (e.g., for factory functions or third-party libraries), use `//nolint:ireturn` with an explanatory comment

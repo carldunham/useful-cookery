@@ -1,9 +1,16 @@
 import { renderHook, act } from "@testing-library/react";
+import { describe, test, expect, vi, beforeEach, afterEach } from "vitest";
 
 import { useDebounce } from "../useDebounce";
 
 // Mock timer functions
-jest.useFakeTimers();
+beforeEach(() => {
+  vi.useFakeTimers();
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe("useDebounce", () => {
   test("should return the initial value immediately", () => {
@@ -25,7 +32,7 @@ describe("useDebounce", () => {
 
     // Fast-forward time by 400ms (less than the delay)
     act(() => {
-      jest.advanceTimersByTime(400);
+      vi.advanceTimersByTime(400);
     });
 
     // Value should still not have changed
@@ -42,7 +49,7 @@ describe("useDebounce", () => {
 
     // Fast-forward time by 500ms (equal to the delay)
     act(() => {
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
     });
 
     // Value should have updated
@@ -59,7 +66,7 @@ describe("useDebounce", () => {
 
     // Fast-forward time by 200ms
     act(() => {
-      jest.advanceTimersByTime(200);
+      vi.advanceTimersByTime(200);
     });
 
     // Change the value again
@@ -67,7 +74,7 @@ describe("useDebounce", () => {
 
     // Fast-forward time by 200ms
     act(() => {
-      jest.advanceTimersByTime(200);
+      vi.advanceTimersByTime(200);
     });
 
     // Change the value one more time
@@ -78,7 +85,7 @@ describe("useDebounce", () => {
 
     // Fast-forward time by 500ms to complete the delay for the last change
     act(() => {
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
     });
 
     // Value should be the final value
@@ -95,7 +102,7 @@ describe("useDebounce", () => {
 
     // Fast-forward time by 500ms (the original delay)
     act(() => {
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
     });
 
     // Value should not have changed yet due to increased delay
@@ -103,7 +110,7 @@ describe("useDebounce", () => {
 
     // Fast-forward time by another 500ms to complete the new delay
     act(() => {
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
     });
 
     // Value should have updated
@@ -111,7 +118,7 @@ describe("useDebounce", () => {
   });
 
   test("should clean up timeout on unmount", () => {
-    const clearTimeoutSpy = jest.spyOn(global, "clearTimeout");
+    const clearTimeoutSpy = vi.spyOn(global, "clearTimeout");
 
     const { unmount } = renderHook(({ value, delay }) => useDebounce(value, delay), {
       initialProps: { value: "test value", delay: 500 },
@@ -122,8 +129,5 @@ describe("useDebounce", () => {
 
     // clearTimeout should have been called
     expect(clearTimeoutSpy).toHaveBeenCalled();
-
-    // Clean up the spy
-    clearTimeoutSpy.mockRestore();
   });
 });

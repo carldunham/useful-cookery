@@ -51,7 +51,7 @@ useful-cookery/
    - For DGraph setup, see docs/dgraph-setup.md
 3. Configure environment (cp .env.example .env)
 4. Run the API server: `go run cmd/api/main.go`
-5. Run the UI: `cd ui && npm start`
+5. Run the UI: `cd ui && npm run dev`
 
 ## Development Roadmap
 
