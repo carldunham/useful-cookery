@@ -50,30 +50,31 @@ type Category struct {
 
 // Recipe represents a recipe.
 type Recipe struct {
-	ID            string               `dgraph:"uid"           json:"uid"`
-	OriginalID    string               `dgraph:"originalID"    json:"originalID,omitempty"`
-	Title         string               `dgraph:"title"         json:"title"`
-	Description   string               `dgraph:"description"   json:"description,omitempty"`
-	Notes         string               `dgraph:"notes"         json:"notes,omitempty"`
-	Author        *User                `dgraph:"author"        json:"author,omitempty"`
-	Categories    []Category           `dgraph:"categories"    json:"categories,omitempty"`
-	Cuisine       string               `dgraph:"cuisine"       json:"cuisine,omitempty"`
-	PrepTime      int                  `dgraph:"prepTime"      json:"prepTime,omitempty"`
-	CookTime      int                  `dgraph:"cookTime"      json:"cookTime,omitempty"`
-	Servings      int                  `dgraph:"servings"      json:"servings,omitempty"`
-	Difficulty    string               `dgraph:"difficulty"    json:"difficulty,omitempty"`
-	Ingredients   []DetailedIngredient `dgraph:"ingredients"   json:"ingredients,omitempty"`
-	Steps         []Step               `dgraph:"steps"         json:"steps,omitempty"`
-	NutritionInfo *NutritionInfo       `dgraph:"nutritionInfo" json:"nutritionInfo,omitempty"`
-	Images        []Image              `dgraph:"images"        json:"images,omitempty"`
-	Tags          []string             `dgraph:"tags"          json:"tags,omitempty"`
-	Likes         int                  `dgraph:"likes"         json:"likes,omitempty"`
-	Reviews       []Review             `dgraph:"reviews"       json:"reviews,omitempty"`
-	AverageRating float64              `dgraph:"averageRating" json:"averageRating,omitempty"`
-	SavedBy       []User               `dgraph:"savedBy"       json:"savedBy,omitempty"`
-	Embeddings    []float32            `dgraph:"embeddings"    json:"-"`
-	CreatedAt     time.Time            `dgraph:"createdAt"     json:"createdAt"`
-	UpdatedAt     time.Time            `dgraph:"updatedAt"     json:"updatedAt"`
+	ID             string               `dgraph:"uid"           json:"uid"`
+	OriginalID     string               `dgraph:"originalID"    json:"originalID,omitempty"`
+	Title          string               `dgraph:"title"         json:"title"`
+	Description    string               `dgraph:"description"   json:"description,omitempty"`
+	Notes          string               `dgraph:"notes"         json:"notes,omitempty"`
+	Author         *User                `dgraph:"author"        json:"author,omitempty"`
+	Categories     []Category           `dgraph:"categories"    json:"categories,omitempty"`
+	Cuisine        string               `dgraph:"cuisine"       json:"cuisine,omitempty"`
+	PrepTime       int                  `dgraph:"prepTime"      json:"prepTime,omitempty"`
+	CookTime       int                  `dgraph:"cookTime"      json:"cookTime,omitempty"`
+	Servings       int                  `dgraph:"servings"      json:"servings,omitempty"`
+	Difficulty     string               `dgraph:"difficulty"    json:"difficulty,omitempty"`
+	DifficultyText string               `dgraph:"difficultyText" json:"difficultyText,omitempty"`
+	Ingredients    []DetailedIngredient `dgraph:"ingredients"   json:"ingredients,omitempty"`
+	Steps          []Step               `dgraph:"steps"         json:"steps,omitempty"`
+	NutritionInfo  *NutritionInfo       `dgraph:"nutritionInfo" json:"nutritionInfo,omitempty"`
+	Images         []Image              `dgraph:"images"        json:"images,omitempty"`
+	Tags           []string             `dgraph:"tags"          json:"tags,omitempty"`
+	Likes          int                  `dgraph:"likes"         json:"likes,omitempty"`
+	Reviews        []Review             `dgraph:"reviews"       json:"reviews,omitempty"`
+	AverageRating  float64              `dgraph:"averageRating" json:"averageRating,omitempty"`
+	SavedBy        []User               `dgraph:"savedBy"       json:"savedBy,omitempty"`
+	Embeddings     []float32            `dgraph:"embeddings"    json:"-"`
+	CreatedAt      time.Time            `dgraph:"createdAt"     json:"createdAt"`
+	UpdatedAt      time.Time            `dgraph:"updatedAt"     json:"updatedAt"`
 }
 
 // IngredientUnit represents a measurement unit for an ingredient.

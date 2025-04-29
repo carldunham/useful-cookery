@@ -140,28 +140,29 @@ type ComplexityRoot struct {
 	}
 
 	Recipe struct {
-		Author        func(childComplexity int) int
-		AverageRating func(childComplexity int) int
-		Categories    func(childComplexity int) int
-		CookTime      func(childComplexity int) int
-		CreatedAt     func(childComplexity int) int
-		Cuisine       func(childComplexity int) int
-		Description   func(childComplexity int) int
-		Difficulty    func(childComplexity int) int
-		ID            func(childComplexity int) int
-		Images        func(childComplexity int) int
-		Ingredients   func(childComplexity int) int
-		Likes         func(childComplexity int) int
-		NutritionInfo func(childComplexity int) int
-		OriginalID    func(childComplexity int) int
-		PrepTime      func(childComplexity int) int
-		Reviews       func(childComplexity int) int
-		SavedBy       func(childComplexity int) int
-		Servings      func(childComplexity int) int
-		Steps         func(childComplexity int) int
-		Tags          func(childComplexity int) int
-		Title         func(childComplexity int) int
-		UpdatedAt     func(childComplexity int) int
+		Author         func(childComplexity int) int
+		AverageRating  func(childComplexity int) int
+		Categories     func(childComplexity int) int
+		CookTime       func(childComplexity int) int
+		CreatedAt      func(childComplexity int) int
+		Cuisine        func(childComplexity int) int
+		Description    func(childComplexity int) int
+		Difficulty     func(childComplexity int) int
+		DifficultyText func(childComplexity int) int
+		ID             func(childComplexity int) int
+		Images         func(childComplexity int) int
+		Ingredients    func(childComplexity int) int
+		Likes          func(childComplexity int) int
+		NutritionInfo  func(childComplexity int) int
+		OriginalID     func(childComplexity int) int
+		PrepTime       func(childComplexity int) int
+		Reviews        func(childComplexity int) int
+		SavedBy        func(childComplexity int) int
+		Servings       func(childComplexity int) int
+		Steps          func(childComplexity int) int
+		Tags           func(childComplexity int) int
+		Title          func(childComplexity int) int
+		UpdatedAt      func(childComplexity int) int
 	}
 
 	RecipeConnection struct {
@@ -251,6 +252,7 @@ type QueryResolver interface {
 }
 type RecipeResolver interface {
 	Difficulty(ctx context.Context, obj *model1.Recipe) (*model.SkillLevel, error)
+	DifficultyText(ctx context.Context, obj *model1.Recipe) (*string, error)
 }
 type SubscriptionResolver interface {
 	RecipeLikes(ctx context.Context, id string) (<-chan *int, error)
@@ -869,6 +871,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Recipe.Difficulty(childComplexity), true
+
+	case "Recipe.difficultyText":
+		if e.complexity.Recipe.DifficultyText == nil {
+			break
+		}
+
+		return e.complexity.Recipe.DifficultyText(childComplexity), true
 
 	case "Recipe.id":
 		if e.complexity.Recipe.ID == nil {
@@ -1598,6 +1607,7 @@ type Recipe {
   cookTime: Int
   servings: Int
   difficulty: SkillLevel
+  difficultyText: String
   ingredients: [DetailedIngredient!]
   steps: [Step!]
   nutritionInfo: NutritionInfo
@@ -3232,6 +3242,8 @@ func (ec *executionContext) fieldContext_Category_recipes(_ context.Context, fie
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "difficultyText":
+				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
 				return ec.fieldContext_Recipe_ingredients(ctx, field)
 			case "steps":
@@ -4298,6 +4310,8 @@ func (ec *executionContext) fieldContext_Mutation_createRecipe(ctx context.Conte
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "difficultyText":
+				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
 				return ec.fieldContext_Recipe_ingredients(ctx, field)
 			case "steps":
@@ -4399,6 +4413,8 @@ func (ec *executionContext) fieldContext_Mutation_updateRecipe(ctx context.Conte
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "difficultyText":
+				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
 				return ec.fieldContext_Recipe_ingredients(ctx, field)
 			case "steps":
@@ -4555,6 +4571,8 @@ func (ec *executionContext) fieldContext_Mutation_likeRecipe(ctx context.Context
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "difficultyText":
+				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
 				return ec.fieldContext_Recipe_ingredients(ctx, field)
 			case "steps":
@@ -5646,6 +5664,8 @@ func (ec *executionContext) fieldContext_Query_recipe(ctx context.Context, field
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "difficultyText":
+				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
 				return ec.fieldContext_Recipe_ingredients(ctx, field)
 			case "steps":
@@ -5744,6 +5764,8 @@ func (ec *executionContext) fieldContext_Query_recipeByOriginalId(ctx context.Co
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "difficultyText":
+				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
 				return ec.fieldContext_Recipe_ingredients(ctx, field)
 			case "steps":
@@ -6901,6 +6923,47 @@ func (ec *executionContext) fieldContext_Recipe_difficulty(_ context.Context, fi
 	return fc, nil
 }
 
+func (ec *executionContext) _Recipe_difficultyText(ctx context.Context, field graphql.CollectedField, obj *model1.Recipe) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Recipe_difficultyText(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Recipe().DifficultyText(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Recipe_difficultyText(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Recipe",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Recipe_ingredients(ctx context.Context, field graphql.CollectedField, obj *model1.Recipe) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Recipe_ingredients(ctx, field)
 	if err != nil {
@@ -7657,6 +7720,8 @@ func (ec *executionContext) fieldContext_RecipeEdge_node(_ context.Context, fiel
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "difficultyText":
+				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
 				return ec.fieldContext_Recipe_ingredients(ctx, field)
 			case "steps":
@@ -7835,6 +7900,8 @@ func (ec *executionContext) fieldContext_Review_recipe(_ context.Context, field 
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "difficultyText":
+				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
 				return ec.fieldContext_Recipe_ingredients(ctx, field)
 			case "steps":
@@ -8755,6 +8822,8 @@ func (ec *executionContext) fieldContext_User_savedRecipes(_ context.Context, fi
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "difficultyText":
+				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
 				return ec.fieldContext_Recipe_ingredients(ctx, field)
 			case "steps":
@@ -8842,6 +8911,8 @@ func (ec *executionContext) fieldContext_User_createdRecipes(_ context.Context, 
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "difficultyText":
+				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
 				return ec.fieldContext_Recipe_ingredients(ctx, field)
 			case "steps":
@@ -12630,6 +12701,39 @@ func (ec *executionContext) _Recipe(ctx context.Context, sel ast.SelectionSet, o
 					}
 				}()
 				res = ec._Recipe_difficulty(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "difficultyText":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Recipe_difficultyText(ctx, field, obj)
 				return res
 			}
 

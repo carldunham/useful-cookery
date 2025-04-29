@@ -247,6 +247,7 @@ type Recipe {
   cookTime: Int
   servings: Int
   difficulty: SkillLevel
+  difficultyText: String
   ingredients: [DetailedIngredient!]
   steps: [Step!]
   nutritionInfo: NutritionInfo

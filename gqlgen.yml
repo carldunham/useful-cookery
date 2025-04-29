@@ -65,3 +65,7 @@ models:
   DateTime:
     model:
       - github.com/99designs/gqlgen/graphql.Time
+  Recipe:
+    fields:
+      difficultyText:
+        resolver: true

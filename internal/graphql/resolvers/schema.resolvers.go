@@ -143,6 +143,11 @@ func (r *recipeResolver) Difficulty(ctx context.Context, obj *model1.Recipe) (*m
 	return r.difficulty(ctx, obj)
 }
 
+// DifficultyText is the resolver for the difficultyText field.
+func (r *recipeResolver) DifficultyText(ctx context.Context, obj *model1.Recipe) (*string, error) {
+	return r.difficultyText(ctx, obj)
+}
+
 // RecipeLikes is the resolver for the recipeLikes field.
 func (r *subscriptionResolver) RecipeLikes(ctx context.Context, id string) (<-chan *int, error) {
 	return r.Resolver.recipeLikes(ctx, id)

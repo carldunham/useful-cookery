@@ -366,30 +366,70 @@ func processTokens(tokens []Token, recipe *model.Recipe) {
 							recipe.Tags = []string{}
 						}
 
-						// Skip to the next token which should contain all the rating information
-						if tokenIndex+1 < len(tokens) && tokens[tokenIndex+1].Type == TokenParam {
-							// Get the rating content
-							ratingContent := tokens[tokenIndex+1].Value
+						// Process the RATING section tokens directly
+						// We need to look for .I commands followed by Difficulty:, Time:, etc.
+						var currentField string
+						var fieldValue string
 
-							// Split the content by newlines
-							lines := strings.Split(ratingContent, "\n")
+						// Start from the next token after RATING
+						for i := tokenIndex + 1; i < len(tokens); i++ {
+							token := tokens[i]
 
-							// Process the lines
-							for i := range lines {
-								line := lines[i]
+							// Break if we hit another section or the end of the file
+							if token.Type == TokenCommand && (token.Value == "SH" || token.Value == "WR") {
+								break
+							}
 
-								// Check for difficulty
-								if strings.Contains(line, "<i>Difficulty</i>") && i+1 < len(lines) {
-									recipe.Difficulty = ProcessText(lines[i+1])
+							// Check for .I command (which might be TokenUnknown)
+							if (token.Type == TokenCommand && token.Value == "I") ||
+								(token.Type == TokenUnknown && token.Value == ".I") {
+								// The next token should be the field name
+								if i+1 < len(tokens) {
+									fieldName := tokens[i+1].Value
+									if strings.HasPrefix(fieldName, "Difficulty:") {
+										currentField = "Difficulty"
+										fieldValue = ""
+									} else if strings.HasPrefix(fieldName, "Time:") {
+										currentField = "Time"
+										fieldValue = ""
+									} else if strings.HasPrefix(fieldName, "Precision:") {
+										currentField = "Precision"
+										fieldValue = ""
+									}
+									i++ // Skip the field name token
 								}
+							} else if currentField != "" && token.Type == TokenParam {
+								// This is a value for the current field
+								fieldValue = ProcessText(token.Value)
 
-								// Check for time
-								if strings.Contains(line, "<i>Time</i>") && i+1 < len(lines) {
-									timeValue := ProcessText(lines[i+1])
+								// Process the field value
+								switch currentField {
+								case "Difficulty":
+									recipe.DifficultyText = fieldValue
 
+									// Map natural language difficulty descriptions to enum values
+									difficultyLower := strings.ToLower(fieldValue)
+									switch {
+									case strings.Contains(difficultyLower, "easy") && !strings.Contains(difficultyLower, "moderate") && !strings.Contains(difficultyLower, "difficult"):
+										recipe.Difficulty = "BEGINNER"
+									case strings.Contains(difficultyLower, "moderate") ||
+										(strings.Contains(difficultyLower, "easy") && strings.Contains(difficultyLower, "moderate")) ||
+										strings.Contains(difficultyLower, "medium"):
+										recipe.Difficulty = "INTERMEDIATE"
+									case strings.Contains(difficultyLower, "difficult") ||
+										strings.Contains(difficultyLower, "hard") ||
+										strings.Contains(difficultyLower, "advanced") ||
+										strings.Contains(difficultyLower, "complex"):
+										recipe.Difficulty = "ADVANCED"
+									default:
+										// Default to INTERMEDIATE if we can't determine
+										recipe.Difficulty = "INTERMEDIATE"
+									}
+
+								case "Time":
 									// Extract numbers from the time string
 									numStr := ""
-									for _, c := range timeValue {
+									for _, c := range fieldValue {
 										if c >= '0' && c <= '9' {
 											numStr += string(c)
 										} else if len(numStr) > 0 {
@@ -403,16 +443,20 @@ func processTokens(tokens []Token, recipe *model.Recipe) {
 											recipe.PrepTime = minutes
 										}
 									}
+
+								case "Precision":
+									recipe.Tags = append(recipe.Tags, "Precision: "+fieldValue)
 								}
 
-								// Check for precision
-								if strings.Contains(line, "<i>Precision</i>") && i+1 < len(lines) {
-									precisionValue := ProcessText(lines[i+1])
-									recipe.Tags = append(recipe.Tags, "Precision: "+precisionValue)
-								}
+								// Reset current field
+								currentField = ""
 							}
+						}
 
-							// Skip the rating content token
+						// Skip to the next section, but stop at IH (Ingredients Header)
+						for tokenIndex+1 < len(tokens) &&
+							!(tokens[tokenIndex+1].Type == TokenCommand &&
+								(tokens[tokenIndex+1].Value == "SH" || tokens[tokenIndex+1].Value == "WR" || tokens[tokenIndex+1].Value == "IH")) {
 							tokenIndex++
 						}
 					} else if sectionName == "CUISINE" && tokenIndex+1 < len(tokens) && tokens[tokenIndex+1].Type == TokenParam {

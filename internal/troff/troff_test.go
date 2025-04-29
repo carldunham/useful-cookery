@@ -207,11 +207,11 @@ func TestParse_RecipeWithRatings(t *testing.T) {
 .RZ "CHOCOLATE CAKE" "A delicious chocolate cake"
 This is a classic chocolate cake recipe.
 .SH "RATING"
-<i>Difficulty</i>
+.I Difficulty:
 Easy to moderate
-<i>Time</i>
+.I Time:
 45 minutes preparation, 35 minutes baking
-<i>Precision</i>
+.I Precision:
 Measure carefully
 .IH "8 servings"
 .IG "2 cups" "flour" "250g"
@@ -238,7 +238,8 @@ jane@example.com`
 	assert.Equal(t, "RECIPE-ID", recipe.OriginalID, "Recipe OriginalID should match")
 
 	// Check ratings fields
-	assert.Equal(t, "Easy to moderate", recipe.Difficulty, "Difficulty should be parsed correctly")
+	assert.Equal(t, "Easy to moderate", recipe.DifficultyText, "Difficulty text should be parsed correctly")
+	assert.Equal(t, "INTERMEDIATE", recipe.Difficulty, "Difficulty enum should be mapped correctly")
 	assert.Equal(t, 45, recipe.PrepTime, "Prep time should be parsed correctly")
 	assert.Equal(t, 8, recipe.Servings, "Servings should be parsed correctly")
 
