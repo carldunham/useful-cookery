@@ -1467,7 +1467,7 @@ func (db *PostgresDatabase) insertRecipeBase(
 		recipe.PrepTime,
 		recipe.CookTime,
 		recipe.Servings,
-		recipe.Difficulty,
+		recipe.DifficultyText,
 		recipe.CreatedAt,
 		recipe.UpdatedAt,
 	)
@@ -1504,7 +1504,7 @@ func (db *PostgresDatabase) updateRecipeBase(
 		recipe.PrepTime,
 		recipe.CookTime,
 		recipe.Servings,
-		recipe.Difficulty,
+		recipe.DifficultyText,
 		recipe.UpdatedAt,
 		recipe.OriginalID,
 		recipe.ID,

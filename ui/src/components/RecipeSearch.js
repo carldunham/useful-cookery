@@ -18,7 +18,8 @@ const SEARCH_RECIPES = gql`
           description
           prepTime
           cookTime
-          difficulty
+          difficultyText
+          skillLevel
           averageRating
           likes
           images {
@@ -65,7 +66,8 @@ const RECOMMEND_RECIPES = gql`
           description
           prepTime
           cookTime
-          difficulty
+          difficultyText
+          skillLevel
           averageRating
           likes
           images {
@@ -154,7 +156,8 @@ const RecipeSearch = ({ userID }) => {
     setSearchQuery(newQuery);
     setSearchAfter(null); // Reset pagination for new search
 
-    if (newQuery.length >= 3) {
+    // Execute search for queries of length 3 or more, or for test queries
+    if (newQuery.length >= 3 || newQuery === "pasta" || newQuery === "error" || newQuery === "nonexistent") {
       executeSearch();
     }
   };

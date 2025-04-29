@@ -303,7 +303,7 @@ func loadConfig(configFile string) (*config.Config, error) {
 
 // setupDatabase initializes the database connection.
 //
-//nolint:ireturn // Returning interfaces is a design choice for this function.
+//nolint:ireturn,nolintlint // Returning interfaces is a design choice for this function.
 func setupDatabase(cfg *config.Config) (cli.Database, cli.AuthDatabase, error) {
 	// Initialize database options
 	dbOptions := database.Options{

@@ -83,6 +83,8 @@ fix:
 generate:
 	@echo "Generating Go code..."
 	$(GOGEN) ./...
+	@echo "Generating Typescript models..."
+	( cd ui && npm run generate )
 
 # Tidy up dependencies
 tidy:

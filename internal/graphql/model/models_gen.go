@@ -79,6 +79,7 @@ type RecipeFilter struct {
 	Categories  []string    `json:"categories,omitempty"`
 	Cuisine     *string     `json:"cuisine,omitempty"`
 	Difficulty  *SkillLevel `json:"difficulty,omitempty"`
+	SkillLevel  *SkillLevel `json:"skillLevel,omitempty"`
 	MaxPrepTime *int        `json:"maxPrepTime,omitempty"`
 	Ingredients []string    `json:"ingredients,omitempty"`
 	AuthorID    *string     `json:"authorID,omitempty"`
@@ -94,6 +95,7 @@ type RecipeInput struct {
 	CookTime      *int                `json:"cookTime,omitempty"`
 	Servings      *int                `json:"servings,omitempty"`
 	Difficulty    *SkillLevel         `json:"difficulty,omitempty"`
+	SkillLevel    *SkillLevel         `json:"skillLevel,omitempty"`
 	Ingredients   []*IngredientInput  `json:"ingredients"`
 	Steps         []*StepInput        `json:"steps"`
 	NutritionInfo *NutritionInfoInput `json:"nutritionInfo,omitempty"`

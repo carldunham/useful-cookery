@@ -159,6 +159,7 @@ type ComplexityRoot struct {
 		Reviews        func(childComplexity int) int
 		SavedBy        func(childComplexity int) int
 		Servings       func(childComplexity int) int
+		SkillLevel     func(childComplexity int) int
 		Steps          func(childComplexity int) int
 		Tags           func(childComplexity int) int
 		Title          func(childComplexity int) int
@@ -252,6 +253,7 @@ type QueryResolver interface {
 }
 type RecipeResolver interface {
 	Difficulty(ctx context.Context, obj *model1.Recipe) (*model.SkillLevel, error)
+	SkillLevel(ctx context.Context, obj *model1.Recipe) (*model.SkillLevel, error)
 	DifficultyText(ctx context.Context, obj *model1.Recipe) (*string, error)
 }
 type SubscriptionResolver interface {
@@ -949,6 +951,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Recipe.Servings(childComplexity), true
 
+	case "Recipe.skillLevel":
+		if e.complexity.Recipe.SkillLevel == nil {
+			break
+		}
+
+		return e.complexity.Recipe.SkillLevel(childComplexity), true
+
 	case "Recipe.steps":
 		if e.complexity.Recipe.Steps == nil {
 			break
@@ -1484,7 +1493,8 @@ input RecipeFilter {
   originalId: String
   categories: [ID!]
   cuisine: String
-  difficulty: SkillLevel
+  difficulty: SkillLevel @deprecated(reason: "Use skillLevel instead")
+  skillLevel: SkillLevel
   maxPrepTime: Int
   ingredients: [String!]
   authorID: ID
@@ -1517,7 +1527,8 @@ input RecipeInput {
   prepTime: Int
   cookTime: Int
   servings: Int
-  difficulty: SkillLevel
+  difficulty: SkillLevel @deprecated(reason: "Use skillLevel instead")
+  skillLevel: SkillLevel
   ingredients: [IngredientInput!]!
   steps: [StepInput!]!
   nutritionInfo: NutritionInfoInput
@@ -1606,7 +1617,8 @@ type Recipe {
   prepTime: Int
   cookTime: Int
   servings: Int
-  difficulty: SkillLevel
+  difficulty: SkillLevel @deprecated(reason: "Use skillLevel instead")
+  skillLevel: SkillLevel
   difficultyText: String
   ingredients: [DetailedIngredient!]
   steps: [Step!]
@@ -3242,6 +3254,8 @@ func (ec *executionContext) fieldContext_Category_recipes(_ context.Context, fie
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "skillLevel":
+				return ec.fieldContext_Recipe_skillLevel(ctx, field)
 			case "difficultyText":
 				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
@@ -4310,6 +4324,8 @@ func (ec *executionContext) fieldContext_Mutation_createRecipe(ctx context.Conte
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "skillLevel":
+				return ec.fieldContext_Recipe_skillLevel(ctx, field)
 			case "difficultyText":
 				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
@@ -4413,6 +4429,8 @@ func (ec *executionContext) fieldContext_Mutation_updateRecipe(ctx context.Conte
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "skillLevel":
+				return ec.fieldContext_Recipe_skillLevel(ctx, field)
 			case "difficultyText":
 				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
@@ -4571,6 +4589,8 @@ func (ec *executionContext) fieldContext_Mutation_likeRecipe(ctx context.Context
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "skillLevel":
+				return ec.fieldContext_Recipe_skillLevel(ctx, field)
 			case "difficultyText":
 				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
@@ -5664,6 +5684,8 @@ func (ec *executionContext) fieldContext_Query_recipe(ctx context.Context, field
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "skillLevel":
+				return ec.fieldContext_Recipe_skillLevel(ctx, field)
 			case "difficultyText":
 				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
@@ -5764,6 +5786,8 @@ func (ec *executionContext) fieldContext_Query_recipeByOriginalId(ctx context.Co
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "skillLevel":
+				return ec.fieldContext_Recipe_skillLevel(ctx, field)
 			case "difficultyText":
 				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
@@ -6923,6 +6947,47 @@ func (ec *executionContext) fieldContext_Recipe_difficulty(_ context.Context, fi
 	return fc, nil
 }
 
+func (ec *executionContext) _Recipe_skillLevel(ctx context.Context, field graphql.CollectedField, obj *model1.Recipe) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Recipe_skillLevel(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (any, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Recipe().SkillLevel(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.SkillLevel)
+	fc.Result = res
+	return ec.marshalOSkillLevel2ᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋgraphqlᚋmodelᚐSkillLevel(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Recipe_skillLevel(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Recipe",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type SkillLevel does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Recipe_difficultyText(ctx context.Context, field graphql.CollectedField, obj *model1.Recipe) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Recipe_difficultyText(ctx, field)
 	if err != nil {
@@ -7720,6 +7785,8 @@ func (ec *executionContext) fieldContext_RecipeEdge_node(_ context.Context, fiel
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "skillLevel":
+				return ec.fieldContext_Recipe_skillLevel(ctx, field)
 			case "difficultyText":
 				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
@@ -7900,6 +7967,8 @@ func (ec *executionContext) fieldContext_Review_recipe(_ context.Context, field 
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "skillLevel":
+				return ec.fieldContext_Recipe_skillLevel(ctx, field)
 			case "difficultyText":
 				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
@@ -8822,6 +8891,8 @@ func (ec *executionContext) fieldContext_User_savedRecipes(_ context.Context, fi
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "skillLevel":
+				return ec.fieldContext_Recipe_skillLevel(ctx, field)
 			case "difficultyText":
 				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
@@ -8911,6 +8982,8 @@ func (ec *executionContext) fieldContext_User_createdRecipes(_ context.Context, 
 				return ec.fieldContext_Recipe_servings(ctx, field)
 			case "difficulty":
 				return ec.fieldContext_Recipe_difficulty(ctx, field)
+			case "skillLevel":
+				return ec.fieldContext_Recipe_skillLevel(ctx, field)
 			case "difficultyText":
 				return ec.fieldContext_Recipe_difficultyText(ctx, field)
 			case "ingredients":
@@ -11478,7 +11551,7 @@ func (ec *executionContext) unmarshalInputRecipeFilter(ctx context.Context, obj 
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"search", "originalId", "categories", "cuisine", "difficulty", "maxPrepTime", "ingredients", "authorID"}
+	fieldsInOrder := [...]string{"search", "originalId", "categories", "cuisine", "difficulty", "skillLevel", "maxPrepTime", "ingredients", "authorID"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -11520,6 +11593,13 @@ func (ec *executionContext) unmarshalInputRecipeFilter(ctx context.Context, obj 
 				return it, err
 			}
 			it.Difficulty = data
+		case "skillLevel":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("skillLevel"))
+			data, err := ec.unmarshalOSkillLevel2ᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋgraphqlᚋmodelᚐSkillLevel(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SkillLevel = data
 		case "maxPrepTime":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("maxPrepTime"))
 			data, err := ec.unmarshalOInt2ᚖint(ctx, v)
@@ -11554,7 +11634,7 @@ func (ec *executionContext) unmarshalInputRecipeInput(ctx context.Context, obj a
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"title", "description", "originalId", "categoryIDs", "cuisine", "prepTime", "cookTime", "servings", "difficulty", "ingredients", "steps", "nutritionInfo", "tags", "images"}
+	fieldsInOrder := [...]string{"title", "description", "originalId", "categoryIDs", "cuisine", "prepTime", "cookTime", "servings", "difficulty", "skillLevel", "ingredients", "steps", "nutritionInfo", "tags", "images"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -11624,6 +11704,13 @@ func (ec *executionContext) unmarshalInputRecipeInput(ctx context.Context, obj a
 				return it, err
 			}
 			it.Difficulty = data
+		case "skillLevel":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("skillLevel"))
+			data, err := ec.unmarshalOSkillLevel2ᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋgraphqlᚋmodelᚐSkillLevel(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.SkillLevel = data
 		case "ingredients":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("ingredients"))
 			data, err := ec.unmarshalNIngredientInput2ᚕᚖgithubᚗcomᚋcarldunhamᚋusefulᚑcookeryᚋinternalᚋgraphqlᚋmodelᚐIngredientInputᚄ(ctx, v)
@@ -12701,6 +12788,39 @@ func (ec *executionContext) _Recipe(ctx context.Context, sel ast.SelectionSet, o
 					}
 				}()
 				res = ec._Recipe_difficulty(ctx, field, obj)
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+		case "skillLevel":
+			field := field
+
+			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Recipe_skillLevel(ctx, field, obj)
 				return res
 			}
 

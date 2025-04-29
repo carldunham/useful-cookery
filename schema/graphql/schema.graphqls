@@ -124,7 +124,8 @@ input RecipeFilter {
   originalId: String
   categories: [ID!]
   cuisine: String
-  difficulty: SkillLevel
+  difficulty: SkillLevel @deprecated(reason: "Use skillLevel instead")
+  skillLevel: SkillLevel
   maxPrepTime: Int
   ingredients: [String!]
   authorID: ID
@@ -157,7 +158,8 @@ input RecipeInput {
   prepTime: Int
   cookTime: Int
   servings: Int
-  difficulty: SkillLevel
+  difficulty: SkillLevel @deprecated(reason: "Use skillLevel instead")
+  skillLevel: SkillLevel
   ingredients: [IngredientInput!]!
   steps: [StepInput!]!
   nutritionInfo: NutritionInfoInput
@@ -246,7 +248,8 @@ type Recipe {
   prepTime: Int
   cookTime: Int
   servings: Int
-  difficulty: SkillLevel
+  difficulty: SkillLevel @deprecated(reason: "Use skillLevel instead")
+  skillLevel: SkillLevel
   difficultyText: String
   ingredients: [DetailedIngredient!]
   steps: [Step!]

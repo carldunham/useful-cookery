@@ -3,6 +3,7 @@ package resolvers
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	gqlmodel "github.com/carldunham/useful-cookery/internal/graphql/model"
 	domainmodel "github.com/carldunham/useful-cookery/internal/model"
@@ -10,13 +11,15 @@ import (
 
 // Sentinel errors for recipe resolvers.
 var (
-	ErrInvalidSkillLevel = errors.New("invalid skill level")
+	ErrMissingDifficultyLevel = errors.New("missing difficulty level")
+	ErrInvalidDifficultyLevel = errors.New("invalid difficulty level")
+	ErrInvalidSkillLevel      = errors.New("invalid skill level")
 )
 
-// getDifficulty converts the string difficulty from the domain model to the GraphQL enum type.
-func (r *Resolver) difficulty(_ context.Context, recipe *domainmodel.Recipe) (*gqlmodel.SkillLevel, error) {
+// getDifficulty converts the string skillLevel from the domain model to the GraphQL enum type.
+func (r *Resolver) skillLevel(_ context.Context, recipe *domainmodel.Recipe) (*gqlmodel.SkillLevel, error) {
 	if recipe.Difficulty == "" {
-		return nil, ErrInvalidSkillLevel
+		return nil, ErrMissingDifficultyLevel
 	}
 
 	var skillLevel gqlmodel.SkillLevel
@@ -28,7 +31,7 @@ func (r *Resolver) difficulty(_ context.Context, recipe *domainmodel.Recipe) (*g
 	case "ADVANCED":
 		skillLevel = gqlmodel.SkillLevelAdvanced
 	default:
-		return nil, ErrInvalidSkillLevel
+		return nil, fmt.Errorf("%w: %s", ErrInvalidDifficultyLevel, recipe.Difficulty)
 	}
 
 	return &skillLevel, nil
@@ -48,8 +51,8 @@ func (r *recipeResolver) difficultyText(_ context.Context, obj *domainmodel.Reci
 	return &obj.DifficultyText, nil
 }
 
-// skillLevel converts the string skill level from the domain model to the GraphQL enum type.
-func (r *Resolver) skillLevel(_ context.Context, prefs *domainmodel.UserPreferences) (*gqlmodel.SkillLevel, error) {
+// skillLevelPref converts the string skill level from the domain model to the GraphQL enum type.
+func (r *Resolver) skillLevelPref(_ context.Context, prefs *domainmodel.UserPreferences) (*gqlmodel.SkillLevel, error) {
 	if prefs.SkillLevel == "" {
 		return nil, ErrInvalidSkillLevel
 	}
@@ -63,7 +66,7 @@ func (r *Resolver) skillLevel(_ context.Context, prefs *domainmodel.UserPreferen
 	case "ADVANCED":
 		skillLevel = gqlmodel.SkillLevelAdvanced
 	default:
-		return nil, ErrInvalidSkillLevel
+		return nil, fmt.Errorf("%w: %s", ErrInvalidSkillLevel, prefs.SkillLevel)
 	}
 
 	return &skillLevel, nil

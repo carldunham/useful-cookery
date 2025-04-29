@@ -140,7 +140,12 @@ func (r *queryResolver) FindSubstitutes(ctx context.Context, ingredientName stri
 
 // Difficulty is the resolver for the difficulty field.
 func (r *recipeResolver) Difficulty(ctx context.Context, obj *model1.Recipe) (*model.SkillLevel, error) {
-	return r.difficulty(ctx, obj)
+	return r.skillLevel(ctx, obj)
+}
+
+// SkillLevel is the resolver for the skillLevel field.
+func (r *recipeResolver) SkillLevel(ctx context.Context, obj *model1.Recipe) (*model.SkillLevel, error) {
+	return r.skillLevel(ctx, obj)
 }
 
 // DifficultyText is the resolver for the difficultyText field.
@@ -160,7 +165,7 @@ func (r *subscriptionResolver) NewReview(ctx context.Context, recipeID string) (
 
 // SkillLevel is the resolver for the skillLevel field.
 func (r *userPreferencesResolver) SkillLevel(ctx context.Context, obj *model1.UserPreferences) (*model.SkillLevel, error) {
-	return r.skillLevel(ctx, obj)
+	return r.skillLevelPref(ctx, obj)
 }
 
 // Mutation returns generated.MutationResolver implementation.

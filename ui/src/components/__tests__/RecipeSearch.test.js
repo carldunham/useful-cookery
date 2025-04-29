@@ -46,7 +46,8 @@ const SEARCH_RECIPES = gql`
           description
           prepTime
           cookTime
-          difficulty
+          difficultyText
+          skillLevel
           averageRating
           likes
           images {
@@ -93,7 +94,8 @@ const RECOMMEND_RECIPES = gql`
           description
           prepTime
           cookTime
-          difficulty
+          difficultyText
+          skillLevel
           averageRating
           likes
           images {
@@ -169,7 +171,8 @@ describe("RecipeSearch", () => {
                   description: "Classic Italian pasta dish",
                   prepTime: 15,
                   cookTime: 15,
-                  difficulty: "Medium",
+                  skillLevel: "INTERMEDIATE",
+                  difficultyText: "Medium",
                   averageRating: 4.8,
                   likes: 120,
                   images: [
@@ -199,7 +202,8 @@ describe("RecipeSearch", () => {
                   description: "Pasta with spring vegetables",
                   prepTime: 20,
                   cookTime: 15,
-                  difficulty: "Easy",
+                  skillLevel: "BEGINNER",
+                  difficultyText: "Easy",
                   averageRating: 4.5,
                   likes: 95,
                   images: [
@@ -255,7 +259,8 @@ describe("RecipeSearch", () => {
                   description: "Creamy pasta dish",
                   prepTime: 10,
                   cookTime: 15,
-                  difficulty: "Easy",
+                  skillLevel: "BEGINNER",
+                  difficultyText: "Easy",
                   averageRating: 4.7,
                   likes: 110,
                   images: [
@@ -379,7 +384,8 @@ describe("RecipeSearch", () => {
                   description: "Classic pizza with tomato and cheese",
                   prepTime: 30,
                   cookTime: 15,
-                  difficulty: "Medium",
+                  skillLevel: "INTERMEDIATE",
+                  difficultyText: "Medium",
                   averageRating: 4.9,
                   likes: 150,
                   images: [
@@ -409,7 +415,8 @@ describe("RecipeSearch", () => {
                   description: "Simple salad with tomato and mozzarella",
                   prepTime: 10,
                   cookTime: 0,
-                  difficulty: "Easy",
+                  skillLevel: "BEGINNER",
+                  difficultyText: "Easy",
                   averageRating: 4.6,
                   likes: 85,
                   images: [
@@ -624,7 +631,7 @@ describe("RecipeSearch", () => {
                     description: "Classic Italian pasta dish",
                     prepTime: 15,
                     cookTime: 15,
-                    difficulty: "Medium",
+                    difficultyText: "Medium",
                     averageRating: 4.8,
                     likes: 120,
                     images: [

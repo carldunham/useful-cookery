@@ -6,7 +6,8 @@ const RecipeCard = ({ recipe }) => {
     description,
     prepTime,
     cookTime,
-    difficulty,
+    difficultyText,
+    skillLevel,
     averageRating,
     images,
     author,
@@ -36,7 +37,9 @@ const RecipeCard = ({ recipe }) => {
         {author && <p className="recipe-author">By {author.name}</p>}
         <p className="recipe-description">{description}</p>
         <div className="recipe-meta">
-          {difficulty && <span className="recipe-difficulty">Difficulty: {difficulty}</span>}
+          {(skillLevel || difficultyText) && (
+            <span className="recipe-difficulty">Difficulty: {skillLevel || difficultyText}</span>
+          )}
           {totalTime && <span className="recipe-time">Time: {totalTime} min</span>}
           {averageRating && (
             <span className="recipe-rating">Rating: {averageRating.toFixed(1)}/5</span>

@@ -69,3 +69,5 @@ models:
     fields:
       difficultyText:
         resolver: true
+      skillLevel:
+        resolver: true

@@ -38,9 +38,12 @@ export type DetailedIngredient = {
   isOptional: Maybe<Scalars['Boolean']['output']>;
   name: Scalars['String']['output'];
   preparation: Maybe<Scalars['String']['output']>;
+  /** @deprecated Use units instead */
   quantity: Maybe<Scalars['Float']['output']>;
   substitutes: Maybe<Array<Scalars['String']['output']>>;
+  /** @deprecated Use units instead */
   unit: Maybe<Scalars['String']['output']>;
+  units: Maybe<Array<IngredientUnit>>;
 };
 
 export type Image = {
@@ -63,9 +66,28 @@ export type IngredientInput = {
   isOptional: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
   preparation: InputMaybe<Scalars['String']['input']>;
+  /** @deprecated Use units instead */
   quantity: InputMaybe<Scalars['Float']['input']>;
   substitutes: InputMaybe<Array<Scalars['String']['input']>>;
+  /** @deprecated Use units instead */
   unit: InputMaybe<Scalars['String']['input']>;
+  units: InputMaybe<Array<IngredientUnitInput>>;
+};
+
+export type IngredientUnit = {
+  __typename?: 'IngredientUnit';
+  id: Scalars['ID']['output'];
+  isMain: Scalars['Boolean']['output'];
+  system: Scalars['String']['output'];
+  unit: Scalars['String']['output'];
+  value: Scalars['Float']['output'];
+};
+
+export type IngredientUnitInput = {
+  isMain: Scalars['Boolean']['input'];
+  system: Scalars['String']['input'];
+  unit: Scalars['String']['input'];
+  value: Scalars['Float']['input'];
 };
 
 export type Mutation = {
@@ -277,7 +299,9 @@ export type Recipe = {
   createdAt: Maybe<Scalars['DateTime']['output']>;
   cuisine: Maybe<Scalars['String']['output']>;
   description: Maybe<Scalars['String']['output']>;
+  /** @deprecated Use skillLevel instead */
   difficulty: Maybe<SkillLevel>;
+  difficultyText: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   images: Maybe<Array<Image>>;
   ingredients: Maybe<Array<DetailedIngredient>>;
@@ -288,6 +312,7 @@ export type Recipe = {
   reviews: Maybe<Array<Review>>;
   savedBy: Maybe<Array<User>>;
   servings: Maybe<Scalars['Int']['output']>;
+  skillLevel: Maybe<SkillLevel>;
   steps: Maybe<Array<Step>>;
   tags: Maybe<Array<Scalars['String']['output']>>;
   title: Scalars['String']['output'];
@@ -311,11 +336,13 @@ export type RecipeFilter = {
   authorID: InputMaybe<Scalars['ID']['input']>;
   categories: InputMaybe<Array<Scalars['ID']['input']>>;
   cuisine: InputMaybe<Scalars['String']['input']>;
+  /** @deprecated Use skillLevel instead */
   difficulty: InputMaybe<SkillLevel>;
   ingredients: InputMaybe<Array<Scalars['String']['input']>>;
   maxPrepTime: InputMaybe<Scalars['Int']['input']>;
   originalId: InputMaybe<Scalars['String']['input']>;
   search: InputMaybe<Scalars['String']['input']>;
+  skillLevel: InputMaybe<SkillLevel>;
 };
 
 export type RecipeInput = {
@@ -323,6 +350,7 @@ export type RecipeInput = {
   cookTime: InputMaybe<Scalars['Int']['input']>;
   cuisine: InputMaybe<Scalars['String']['input']>;
   description: Scalars['String']['input'];
+  /** @deprecated Use skillLevel instead */
   difficulty: InputMaybe<SkillLevel>;
   images: InputMaybe<Array<ImageInput>>;
   ingredients: Array<IngredientInput>;
@@ -330,6 +358,7 @@ export type RecipeInput = {
   originalId: InputMaybe<Scalars['String']['input']>;
   prepTime: InputMaybe<Scalars['Int']['input']>;
   servings: InputMaybe<Scalars['Int']['input']>;
+  skillLevel: InputMaybe<SkillLevel>;
   steps: Array<StepInput>;
   tags: InputMaybe<Array<Scalars['String']['input']>>;
   title: Scalars['String']['input'];
@@ -452,7 +481,7 @@ export type SearchRecipesQueryVariables = Exact<{
 }>;
 
 
-export type SearchRecipesQuery = { __typename?: 'Query', searchRecipes: { __typename?: 'RecipeConnection', totalCount: number, edges: Array<{ __typename?: 'RecipeEdge', cursor: string, node: { __typename?: 'Recipe', id: string, title: string, description: string | null, prepTime: number | null, cookTime: number | null, difficulty: SkillLevel | null, averageRating: number | null, likes: number | null, images: Array<{ __typename?: 'Image', url: string, alt: string | null }> | null, author: { __typename?: 'User', name: string } | null, categories: Array<{ __typename?: 'Category', name: string }> | null } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor: string | null, endCursor: string | null } } };
+export type SearchRecipesQuery = { __typename?: 'Query', searchRecipes: { __typename?: 'RecipeConnection', totalCount: number, edges: Array<{ __typename?: 'RecipeEdge', cursor: string, node: { __typename?: 'Recipe', id: string, title: string, description: string | null, prepTime: number | null, cookTime: number | null, difficultyText: string | null, skillLevel: SkillLevel | null, averageRating: number | null, likes: number | null, images: Array<{ __typename?: 'Image', url: string, alt: string | null }> | null, author: { __typename?: 'User', name: string } | null, categories: Array<{ __typename?: 'Category', name: string }> | null } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor: string | null, endCursor: string | null } } };
 
 export type RecommendRecipesQueryVariables = Exact<{
   userID: InputMaybe<Scalars['ID']['input']>;
@@ -462,9 +491,28 @@ export type RecommendRecipesQueryVariables = Exact<{
 }>;
 
 
-export type RecommendRecipesQuery = { __typename?: 'Query', recommendRecipes: { __typename?: 'RecipeConnection', totalCount: number, edges: Array<{ __typename?: 'RecipeEdge', cursor: string, node: { __typename?: 'Recipe', id: string, title: string, description: string | null, prepTime: number | null, cookTime: number | null, difficulty: SkillLevel | null, averageRating: number | null, likes: number | null, images: Array<{ __typename?: 'Image', url: string, alt: string | null }> | null, author: { __typename?: 'User', name: string } | null, categories: Array<{ __typename?: 'Category', name: string }> | null } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor: string | null, endCursor: string | null } } };
+export type RecommendRecipesQuery = { __typename?: 'Query', recommendRecipes: { __typename?: 'RecipeConnection', totalCount: number, edges: Array<{ __typename?: 'RecipeEdge', cursor: string, node: { __typename?: 'Recipe', id: string, title: string, description: string | null, prepTime: number | null, cookTime: number | null, difficultyText: string | null, skillLevel: SkillLevel | null, averageRating: number | null, likes: number | null, images: Array<{ __typename?: 'Image', url: string, alt: string | null }> | null, author: { __typename?: 'User', name: string } | null, categories: Array<{ __typename?: 'Category', name: string }> | null } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor: string | null, endCursor: string | null } } };
 
-export type RecipeCardFragmentFragment = { __typename?: 'Recipe', id: string, title: string, description: string | null, prepTime: number | null, cookTime: number | null, difficulty: SkillLevel | null, averageRating: number | null, likes: number | null, images: Array<{ __typename?: 'Image', url: string, alt: string | null }> | null, author: { __typename?: 'User', name: string } | null, categories: Array<{ __typename?: 'Category', name: string }> | null };
+export type TestSearchRecipesQueryVariables = Exact<{
+  query: Scalars['String']['input'];
+  first: InputMaybe<Scalars['Int']['input']>;
+  after: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type TestSearchRecipesQuery = { __typename?: 'Query', searchRecipes: { __typename?: 'RecipeConnection', totalCount: number, edges: Array<{ __typename?: 'RecipeEdge', cursor: string, node: { __typename?: 'Recipe', id: string, title: string, description: string | null, prepTime: number | null, cookTime: number | null, difficultyText: string | null, skillLevel: SkillLevel | null, averageRating: number | null, likes: number | null, images: Array<{ __typename?: 'Image', url: string, alt: string | null }> | null, author: { __typename?: 'User', name: string } | null, categories: Array<{ __typename?: 'Category', name: string }> | null } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor: string | null, endCursor: string | null } } };
+
+export type TestRecommendRecipesQueryVariables = Exact<{
+  userID: InputMaybe<Scalars['ID']['input']>;
+  availableIngredients: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  first: InputMaybe<Scalars['Int']['input']>;
+  after: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type TestRecommendRecipesQuery = { __typename?: 'Query', recommendRecipes: { __typename?: 'RecipeConnection', totalCount: number, edges: Array<{ __typename?: 'RecipeEdge', cursor: string, node: { __typename?: 'Recipe', id: string, title: string, description: string | null, prepTime: number | null, cookTime: number | null, difficultyText: string | null, skillLevel: SkillLevel | null, averageRating: number | null, likes: number | null, images: Array<{ __typename?: 'Image', url: string, alt: string | null }> | null, author: { __typename?: 'User', name: string } | null, categories: Array<{ __typename?: 'Category', name: string }> | null } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor: string | null, endCursor: string | null } } };
+
+export type RecipeCardFragmentFragment = { __typename?: 'Recipe', id: string, title: string, description: string | null, prepTime: number | null, cookTime: number | null, difficultyText: string | null, skillLevel: SkillLevel | null, averageRating: number | null, likes: number | null, images: Array<{ __typename?: 'Image', url: string, alt: string | null }> | null, author: { __typename?: 'User', name: string } | null, categories: Array<{ __typename?: 'Category', name: string }> | null };
 
 export type ExampleSearchRecipesQueryVariables = Exact<{
   query: Scalars['String']['input'];
@@ -473,7 +521,7 @@ export type ExampleSearchRecipesQueryVariables = Exact<{
 }>;
 
 
-export type ExampleSearchRecipesQuery = { __typename?: 'Query', searchRecipes: { __typename?: 'RecipeConnection', totalCount: number, edges: Array<{ __typename?: 'RecipeEdge', cursor: string, node: { __typename?: 'Recipe', id: string, title: string, description: string | null, prepTime: number | null, cookTime: number | null, difficulty: SkillLevel | null, averageRating: number | null, likes: number | null, images: Array<{ __typename?: 'Image', url: string, alt: string | null }> | null, author: { __typename?: 'User', name: string } | null, categories: Array<{ __typename?: 'Category', name: string }> | null } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor: string | null, endCursor: string | null } } };
+export type ExampleSearchRecipesQuery = { __typename?: 'Query', searchRecipes: { __typename?: 'RecipeConnection', totalCount: number, edges: Array<{ __typename?: 'RecipeEdge', cursor: string, node: { __typename?: 'Recipe', id: string, title: string, description: string | null, prepTime: number | null, cookTime: number | null, difficultyText: string | null, skillLevel: SkillLevel | null, averageRating: number | null, likes: number | null, images: Array<{ __typename?: 'Image', url: string, alt: string | null }> | null, author: { __typename?: 'User', name: string } | null, categories: Array<{ __typename?: 'Category', name: string }> | null } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor: string | null, endCursor: string | null } } };
 
 export type ExampleRecommendRecipesQueryVariables = Exact<{
   userID: InputMaybe<Scalars['ID']['input']>;
@@ -483,7 +531,7 @@ export type ExampleRecommendRecipesQueryVariables = Exact<{
 }>;
 
 
-export type ExampleRecommendRecipesQuery = { __typename?: 'Query', recommendRecipes: { __typename?: 'RecipeConnection', totalCount: number, edges: Array<{ __typename?: 'RecipeEdge', cursor: string, node: { __typename?: 'Recipe', id: string, title: string, description: string | null, prepTime: number | null, cookTime: number | null, difficulty: SkillLevel | null, averageRating: number | null, likes: number | null, images: Array<{ __typename?: 'Image', url: string, alt: string | null }> | null, author: { __typename?: 'User', name: string } | null, categories: Array<{ __typename?: 'Category', name: string }> | null } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor: string | null, endCursor: string | null } } };
+export type ExampleRecommendRecipesQuery = { __typename?: 'Query', recommendRecipes: { __typename?: 'RecipeConnection', totalCount: number, edges: Array<{ __typename?: 'RecipeEdge', cursor: string, node: { __typename?: 'Recipe', id: string, title: string, description: string | null, prepTime: number | null, cookTime: number | null, difficultyText: string | null, skillLevel: SkillLevel | null, averageRating: number | null, likes: number | null, images: Array<{ __typename?: 'Image', url: string, alt: string | null }> | null, author: { __typename?: 'User', name: string } | null, categories: Array<{ __typename?: 'Category', name: string }> | null } }>, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor: string | null, endCursor: string | null } } };
 
 export const RecipeCardFragmentFragmentDoc = gql`
     fragment RecipeCardFragment on Recipe {
@@ -492,7 +540,8 @@ export const RecipeCardFragmentFragmentDoc = gql`
   description
   prepTime
   cookTime
-  difficulty
+  difficultyText
+  skillLevel
   averageRating
   likes
   images {
@@ -517,7 +566,8 @@ export const SearchRecipesDocument = gql`
         description
         prepTime
         cookTime
-        difficulty
+        difficultyText
+        skillLevel
         averageRating
         likes
         images {
@@ -593,7 +643,8 @@ export const RecommendRecipesDocument = gql`
         description
         prepTime
         cookTime
-        difficulty
+        difficultyText
+        skillLevel
         averageRating
         likes
         images {
@@ -655,6 +706,156 @@ export type RecommendRecipesQueryHookResult = ReturnType<typeof useRecommendReci
 export type RecommendRecipesLazyQueryHookResult = ReturnType<typeof useRecommendRecipesLazyQuery>;
 export type RecommendRecipesSuspenseQueryHookResult = ReturnType<typeof useRecommendRecipesSuspenseQuery>;
 export type RecommendRecipesQueryResult = Apollo.QueryResult<RecommendRecipesQuery, RecommendRecipesQueryVariables>;
+export const TestSearchRecipesDocument = gql`
+    query TestSearchRecipes($query: String!, $first: Int, $after: String) {
+  searchRecipes(query: $query, first: $first, after: $after) {
+    edges {
+      node {
+        id
+        title
+        description
+        prepTime
+        cookTime
+        difficultyText
+        skillLevel
+        averageRating
+        likes
+        images {
+          url
+          alt
+        }
+        author {
+          name
+        }
+        categories {
+          name
+        }
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useTestSearchRecipesQuery__
+ *
+ * To run a query within a React component, call `useTestSearchRecipesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTestSearchRecipesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTestSearchRecipesQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *   },
+ * });
+ */
+export function useTestSearchRecipesQuery(baseOptions: Apollo.QueryHookOptions<TestSearchRecipesQuery, TestSearchRecipesQueryVariables> & ({ variables: TestSearchRecipesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TestSearchRecipesQuery, TestSearchRecipesQueryVariables>(TestSearchRecipesDocument, options);
+      }
+export function useTestSearchRecipesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TestSearchRecipesQuery, TestSearchRecipesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TestSearchRecipesQuery, TestSearchRecipesQueryVariables>(TestSearchRecipesDocument, options);
+        }
+export function useTestSearchRecipesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<TestSearchRecipesQuery, TestSearchRecipesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<TestSearchRecipesQuery, TestSearchRecipesQueryVariables>(TestSearchRecipesDocument, options);
+        }
+export type TestSearchRecipesQueryHookResult = ReturnType<typeof useTestSearchRecipesQuery>;
+export type TestSearchRecipesLazyQueryHookResult = ReturnType<typeof useTestSearchRecipesLazyQuery>;
+export type TestSearchRecipesSuspenseQueryHookResult = ReturnType<typeof useTestSearchRecipesSuspenseQuery>;
+export type TestSearchRecipesQueryResult = Apollo.QueryResult<TestSearchRecipesQuery, TestSearchRecipesQueryVariables>;
+export const TestRecommendRecipesDocument = gql`
+    query TestRecommendRecipes($userID: ID, $availableIngredients: [String!], $first: Int, $after: String) {
+  recommendRecipes(
+    userID: $userID
+    availableIngredients: $availableIngredients
+    first: $first
+    after: $after
+  ) {
+    edges {
+      node {
+        id
+        title
+        description
+        prepTime
+        cookTime
+        difficultyText
+        skillLevel
+        averageRating
+        likes
+        images {
+          url
+          alt
+        }
+        author {
+          name
+        }
+        categories {
+          name
+        }
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    totalCount
+  }
+}
+    `;
+
+/**
+ * __useTestRecommendRecipesQuery__
+ *
+ * To run a query within a React component, call `useTestRecommendRecipesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTestRecommendRecipesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTestRecommendRecipesQuery({
+ *   variables: {
+ *      userID: // value for 'userID'
+ *      availableIngredients: // value for 'availableIngredients'
+ *      first: // value for 'first'
+ *      after: // value for 'after'
+ *   },
+ * });
+ */
+export function useTestRecommendRecipesQuery(baseOptions?: Apollo.QueryHookOptions<TestRecommendRecipesQuery, TestRecommendRecipesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TestRecommendRecipesQuery, TestRecommendRecipesQueryVariables>(TestRecommendRecipesDocument, options);
+      }
+export function useTestRecommendRecipesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TestRecommendRecipesQuery, TestRecommendRecipesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TestRecommendRecipesQuery, TestRecommendRecipesQueryVariables>(TestRecommendRecipesDocument, options);
+        }
+export function useTestRecommendRecipesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<TestRecommendRecipesQuery, TestRecommendRecipesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<TestRecommendRecipesQuery, TestRecommendRecipesQueryVariables>(TestRecommendRecipesDocument, options);
+        }
+export type TestRecommendRecipesQueryHookResult = ReturnType<typeof useTestRecommendRecipesQuery>;
+export type TestRecommendRecipesLazyQueryHookResult = ReturnType<typeof useTestRecommendRecipesLazyQuery>;
+export type TestRecommendRecipesSuspenseQueryHookResult = ReturnType<typeof useTestRecommendRecipesSuspenseQuery>;
+export type TestRecommendRecipesQueryResult = Apollo.QueryResult<TestRecommendRecipesQuery, TestRecommendRecipesQueryVariables>;
 export const ExampleSearchRecipesDocument = gql`
     query ExampleSearchRecipes($query: String!, $first: Int, $after: String) {
   searchRecipes(query: $query, first: $first, after: $after) {
