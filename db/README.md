@@ -6,7 +6,7 @@ This directory contains database migration files for the Useful Cookery applicat
 
 Migration files are stored in the `migrations` directory and follow the naming convention:
 
-```
+```bash
 {version}_{name}.{up|down}.sql
 ```
 

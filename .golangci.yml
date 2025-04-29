@@ -29,6 +29,9 @@ linters-settings:
     min-name-length: 3
     # List of variable names that should be ignored completely.
     ignore-names:
+      - i
+      - j
+      - k
       - db
       - tx
       - id

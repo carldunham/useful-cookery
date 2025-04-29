@@ -23,12 +23,20 @@ type ImageInput struct {
 }
 
 type IngredientInput struct {
-	Name        string   `json:"name"`
-	Quantity    *float64 `json:"quantity,omitempty"`
-	Unit        *string  `json:"unit,omitempty"`
-	Preparation *string  `json:"preparation,omitempty"`
-	Substitutes []string `json:"substitutes,omitempty"`
-	IsOptional  *bool    `json:"isOptional,omitempty"`
+	Name        string                 `json:"name"`
+	Units       []*IngredientUnitInput `json:"units,omitempty"`
+	Quantity    *float64               `json:"quantity,omitempty"`
+	Unit        *string                `json:"unit,omitempty"`
+	Preparation *string                `json:"preparation,omitempty"`
+	Substitutes []string               `json:"substitutes,omitempty"`
+	IsOptional  *bool                  `json:"isOptional,omitempty"`
+}
+
+type IngredientUnitInput struct {
+	System string  `json:"system"`
+	Value  float64 `json:"value"`
+	Unit   string  `json:"unit"`
+	IsMain bool    `json:"isMain"`
 }
 
 type Mutation struct {

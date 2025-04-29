@@ -10,6 +10,7 @@ import (
 	"github.com/carldunham/useful-cookery/internal/troff"
 )
 
+//nolint:funlen // Test function with many assertions to verify parsing correctness.
 func TestParse_BasicRecipe(t *testing.T) {
 	t.Parallel()
 	input := `.RH MOD.RECIPES-SOURCE RECIPE-ID D "22 Dec 83"
@@ -58,10 +59,34 @@ Test Organization, Test City`
 
 	// Check ingredients
 	assert.Len(t, recipe.Ingredients, 2, "Should have 2 ingredients")
+
+	// Check first ingredient (sugar with imperial and metric units)
 	assert.Equal(t, "sugar", recipe.Ingredients[0].Name, "First ingredient should be 'sugar'")
 	assert.Contains(t, recipe.Ingredients[0].Unit, "1 cup", "First ingredient unit should contain '1 cup'")
+	assert.InEpsilon(t, 1.0, recipe.Ingredients[0].Quantity, 0.001, "First ingredient quantity should be 1.0")
+
+	// Check units for first ingredient
+	assert.Len(t, recipe.Ingredients[0].Units, 2, "First ingredient should have 2 units")
+	assert.Equal(t, "imperial", recipe.Ingredients[0].Units[0].System, "First unit should be imperial")
+	assert.Equal(t, "1 cup", recipe.Ingredients[0].Units[0].Unit, "First unit should be '1 cup'")
+	assert.InEpsilon(t, 1.0, recipe.Ingredients[0].Units[0].Value, 0.001, "First unit value should be 1.0")
+	assert.True(t, recipe.Ingredients[0].Units[0].IsMain, "First unit should be marked as main")
+
+	assert.Equal(t, "metric", recipe.Ingredients[0].Units[1].System, "Second unit should be metric")
+	assert.Equal(t, "200g", recipe.Ingredients[0].Units[1].Unit, "Second unit should be '200g'")
+	assert.False(t, recipe.Ingredients[0].Units[1].IsMain, "Second unit should not be marked as main")
+
+	// Check second ingredient (eggs with only imperial unit)
 	assert.Equal(t, "eggs", recipe.Ingredients[1].Name, "Second ingredient should be 'eggs'")
 	assert.Contains(t, recipe.Ingredients[1].Unit, "2", "Second ingredient unit should contain '2'")
+	assert.InEpsilon(t, 2.0, recipe.Ingredients[1].Quantity, 0.001, "Second ingredient quantity should be 2.0")
+
+	// Check units for second ingredient
+	assert.Len(t, recipe.Ingredients[1].Units, 1, "Second ingredient should have 1 unit")
+	assert.Equal(t, "imperial", recipe.Ingredients[1].Units[0].System, "Unit should be imperial")
+	assert.Equal(t, "2", recipe.Ingredients[1].Units[0].Unit, "Unit should be '2'")
+	assert.InEpsilon(t, 2.0, recipe.Ingredients[1].Units[0].Value, 0.001, "Unit value should be 2.0")
+	assert.True(t, recipe.Ingredients[1].Units[0].IsMain, "Unit should be marked as main")
 
 	// Check steps
 	assert.Len(t, recipe.Steps, 2, "Should have 2 steps")
@@ -129,21 +154,40 @@ Test University, Amsterdam`
 
 	// Check ingredients
 	expectedIngredients := []struct {
-		name             string
-		quantityContains string
+		name          string
+		imperialUnit  string
+		imperialValue float64
+		hasMetric     bool
+		metricUnit    string
 	}{
-		{"sugar", "1 1/2 cups"},
-		{"vanilla sugar", "2 Tbsp"},
-		{"milk", "2 cups"},
-		{"egg yolks", "9"},
-		{"95% grain alcohol", "1 1/2 cups"},
+		{"sugar", "1 1/2 cups", 1.5, true, "300 g"},
+		{"vanilla sugar", "2 Tbsp", 2.0, true, "25 g"},
+		{"milk", "2 cups", 2.0, true, "500 ml"},
+		{"egg yolks", "9", 9.0, false, ""},
+		{"95% grain alcohol", "1 1/2 cups", 1.5, true, "350 ml"},
 	}
 
 	assert.Len(t, recipe.Ingredients, len(expectedIngredients), "Should have correct number of ingredients")
 
 	for i, ing := range expectedIngredients {
 		assert.Equal(t, ing.name, recipe.Ingredients[i].Name, "Ingredient name should match")
-		assert.Contains(t, recipe.Ingredients[i].Unit, ing.quantityContains, "Ingredient unit should contain quantity")
+		assert.Contains(t, recipe.Ingredients[i].Unit, ing.imperialUnit, "Ingredient unit should contain imperial quantity")
+
+		// Check imperial unit
+		assert.Equal(t, "imperial", recipe.Ingredients[i].Units[0].System, "First unit should be imperial")
+		assert.Equal(t, ing.imperialUnit, recipe.Ingredients[i].Units[0].Unit, "Imperial unit should match")
+		assert.InEpsilon(t, ing.imperialValue, recipe.Ingredients[i].Units[0].Value, 0.001, "Imperial value should match")
+		assert.True(t, recipe.Ingredients[i].Units[0].IsMain, "Imperial unit should be marked as main")
+
+		// Check metric unit if present
+		if ing.hasMetric {
+			assert.Len(t, recipe.Ingredients[i].Units, 2, "Ingredient should have 2 units")
+			assert.Equal(t, "metric", recipe.Ingredients[i].Units[1].System, "Second unit should be metric")
+			assert.Equal(t, ing.metricUnit, recipe.Ingredients[i].Units[1].Unit, "Metric unit should match")
+			assert.False(t, recipe.Ingredients[i].Units[1].IsMain, "Metric unit should not be marked as main")
+		} else {
+			assert.Len(t, recipe.Ingredients[i].Units, 1, "Ingredient should have 1 unit")
+		}
 	}
 
 	// Check steps
@@ -154,7 +198,9 @@ Test University, Amsterdam`
 		recipe.Steps[4].Description, "Last step description should match")
 }
 
-// TestParse_RecipeWithRatings tests parsing a recipe with ratings information
+// TestParse_RecipeWithRatings tests parsing a recipe with ratings information.
+//
+//nolint:funlen // Test function with many assertions to verify parsing correctness.
 func TestParse_RecipeWithRatings(t *testing.T) {
 	t.Parallel()
 	input := `.RH MOD.RECIPES-SOURCE RECIPE-ID D "22 Dec 83"
@@ -204,11 +250,27 @@ jane@example.com`
 
 	// Check first ingredient with numeric quantity
 	assert.Equal(t, "flour", recipe.Ingredients[0].Name, "First ingredient should be 'flour'")
-	assert.Equal(t, 2.0, recipe.Ingredients[0].Quantity, "First ingredient quantity should be 2.0")
+	assert.InEpsilon(t, 2.0, recipe.Ingredients[0].Quantity, 0.001, "First ingredient quantity should be 2.0")
+
+	// Check units for first ingredient
+	assert.Len(t, recipe.Ingredients[0].Units, 2, "First ingredient should have 2 units")
+	assert.Equal(t, "imperial", recipe.Ingredients[0].Units[0].System, "First unit should be imperial")
+	assert.Equal(t, "2 cups", recipe.Ingredients[0].Units[0].Unit, "First unit should be '2 cups'")
+	assert.InEpsilon(t, 2.0, recipe.Ingredients[0].Units[0].Value, 0.001, "First unit value should be 2.0")
+	assert.Equal(t, "metric", recipe.Ingredients[0].Units[1].System, "Second unit should be metric")
+	assert.Equal(t, "250g", recipe.Ingredients[0].Units[1].Unit, "Second unit should be '250g'")
 
 	// Check ingredient with fraction
 	assert.Equal(t, "cocoa powder", recipe.Ingredients[2].Name, "Third ingredient should be 'cocoa powder'")
-	assert.Equal(t, 0.5, recipe.Ingredients[2].Quantity, "Third ingredient quantity should be 0.5")
+	assert.InEpsilon(t, 0.5, recipe.Ingredients[2].Quantity, 0.001, "Third ingredient quantity should be 0.5")
+
+	// Check units for third ingredient
+	assert.Len(t, recipe.Ingredients[2].Units, 2, "Third ingredient should have 2 units")
+	assert.Equal(t, "imperial", recipe.Ingredients[2].Units[0].System, "First unit should be imperial")
+	assert.Equal(t, "1/2 cup", recipe.Ingredients[2].Units[0].Unit, "First unit should be '1/2 cup'")
+	assert.InEpsilon(t, 0.5, recipe.Ingredients[2].Units[0].Value, 0.001, "First unit value should be 0.5")
+	assert.Equal(t, "metric", recipe.Ingredients[2].Units[1].System, "Second unit should be metric")
+	assert.Equal(t, "50g", recipe.Ingredients[2].Units[1].Unit, "Second unit should be '50g'")
 }
 
 func TestParse_EmptyInput(t *testing.T) {

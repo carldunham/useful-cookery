@@ -26,7 +26,9 @@ import (
 // Database defines the database operations needed by the migration tool.
 type Database interface {
 	GetRecipe(ctx context.Context, recipeID string) (*model.Recipe, error)
+	GetRecipes(ctx context.Context, filter map[string]string, first, offset int) ([]*model.Recipe, error)
 	CreateRecipe(ctx context.Context, recipe *model.Recipe) error
+	UpdateRecipe(ctx context.Context, recipe *model.Recipe) error
 }
 
 // Constants.
@@ -38,17 +40,18 @@ const (
 //nolint:gochecknoglobals // Using cobra command pattern which requires globals.
 var (
 	// Global flags.
-	verbose       bool
-	dryRun        bool
-	skipExisting  bool
-	maxErrors     int
-	outputPath    string
-	migrationName string
-	steps         int
+	verbose      bool
+	dryRun       bool
+	skipExisting bool
+	maxErrors    int
+	outputPath   string
+	steps        int
 
 	// Error definitions.
-	errMaxErrorsReached  = errors.New("maximum error count reached, terminating")
-	errUnsupportedDBType = errors.New("unsupported database type for migration")
+	errMaxErrorsReached              = errors.New("maximum error count reached, terminating")
+	errUnsupportedDBType             = errors.New("unsupported database type for migration")
+	errNoMigrationFound              = errors.New("no migration file found for version")
+	errUnsupportedDBTypeForMigration = errors.New("migrations only supported for postgres database type")
 
 	// Root command.
 	rootCmd = &cobra.Command{
@@ -57,7 +60,7 @@ var (
 		Long:  "A tool for converting TROFF recipes to structured data and managing database schema migrations",
 	}
 
-	// TROFF recipe migration commands
+	// TROFF recipe migration commands.
 	troffCmd = &cobra.Command{
 		Use:   "troff",
 		Short: "TROFF recipe migration commands",
@@ -91,14 +94,14 @@ var (
 		RunE:  runBatch,
 	}
 
-	// Database schema migration commands
+	// Database schema migration commands.
 	dbCmd = &cobra.Command{
 		Use:   "db",
 		Short: "Database schema migration commands",
 		Long:  "Commands for managing database schema migrations",
 	}
 
-	// Create migration command
+	// Create migration command.
 	createCmd = &cobra.Command{
 		Use:   "create [name]",
 		Short: "Create a new migration",
@@ -107,7 +110,7 @@ var (
 		RunE:  runCreate,
 	}
 
-	// Up command
+	// Up command.
 	upCmd = &cobra.Command{
 		Use:   "up",
 		Short: "Run migrations up",
@@ -115,7 +118,7 @@ var (
 		RunE:  runUp,
 	}
 
-	// Down command
+	// Down command.
 	downCmd = &cobra.Command{
 		Use:   "down",
 		Short: "Run migrations down",
@@ -123,7 +126,7 @@ var (
 		RunE:  runDown,
 	}
 
-	// Status command
+	// Status command.
 	statusCmd = &cobra.Command{
 		Use:   "status",
 		Short: "Show migration status",
@@ -214,6 +217,64 @@ func runTest(_ *cobra.Command, args []string) error {
 	return nil
 }
 
+// checkExistingRecipe checks if a recipe already exists in the database.
+func checkExistingRecipe(db Database, recipe *model.Recipe) (*model.Recipe, bool) {
+	// First try to find by ID
+	existingRecipe, err := db.GetRecipe(context.Background(), recipe.ID)
+	if err == nil && existingRecipe != nil {
+		return existingRecipe, true
+	}
+
+	// If not found by ID, try to find by OriginalID
+	recipes, err := db.GetRecipes(context.Background(), map[string]string{"originalID": recipe.OriginalID}, 1, 0)
+	if err == nil && len(recipes) > 0 {
+		existingRecipe := recipes[0]
+		// Use the existing ID
+		recipe.ID = existingRecipe.ID
+		return existingRecipe, true
+	}
+
+	return nil, false
+}
+
+// saveRecipeToDatabase saves or updates a recipe in the database.
+func saveRecipeToDatabase(db Database, recipe *model.Recipe, shouldUpdate bool, existingRecipe *model.Recipe) error {
+	// Set creation and update timestamps.
+	now := time.Now()
+	if shouldUpdate {
+		recipe.CreatedAt = existingRecipe.CreatedAt
+		recipe.UpdatedAt = now
+	} else {
+		recipe.CreatedAt = now
+		recipe.UpdatedAt = now
+	}
+
+	// Save the recipe to the database.
+	if shouldUpdate {
+		if err := db.UpdateRecipe(context.Background(), recipe); err != nil {
+			return fmt.Errorf("failed to update recipe in database: %w", err)
+		}
+		fmt.Println(
+			"Recipe updated in database. ",
+			"id:", recipe.ID,
+			"originalID:", recipe.OriginalID,
+			"title:", recipe.Title,
+		)
+	} else {
+		if err := db.CreateRecipe(context.Background(), recipe); err != nil {
+			return fmt.Errorf("failed to save recipe to database: %w", err)
+		}
+		fmt.Println(
+			"Recipe saved to database. ",
+			"id:", recipe.ID,
+			"originalID:", recipe.OriginalID,
+			"title:", recipe.Title,
+		)
+	}
+
+	return nil
+}
+
 // runSave parses a single TROFF file and saves it to the database.
 func runSave(_ *cobra.Command, args []string) error {
 	filePath := args[0]
@@ -237,27 +298,17 @@ func runSave(_ *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to connect to database: %w", err)
 	}
 
-	// Check if recipe already exists.
-	if skipExisting {
-		existingRecipe, err := db.GetRecipe(context.Background(), recipe.ID)
-		if err == nil && existingRecipe != nil {
-			fmt.Println("Recipe already exists, skipping", "id", recipe.ID)
-			return nil
-		}
+	// Check if recipe already exists
+	existingRecipe, shouldUpdate := checkExistingRecipe(db, &recipe)
+
+	// Skip if requested and recipe exists
+	if skipExisting && shouldUpdate {
+		fmt.Println("Recipe already exists, skipping", "id", recipe.ID, "originalID", recipe.OriginalID)
+		return nil
 	}
 
-	// Set creation and update timestamps.
-	now := time.Now()
-	recipe.CreatedAt = now
-	recipe.UpdatedAt = now
-
-	// Save the recipe to the database.
-	if err := db.CreateRecipe(context.Background(), &recipe); err != nil {
-		return fmt.Errorf("failed to save recipe to database: %w", err)
-	}
-
-	fmt.Println("Recipe saved to database. ", "id:", recipe.ID, "originalID:", recipe.OriginalID, "title:", recipe.Title)
-	return nil
+	// Save or update the recipe
+	return saveRecipeToDatabase(db, &recipe, shouldUpdate, existingRecipe)
 }
 
 // runBatch parses all TROFF files in a directory and saves them to the database.
@@ -355,12 +406,15 @@ func runBatch(_ *cobra.Command, args []string) error {
 	fmt.Println("Batch processing complete",
 		"successful", successCount,
 		"skipped", skipCount,
-		"errors", errorCount)
+		"errors", errorCount,
+	)
 	return nil
 }
 
 // connectToDatabase connects to the database.
-func connectToDatabase() (Database, error) { //nolint:ireturn // Intentionally returning the Database abstraction
+//
+//nolint:ireturn,nolintlint // Intentionally returning the Database abstraction.
+func connectToDatabase() (Database, error) {
 	// Load configuration.
 	cfg, err := config.Load()
 	if err != nil {
@@ -387,14 +441,40 @@ func connectToDatabase() (Database, error) { //nolint:ireturn // Intentionally r
 	return db, nil
 }
 
-// printRecipe logs a recipe in a readable format.
-func printRecipe(recipe model.Recipe) {
+// printRecipeBasicInfo prints the basic information of a recipe.
+func printRecipeBasicInfo(recipe model.Recipe) {
 	fmt.Println("Recipe details", "id:", recipe.ID, "originalID:", recipe.OriginalID, "title:", recipe.Title)
 
 	if recipe.Description != "" {
 		fmt.Println("Description", "text", recipe.Description)
 	}
 
+	if recipe.Difficulty != "" {
+		fmt.Println("Difficulty", "level", recipe.Difficulty)
+	}
+
+	if recipe.Cuisine != "" {
+		fmt.Println("Cuisine", "type", recipe.Cuisine)
+	}
+}
+
+// printRecipeTimingInfo prints the timing information of a recipe.
+func printRecipeTimingInfo(recipe model.Recipe) {
+	if recipe.PrepTime > 0 {
+		fmt.Println("Prep Time", "minutes", recipe.PrepTime)
+	}
+
+	if recipe.CookTime > 0 {
+		fmt.Println("Cook Time", "minutes", recipe.CookTime)
+	}
+
+	if recipe.Servings > 0 {
+		fmt.Println("Servings", "count", recipe.Servings)
+	}
+}
+
+// printRecipeCategories prints the categories of a recipe.
+func printRecipeCategories(recipe model.Recipe) {
 	if len(recipe.Categories) > 0 {
 		categories := make([]string, 0, len(recipe.Categories))
 		for _, category := range recipe.Categories {
@@ -406,24 +486,55 @@ func printRecipe(recipe model.Recipe) {
 	if recipe.Author != nil {
 		fmt.Println("Author", "name", recipe.Author.Name)
 	}
+}
 
+// printRecipeIngredients prints the ingredients of a recipe.
+func printRecipeIngredients(recipe model.Recipe) {
 	if len(recipe.Ingredients) > 0 {
 		fmt.Println("Ingredients")
 		for _, ingredient := range recipe.Ingredients {
 			fmt.Println("- Ingredient", "unit", ingredient.Unit, "name", ingredient.Name)
+
+			if len(ingredient.Units) > 0 {
+				fmt.Println("  Units:")
+				for _, unit := range ingredient.Units {
+					fmt.Printf("  - %s: %g %s (system: %s, main: %t)\n",
+						unit.ID, unit.Value, unit.Unit, unit.System, unit.IsMain)
+				}
+			}
 		}
 	}
+}
 
+// printRecipeSteps prints the steps of a recipe.
+func printRecipeSteps(recipe model.Recipe) {
 	if len(recipe.Steps) > 0 {
 		fmt.Println("Steps")
 		for _, step := range recipe.Steps {
 			fmt.Println("- Step", "number", step.OrderIndex+1, "description", step.Description)
 		}
 	}
+}
 
+// printRecipeNotesAndTags prints the notes and tags of a recipe.
+func printRecipeNotesAndTags(recipe model.Recipe) {
 	if recipe.Notes != "" {
 		fmt.Println("Notes", "text", recipe.Notes)
 	}
+
+	if len(recipe.Tags) > 0 {
+		fmt.Println("Tags", "list", recipe.Tags)
+	}
+}
+
+// printRecipe logs a recipe in a readable format.
+func printRecipe(recipe model.Recipe) {
+	printRecipeBasicInfo(recipe)
+	printRecipeTimingInfo(recipe)
+	printRecipeCategories(recipe)
+	printRecipeIngredients(recipe)
+	printRecipeSteps(recipe)
+	printRecipeNotesAndTags(recipe)
 }
 
 // formatRecipeAsText formats a recipe as plain text.
@@ -477,7 +588,8 @@ func runCreate(_ *cobra.Command, args []string) error {
 	name := args[0]
 
 	// Create migrations directory if it doesn't exist
-	if err := os.MkdirAll("db/migrations", 0755); err != nil {
+	const dirPermission = 0700 // Owner can read, write, and execute
+	if err := os.MkdirAll("db/migrations", dirPermission); err != nil {
 		return fmt.Errorf("failed to create migrations directory: %w", err)
 	}
 
@@ -511,7 +623,7 @@ func getDatabaseURL() (string, error) {
 
 	// Check database type
 	if cfg.Database.Type != "postgres" {
-		return "", fmt.Errorf("migrations only supported for postgres database type, got: %s", cfg.Database.Type)
+		return "", fmt.Errorf("%w: got %s", errUnsupportedDBTypeForMigration, cfg.Database.Type)
 	}
 
 	return cfg.Database.ConnectionString, nil
@@ -535,19 +647,19 @@ func createMigrate() (*migrate.Migrate, error) {
 
 // runUp runs migrations up.
 func runUp(_ *cobra.Command, _ []string) error {
-	m, err := createMigrate()
+	mig, err := createMigrate()
 	if err != nil {
 		return err
 	}
-	defer m.Close()
+	defer mig.Close()
 
 	if steps > 0 {
-		if err := m.Steps(steps); err != nil && err != migrate.ErrNoChange {
+		if err := mig.Steps(steps); err != nil && !errors.Is(err, migrate.ErrNoChange) {
 			return fmt.Errorf("failed to apply migrations: %w", err)
 		}
 		fmt.Printf("Applied %d migrations\n", steps)
 	} else {
-		if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		if err := mig.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
 			return fmt.Errorf("failed to apply migrations: %w", err)
 		}
 		fmt.Println("Applied all migrations")
@@ -558,19 +670,19 @@ func runUp(_ *cobra.Command, _ []string) error {
 
 // runDown runs migrations down.
 func runDown(_ *cobra.Command, _ []string) error {
-	m, err := createMigrate()
+	mig, err := createMigrate()
 	if err != nil {
 		return err
 	}
-	defer m.Close()
+	defer mig.Close()
 
 	if steps > 0 {
-		if err := m.Steps(-steps); err != nil && err != migrate.ErrNoChange {
+		if err := mig.Steps(-steps); err != nil && !errors.Is(err, migrate.ErrNoChange) {
 			return fmt.Errorf("failed to revert migrations: %w", err)
 		}
 		fmt.Printf("Reverted %d migrations\n", steps)
 	} else {
-		if err := m.Down(); err != nil && err != migrate.ErrNoChange {
+		if err := mig.Down(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
 			return fmt.Errorf("failed to revert migrations: %w", err)
 		}
 		fmt.Println("Reverted all migrations")
@@ -581,15 +693,15 @@ func runDown(_ *cobra.Command, _ []string) error {
 
 // runStatus shows the current migration version.
 func runStatus(_ *cobra.Command, _ []string) error {
-	m, err := createMigrate()
+	mig, err := createMigrate()
 	if err != nil {
 		return err
 	}
-	defer m.Close()
+	defer mig.Close()
 
-	version, dirty, err := m.Version()
+	version, dirty, err := mig.Version()
 	if err != nil {
-		if err == migrate.ErrNilVersion {
+		if errors.Is(err, migrate.ErrNilVersion) {
 			fmt.Println("No migrations applied")
 			return nil
 		}
@@ -624,7 +736,9 @@ func getMigrationName(version uint) (string, error) {
 		var fileVersion uint
 		parts := strings.Split(file.Name(), "_")
 		if len(parts) > 0 {
-			fmt.Sscanf(parts[0], "%d", &fileVersion)
+			if _, err := fmt.Sscanf(parts[0], "%d", &fileVersion); err != nil {
+				continue
+			}
 			if fileVersion == version && strings.HasSuffix(file.Name(), ".up.sql") {
 				// Extract the name part from the filename
 				namePart := strings.Join(parts[1:], "_")
@@ -633,6 +747,5 @@ func getMigrationName(version uint) (string, error) {
 			}
 		}
 	}
-
-	return "", fmt.Errorf("no migration file found for version %d", version)
+	return "", fmt.Errorf("%w: %d", errNoMigrationFound, version)
 }

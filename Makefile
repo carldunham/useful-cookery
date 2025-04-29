@@ -82,7 +82,7 @@ fix:
 # Generate code as needed
 generate:
 	@echo "Generating Go code..."
-	$(GOGEN)
+	$(GOGEN) ./...
 
 # Tidy up dependencies
 tidy:

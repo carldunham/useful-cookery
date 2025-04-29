@@ -98,9 +98,16 @@ useful-cookery/
 - Ensure all comments end with a period for consistency
 - Keep function cyclomatic complexity below 10 to maintain readability
   - For complex functions that cannot be easily refactored (e.g., GraphQL resolvers with multiple fallback strategies), use `//nolint:cyclop` with an explanatory comment
+  - Break down complex conditional logic into separate helper functions with descriptive names
+  - Extract repeated patterns into helper functions, especially for database operations
 - Keep function length below 60 lines to maintain readability
   - For functions that necessarily need to be longer (e.g., database operations with many fields), use `//nolint:funlen` with an explanatory comment
   - Consider if the function can be split into smaller helper functions before adding a nolint directive
+  - For CRUD operations, extract common patterns into helper functions (e.g., separate functions for handling ingredients, steps, etc.)
+- Avoid code duplication, especially in database operations:
+  - Identify common patterns in database operations and extract them into reusable helper functions
+  - For similar operations on different entities (e.g., ingredients and steps), create generic helper functions
+  - When similar code appears in multiple methods (e.g., CreateX and UpdateX), extract the common logic
 - Avoid variable names that are too short for their scope, with exceptions for standard Go idioms like `db`, `tx`, `id`, `ok`, and `err`
 - Use interfaces for defining behavior, not for returning values
 - Prefer dependency injection through interfaces, but have factory functions return concrete implementations
@@ -115,6 +122,20 @@ useful-cookery/
 - Use constants for string literals that are used in multiple places, especially for filter keys, error messages, and other identifiers
 - When handling errors that don't affect the main return value (e.g., errors from counting operations when you already have results to return), log the error and continue rather than returning nil
 - Document any intentional deviations from linting rules in the code with clear explanations
+- Structure database operations with a consistent pattern:
+  - For complex database operations (like those involving multiple entities), use a transaction-based approach
+  - Break down database operations into logical components:
+    - Base entity operations (e.g., recipe base data)
+    - Related entity operations (e.g., ingredients, steps)
+    - Utility functions for handling SQL NULL values and type conversions
+  - Use helper functions for fetching related entities (e.g., `fetchRecipeIngredients`, `fetchRecipeSteps`)
+  - Create helper functions for handling common database patterns like nullable fields
+- When implementing complex functions:
+  - Start by identifying repeated code blocks or similar patterns
+  - Extract these patterns into helper functions with clear, descriptive names
+  - Consider creating utility functions for common operations (e.g., SQL NULL handling)
+  - Break down large functions into smaller, focused functions that each handle a specific aspect
+  - Use meaningful function names that describe what the function does, not just the entity it works with
 
 ### Frontend (React)
 
@@ -139,9 +160,26 @@ useful-cookery/
 - Vector embeddings for semantic search
 - RAG system for contextual recommendations
 
+## Code Review Practices
+
+- Before submitting code for review, run `golangci-lint run ./...` locally to catch common issues
+- When reviewing code, pay special attention to:
+  - Function length and complexity - suggest breaking down large functions
+  - Duplicate code patterns - suggest extracting common logic into helper functions
+  - Database operations - ensure they follow the project's structured approach
+  - Error handling - verify errors are properly wrapped and contextual
+  - Naming conventions - ensure function and variable names are descriptive
+- Look for opportunities to refactor similar code across different files
+- Verify that any `//nolint` directives are properly justified with comments
+- Check that complex database operations use transactions appropriately
+- Ensure helper functions are used consistently for common operations
+- Verify that SQL NULL handling is consistent across the codebase
+
 ## Success Metrics
 
 - API response times under 100ms for non-AI endpoints
 - Search results returned in under 500ms
 - 95% test coverage for critical components
 - Web Core Vitals meeting "Good" thresholds
+- Zero linting errors in CI pipeline
+- Reduced code duplication (measured by static analysis tools)

@@ -14,6 +14,13 @@ import (
 // ErrNilReader is returned when a nil reader is provided.
 var ErrNilReader = errors.New("nil reader provided")
 
+// Constants for numeric values used in parsing.
+const (
+	oneAndHalf = 1.5
+	half       = 0.5
+	minParts   = 2
+)
+
 // Parse converts a TROFF formatted recipe into a Recipe struct using the lexer.
 func Parse(reader io.Reader) (model.Recipe, error) {
 	if reader == nil {
@@ -44,6 +51,93 @@ func ParseFile(filename string) (model.Recipe, error) {
 	defer file.Close()
 
 	return Parse(file)
+}
+
+// extractNumericValue extracts a numeric value from a string, handling fractions like "1 1/2".
+func extractNumericValue(input string) float64 {
+	// Handle common fractions with predefined values
+	if strings.HasPrefix(input, "1 1/2") {
+		return oneAndHalf
+	}
+	if strings.HasPrefix(input, "1/2") {
+		return half
+	}
+
+	// Try to parse as a mixed fraction (e.g., "1 1/2")
+	if val := parseMixedFraction(input); val > 0 {
+		return val
+	}
+
+	// Try to parse as a simple fraction (e.g., "1/2")
+	if val := parseSimpleFraction(input); val > 0 {
+		return val
+	}
+
+	// Try to extract a simple number
+	return parseSimpleNumber(input)
+}
+
+// parseMixedFraction parses a mixed fraction like "1 1/2" and returns the numeric value.
+func parseMixedFraction(input string) float64 {
+	parts := strings.Fields(input)
+	if len(parts) < minParts {
+		return 0
+	}
+
+	wholeNum, wholeErr := strconv.ParseFloat(parts[0], 64)
+	if wholeErr != nil || !strings.Contains(parts[1], "/") {
+		return 0
+	}
+
+	fractionValue := parseSimpleFraction(parts[1])
+	if fractionValue <= 0 {
+		return 0
+	}
+
+	return wholeNum + fractionValue
+}
+
+// parseSimpleFraction parses a simple fraction like "1/2" and returns the numeric value.
+func parseSimpleFraction(input string) float64 {
+	if !strings.Contains(input, "/") {
+		return 0
+	}
+
+	fractionParts := strings.Split(input, "/")
+	if len(fractionParts) != minParts {
+		return 0
+	}
+
+	num, numErr := strconv.ParseFloat(fractionParts[0], 64)
+	den, denErr := strconv.ParseFloat(fractionParts[1], 64)
+	if numErr != nil || denErr != nil || den == 0 {
+		return 0
+	}
+
+	return num / den
+}
+
+// parseSimpleNumber extracts a simple number from a string.
+func parseSimpleNumber(input string) float64 {
+	numStr := ""
+	for _, c := range input {
+		if (c >= '0' && c <= '9') || c == '.' {
+			numStr += string(c)
+		} else if len(numStr) > 0 {
+			break
+		}
+	}
+
+	if numStr == "" {
+		return 0
+	}
+
+	val, err := strconv.ParseFloat(numStr, 64)
+	if err != nil {
+		return 0
+	}
+
+	return val
 }
 
 // processTokens processes the tokens and builds a Recipe struct.
@@ -166,58 +260,54 @@ func processTokens(tokens []Token, recipe *model.Recipe) {
 					name := tokens[tokenIndex+2].Value
 					tokenIndex += 2 // Skip the parameters we just processed
 
-					// Check for optional metric quantity
-					var metricQty string
-					if tokenIndex+1 < len(tokens) && tokens[tokenIndex+1].Type == TokenParam {
-						metricQty = tokens[tokenIndex+1].Value
-						tokenIndex++ // Skip the metric parameter
-					}
-
 					// Create ingredient with proper types
-					// If we have metric quantity, append it to the unit field
-					unitValue := quantity
-					if metricQty != "" {
-						unitValue += " (metric: " + metricQty + ")"
-					}
-
-					// Convert TROFF codes in the name and unit
 					processedName := ProcessText(name)
-					processedUnit := ProcessText(unitValue)
 
-					// Try to extract numeric quantity if possible
-					var quantityValue float64
-					quantityStr := ""
-					for _, c := range quantity {
-						if (c >= '0' && c <= '9') || c == '.' || c == '/' {
-							quantityStr += string(c)
-						} else if c != ' ' && len(quantityStr) > 0 {
-							break
-						}
-					}
-
-					if quantityStr != "" {
-						// Handle fractions like 1/2
-						if strings.Contains(quantityStr, "/") {
-							parts := strings.Split(quantityStr, "/")
-							if len(parts) == 2 {
-								num, errNum := strconv.ParseFloat(parts[0], 64)
-								den, errDen := strconv.ParseFloat(parts[1], 64)
-								if errNum == nil && errDen == nil && den != 0 {
-									quantityValue = num / den
-								}
-							}
-						} else {
-							parsedQty, err := strconv.ParseFloat(quantityStr, 64)
-							if err == nil {
-								quantityValue = parsedQty
-							}
-						}
-					}
-
+					// Create a new ingredient with units
 					ingredient := model.DetailedIngredient{
-						Name:     processedName,
-						Unit:     processedUnit,
-						Quantity: quantityValue,
+						Name:  processedName,
+						Units: []model.IngredientUnit{},
+					}
+
+					// Process imperial unit
+					imperialUnit := model.IngredientUnit{
+						ID:     model.NewID(),
+						System: "imperial",
+						Unit:   ProcessText(quantity),
+						IsMain: true,
+					}
+
+					// Extract numeric value from quantity
+					imperialUnit.Value = extractNumericValue(quantity)
+					ingredient.Quantity = imperialUnit.Value // Legacy field
+
+					// Add imperial unit to the ingredient
+					ingredient.Units = append(ingredient.Units, imperialUnit)
+
+					// For backward compatibility
+					ingredient.Unit = imperialUnit.Unit
+
+					// Check for optional metric quantity
+					if tokenIndex+1 < len(tokens) && tokens[tokenIndex+1].Type == TokenParam {
+						metricQty := tokens[tokenIndex+1].Value
+						tokenIndex++ // Skip the metric parameter
+
+						// Process metric unit
+						metricUnit := model.IngredientUnit{
+							ID:     model.NewID(),
+							System: "metric",
+							Unit:   ProcessText(metricQty),
+							IsMain: false,
+						}
+
+						// Extract numeric value from metric quantity
+						metricUnit.Value = extractNumericValue(metricQty)
+
+						// Add metric unit to the ingredient
+						ingredient.Units = append(ingredient.Units, metricUnit)
+
+						// For backward compatibility, update the unit field
+						ingredient.Unit = imperialUnit.Unit + " (metric: " + metricUnit.Unit + ")"
 					}
 
 					currentIngredientSet = append(currentIngredientSet, ingredient)
@@ -285,7 +375,7 @@ func processTokens(tokens []Token, recipe *model.Recipe) {
 							lines := strings.Split(ratingContent, "\n")
 
 							// Process the lines
-							for i := 0; i < len(lines); i++ {
+							for i := range lines {
 								line := lines[i]
 
 								// Check for difficulty
@@ -325,6 +415,10 @@ func processTokens(tokens []Token, recipe *model.Recipe) {
 							// Skip the rating content token
 							tokenIndex++
 						}
+					} else if sectionName == "CUISINE" && tokenIndex+1 < len(tokens) && tokens[tokenIndex+1].Type == TokenParam {
+						// Extract cuisine information
+						recipe.Cuisine = ProcessText(tokens[tokenIndex+1].Value)
+						tokenIndex++
 					}
 				}
 

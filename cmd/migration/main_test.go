@@ -28,7 +28,8 @@ func TestCommandHelp(t *testing.T) {
 
 	// Verify the output contains expected help text
 	output := stdout.String()
-	assert.Contains(t, output, "A tool for converting TROFF recipes to structured data and managing database schema migrations")
+	assert.Contains(t, output,
+		"A tool for converting TROFF recipes to structured data and managing database schema migrations")
 	assert.Contains(t, output, "troff")
 	assert.Contains(t, output, "db")
 }
@@ -168,13 +169,11 @@ func TestDBStatusCommand(t *testing.T) {
 	t.Parallel()
 
 	// Create a temporary directory for test migrations
-	tempDir, err := os.MkdirTemp("", "migration-test")
-	require.NoError(t, err, "Should be able to create temp directory")
-	defer os.RemoveAll(tempDir)
+	tempDir := t.TempDir()
 
 	// Create a migrations directory structure
 	migrationsDir := filepath.Join(tempDir, "db", "migrations")
-	err = os.MkdirAll(migrationsDir, 0755)
+	err := os.MkdirAll(migrationsDir, 0755)
 	require.NoError(t, err, "Should be able to create migrations directory")
 
 	// Create a test migration file
@@ -182,7 +181,7 @@ func TestDBStatusCommand(t *testing.T) {
 	err = os.WriteFile(
 		filepath.Join(migrationsDir, testMigration),
 		[]byte("-- Test migration"),
-		0644,
+		0600,
 	)
 	require.NoError(t, err, "Should be able to create test migration file")
 
@@ -199,7 +198,7 @@ database:
 	err = os.WriteFile(
 		filepath.Join(configDir, "config.yml"),
 		[]byte(configContent),
-		0644,
+		0600,
 	)
 	require.NoError(t, err, "Should be able to create config file")
 

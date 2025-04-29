@@ -34,7 +34,13 @@ type Query {
   # Recipe queries
   recipe(id: ID!): Recipe
   recipeByOriginalId(originalId: String!): Recipe
-  recipes(filter: RecipeFilter, order: RecipeOrder, first: Int, after: String, offset: Int): RecipeConnection!
+  recipes(
+    filter: RecipeFilter
+    order: RecipeOrder
+    first: Int
+    after: String
+    offset: Int
+  ): RecipeConnection!
 
   # User queries
   me: User
@@ -46,7 +52,12 @@ type Query {
 
   # AI-powered queries
   searchRecipes(query: String!, first: Int, after: String): RecipeConnection!
-  recommendRecipes(userID: ID, availableIngredients: [String!], first: Int, after: String): RecipeConnection!
+  recommendRecipes(
+    userID: ID
+    availableIngredients: [String!]
+    first: Int
+    after: String
+  ): RecipeConnection!
   findSubstitutes(ingredientName: String!): [String!]!
 }
 
@@ -154,10 +165,18 @@ input RecipeInput {
   images: [ImageInput!]
 }
 
+input IngredientUnitInput {
+  system: String!
+  value: Float!
+  unit: String!
+  isMain: Boolean!
+}
+
 input IngredientInput {
   name: String!
-  quantity: Float
-  unit: String
+  units: [IngredientUnitInput!]
+  quantity: Float @deprecated(reason: "Use units instead")
+  unit: String @deprecated(reason: "Use units instead")
   preparation: String
   substitutes: [String!]
   isOptional: Boolean
@@ -241,11 +260,20 @@ type Recipe {
   updatedAt: DateTime
 }
 
+type IngredientUnit {
+  id: ID!
+  system: String!
+  value: Float!
+  unit: String!
+  isMain: Boolean!
+}
+
 type DetailedIngredient {
   id: ID!
   name: String!
-  quantity: Float
-  unit: String
+  units: [IngredientUnit!]
+  quantity: Float @deprecated(reason: "Use units instead")
+  unit: String @deprecated(reason: "Use units instead")
   preparation: String
   substitutes: [String!]
   isOptional: Boolean

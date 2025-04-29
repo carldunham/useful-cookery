@@ -76,15 +76,25 @@ type Recipe struct {
 	UpdatedAt     time.Time            `dgraph:"updatedAt"     json:"updatedAt"`
 }
 
+// IngredientUnit represents a measurement unit for an ingredient.
+type IngredientUnit struct {
+	ID     string  `dgraph:"uid"    json:"uid"`
+	System string  `dgraph:"system" json:"system"` // "imperial", "metric", "weight", etc.
+	Value  float64 `dgraph:"value"  json:"value"`  // Numeric value
+	Unit   string  `dgraph:"unit"   json:"unit"`   // The unit name (cup, g, oz, etc.)
+	IsMain bool    `dgraph:"isMain" json:"isMain"` // Whether this is the main unit for display
+}
+
 // DetailedIngredient represents a detailed ingredient in a recipe.
 type DetailedIngredient struct {
-	ID          string   `dgraph:"uid"         json:"uid"`
-	Name        string   `dgraph:"name"        json:"name"`
-	Quantity    float64  `dgraph:"quantity"    json:"quantity,omitempty"`
-	Unit        string   `dgraph:"unit"        json:"unit,omitempty"`
-	Preparation string   `dgraph:"preparation" json:"preparation,omitempty"`
-	Substitutes []string `dgraph:"substitutes" json:"substitutes,omitempty"`
-	IsOptional  bool     `dgraph:"isOptional"  json:"isOptional,omitempty"`
+	ID          string           `dgraph:"uid"         json:"uid"`
+	Name        string           `dgraph:"name"        json:"name"`
+	Units       []IngredientUnit `dgraph:"units"       json:"units,omitempty"`
+	Quantity    float64          `dgraph:"quantity"    json:"quantity,omitempty"` // Deprecated field
+	Unit        string           `dgraph:"unit"        json:"unit,omitempty"`     // Deprecated field
+	Preparation string           `dgraph:"preparation" json:"preparation,omitempty"`
+	Substitutes []string         `dgraph:"substitutes" json:"substitutes,omitempty"`
+	IsOptional  bool             `dgraph:"isOptional"  json:"isOptional,omitempty"`
 }
 
 // Step represents a step in a recipe.
