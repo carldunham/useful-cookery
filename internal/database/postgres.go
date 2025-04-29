@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 
@@ -594,6 +593,56 @@ func (db *PostgresDatabase) DeleteCategory(ctx context.Context, categoryID strin
 	return nil
 }
 
+// GetCategories fetches a list of categories with pagination.
+func (db *PostgresDatabase) GetCategories(ctx context.Context, limit, offset int) ([]*model.Category, error) {
+	if limit <= 0 {
+		limit = 10 // Default limit
+	}
+
+	if offset < 0 {
+		offset = 0
+	}
+
+	query := `
+		SELECT id, name, description, created_at, updated_at
+		FROM categories
+		ORDER BY name ASC
+		LIMIT $1 OFFSET $2
+	`
+
+	rows, err := db.DB.QueryContext(ctx, query, limit, offset)
+	if err != nil {
+		return nil, fmt.Errorf("querying categories: %w", err)
+	}
+	defer rows.Close()
+
+	var categories []*model.Category
+
+	for rows.Next() {
+		var category model.Category
+
+		err := rows.Scan(
+			&category.ID,
+			&category.Name,
+			&category.Description,
+			&category.CreatedAt,
+			&category.UpdatedAt,
+		)
+
+		if err != nil {
+			return nil, fmt.Errorf("scanning category row: %w", err)
+		}
+
+		categories = append(categories, &category)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterating category rows: %w", err)
+	}
+
+	return categories, nil
+}
+
 // CreateReview creates a new review.
 //
 //nolint:cyclop // This function is necessarily complex due to transaction handling
@@ -853,259 +902,6 @@ func (db *PostgresDatabase) updateRecipeRating(ctx context.Context, tx *sql.Tx, 
 	return nil
 }
 
-// setRecipeNullableFields sets the nullable fields of a recipe from SQL null types.
-func setRecipeNullableFields(
-	recipe *model.Recipe,
-	originalID sql.NullString,
-	notes sql.NullString,
-	cuisine sql.NullString,
-	prepTime sql.NullInt64,
-	cookTime sql.NullInt64,
-	servings sql.NullInt64,
-	difficulty sql.NullString,
-) {
-	if originalID.Valid {
-		recipe.OriginalID = originalID.String
-	}
-	if notes.Valid {
-		recipe.Notes = notes.String
-	}
-	if cuisine.Valid {
-		recipe.Cuisine = cuisine.String
-	}
-	if prepTime.Valid {
-		recipe.PrepTime = int(prepTime.Int64)
-	}
-	if cookTime.Valid {
-		recipe.CookTime = int(cookTime.Int64)
-	}
-	if servings.Valid {
-		recipe.Servings = int(servings.Int64)
-	}
-	if difficulty.Valid {
-		recipe.Difficulty = difficulty.String
-	}
-}
-
-// fetchRecipeBase fetches the base recipe data from the database.
-func (db *PostgresDatabase) fetchRecipeBase(
-	ctx context.Context,
-	tx *sql.Tx,
-	recipeID string,
-) (*model.Recipe, error) {
-	query := `
-		SELECT id, original_id, title, description, notes,
-		       cuisine, prep_time, cook_time, servings, difficulty,
-		       created_at, updated_at
-		FROM recipes
-		WHERE id = $1
-	`
-
-	var recipe model.Recipe
-	var (
-		originalID sql.NullString
-		notes      sql.NullString
-		cuisine    sql.NullString
-		prepTime   sql.NullInt64
-		cookTime   sql.NullInt64
-		servings   sql.NullInt64
-		difficulty sql.NullString
-	)
-
-	err := tx.QueryRowContext(ctx, query, recipeID).Scan(
-		&recipe.ID,
-		&originalID,
-		&recipe.Title,
-		&recipe.Description,
-		&notes,
-		&cuisine,
-		&prepTime,
-		&cookTime,
-		&servings,
-		&difficulty,
-		&recipe.CreatedAt,
-		&recipe.UpdatedAt,
-	)
-
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, dbtypes.ErrNotFound
-		}
-		return nil, fmt.Errorf("querying recipe: %w", err)
-	}
-
-	// Set nullable fields
-	setRecipeNullableFields(
-		&recipe,
-		originalID,
-		notes,
-		cuisine,
-		prepTime,
-		cookTime,
-		servings,
-		difficulty,
-	)
-
-	return &recipe, nil
-}
-
-// fetchIngredientUnits fetches the units for an ingredient.
-func (db *PostgresDatabase) fetchIngredientUnits(
-	ctx context.Context,
-	tx *sql.Tx,
-	ingredientID string,
-) ([]model.IngredientUnit, error) {
-	unitsQuery := `
-		SELECT id, system, value, unit, is_main
-		FROM ingredient_units
-		WHERE ingredient_id = $1
-		ORDER BY is_main DESC
-	`
-
-	unitRows, err := tx.QueryContext(ctx, unitsQuery, ingredientID)
-	if err != nil {
-		return nil, fmt.Errorf("querying ingredient units: %w", err)
-	}
-	defer unitRows.Close()
-
-	var units []model.IngredientUnit
-	for unitRows.Next() {
-		var unit model.IngredientUnit
-
-		err := unitRows.Scan(
-			&unit.ID,
-			&unit.System,
-			&unit.Value,
-			&unit.Unit,
-			&unit.IsMain,
-		)
-		if err != nil {
-			return nil, fmt.Errorf("scanning ingredient unit row: %w", err)
-		}
-
-		units = append(units, unit)
-	}
-
-	if err := unitRows.Err(); err != nil {
-		return nil, fmt.Errorf("iterating ingredient unit rows: %w", err)
-	}
-
-	return units, nil
-}
-
-// fetchRecipeIngredients fetches the ingredients for a recipe.
-func (db *PostgresDatabase) fetchRecipeIngredients(
-	ctx context.Context,
-	tx *sql.Tx,
-	recipeID string,
-) ([]model.DetailedIngredient, error) {
-	ingredientsQuery := `
-		SELECT id, name, quantity, unit, preparation, is_optional
-		FROM ingredients
-		WHERE recipe_id = $1
-		ORDER BY id
-	`
-
-	ingredientRows, err := tx.QueryContext(ctx, ingredientsQuery, recipeID)
-	if err != nil {
-		return nil, fmt.Errorf("querying ingredients: %w", err)
-	}
-	defer ingredientRows.Close()
-
-	var ingredients []model.DetailedIngredient
-	for ingredientRows.Next() {
-		var ingredient model.DetailedIngredient
-		var (
-			preparation sql.NullString
-			isOptional  sql.NullBool
-		)
-
-		err := ingredientRows.Scan(
-			&ingredient.ID,
-			&ingredient.Name,
-			&ingredient.Quantity,
-			&ingredient.Unit,
-			&preparation,
-			&isOptional,
-		)
-		if err != nil {
-			return nil, fmt.Errorf("scanning ingredient row: %w", err)
-		}
-
-		// Set nullable fields
-		if preparation.Valid {
-			ingredient.Preparation = preparation.String
-		}
-		if isOptional.Valid {
-			ingredient.IsOptional = isOptional.Bool
-		}
-
-		// Get ingredient units
-		units, err := db.fetchIngredientUnits(ctx, tx, ingredient.ID)
-		if err != nil {
-			return nil, err
-		}
-		ingredient.Units = units
-
-		ingredients = append(ingredients, ingredient)
-	}
-
-	if err := ingredientRows.Err(); err != nil {
-		return nil, fmt.Errorf("iterating ingredient rows: %w", err)
-	}
-
-	return ingredients, nil
-}
-
-// fetchRecipeSteps fetches the steps for a recipe.
-func (db *PostgresDatabase) fetchRecipeSteps(
-	ctx context.Context,
-	tx *sql.Tx,
-	recipeID string,
-) ([]model.Step, error) {
-	stepsQuery := `
-		SELECT id, order_index, description, time_estimate
-		FROM steps
-		WHERE recipe_id = $1
-		ORDER BY order_index
-	`
-
-	stepRows, err := tx.QueryContext(ctx, stepsQuery, recipeID)
-	if err != nil {
-		return nil, fmt.Errorf("querying steps: %w", err)
-	}
-	defer stepRows.Close()
-
-	var steps []model.Step
-	for stepRows.Next() {
-		var step model.Step
-		var timeEstimate sql.NullInt64
-
-		err := stepRows.Scan(
-			&step.ID,
-			&step.OrderIndex,
-			&step.Description,
-			&timeEstimate,
-		)
-		if err != nil {
-			return nil, fmt.Errorf("scanning step row: %w", err)
-		}
-
-		// Set nullable fields
-		if timeEstimate.Valid {
-			step.TimeEstimate = int(timeEstimate.Int64)
-		}
-
-		steps = append(steps, step)
-	}
-
-	if err := stepRows.Err(); err != nil {
-		return nil, fmt.Errorf("iterating step rows: %w", err)
-	}
-
-	return steps, nil
-}
-
 // GetRecipe fetches a recipe by ID.
 func (db *PostgresDatabase) GetRecipe(ctx context.Context, recipeID string) (*model.Recipe, error) {
 	if recipeID == "" {
@@ -1121,25 +917,11 @@ func (db *PostgresDatabase) GetRecipe(ctx context.Context, recipeID string) (*mo
 		_ = tx.Rollback() // Safe to call even if tx is already committed
 	}()
 
-	// Get the base recipe data
-	recipe, err := db.fetchRecipeBase(ctx, tx, recipeID)
+	// Fetch the recipe with all its data in a single query
+	recipe, err := db.fetchRecipeWithJoins(ctx, tx, recipeID)
 	if err != nil {
 		return nil, err
 	}
-
-	// Get ingredients with their units
-	ingredients, err := db.fetchRecipeIngredients(ctx, tx, recipeID)
-	if err != nil {
-		return nil, err
-	}
-	recipe.Ingredients = ingredients
-
-	// Get steps
-	steps, err := db.fetchRecipeSteps(ctx, tx, recipeID)
-	if err != nil {
-		return nil, err
-	}
-	recipe.Steps = steps
 
 	// Commit transaction
 	if err := tx.Commit(); err != nil {
@@ -1149,9 +931,242 @@ func (db *PostgresDatabase) GetRecipe(ctx context.Context, recipeID string) (*mo
 	return recipe, nil
 }
 
-// GetRecipes fetches recipes based on filters.
+// fetchRecipesWithJoins is a shared helper function that fetches recipes with their data using SQL joins.
+// It can fetch a single recipe by ID or multiple recipes with filtering and pagination.
 //
-//nolint:cyclop,funlen // This function is necessarily complex and long due to dynamic filter handling
+//nolint:cyclop,funlen // This function is necessarily complex due to the number of options and joins.
+func (db *PostgresDatabase) fetchRecipesWithJoins(
+	ctx context.Context,
+	tx *sql.Tx,
+	options struct {
+		RecipeID    string            // For single recipe retrieval
+		Filter      map[string]string // For filtering multiple recipes
+		Limit       int               // For pagination
+		Offset      int               // For pagination
+		IncludeData bool              // Whether to include ingredients and steps
+	},
+) ([]*model.Recipe, error) {
+	var args []interface{}
+	var whereClause string
+	var limitOffsetClause string
+
+	// Build the WHERE clause based on whether we're fetching a single recipe or multiple
+	if options.RecipeID != "" {
+		// Single recipe by ID
+		whereClause = "WHERE r.id = $1"
+		args = append(args, options.RecipeID)
+	} else {
+		// Multiple recipes with filtering
+		whereClause = "WHERE 1=1"
+		argIndex := 1
+
+		// Apply filters
+		for key, value := range options.Filter {
+			if value == "" {
+				continue
+			}
+
+			switch key {
+			case "title":
+				whereClause += fmt.Sprintf(" AND r.title ILIKE $%d", argIndex)
+				args = append(args, "%"+value+"%")
+				argIndex++
+			case "cuisine":
+				whereClause += fmt.Sprintf(" AND r.cuisine ILIKE $%d", argIndex)
+				args = append(args, "%"+value+"%")
+				argIndex++
+			case "category":
+				whereClause += fmt.Sprintf(` AND r.id IN (
+					SELECT recipe_id FROM recipe_categories rc
+					JOIN categories c ON rc.category_id = c.id
+					WHERE c.name ILIKE $%d
+				)`, argIndex)
+				args = append(args, "%"+value+"%")
+				argIndex++
+			case "authorID":
+				whereClause += fmt.Sprintf(" AND r.author_id = $%d", argIndex)
+				args = append(args, value)
+				argIndex++
+			case "originalID":
+				whereClause += fmt.Sprintf(" AND r.original_id = $%d", argIndex)
+				args = append(args, value)
+				argIndex++
+			}
+		}
+
+		// Add pagination for multiple recipes
+		if options.Limit > 0 {
+			limitOffsetClause = fmt.Sprintf(" ORDER BY r.created_at DESC LIMIT $%d OFFSET $%d",
+				argIndex, argIndex+1)
+			args = append(args, options.Limit, options.Offset)
+		}
+	}
+
+	// Base query for recipe data
+	baseQuery := fmt.Sprintf(`
+		WITH recipe_data AS (
+			SELECT
+				r.id, r.original_id, r.title, r.description, r.notes,
+				r.cuisine, r.prep_time, r.cook_time, r.servings, r.difficulty,
+				r.created_at, r.updated_at, r.average_rating,
+				u.id as author_id, u.name as author_name
+			FROM recipes r
+			LEFT JOIN users u ON r.author_id = u.id
+			%s
+			%s
+		)
+	`, whereClause, limitOffsetClause)
+
+	var query string
+
+	if options.IncludeData {
+		// Full query with ingredients and steps
+		query = baseQuery + `
+		, ingredient_data AS (
+			SELECT
+				i.id, i.name, i.quantity, i.unit, i.preparation, i.is_optional,
+				iu.id as unit_id, iu.system, iu.value, iu.unit as unit_name, iu.is_main,
+				i.recipe_id
+			FROM ingredients i
+			LEFT JOIN ingredient_units iu ON i.id = iu.ingredient_id
+			WHERE i.recipe_id IN (SELECT id FROM recipe_data)
+		),
+		step_data AS (
+			SELECT
+				id, order_index, description, time_estimate, recipe_id
+			FROM steps
+			WHERE recipe_id IN (SELECT id FROM recipe_data)
+			ORDER BY order_index
+		)
+		SELECT json_agg(
+			json_build_object(
+				'recipe', recipe,
+				'ingredients', ingredients,
+				'steps', steps
+			)
+		)
+		FROM (
+			SELECT
+				row_to_json(rd) as recipe,
+				(
+					SELECT json_agg(i)
+					FROM (
+						SELECT
+							id, name, quantity, unit, preparation, is_optional,
+							(
+								SELECT json_agg(u)
+								FROM (
+									SELECT unit_id as id, system, value, unit_name as unit, is_main
+									FROM ingredient_data
+									WHERE id = i.id
+									ORDER BY is_main DESC
+								) u
+							) as units
+						FROM ingredient_data i
+						WHERE i.recipe_id = rd.id
+						GROUP BY id, name, quantity, unit, preparation, is_optional, recipe_id
+					) i
+				) as ingredients,
+				(
+					SELECT json_agg(s ORDER BY s.order_index)
+					FROM (
+						SELECT id, order_index, description, time_estimate
+						FROM step_data
+						WHERE recipe_id = rd.id
+					) s
+				) as steps
+			FROM recipe_data rd
+		) recipes
+		`
+	} else {
+		// Simple query for basic recipe info only
+		query = baseQuery + `
+		SELECT json_agg(
+			json_build_object(
+				'recipe', row_to_json(rd)
+			)
+		)
+		FROM recipe_data rd
+		`
+	}
+
+	// Execute the query
+	var recipesJSON []byte
+	err := tx.QueryRowContext(ctx, query, args...).Scan(&recipesJSON)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil // Return empty slice instead of error for no results
+		}
+		return nil, fmt.Errorf("querying recipes with joins: %w", err)
+	}
+
+	// Handle null result (no recipes found)
+	if recipesJSON == nil {
+		return []*model.Recipe{}, nil
+	}
+
+	// Parse the JSON result
+	var results []struct {
+		Recipe      model.Recipe               `json:"recipe"`
+		Ingredients []model.DetailedIngredient `json:"ingredients"`
+		Steps       []model.Step               `json:"steps"`
+	}
+
+	if err := json.Unmarshal(recipesJSON, &results); err != nil {
+		return nil, fmt.Errorf("unmarshaling recipe data: %w", err)
+	}
+
+	// Build the complete recipe objects
+	recipes := make([]*model.Recipe, 0, len(results))
+	for _, result := range results {
+		recipe := &result.Recipe
+
+		// Set author if present
+		if result.Recipe.Author != nil && result.Recipe.Author.ID != "" {
+			recipe.Author = result.Recipe.Author
+		}
+
+		// Set ingredients and steps if included
+		if options.IncludeData {
+			recipe.Ingredients = result.Ingredients
+			recipe.Steps = result.Steps
+		}
+
+		recipes = append(recipes, recipe)
+	}
+
+	return recipes, nil
+}
+
+// fetchRecipeWithJoins fetches a single recipe with all its data using the shared helper.
+func (db *PostgresDatabase) fetchRecipeWithJoins(
+	ctx context.Context,
+	tx *sql.Tx,
+	recipeID string,
+) (*model.Recipe, error) {
+	recipes, err := db.fetchRecipesWithJoins(ctx, tx, struct {
+		RecipeID    string
+		Filter      map[string]string
+		Limit       int
+		Offset      int
+		IncludeData bool
+	}{
+		RecipeID:    recipeID,
+		IncludeData: true,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len(recipes) == 0 {
+		return nil, dbtypes.ErrNotFound
+	}
+
+	return recipes[0], nil
+}
+
+// GetRecipes fetches recipes based on filters.
 func (db *PostgresDatabase) GetRecipes(
 	ctx context.Context,
 	filter map[string]string,
@@ -1165,102 +1180,36 @@ func (db *PostgresDatabase) GetRecipes(
 		offset = 0
 	}
 
-	// Build query with filters
-	query := `
-		SELECT r.id, r.title, r.description, r.cuisine, r.created_at,
-		       u.id, u.name
-		FROM recipes r
-		LEFT JOIN users u ON r.author_id = u.id
-		WHERE 1=1
-	`
-	args := make([]interface{}, 0)
-	argIndex := 1
-
-	// Apply filters
-	for key, value := range filter {
-		if value == "" {
-			continue
-		}
-
-		switch key {
-		case "title":
-			query += fmt.Sprintf(" AND r.title ILIKE $%d", argIndex)
-			args = append(args, "%"+value+"%")
-			argIndex++
-		case "cuisine":
-			query += fmt.Sprintf(" AND r.cuisine ILIKE $%d", argIndex)
-			args = append(args, "%"+value+"%")
-			argIndex++
-		case "category":
-			query += fmt.Sprintf(` AND r.id IN (
-				SELECT recipe_id FROM recipe_categories rc
-				JOIN categories c ON rc.category_id = c.id
-				WHERE c.name ILIKE $%d
-			)`, argIndex)
-			args = append(args, "%"+value+"%")
-			argIndex++
-		case "authorID":
-			query += fmt.Sprintf(" AND r.author_id = $%d", argIndex)
-			args = append(args, value)
-			argIndex++
-		case "originalID":
-			query += fmt.Sprintf(" AND r.original_id = $%d", argIndex)
-			args = append(args, value)
-			argIndex++
-		}
-	}
-
-	// Add order by and pagination
-	query += " ORDER BY created_at DESC LIMIT $" + strconv.Itoa(argIndex) + " OFFSET $" + strconv.Itoa(argIndex+1)
-	args = append(args, first, offset)
-
-	// Execute query
-	rows, err := db.DB.QueryContext(ctx, query, args...)
+	// Start a transaction for consistent reads
+	tx, err := db.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
 	if err != nil {
-		return nil, fmt.Errorf("querying recipes: %w", err)
+		return nil, fmt.Errorf("beginning transaction: %w", err)
 	}
-	defer rows.Close()
+	defer func() {
+		_ = tx.Rollback() // Safe to call even if tx is already committed
+	}()
 
-	var recipes []*model.Recipe
-	for rows.Next() {
-		var (
-			recipe     model.Recipe
-			cuisine    sql.NullString
-			authorID   sql.NullString
-			authorName sql.NullString
-		)
+	// Use the shared helper function to fetch recipes
+	recipes, err := db.fetchRecipesWithJoins(ctx, tx, struct {
+		RecipeID    string
+		Filter      map[string]string
+		Limit       int
+		Offset      int
+		IncludeData bool
+	}{
+		Filter:      filter,
+		Limit:       first,
+		Offset:      offset,
+		IncludeData: true,
+	})
 
-		err := rows.Scan(
-			&recipe.ID,
-			&recipe.Title,
-			&recipe.Description,
-			&cuisine,
-			&recipe.CreatedAt,
-			&authorID,
-			&authorName,
-		)
-		if err != nil {
-			return nil, fmt.Errorf("scanning recipe row: %w", err)
-		}
-
-		// Set nullable fields
-		if cuisine.Valid {
-			recipe.Cuisine = cuisine.String
-		}
-
-		// Set author if present
-		if authorID.Valid && authorName.Valid {
-			recipe.Author = &model.User{
-				ID:   authorID.String,
-				Name: authorName.String,
-			}
-		}
-
-		recipes = append(recipes, &recipe)
+	if err != nil {
+		return nil, err
 	}
 
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("iterating recipe rows: %w", err)
+	// Commit transaction
+	if err := tx.Commit(); err != nil {
+		return nil, fmt.Errorf("committing transaction: %w", err)
 	}
 
 	return recipes, nil
@@ -1685,7 +1634,7 @@ func (db *PostgresDatabase) DeleteRecipe(ctx context.Context, recipeID string) e
 
 // GetPopularRecipes returns popular recipes for PostgreSQL.
 //
-//nolint:funlen // This function is necessarily long due to the query and result processing
+//nolint:cyclop,funlen // This function is necessarily complex due to the query and result processing
 func (db *PostgresDatabase) GetPopularRecipes(ctx context.Context, limit, offset int) ([]*model.Recipe, error) {
 	if limit <= 0 {
 		limit = 10 // Default limit
@@ -1695,61 +1644,76 @@ func (db *PostgresDatabase) GetPopularRecipes(ctx context.Context, limit, offset
 		offset = 0
 	}
 
+	// Start a transaction for consistent reads
+	tx, err := db.DB.BeginTx(ctx, &sql.TxOptions{ReadOnly: true})
+	if err != nil {
+		return nil, fmt.Errorf("beginning transaction: %w", err)
+	}
+	defer func() {
+		_ = tx.Rollback() // Safe to call even if tx is already committed
+	}()
+
+	// Custom query for popular recipes with specific ordering
 	query := `
-		SELECT r.id, r.title, r.description, r.cuisine, r.created_at,
-		       u.id, u.name
-		FROM recipes r
-		LEFT JOIN users u ON r.author_id = u.id
-		ORDER BY r.likes DESC, r.average_rating DESC
-		LIMIT $1 OFFSET $2
+		WITH recipe_data AS (
+			SELECT
+				r.id, r.original_id, r.title, r.description, r.notes,
+				r.cuisine, r.prep_time, r.cook_time, r.servings, r.difficulty,
+				r.created_at, r.updated_at, r.average_rating,
+				u.id as author_id, u.name as author_name
+			FROM recipes r
+			LEFT JOIN users u ON r.author_id = u.id
+			ORDER BY r.likes DESC, r.average_rating DESC
+			LIMIT $1 OFFSET $2
+		)
+		SELECT json_agg(
+			json_build_object(
+				'recipe', row_to_json(rd)
+			)
+		)
+		FROM recipe_data rd
 	`
 
-	rows, err := db.DB.QueryContext(ctx, query, limit, offset)
+	// Execute the query
+	var recipesJSON []byte
+	err = tx.QueryRowContext(ctx, query, limit, offset).Scan(&recipesJSON)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return []*model.Recipe{}, nil
+		}
 		return nil, fmt.Errorf("querying popular recipes: %w", err)
 	}
-	defer rows.Close()
 
-	var recipes []*model.Recipe
-	for rows.Next() {
-		var (
-			recipe     model.Recipe
-			cuisine    sql.NullString
-			authorID   sql.NullString
-			authorName sql.NullString
-		)
-
-		err := rows.Scan(
-			&recipe.ID,
-			&recipe.Title,
-			&recipe.Description,
-			&cuisine,
-			&recipe.CreatedAt,
-			&authorID,
-			&authorName,
-		)
-		if err != nil {
-			return nil, fmt.Errorf("scanning recipe row: %w", err)
-		}
-
-		// Set nullable fields
-		if cuisine.Valid {
-			recipe.Cuisine = cuisine.String
-		}
-
-		// Set author if present
-		if authorID.Valid && authorName.Valid {
-			recipe.Author = &model.User{
-				ID:   authorID.String,
-				Name: authorName.String,
-			}
-		}
-
-		recipes = append(recipes, &recipe)
+	// Handle null result (no recipes found)
+	if recipesJSON == nil {
+		return []*model.Recipe{}, nil
 	}
 
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("iterating recipe rows: %w", err)
+	// Parse the JSON result
+	var results []struct {
+		Recipe model.Recipe `json:"recipe"`
+	}
+
+	if err := json.Unmarshal(recipesJSON, &results); err != nil {
+		return nil, fmt.Errorf("unmarshaling recipe data: %w", err)
+	}
+
+	// Build the recipe objects
+	recipes := make([]*model.Recipe, 0, len(results))
+	for _, result := range results {
+		recipe := &result.Recipe
+
+		// Set author if present
+		if result.Recipe.Author != nil && result.Recipe.Author.ID != "" {
+			recipe.Author = result.Recipe.Author
+		}
+
+		recipes = append(recipes, recipe)
+	}
+
+	// Commit transaction
+	if err := tx.Commit(); err != nil {
+		return nil, fmt.Errorf("committing transaction: %w", err)
 	}
 
 	return recipes, nil

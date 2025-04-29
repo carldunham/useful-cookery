@@ -4,8 +4,9 @@ linters:
   disable:
     - depguard
     - exhaustruct
-    - godox # need my TODOs
+    - godox # need my TODOs.
     - gofumpt
+    - nilnil # used a lot in gql resolvers.
     - nlreturn
     - tenv # Replaced by usetesting.
     - wsl

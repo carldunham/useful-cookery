@@ -10,9 +10,12 @@ import (
 type Database interface {
 	// Category operations
 	CreateCategory(ctx context.Context, category *model.Category) error
+	GetCategories(ctx context.Context, limit, offset int) ([]*model.Category, error)
 
 	// Recipe operations
 	CreateRecipe(ctx context.Context, recipe *model.Recipe) error
+	GetRecipe(ctx context.Context, recipeID string) (*model.Recipe, error)
+	GetRecipes(ctx context.Context, filter map[string]string, limit, offset int) ([]*model.Recipe, error)
 
 	// User operations
 	GetUsers(ctx context.Context, limit, offset int) ([]*model.User, error)

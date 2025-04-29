@@ -334,6 +334,54 @@ func (db *DGraphDatabase) DeleteCategory(ctx context.Context, categoryID string)
 	return nil
 }
 
+// GetCategories fetches a list of categories with pagination.
+func (db *DGraphDatabase) GetCategories(ctx context.Context, limit, offset int) ([]*model.Category, error) {
+	// Query for categories - use a more specific query to avoid getting users
+	query := `
+	{
+		categories(func: has(name)) @filter(NOT has(email)) {
+			uid
+			name
+			description
+			createdAt
+		}
+	}`
+
+	var result struct {
+		Categories []*model.Category `json:"categories"`
+	}
+
+	err := db.Query(ctx, query, nil, &result)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query categories: %w", err)
+	}
+
+	// Apply pagination in memory
+	if len(result.Categories) == 0 {
+		return []*model.Category{}, nil
+	}
+
+	// Apply pagination
+	if limit <= 0 {
+		limit = len(result.Categories)
+	}
+	if offset < 0 {
+		offset = 0
+	}
+
+	// Check bounds
+	if offset >= len(result.Categories) {
+		return []*model.Category{}, nil
+	}
+
+	end := offset + limit
+	if end > len(result.Categories) {
+		end = len(result.Categories)
+	}
+
+	return result.Categories[offset:end], nil
+}
+
 // CreateReview creates a new review.
 func (db *DGraphDatabase) CreateReview(ctx context.Context, review *model.Review) error {
 	_, err := db.Mutate(ctx, review)
