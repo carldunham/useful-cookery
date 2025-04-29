@@ -146,7 +146,7 @@ func (s *Service) SearchRecipes(_ context.Context, _ string, _ int) ([]model.Rec
 	// 	return nil, fmt.Errorf("failed to generate query embedding: %w", err)
 	// }
 
-	// In a real implementation, this would send the embedding to DGraph
+	// In a real implementation, this would send the embedding to the database
 	// to perform vector search. For now, return a placeholder.
 	return []model.Recipe{}, ErrNotImplemented
 }

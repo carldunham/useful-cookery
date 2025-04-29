@@ -31,9 +31,6 @@ type Cache interface {
 type DatabaseType string
 
 const (
-	// DatabaseTypeDGraph represents a DGraph database.
-	DatabaseTypeDGraph DatabaseType = "dgraph"
-
 	// DatabaseTypeInMemory represents an in-memory database (for testing).
 	DatabaseTypeInMemory DatabaseType = "memory"
 

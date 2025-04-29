@@ -7,14 +7,12 @@ This document outlines the specific implementation tasks for the rewrite of the 
 ### Week 1-2: Setup and Infrastructure
 
 - [ ] Set up the Go project structure
-- [ ] Configure DGraph cluster (local development)
 - [ ] Implement basic GraphQL server with gqlgen
 - [ ] Create CI/CD pipeline with GitHub Actions
 - [ ] Set up development environment documentation
 
 ### Week 3-4: Core Backend Features
 
-- [ ] Implement DGraph schema and connection layer
 - [ ] Develop user authentication system with JWT
 - [ ] Create initial GraphQL resolvers for basic queries
 - [ ] Implement TROFF parser for recipe conversion
@@ -64,7 +62,7 @@ This document outlines the specific implementation tasks for the rewrite of the 
 
 ### Week 15-16: Data Migration and Refinement
 
-- [ ] Finalize TROFF to DGraph migration process
+- [ ] Finalize TROFF to database migration process
 - [ ] Migrate production data
 - [ ] Refine UI/UX based on feedback
 - [ ] Performance optimization
@@ -75,7 +73,7 @@ This document outlines the specific implementation tasks for the rewrite of the 
 ### Week 17-18: AI Foundation
 
 - [ ] Set up AI service integration layer
-- [ ] Implement vector embedding storage in DGraph
+- [ ] Implement vector embedding storage in database
 - [ ] Create recipe embedding generation pipeline
 - [ ] Develop external API integration
 - [ ] Implement caching for AI operations
@@ -110,7 +108,7 @@ This document outlines the specific implementation tasks for the rewrite of the 
 
 - Go 1.20+ with modules
 - gqlgen for GraphQL
-- DGraph Go client
+- database Go client
 - JWT authentication
 - Testing with testify
 - Logging with zap

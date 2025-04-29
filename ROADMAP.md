@@ -3,7 +3,7 @@
 ## Phase 1: Foundation (2-3 months)
 
 - [x] Define project architecture and technology stack
-- [ ] Design and implement DGraph schema
+- [ ] Design and implement database schema
 - [ ] Develop GraphQL API with basic recipe functionality
 - [ ] Create authentication and user management system
 - [ ] Develop TROFF to JSON parser
@@ -13,7 +13,7 @@
 
 ## Phase 2: Core Features (2-3 months)
 
-- [ ] Migrate legacy data from TROFF to DGraph
+- [ ] Migrate legacy data from TROFF to database
 - [ ] Implement user accounts and profiles
 - [ ] Add recipe creation and editing capabilities
 - [ ] Enhance search with filtering and sorting

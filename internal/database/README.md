@@ -17,7 +17,6 @@ The database abstraction layer consists of the following components:
 - `factory.go`: Contains factory functions to create database instances.
 - `interfaces.go`: Re-exports common types and errors from dbtypes.
 - `cache.go`: Provides caching functionality for database operations.
-- `dgraph.go`: Legacy DGraph client implementation (will be deprecated).
 
 ## Usage
 
@@ -27,14 +26,7 @@ The database type and connection string are specified in the application configu
 
 ```yaml
 database:
-  type: dgraph # or "memory" for in-memory database
-  connection_string: localhost:9080
-```
-
-For backward compatibility, the application also supports the old configuration format:
-
-```yaml
-dgraph:
+  type: postgres # or "memory" for in-memory database
   connection_string: localhost:9080
 ```
 
@@ -59,8 +51,8 @@ var dbImpl dbtypes.Database
 var err error
 
 switch cfg.Database.Type {
-case "dgraph", "":
-    dbImpl, err = database.NewDGraphDatabase(dbOptions)
+case "postgres":
+    dbImpl, err = database.NewPostgresDatabase(dbOptions)
 case "memory":
     dbImpl, err = database.NewInMemoryDatabase(dbOptions)
 default:

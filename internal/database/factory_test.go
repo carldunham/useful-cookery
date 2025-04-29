@@ -9,20 +9,6 @@ import (
 	"github.com/carldunham/useful-cookery/internal/database/dbtypes"
 )
 
-func TestNewDGraphDatabase(t *testing.T) {
-	t.Parallel()
-	// Test creating a DGraph database
-	dgraphDB, err := database.NewDGraphDatabase(dbtypes.DatabaseOptions{
-		ConnectionString: "dgraph://localhost:9080",
-	})
-	if err != nil {
-		t.Fatalf("Failed to create DGraph database: %v", err)
-	}
-	if dgraphDB == nil {
-		t.Fatal("DGraph database should not be nil")
-	}
-}
-
 func TestNewInMemoryDatabase(t *testing.T) {
 	t.Parallel()
 	// Test creating an in-memory database
@@ -49,19 +35,10 @@ func TestCreatePostgresDatabase(t *testing.T) {
 func TestCreateDatabase(t *testing.T) {
 	t.Parallel()
 
-	// Test with DGraph type
-	db, err := database.CreateDatabase(dbtypes.DatabaseTypeDGraph, dbtypes.DatabaseOptions{
-		ConnectionString: "dgraph://localhost:9080",
-	})
-	if err != nil {
-		t.Fatalf("Failed to create DGraph database: %v", err)
-	}
-	if db == nil {
-		t.Fatal("DGraph database should not be nil")
-	}
+	// TODO: test Postgres database creation with a valid connection string.
 
 	// Test with InMemory type
-	db, err = database.CreateDatabase(dbtypes.DatabaseTypeInMemory, dbtypes.DatabaseOptions{})
+	db, err := database.CreateDatabase(dbtypes.DatabaseTypeInMemory, dbtypes.DatabaseOptions{})
 	if err != nil {
 		t.Fatalf("Failed to create in-memory database: %v", err)
 	}

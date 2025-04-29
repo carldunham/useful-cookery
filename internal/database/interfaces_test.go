@@ -15,9 +15,6 @@ func TestTypeAliases(t *testing.T) {
 	var _ database.Type = dbtypes.DatabaseType("")
 
 	// Test that the constants are defined correctly
-	if database.DatabaseTypeDGraph != dbtypes.DatabaseTypeDGraph {
-		t.Errorf("DatabaseTypeDGraph has unexpected value: %s", database.DatabaseTypeDGraph)
-	}
 	if database.DatabaseTypeInMemory != dbtypes.DatabaseTypeInMemory {
 		t.Errorf("DatabaseTypeInMemory has unexpected value: %s", database.DatabaseTypeInMemory)
 	}

@@ -11,7 +11,7 @@ server:
 
 # Database configuration
 database:
-  type: "postgres" # Options: postgres, memory, dgraph
+  type: "postgres" # Options: postgres, memory
   connection_string: "postgres://postgres:postgres@localhost:5432/useful-cookery?sslmode=disable"
 
 # Redis configuration

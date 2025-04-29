@@ -34,11 +34,6 @@ data:
       type: "postgres"
       connection_string: "${DATABASE_CONNECTION_STRING}"
 
-    # DGraph configuration (for backward compatibility)
-    dgraph:
-      type: "postgres"
-      connection_string: ""
-
     # Authentication configuration
     auth:
       jwt_secret: "${JWT_SECRET}"

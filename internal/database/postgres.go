@@ -102,7 +102,7 @@ func (db *PostgresDatabase) initSchema() error {
 }
 
 // Query executes a raw SQL query against PostgreSQL.
-// This is a simplified implementation that doesn't support all DGraph query features.
+// This is a simplified implementation that doesn't support all query features.
 func (db *PostgresDatabase) Query(_ context.Context, _ string, _ map[string]string, _ any) error {
 	return errors.New("raw queries not supported in PostgreSQL implementation")
 }

@@ -1577,7 +1577,6 @@ input ImageInput {
   height: Int
 }
 
-# Main types that match the DGraph schema
 type User {
   id: ID!
   name: String!

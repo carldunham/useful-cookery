@@ -18,7 +18,7 @@ This branch (`cd/5/rewrite`) represents a complete rewrite of the original appli
 ## Technology Stack
 
 - **Backend**: Go
-- **Database**: Multiple options supported (DGraph, PostgreSQL, in-memory)
+- **Database**: Multiple options supported (PostgreSQL, in-memory)
 - **API**: GraphQL
 - **Frontend**: React
 - **AI Integration**: External APIs initially, with plans for RAG and fine-tuning
@@ -49,8 +49,7 @@ useful-cookery/
 ## Getting Started
 
 1. Clone the repository
-2. Configure database (options include DGraph, PostgreSQL, or in-memory)
-   - For DGraph setup, see docs/dgraph-setup.md
+2. Configure database (options include PostgreSQL, or in-memory)
    - For PostgreSQL, run database migrations: `make migrate-up`
 3. Configure environment (cp .env.example .env)
 4. Run the API server: `go run cmd/api/main.go`

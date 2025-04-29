@@ -16,9 +16,6 @@ type (
 
 // Database type constants.
 const (
-	// DatabaseTypeDGraph represents a DGraph database.
-	DatabaseTypeDGraph = dbtypes.DatabaseTypeDGraph
-
 	// DatabaseTypeInMemory represents an in-memory database (for testing).
 	DatabaseTypeInMemory = dbtypes.DatabaseTypeInMemory
 
