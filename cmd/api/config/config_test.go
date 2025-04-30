@@ -32,7 +32,7 @@ func createValidConfig() *Config {
 			TokenExpiry: 24 * time.Hour,
 		},
 		AI: AIConfig{
-			OpenAIKey:       "test-key",
+			OpenAIAPIKey:    "test-key",
 			EmbeddingModel:  "text-embedding-ada-002",
 			CompletionModel: "gpt-3.5-turbo",
 			EnableCache:     true,
@@ -103,7 +103,7 @@ func TestValidateConfig(t *testing.T) {
 	t.Run("missing OpenAI API key", func(t *testing.T) {
 		t.Parallel()
 		cfg := createValidConfig()
-		cfg.AI.OpenAIKey = ""
+		cfg.AI.OpenAIAPIKey = ""
 		testConfigValidation(t, cfg, ErrOpenAIAPIKeyRequired)
 	})
 }
@@ -143,6 +143,10 @@ func verifyServerDefaults(t *testing.T, cfg *Config) {
 func verifyAIDefaults(t *testing.T, cfg *Config) {
 	t.Helper()
 
+	expectedOpenAIAPIKey := "test-openai-api-key"
+	if cfg.AI.OpenAIAPIKey != expectedOpenAIAPIKey {
+		t.Errorf("Expected AI.OpenAIKey = %s, got %s", expectedOpenAIAPIKey, cfg.AI.OpenAIAPIKey)
+	}
 	expectedEmbeddingModel := "text-embedding-ada-002"
 	if cfg.AI.EmbeddingModel != expectedEmbeddingModel {
 		t.Errorf("Expected AI.EmbeddingModel = %s, got %s", expectedEmbeddingModel, cfg.AI.EmbeddingModel)
@@ -181,7 +185,7 @@ func TestSetDefaults(t *testing.T) {
 	t.Setenv("UC_DATABASE_TYPE", "postgres")
 	t.Setenv("UC_DATABASE_CONNECTION_STRING", "postgres://test:test@localhost:5432/testdb")
 	t.Setenv("UC_AUTH_JWT_SECRET", "test-secret")
-	t.Setenv("UC_AI_OPENAI_KEY", "test-openai-key")
+	t.Setenv("UC_AI_OPENAI_API_KEY", "test-openai-api-key")
 
 	// Load configuration
 	cfg, err := Load()

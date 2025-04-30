@@ -82,7 +82,7 @@ func main() {
 
 	// Initialize AI service
 	aiConfig := &ai.Config{
-		OpenAIAPIKey:     cfg.AI.OpenAIKey,
+		OpenAIAPIKey:     cfg.AI.OpenAIAPIKey,
 		EmbeddingModel:   cfg.AI.EmbeddingModel,
 		CompletionModel:  cfg.AI.CompletionModel,
 		CacheEnabled:     cfg.AI.EnableCache,

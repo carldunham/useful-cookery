@@ -54,12 +54,12 @@ spec:
                 secretKeyRef:
                   name: useful-cookery-secrets
                   key: database.connection_string
-            - name: UC_JWT_SECRET
+            - name: UC_AUTH_JWT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: useful-cookery-secrets
                   key: jwt.secret
-            - name: UC_OPENAI_API_KEY
+            - name: UC_AI_OPENAI_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: useful-cookery-secrets

@@ -27,7 +27,7 @@ auth:
 
 # AI configuration
 ai:
-  openai_key: "your-openai-api-key"
+  openai_api_key: "your-openai-api-key"
   embedding_model: "text-embedding-ada-002"
   completion_model: "gpt-3.5-turbo"
   enable_cache: true

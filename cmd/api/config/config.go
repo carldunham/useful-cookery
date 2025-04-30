@@ -70,7 +70,7 @@ type AuthConfig struct {
 
 // AIConfig holds AI-related configuration.
 type AIConfig struct {
-	OpenAIKey       string                `mapstructure:"openai_key"`
+	OpenAIAPIKey    string                `mapstructure:"openai_api_key"`
 	EmbeddingModel  openai.EmbeddingModel `mapstructure:"embedding_model"`
 	CompletionModel string                `mapstructure:"completion_model"`
 	EnableCache     bool                  `mapstructure:"enable_cache"`
@@ -187,7 +187,7 @@ func validateConfig(config *Config) error {
 	}
 
 	// Validate AI config
-	if config.AI.OpenAIKey == "" {
+	if config.AI.OpenAIAPIKey == "" {
 		return ErrOpenAIAPIKeyRequired
 	}
 
