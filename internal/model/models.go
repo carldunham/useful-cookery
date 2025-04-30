@@ -61,6 +61,7 @@ type Recipe struct {
 	CookTime       int                  `json:"cookTime,omitempty"`
 	Servings       int                  `json:"servings,omitempty"`
 	Difficulty     string               `json:"difficulty,omitempty"`
+	SkillLevel     string               `json:"skillLevel,omitempty"`
 	DifficultyText string               `json:"difficultyText,omitempty"`
 	Ingredients    []DetailedIngredient `json:"ingredients,omitempty"`
 	Steps          []Step               `json:"steps,omitempty"`

@@ -49,6 +49,7 @@ var (
 	title       string
 	desc        string
 	difficulty  string
+	skillLevel  string
 	cuisine     string
 	prepTime    int
 	cookTime    int
@@ -200,6 +201,10 @@ func setupRecipeCommands() {
 	createRecipeCmd.Flags().StringVarP(&title, "title", "t", "", "Recipe title")
 	createRecipeCmd.Flags().StringVarP(&desc, "description", "d", "", "Recipe description")
 	createRecipeCmd.Flags().StringVar(&difficulty, "difficulty", "", "Recipe difficulty (Easy, Medium, Hard)")
+	createRecipeCmd.Flags().StringVar(
+		&skillLevel, "skill-level", "",
+		"Recipe skill level (BEGINNER, INTERMEDIATE, ADVANCED)",
+	)
 	createRecipeCmd.Flags().StringVar(&cuisine, "cuisine", "", "Recipe cuisine type")
 	createRecipeCmd.Flags().IntVar(&prepTime, "prep-time", 0, "Preparation time in minutes")
 	createRecipeCmd.Flags().IntVar(&cookTime, "cook-time", 0, "Cooking time in minutes")
@@ -266,7 +271,7 @@ func loadConfig(configFile string) (*config.Config, error) {
 	// Database defaults - using Postgres as default
 	viper.SetDefault("database.type", "postgres")
 	viper.SetDefault(
-		"database.connection_string", //nolint:ireturn,nolintlint // No idea why this has to be here.
+		"database.connection_string",
 		"postgres://postgres:postgres@localhost:5432/useful-cookery?sslmode=disable",
 	)
 
@@ -299,7 +304,7 @@ func loadConfig(configFile string) (*config.Config, error) {
 	slog.Info("Using database", "type", cfg.Database.Type, "connection", cfg.Database.ConnectionString)
 
 	return &cfg, nil
-}
+} //nolint:ireturn,nolintlint // No idea why this has to be here.
 
 // setupDatabase initializes the database connection.
 //
@@ -580,6 +585,7 @@ func createRecipeFromFlags() *model.Recipe {
 		Title:       title,
 		Description: desc,
 		Difficulty:  difficulty,
+		SkillLevel:  skillLevel,
 		Cuisine:     cuisine,
 		PrepTime:    prepTime,
 		CookTime:    cookTime,
@@ -654,6 +660,9 @@ func printRecipeBasicInfo(recipe *model.Recipe) {
 func printRecipeDetails2(recipe *model.Recipe) {
 	if recipe.Difficulty != "" {
 		fmt.Printf("Difficulty: %s\n", recipe.Difficulty)
+	}
+	if recipe.SkillLevel != "" {
+		fmt.Printf("Skill Level: %s\n", recipe.SkillLevel)
 	}
 	if recipe.Cuisine != "" {
 		fmt.Printf("Cuisine: %s\n", recipe.Cuisine)
@@ -758,6 +767,9 @@ func printRecipeDetails(recipe *model.Recipe, indent string) {
 	}
 	if recipe.Difficulty != "" {
 		fmt.Printf("%s  Difficulty: %s\n", indent, recipe.Difficulty)
+	}
+	if recipe.SkillLevel != "" {
+		fmt.Printf("%s  Skill Level: %s\n", indent, recipe.SkillLevel)
 	}
 	if recipe.Cuisine != "" {
 		fmt.Printf("%s  Cuisine: %s\n", indent, recipe.Cuisine)

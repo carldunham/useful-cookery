@@ -37,8 +37,9 @@ const RecipeCard = ({ recipe }) => {
         {author && <p className="recipe-author">By {author.name}</p>}
         <p className="recipe-description">{description}</p>
         <div className="recipe-meta">
-          {(skillLevel || difficultyText) && (
-            <span className="recipe-difficulty">Difficulty: {skillLevel || difficultyText}</span>
+          {skillLevel && <span className="recipe-skill-level">Skill Level: {skillLevel}</span>}
+          {difficultyText && (
+            <span className="recipe-difficulty">Difficulty: {difficultyText}</span>
           )}
           {totalTime && <span className="recipe-time">Time: {totalTime} min</span>}
           {averageRating && (

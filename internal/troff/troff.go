@@ -406,22 +406,25 @@ func processTokens(tokens []Token, recipe *model.Recipe) {
 
 									// Map natural language difficulty descriptions to enum values
 									difficultyLower := strings.ToLower(fieldValue)
+									var skillLevel string
 									switch {
 									case strings.Contains(difficultyLower, "difficult") ||
 										strings.Contains(difficultyLower, "hard") ||
 										strings.Contains(difficultyLower, "advanced") ||
 										strings.Contains(difficultyLower, "complex"):
-										recipe.Difficulty = "ADVANCED"
+										skillLevel = "ADVANCED"
 									case strings.Contains(difficultyLower, "moderate") ||
 										strings.Contains(difficultyLower, "medium"):
-										recipe.Difficulty = "INTERMEDIATE"
+										skillLevel = "INTERMEDIATE"
 									case strings.Contains(difficultyLower, "easy") ||
 										strings.Contains(difficultyLower, "simple"):
-										recipe.Difficulty = "BEGINNER"
+										skillLevel = "BEGINNER"
 									default:
 										// Default to INTERMEDIATE if we can't determine
-										recipe.Difficulty = "INTERMEDIATE"
+										skillLevel = "INTERMEDIATE"
 									}
+									recipe.Difficulty = skillLevel
+									recipe.SkillLevel = skillLevel
 
 								case "Time":
 									// Extract numbers from the time string

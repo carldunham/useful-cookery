@@ -14,7 +14,7 @@ import (
 
 // createMockDB creates a mock database for testing.
 //
-//nolint:ireturn // Third-party interface
+//nolint:ireturn,nolintlint // Third-party interface
 func createMockDB(t *testing.T) (*sql.DB, sqlmock.Sqlmock) {
 	t.Helper()
 	db, mock, err := sqlmock.New()

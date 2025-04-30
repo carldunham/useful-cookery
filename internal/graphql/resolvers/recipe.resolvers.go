@@ -11,19 +11,18 @@ import (
 
 // Sentinel errors for recipe resolvers.
 var (
-	ErrMissingDifficultyLevel = errors.New("missing difficulty level")
-	ErrInvalidDifficultyLevel = errors.New("invalid difficulty level")
-	ErrInvalidSkillLevel      = errors.New("invalid skill level")
+	ErrMissingSkillLevel = errors.New("missing skill level")
+	ErrInvalidSkillLevel = errors.New("invalid skill level")
 )
 
 // getDifficulty converts the string skillLevel from the domain model to the GraphQL enum type.
 func (r *Resolver) skillLevel(_ context.Context, recipe *domainmodel.Recipe) (*gqlmodel.SkillLevel, error) {
-	if recipe.Difficulty == "" {
-		return nil, ErrMissingDifficultyLevel
+	if recipe.SkillLevel == "" {
+		return nil, ErrMissingSkillLevel
 	}
 
 	var skillLevel gqlmodel.SkillLevel
-	switch recipe.Difficulty {
+	switch recipe.SkillLevel {
 	case "BEGINNER":
 		skillLevel = gqlmodel.SkillLevelBeginner
 	case "INTERMEDIATE":
@@ -31,7 +30,7 @@ func (r *Resolver) skillLevel(_ context.Context, recipe *domainmodel.Recipe) (*g
 	case "ADVANCED":
 		skillLevel = gqlmodel.SkillLevelAdvanced
 	default:
-		return nil, fmt.Errorf("%w: %s", ErrInvalidDifficultyLevel, recipe.Difficulty)
+		return nil, fmt.Errorf("%w: %s", ErrInvalidSkillLevel, recipe.SkillLevel)
 	}
 
 	return &skillLevel, nil

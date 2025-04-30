@@ -1007,7 +1007,7 @@ func (db *PostgresDatabase) fetchRecipesWithJoins(
 		WITH recipe_data AS (
 			SELECT
 				r.id, r.original_id, r.title, r.description, r.notes,
-				r.cuisine, r.prep_time, r.cook_time, r.servings, r.difficulty,
+				r.cuisine, r.prep_time, r.cook_time, r.servings, r.difficulty, r.skill_level,
 				r.created_at, r.updated_at, r.average_rating,
 				u.id as author_id, u.name as author_name
 			FROM recipes r
@@ -1439,10 +1439,10 @@ func (db *PostgresDatabase) insertRecipeBase(
 	query := `
 		INSERT INTO recipes (
 			id, original_id, title, description, notes,
-			cuisine, prep_time, cook_time, servings, difficulty,
+			cuisine, prep_time, cook_time, servings, difficulty, skill_level,
 			created_at, updated_at
 		)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
 		ON CONFLICT (id) DO UPDATE SET
 			title = EXCLUDED.title,
 			description = EXCLUDED.description,
@@ -1452,6 +1452,7 @@ func (db *PostgresDatabase) insertRecipeBase(
 			cook_time = EXCLUDED.cook_time,
 			servings = EXCLUDED.servings,
 			difficulty = EXCLUDED.difficulty,
+			skill_level = EXCLUDED.skill_level,
 			updated_at = EXCLUDED.updated_at
 	`
 
@@ -1468,6 +1469,7 @@ func (db *PostgresDatabase) insertRecipeBase(
 		recipe.CookTime,
 		recipe.Servings,
 		recipe.DifficultyText,
+		recipe.SkillLevel,
 		recipe.CreatedAt,
 		recipe.UpdatedAt,
 	)
@@ -1489,9 +1491,9 @@ func (db *PostgresDatabase) updateRecipeBase(
 		UPDATE recipes
 		SET title = $1, description = $2, notes = $3,
 			cuisine = $4, prep_time = $5, cook_time = $6,
-			servings = $7, difficulty = $8, updated_at = $9,
-			original_id = $10
-		WHERE id = $11
+			servings = $7, difficulty = $8, skill_level = $9, updated_at = $10,
+			original_id = $11
+		WHERE id = $12
 	`
 
 	result, err := tx.ExecContext(
@@ -1505,6 +1507,7 @@ func (db *PostgresDatabase) updateRecipeBase(
 		recipe.CookTime,
 		recipe.Servings,
 		recipe.DifficultyText,
+		recipe.SkillLevel,
 		recipe.UpdatedAt,
 		recipe.OriginalID,
 		recipe.ID,

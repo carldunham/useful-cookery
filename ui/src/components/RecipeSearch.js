@@ -157,7 +157,12 @@ const RecipeSearch = ({ userID }) => {
     setSearchAfter(null); // Reset pagination for new search
 
     // Execute search for queries of length 3 or more, or for test queries
-    if (newQuery.length >= 3 || newQuery === "pasta" || newQuery === "error" || newQuery === "nonexistent") {
+    if (
+      newQuery.length >= 3 ||
+      newQuery === "pasta" ||
+      newQuery === "error" ||
+      newQuery === "nonexistent"
+    ) {
       executeSearch();
     }
   };
