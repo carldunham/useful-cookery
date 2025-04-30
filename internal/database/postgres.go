@@ -1007,7 +1007,8 @@ func (db *PostgresDatabase) fetchRecipesWithJoins(
 		WITH recipe_data AS (
 			SELECT
 				r.id, r.original_id, r.title, r.description, r.notes,
-				r.cuisine, r.prep_time, r.cook_time, r.servings, r.difficulty, r.skill_level,
+				r.cuisine, r.prep_time, r.cook_time, r.servings, r.difficulty,
+				r.skill_level::text as "skillLevel",
 				r.created_at, r.updated_at, r.average_rating,
 				u.id as author_id, u.name as author_name
 			FROM recipes r
@@ -1662,6 +1663,7 @@ func (db *PostgresDatabase) GetPopularRecipes(ctx context.Context, limit, offset
 			SELECT
 				r.id, r.original_id, r.title, r.description, r.notes,
 				r.cuisine, r.prep_time, r.cook_time, r.servings, r.difficulty,
+				r.skill_level::text as "skillLevel",
 				r.created_at, r.updated_at, r.average_rating,
 				u.id as author_id, u.name as author_name
 			FROM recipes r
