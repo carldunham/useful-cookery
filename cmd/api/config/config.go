@@ -1,14 +1,9 @@
-// Package config provides configuration functionality for the application.
-// DEPRECATED: This package is deprecated and will be removed in a future version.
-// Use the configuration packages in cmd/api/config, cmd/cli/config, and cmd/migration/config instead.
 package config
 
 import (
 	"errors"
 	"fmt"
 	"os"
-	"path/filepath"
-	"regexp"
 	"strings"
 	"time"
 
@@ -34,7 +29,7 @@ var (
 	ErrOpenAIAPIKeyRequired    = errors.New("OpenAI API key is required")
 )
 
-// Config holds the application configuration.
+// Config holds the API application configuration.
 type Config struct {
 	Server   ServerConfig   `mapstructure:"server"`
 	Database DatabaseConfig `mapstructure:"database"`
@@ -97,7 +92,8 @@ func Load() (*Config, error) {
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("./config")
-	viper.AddConfigPath(filepath.Join("$HOME", ".useful-cookery"))
+	viper.AddConfigPath("./cmd/api/config")
+	viper.AddConfigPath(os.ExpandEnv("$HOME/.useful-cookery"))
 	viper.AddConfigPath("/etc/useful-cookery")
 
 	// Set default values
@@ -124,45 +120,12 @@ func Load() (*Config, error) {
 		return nil, fmt.Errorf("failed to parse config: %w", err)
 	}
 
-	// Process environment variable placeholders in strings
-	processEnvPlaceholders(&config)
-
 	// Validate configuration
 	if err := validateConfig(&config); err != nil {
 		return nil, fmt.Errorf("invalid configuration: %w", err)
 	}
 
 	return &config, nil
-}
-
-// processEnvPlaceholders replaces ${ENV_VAR} placeholders with actual environment variable values.
-func processEnvPlaceholders(config *Config) {
-	// Process database connection string
-	config.Database.ConnectionString = replaceEnvVars(config.Database.ConnectionString)
-
-	// Process JWT secret
-	config.Auth.JWTSecret = replaceEnvVars(config.Auth.JWTSecret)
-
-	// Process OpenAI key
-	config.AI.OpenAIKey = replaceEnvVars(config.AI.OpenAIKey)
-}
-
-// replaceEnvVars replaces ${ENV_VAR} placeholders with actual environment variable values.
-func replaceEnvVars(input string) string {
-	re := regexp.MustCompile(`\${([^}]+)}`)
-	return re.ReplaceAllStringFunc(input, func(match string) string {
-		// Extract environment variable name (remove ${ and })
-		envVar := match[2 : len(match)-1]
-
-		// Get environment variable value
-		value := os.Getenv(envVar)
-		if value == "" {
-			fmt.Fprintf(os.Stderr, "Warning: Environment variable %s not set\n", envVar)
-			return match // Return original placeholder if env var not set
-		}
-
-		return value
-	})
 }
 
 // setDefaults sets default values for configuration.

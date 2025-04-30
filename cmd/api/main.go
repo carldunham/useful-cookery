@@ -18,9 +18,9 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 
+	"github.com/carldunham/useful-cookery/cmd/api/config"
 	"github.com/carldunham/useful-cookery/internal/ai"
 	"github.com/carldunham/useful-cookery/internal/auth"
-	"github.com/carldunham/useful-cookery/internal/config"
 	"github.com/carldunham/useful-cookery/internal/database"
 	"github.com/carldunham/useful-cookery/internal/generated"
 	"github.com/carldunham/useful-cookery/internal/graphql"
@@ -125,7 +125,7 @@ func main() {
 
 	// Add CORS middleware
 	router.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{cfg.Server.CorsOrigin},
+		AllowedOrigins:   []string{cfg.Server.CORSOrigin},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
 		ExposedHeaders:   []string{"Link"},

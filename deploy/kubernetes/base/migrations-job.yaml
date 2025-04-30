@@ -19,16 +19,20 @@ spec:
           imagePullPolicy: IfNotPresent
           # No need to specify command as it's set in the Dockerfile
           env:
-            - name: DATABASE_TYPE
+            - name: UC_DATABASE_TYPE
               valueFrom:
                 configMapKeyRef:
                   name: useful-cookery-config
                   key: database.type
-            - name: DATABASE_CONNECTION_STRING
+            - name: UC_DATABASE_CONNECTION_STRING
               valueFrom:
                 secretKeyRef:
                   name: useful-cookery-secrets
                   key: database.connection_string
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/cmd/migration/config/config.yml
+              subPath: migration-config.yml
           resources:
             requests:
               cpu: 100m
@@ -36,4 +40,8 @@ spec:
             limits:
               cpu: 200m
               memory: 256Mi
+      volumes:
+        - name: config-volume
+          configMap:
+            name: useful-cookery-config-files
   backoffLimit: 3

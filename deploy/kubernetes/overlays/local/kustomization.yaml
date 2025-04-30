@@ -9,6 +9,7 @@ resources:
 patchesStrategicMerge:
   - api-deployment-patch.yaml
   - ui-deployment-patch.yaml
+  - migrations-job-patch.yaml
 
 namespace: useful-cookery-local
 

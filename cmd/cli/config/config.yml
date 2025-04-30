@@ -1,0 +1,11 @@
+# Useful Cookery CLI Configuration
+
+# Database configuration
+database:
+  type: "postgres"
+  connection_string: "postgres://postgres:postgres@localhost:5432/useful-cookery?sslmode=disable"
+
+# Authentication configuration
+auth:
+  jwt_secret: "change-me-in-production"
+  token_expiry: "24h"

@@ -17,7 +17,7 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/spf13/cobra"
 
-	"github.com/carldunham/useful-cookery/internal/config"
+	"github.com/carldunham/useful-cookery/cmd/migration/config"
 	"github.com/carldunham/useful-cookery/internal/database"
 	"github.com/carldunham/useful-cookery/internal/model"
 	"github.com/carldunham/useful-cookery/internal/troff"

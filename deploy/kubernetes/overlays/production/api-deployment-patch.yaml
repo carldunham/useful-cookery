@@ -22,22 +22,6 @@ spec:
             limits:
               cpu: 1000m
               memory: 1Gi
-          env:
-            - name: DATABASE_CONNECTION_STRING
-              valueFrom:
-                secretKeyRef:
-                  name: useful-cookery-secrets
-                  key: database.connection_string
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: useful-cookery-secrets
-                  key: jwt.secret
-            - name: OPENAI_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: useful-cookery-secrets
-                  key: openai.api_key
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:

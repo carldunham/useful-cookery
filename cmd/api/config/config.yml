@@ -1,4 +1,4 @@
-# Useful Cookery Configuration
+# Useful Cookery API Configuration
 
 # Server configuration
 server:
@@ -11,7 +11,7 @@ server:
 
 # Database configuration
 database:
-  type: "postgres" # Options: postgres, memory
+  type: "postgres"
   connection_string: "postgres://postgres:postgres@localhost:5432/useful-cookery?sslmode=disable"
 
 # Redis configuration
@@ -36,7 +36,7 @@ ai:
 
 # Storage configuration
 storage:
-  type: "local" # Options: local, s3
+  type: "local"
   s3_bucket: "useful-cookery-uploads"
   s3_region: "us-east-1"
   local_path: "./uploads"

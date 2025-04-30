@@ -5,7 +5,17 @@ set -e
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
+BLUE='\033[0;34m'
 NC='\033[0m' # No Color
+
+# Function to display disk usage
+check_disk_usage() {
+    echo -e "${BLUE}Current disk usage:${NC}"
+    df -h | grep -E 'overlay|Filesystem'
+}
+
+# Get the directory where the script is located (not where it's running from)
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 echo -e "${GREEN}Setting up local Kubernetes environment with k3d...${NC}"
 
@@ -29,6 +39,36 @@ if ! docker info &> /dev/null; then
     exit 1
 fi
 
+# Create volume directory, if it doesn't exist
+VOLUME_DIR="$SCRIPT_DIR/k3d-volumes/useful-cookery"
+OVERLAY_VOLUME="$VOLUME_DIR/overlay"
+STORAGE_VOLUME="$VOLUME_DIR/storage"
+if [ ! -d "$VOLUME_DIR" ]; then
+    echo -e "${YELLOW}Creating volume directory...${NC}"
+    mkdir -p "$VOLUME_DIR"
+else
+    echo -e "${YELLOW}Volume directory already exists, skipping creation...${NC}"
+fi
+if [ ! -d "$OVERLAY_VOLUME" ]; then
+    echo -e "${YELLOW}Creating overlay volume directory...${NC}"
+    mkdir -p "$OVERLAY_VOLUME"
+else
+    echo -e "${YELLOW}Overlay volume directory already exists, skipping creation...${NC}"
+fi
+if [ ! -d "$STORAGE_VOLUME" ]; then
+    echo -e "${YELLOW}Creating storage volume directory...${NC}"
+    mkdir -p "$STORAGE_VOLUME"
+else
+    echo -e "${YELLOW}Storage volume directory already exists, skipping creation...${NC}"
+fi
+
+# Clean up Docker resources to prevent overlay filesystem from filling up
+echo -e "${YELLOW}Cleaning up Docker resources to prevent overlay filesystem from filling up...${NC}"
+echo -e "${YELLOW}This helps prevent the 'overlay 100%' issue...${NC}"
+docker system prune -f
+docker image prune -f
+docker builder prune -f
+
 # Create k3d cluster if it doesn't exist
 if ! k3d cluster list | grep -q "useful-cookery"; then
     echo -e "${YELLOW}Creating k3d cluster...${NC}"
@@ -39,6 +79,12 @@ if ! k3d cluster list | grep -q "useful-cookery"; then
         --port 80:80@loadbalancer \
         --port 443:443@loadbalancer \
         --k3s-arg "--disable=traefik@server:0" \
+        --volume "$STORAGE_VOLUME:/var/lib/rancher/k3s/storage@all" \
+        --volume "$OVERLAY_VOLUME:/var/lib/containerd@all" \
+        --k3s-arg "--kubelet-arg=eviction-hard=imagefs.available<1%,nodefs.available<1%@agent:0" \
+        --k3s-arg "--kubelet-arg=eviction-minimum-reclaim=imagefs.available=1%,nodefs.available=1%@agent:0" \
+        --k3s-arg "--kubelet-arg=image-gc-high-threshold=85@agent:0" \
+        --k3s-arg "--kubelet-arg=image-gc-low-threshold=80@agent:0" \
         --wait
 else
     echo -e "${YELLOW}Cluster already exists, skipping creation...${NC}"
@@ -65,6 +111,27 @@ kubectl wait --namespace ingress-nginx \
   --for=condition=ready pod \
   --selector=app.kubernetes.io/component=controller \
   --timeout=90s
+
+# Create PVC for the PostgreSQL database volume
+echo -e "${YELLOW}Creating PostgreSQL database volume PVC...${NC}"
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: useful-cookery-local
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 1Gi
+EOF
+
+# Note: We don't wait for the PVC to be bound here because the local-path
+# storage class uses WaitForFirstConsumer binding mode, which means the PVC
+# will only be bound after a pod that uses it is created
 
 # Create local PostgreSQL database
 echo -e "${YELLOW}Creating local PostgreSQL database...${NC}"
@@ -103,7 +170,8 @@ spec:
               mountPath: /var/lib/postgresql/data
       volumes:
         - name: postgres-data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: postgres-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -133,12 +201,27 @@ else
     echo -e "${YELLOW}Hosts entry already exists, skipping...${NC}"
 fi
 
+# Check disk usage after setup
+check_disk_usage
+
 echo -e "${GREEN}Local Kubernetes environment setup complete!${NC}"
 echo -e "${GREEN}You can now build and deploy the application:${NC}"
-echo -e "${YELLOW}docker build -t useful-cookery-api:local -f Dockerfile.api .${NC}"
-echo -e "${YELLOW}docker build -t useful-cookery-ui:local -f Dockerfile.ui .${NC}"
-echo -e "${YELLOW}k3d image import useful-cookery-api:local useful-cookery-ui:local -c useful-cookery${NC}"
-echo -e "${YELLOW}kubectl apply -k deploy/kubernetes/overlays/local${NC}"
+echo -e "${YELLOW}make deploy-local${NC}"
 echo -e "${GREEN}Then access the application at http://useful-cookery.local${NC}"
 echo -e "${GREEN}To run database migrations:${NC}"
 echo -e "${YELLOW}make migrate-up${NC}"
+
+echo -e "${BLUE}Overlay Filesystem Management:${NC}"
+echo -e "${YELLOW}The Docker overlay filesystem can fill up when:${NC}"
+echo -e "${YELLOW}- Many container images are built or pulled${NC}"
+echo -e "${YELLOW}- Containers with large volumes are created${NC}"
+echo -e "${YELLOW}- Build cache grows too large${NC}"
+echo -e "${YELLOW}- Old/unused resources aren't cleaned up${NC}"
+echo
+echo -e "${BLUE}Maintenance Commands:${NC}"
+echo -e "${YELLOW}To clean up the overlay filesystem:${NC}"
+echo -e "${YELLOW}./$(basename $SCRIPT_DIR)/cleanup-k3d.sh${NC}"
+echo -e "${YELLOW}To remove the cluster when not needed:${NC}"
+echo -e "${YELLOW}k3d cluster delete useful-cookery${NC}"
+echo -e "${YELLOW}To check overlay filesystem usage:${NC}"
+echo -e "${YELLOW}df -h | grep overlay${NC}"

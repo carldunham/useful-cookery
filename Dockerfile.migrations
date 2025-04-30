@@ -30,8 +30,8 @@ WORKDIR /app
 # Copy the binary from the builder stage
 COPY --from=builder /app/migration .
 
-# Copy configuration and migrations
-COPY config/config.yml ./config/config.yml
+# Create config directories and copy migrations
+RUN mkdir -p ./cmd/migration/config
 COPY db/migrations ./db/migrations
 
 # Set the entrypoint to the migration tool

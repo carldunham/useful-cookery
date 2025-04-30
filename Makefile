@@ -128,6 +128,7 @@ deploy-api-local:
 	@echo "Importing API image to k3d..."
 	k3d image import $(API_IMAGE):$(IMAGE_TAG) -c $(K3D_CLUSTER)
 	@echo "Deploying API to local Kubernetes..."
+	kubectl delete job $(MIGRATIONS_JOB) -n $(K8S_NAMESPACE) --ignore-not-found
 	kubectl apply -k deploy/kubernetes/overlays/local
 	@echo "Restarting API deployment..."
 	kubectl rollout restart deployment $(API_DEPLOYMENT) -n $(K8S_NAMESPACE)
@@ -139,6 +140,7 @@ deploy-ui-local:
 	@echo "Importing UI image to k3d..."
 	k3d image import $(UI_IMAGE):$(IMAGE_TAG) -c $(K3D_CLUSTER)
 	@echo "Deploying UI to local Kubernetes..."
+	kubectl delete job $(MIGRATIONS_JOB) -n $(K8S_NAMESPACE) --ignore-not-found
 	kubectl apply -k deploy/kubernetes/overlays/local
 	@echo "Restarting UI deployment..."
 	kubectl rollout restart deployment $(UI_DEPLOYMENT) -n $(K8S_NAMESPACE)
@@ -150,9 +152,10 @@ deploy-migrations-local:
 	@echo "Importing migrations image to k3d..."
 	k3d image import $(MIGRATIONS_IMAGE):$(IMAGE_TAG) -c $(K3D_CLUSTER)
 	@echo "Deploying migrations to local Kubernetes..."
-	kubectl apply -k deploy/kubernetes/overlays/local
 	@echo "Running migrations job..."
 	kubectl delete job $(MIGRATIONS_JOB) -n $(K8S_NAMESPACE) --ignore-not-found
+	kubectl apply -k deploy/kubernetes/overlays/local
+	@echo "Waiting for migrations to complete..."
 	kubectl wait --for=condition=complete job/$(MIGRATIONS_JOB) -n $(K8S_NAMESPACE) --timeout=60s || true
 
 # Build and deploy all components locally
@@ -164,10 +167,11 @@ deploy-local:
 	@echo "Importing images to k3d..."
 	k3d image import $(API_IMAGE):$(IMAGE_TAG) $(UI_IMAGE):$(IMAGE_TAG) $(MIGRATIONS_IMAGE):$(IMAGE_TAG) -c $(K3D_CLUSTER)
 	@echo "Deploying to local Kubernetes..."
-	kubectl apply -k deploy/kubernetes/overlays/local
 	@echo "Running migrations job..."
 	kubectl delete job $(MIGRATIONS_JOB) -n $(K8S_NAMESPACE) --ignore-not-found
 	kubectl apply -k deploy/kubernetes/overlays/local
+	@echo "Waiting for migrations to complete..."
+	kubectl wait --for=condition=complete job/$(MIGRATIONS_JOB) -n $(K8S_NAMESPACE) --timeout=60s || true
 	@echo "Restarting deployments..."
 	kubectl rollout restart deployment $(API_DEPLOYMENT) $(UI_DEPLOYMENT) -n $(K8S_NAMESPACE)
 

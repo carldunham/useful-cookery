@@ -11,11 +11,10 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 
+	"github.com/carldunham/useful-cookery/cmd/cli/config"
 	"github.com/carldunham/useful-cookery/internal/auth"
 	"github.com/carldunham/useful-cookery/internal/cli"
-	"github.com/carldunham/useful-cookery/internal/config"
 	"github.com/carldunham/useful-cookery/internal/database"
 	"github.com/carldunham/useful-cookery/internal/database/dbtypes"
 	"github.com/carldunham/useful-cookery/internal/model"
@@ -255,56 +254,12 @@ func main() {
 
 // loadConfig loads the configuration from the specified file or environment variables.
 func loadConfig(configFile string) (*config.Config, error) {
-	if configFile != "" {
-		viper.SetConfigFile(configFile)
-	} else {
-		// Use default config paths
-		viper.SetConfigName("config")
-		viper.SetConfigType("yaml")
-		viper.AddConfigPath(".")
-		viper.AddConfigPath("./config")
-		viper.AddConfigPath("$HOME/.useful-cookery")
-		viper.AddConfigPath("/etc/useful-cookery")
+	cfg, err := config.Load(configFile)
+	if err != nil {
+		return nil, fmt.Errorf("failed to load configuration: %w", err)
 	}
-
-	// Set default values
-	// Database defaults - using Postgres as default
-	viper.SetDefault("database.type", "postgres")
-	viper.SetDefault(
-		"database.connection_string",
-		"postgres://postgres:postgres@localhost:5432/useful-cookery?sslmode=disable",
-	)
-
-	// Auth defaults
-	viper.SetDefault("auth.jwt_secret", "change-me-in-production")
-	viper.SetDefault("auth.token_expiry", "24h")
-
-	// Read environment variables
-	viper.SetEnvPrefix("UC")
-	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-	viper.AutomaticEnv()
-
-	// Read configuration file
-	if err := viper.ReadInConfig(); err != nil {
-		var configFileNotFound viper.ConfigFileNotFoundError
-		if !errors.As(err, &configFileNotFound) {
-			return nil, fmt.Errorf("failed to read config file: %w", err)
-		}
-		// Config file not found, using defaults and environment variables
-		slog.Info("Config file not found, using defaults and environment variables")
-	}
-
-	// Parse configuration
-	var cfg config.Config
-	if err := viper.Unmarshal(&cfg); err != nil {
-		return nil, fmt.Errorf("failed to parse config: %w", err)
-	}
-
-	// Log database connection info
-	slog.Info("Using database", "type", cfg.Database.Type, "connection", cfg.Database.ConnectionString)
-
-	return &cfg, nil
-} //nolint:ireturn,nolintlint // No idea why this has to be here.
+	return cfg, nil
+}
 
 // setupDatabase initializes the database connection.
 //
@@ -354,7 +309,7 @@ func runCreateAdmin(_ *cobra.Command, _ []string) error {
 	// Initialize auth service
 	authService := auth.NewService(
 		cfg.Auth.JWTSecret,
-		cfg.Auth.TokenExpiry,
+		cfg.Auth.TokenExpiry, //nolint:ireturn,nolintlint // No idea why this has to be here.
 		authDB,
 	)
 

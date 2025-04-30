@@ -1,0 +1,6 @@
+# Useful Cookery Migration Configuration
+
+# Database configuration
+database:
+  type: "postgres"
+  connection_string: "postgres://postgres:postgres@localhost:5432/useful-cookery?sslmode=disable"

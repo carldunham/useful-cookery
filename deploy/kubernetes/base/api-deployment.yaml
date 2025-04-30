@@ -44,21 +44,31 @@ spec:
             initialDelaySeconds: 15
             periodSeconds: 20
           env:
-            - name: DATABASE_TYPE
+            - name: UC_DATABASE_TYPE
               valueFrom:
                 configMapKeyRef:
                   name: useful-cookery-config
                   key: database.type
-            - name: DATABASE_CONNECTION_STRING
+            - name: UC_DATABASE_CONNECTION_STRING
               valueFrom:
                 secretKeyRef:
                   name: useful-cookery-secrets
                   key: database.connection_string
+            - name: UC_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: useful-cookery-secrets
+                  key: jwt.secret
+            - name: UC_OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: useful-cookery-secrets
+                  key: openai.api_key
           volumeMounts:
             - name: config-volume
-              mountPath: /root/config.yml
-              subPath: config.yml
+              mountPath: /app/cmd/api/config/config.yml
+              subPath: api-config.yml
       volumes:
         - name: config-volume
           configMap:
-            name: useful-cookery-config-file
+            name: useful-cookery-config-files

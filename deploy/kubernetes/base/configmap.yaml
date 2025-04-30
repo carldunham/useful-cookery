@@ -7,22 +7,21 @@ metadata:
 data:
   database.type: "postgres"
   api.url: "http://useful-cookery-api:8080/graphql"
-  config.path: "/app/config/config.yml"
 
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: useful-cookery-config-file
+  name: useful-cookery-config-files
   labels:
     app: useful-cookery
 data:
-  config.yml: |
-    # Useful Cookery Configuration
+  api-config.yml: |
+    # Useful Cookery API Configuration
 
     # Server configuration
     server:
-      port: "8080"
+      port: 8080
       cors_origin: "*"
       enable_playground: true
       read_timeout_seconds: 30
@@ -31,17 +30,23 @@ data:
 
     # Database configuration
     database:
-      type: "postgres"
-      connection_string: "${DATABASE_CONNECTION_STRING}"
+      type: postgres
+      connection_string: "override with UC_DATABASE_CONNECTION_STRING"
+
+    # Redis configuration
+    redis:
+      addr: "localhost:6379"
+      password: ""
+      db: 0
 
     # Authentication configuration
     auth:
-      jwt_secret: "${JWT_SECRET}"
+      jwt_secret: "override with UC_JWT_SECRET"
       token_expiry: "24h"
 
     # AI configuration
     ai:
-      openai_key: "${OPENAI_API_KEY}"
+      openai_key: "override with UC_OPENAI_API_KEY"
       embedding_model: "text-embedding-ada-002"
       completion_model: "gpt-3.5-turbo"
       enable_cache: false
@@ -51,3 +56,11 @@ data:
     storage:
       type: "local"
       local_path: "./uploads"
+
+  migration-config.yml: |
+    # Useful Cookery Migration Configuration
+
+    # Database configuration
+    database:
+      type: postgres
+      connection_string: "override with UC_DATABASE_CONNECTION_STRING"
