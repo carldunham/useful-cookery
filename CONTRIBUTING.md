@@ -78,6 +78,11 @@ make build-ui    # Build UI
 
 # Additional checks
 make lint-md     # Run Markdown linting
+make format-check     # Check code formatting
+make format-check-ui  # Check UI code formatting
+make format-check-md  # Check Markdown formatting
+
+# Formatting code
 make format      # Format all code
 make format-ui   # Format UI code
 make format-md   # Format Markdown

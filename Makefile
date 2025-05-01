@@ -32,7 +32,7 @@ MIGRATIONS_JOB=useful-cookery-migrations
 GQLGEN=github.com/99designs/gqlgen
 GOLANGCI_LINT=github.com/golangci/golangci-lint/cmd/golangci-lint
 
-.PHONY: all build build-go build-ui clean test test-go test-ui lint lint-go lint-ui lint-md format format-ui format-md fix generate tidy help deploy-api-local deploy-ui-local deploy-migrations-local deploy-local migrate-create migrate-up migrate-down migrate-status
+.PHONY: all build build-go build-ui clean test test-go test-ui lint lint-go lint-ui lint-md format format-ui format-md format-check format-check-ui format-check-md fix generate tidy help deploy-api-local deploy-ui-local deploy-migrations-local deploy-local migrate-create migrate-up migrate-down migrate-status
 
 all: generate lint test build
 
@@ -117,6 +117,21 @@ format-md:
 	@echo "Formatting Markdown..."
 	npm run format
 
+# Check formatting
+format-check: format-check-ui format-check-md
+	@echo "Checking code formatting..."
+	npx prettier --check "**/*.{js,jsx,ts,tsx,json,yml,yaml}"
+
+# Check UI code formatting
+format-check-ui:
+	@echo "Checking UI code formatting..."
+	cd ui && npx prettier --check "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}"
+
+# Check Markdown formatting
+format-check-md:
+	@echo "Checking Markdown formatting..."
+	npx prettier --check "**/*.md"
+
 # Generate code as needed
 generate:
 	@echo "Generating Go code..."
@@ -162,6 +177,9 @@ help:
 	@echo "  make format       Format all code"
 	@echo "  make format-ui    Format UI code"
 	@echo "  make format-md    Format Markdown"
+	@echo "  make format-check Check all code formatting"
+	@echo "  make format-check-ui Check UI code formatting"
+	@echo "  make format-check-md Check Markdown formatting"
 	@echo ""
 	@echo "Fix targets:"
 	@echo "  make fix          Fix linting issues and format code"

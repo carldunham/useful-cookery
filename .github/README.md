@@ -8,7 +8,7 @@ This directory contains GitHub Actions workflows for CI/CD processes in the Usef
 
 Runs checks for the Go backend code:
 
-- **Trigger**: Push events affecting Go files, pull requests to main branch
+- **Trigger**: Push events affecting Go files, all pull requests
 - **Jobs**:
   - **Lint**: Runs Go linting using golangci-lint
   - **Test**: Runs Go tests with race detection and coverage reporting
@@ -18,7 +18,7 @@ Runs checks for the Go backend code:
 
 Runs checks for the React frontend code:
 
-- **Trigger**: Push events affecting UI files, pull requests to main branch
+- **Trigger**: Push events affecting UI files, all pull requests
 - **Jobs**:
   - **Lint**: Runs JavaScript/TypeScript linting
   - **Test**: Runs frontend tests
@@ -28,20 +28,19 @@ Runs checks for the React frontend code:
 
 Runs additional project-wide checks:
 
-- **Trigger**: Push events affecting Markdown files and config files, pull requests to main branch
+- **Trigger**: Push events affecting Markdown files and config files, all pull requests
 - **Jobs**:
   - **Markdown Lint**: Validates Markdown files
-  - **Format Check**: Ensures code formatting standards are met
-  - **Project Lint**: Runs project-wide linting
+  - **Format Check**: Ensures code formatting standards are met using Prettier
 
 ### PR Checks (`pr-checks.yml`)
 
 Validates pull requests before they can be merged:
 
-- **Trigger**: Pull requests to main branch
+- **Trigger**: All pull requests
 - **Jobs**:
   - **PR Validation**: Checks for Linear issue references (USE-*) and merge conflicts
-  - **Required Checks**: Ensures all other CI workflows have passed
+  - **Required Checks**: Ensures all individual CI jobs have passed
 
 ## Branch Protection Rules
 
@@ -86,6 +85,9 @@ The CI workflows leverage targets defined in the project's Makefile:
 - `format`: Formats all code
 - `format-ui`: Formats UI code
 - `format-md`: Formats Markdown
+- `format-check`: Checks all code formatting
+- `format-check-ui`: Checks UI code formatting
+- `format-check-md`: Checks Markdown formatting
 
 ### Combined Targets
 

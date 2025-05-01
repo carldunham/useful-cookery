@@ -9,13 +9,6 @@ on:
       - "package.json"
       - ".github/workflows/frontend-ci.yml"
   pull_request:
-    branches: [main]
-    paths:
-      - "ui/**"
-      - ".eslintrc.js"
-      - ".prettierrc.js"
-      - "package.json"
-      - ".github/workflows/frontend-ci.yml"
   workflow_dispatch: # Allow manual triggering
 
 jobs:

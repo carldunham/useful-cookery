@@ -11,15 +11,6 @@ on:
       - "Makefile"
       - ".github/workflows/additional-checks.yml"
   pull_request:
-    branches: [main]
-    paths:
-      - "**/*.md"
-      - ".markdownlint.json"
-      - ".prettierrc.js"
-      - ".prettierignore"
-      - "package.json"
-      - "Makefile"
-      - ".github/workflows/additional-checks.yml"
   workflow_dispatch: # Allow manual triggering
 
 jobs:
@@ -59,6 +50,4 @@ jobs:
           cd ui && npm ci
 
       - name: Check formatting
-        run: |
-          make format-md
-          make format-ui
+        run: make format-check
