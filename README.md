@@ -55,6 +55,45 @@ useful-cookery/
 4. Run the API server: `go run cmd/api/main.go`
 5. Run the UI: `cd ui && npm run dev`
 
+## Continuous Integration
+
+The project uses GitHub Actions for continuous integration:
+
+- **Backend CI**: Linting, testing, and building Go code
+- **Frontend CI**: Linting, testing, and building React code
+- **Additional Checks**: Markdown linting, formatting checks
+- **PR Checks**: Validating pull requests (Linear issue references, merge conflicts)
+
+All CI workflows are configured in the `.github/workflows` directory. For more details, see [.github/README.md](.github/README.md).
+
+### Running CI Checks Locally
+
+You can run the same checks locally that are run in CI:
+
+```bash
+# Backend checks
+make lint-go     # Run Go linting
+make test-go     # Run Go tests
+make build-go    # Build Go binaries
+
+# Frontend checks
+make lint-ui     # Run UI linting
+make test-ui     # Run UI tests
+make build-ui    # Build UI
+
+# Additional checks
+make lint-md     # Run Markdown linting
+make format      # Format all code
+make format-ui   # Format UI code
+make format-md   # Format Markdown
+```
+
+For a complete list of available make targets, run:
+
+```bash
+make help
+```
+
 ## Database Migrations
 
 The project uses [golang-migrate](https://github.com/golang-migrate/migrate) for managing database schema migrations. Migration files are stored in the `db/migrations` directory.

@@ -1,0 +1,64 @@
+name: Additional Checks
+
+on:
+  push:
+    paths:
+      - "**/*.md"
+      - ".markdownlint.json"
+      - ".prettierrc.js"
+      - ".prettierignore"
+      - "package.json"
+      - "Makefile"
+      - ".github/workflows/additional-checks.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "**/*.md"
+      - ".markdownlint.json"
+      - ".prettierrc.js"
+      - ".prettierignore"
+      - "package.json"
+      - "Makefile"
+      - ".github/workflows/additional-checks.yml"
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  markdown-lint:
+    name: Markdown Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Markdown linter
+        run: make lint-md
+
+  format-check:
+    name: Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd ui && npm ci
+
+      - name: Check formatting
+        run: |
+          make format-md
+          make format-ui

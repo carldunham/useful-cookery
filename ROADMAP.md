@@ -8,7 +8,7 @@
 - [ ] Create authentication and user management system
 - [ ] Develop TROFF to JSON parser
 - [ ] Build initial React frontend with basic recipe viewing
-- [ ] Set up CI/CD pipeline
+- [x] Set up CI/CD pipeline
 - [ ] Implement basic search functionality
 
 ## Phase 2: Core Features (2-3 months)

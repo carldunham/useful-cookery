@@ -32,14 +32,23 @@ MIGRATIONS_JOB=useful-cookery-migrations
 GQLGEN=github.com/99designs/gqlgen
 GOLANGCI_LINT=github.com/golangci/golangci-lint/cmd/golangci-lint
 
-.PHONY: all build clean test lint fix generate tidy help deploy-api-local deploy-ui-local deploy-migrations-local deploy-local migrate-create migrate-up migrate-down migrate-status
+.PHONY: all build build-go build-ui clean test test-go test-ui lint lint-go lint-ui lint-md format format-ui format-md fix generate tidy help deploy-api-local deploy-ui-local deploy-migrations-local deploy-local migrate-create migrate-up migrate-down migrate-status
 
 all: generate lint test build
 
 # Build the application
-build:
+build: build-go build-ui
 	@echo "Building..."
+
+# Build Go binaries
+build-go:
+	@echo "Building Go binaries..."
 	$(GOBUILD) -o $(BINARY_NAME) $(MAIN_PATH)
+
+# Build UI
+build-ui:
+	@echo "Building UI..."
+	cd ui && npm run build
 
 # Clean build artifacts
 clean:
@@ -49,25 +58,41 @@ clean:
 	rm -rf $(GENERATED_DIR)
 
 # Run tests
-test:
-	@echo "Running Go tests..."
-	$(GOTEST) ./...
+test: test-go test-ui
+	@echo "Running all tests..."
+
+# Run UI tests
+test-ui:
 	@echo "Running UI tests..."
 	cd ui && npm run test:nowatch
 
+# Run Go tests
+test-go:
+	@echo "Running Go tests..."
+	$(GOTEST) -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+
 # Run linting
-lint:
-	@echo "Running Go linter..."
-	$(GOTOOL) $(GOLANGCI_LINT) run ./...
-	@echo "Running UI linter..."
-	cd ui && npm run lint
-	@echo "Running Markdown linter..."
-	npm run lint:md
+lint: lint-go lint-ui lint-md
 	@echo "Running project linter..."
 	npm run lint
 
+# Run Go linting
+lint-go:
+	@echo "Running Go linter..."
+	$(GOTOOL) $(GOLANGCI_LINT) run ./...
+
+# Run UI linting
+lint-ui:
+	@echo "Running UI linter..."
+	cd ui && npm run lint
+
+# Run Markdown linting
+lint-md:
+	@echo "Running Markdown linter..."
+	npm run lint:md
+
 # Fix linting issues
-fix:
+fix: format
 	@echo "Fixing Go linting issues..."
 	$(GOTOOL) $(GOLANGCI_LINT) run --fix ./...
 	@echo "Fixing UI linting issues..."
@@ -76,8 +101,21 @@ fix:
 	npm run lint:md:fix
 	@echo "Fixing project linting issues..."
 	npm run lint:fix
+
+# Format code
+format: format-ui format-md
 	@echo "Formatting code..."
-	npm run format:all
+	npm run format
+
+# Format UI code
+format-ui:
+	@echo "Formatting UI code..."
+	cd ui && npm run format
+
+# Format Markdown
+format-md:
+	@echo "Formatting Markdown..."
+	npm run format
 
 # Generate code as needed
 generate:
@@ -103,22 +141,50 @@ help:
 	@echo ""
 	@echo "Usage:"
 	@echo "  make              Run generate, lint, test, and build"
-	@echo "  make build        Build the application"
-	@echo "  make clean        Clean build artifacts"
-	@echo "  make test         Run Go and UI tests"
-	@echo "  make lint         Run all linters (Go, UI, Markdown, project)"
+	@echo ""
+	@echo "Build targets:"
+	@echo "  make build        Build the application (Go and UI)"
+	@echo "  make build-go     Build Go binaries"
+	@echo "  make build-ui     Build UI"
+	@echo ""
+	@echo "Test targets:"
+	@echo "  make test         Run all tests"
+	@echo "  make test-go      Run Go tests"
+	@echo "  make test-ui      Run UI tests"
+	@echo ""
+	@echo "Lint targets:"
+	@echo "  make lint         Run all linters"
+	@echo "  make lint-go      Run Go linting"
+	@echo "  make lint-ui      Run UI linting"
+	@echo "  make lint-md      Run Markdown linting"
+	@echo ""
+	@echo "Format targets:"
+	@echo "  make format       Format all code"
+	@echo "  make format-ui    Format UI code"
+	@echo "  make format-md    Format Markdown"
+	@echo ""
+	@echo "Fix targets:"
 	@echo "  make fix          Fix linting issues and format code"
+	@echo ""
+	@echo "Other targets:"
+	@echo "  make clean        Clean build artifacts"
 	@echo "  make generate     Generate code with gqlgen"
 	@echo "  make tidy         Tidy up dependencies"
 	@echo "  make run          Run the application"
+	@echo ""
+	@echo "Deployment targets:"
 	@echo "  make deploy-api-local        Build and deploy API locally"
 	@echo "  make deploy-ui-local         Build and deploy UI locally"
 	@echo "  make deploy-migrations-local Build and deploy migrations locally"
 	@echo "  make deploy-local            Build and deploy all components locally"
+	@echo ""
+	@echo "Migration targets:"
 	@echo "  make migrate-create          Create a new database migration"
 	@echo "  make migrate-up              Apply database migrations"
 	@echo "  make migrate-down            Revert database migrations"
 	@echo "  make migrate-status          Show current migration status"
+	@echo ""
+	@echo "Help:"
 	@echo "  make help         Show this help message"
 
 # Build and deploy API locally
