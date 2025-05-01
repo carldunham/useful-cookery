@@ -149,7 +149,7 @@ func main() {
 	troffCmd.PersistentFlags().BoolVar(&dryRun, "dry-run", false,
 		"Don't actually save to database, just parse and validate")
 	troffCmd.PersistentFlags().BoolVar(&skipExisting, "skip-existing", false,
-		"Skip recipes that already exist in the database (by ID)")
+		"Skip recipes that already exist in the database (by ID or OriginalID)")
 
 	// Add command-specific flags.
 	testCmd.Flags().StringVarP(&outputPath, "output", "o", "", "Path to output file for formatted recipe")
@@ -370,25 +370,20 @@ func runBatch(_ *cobra.Command, args []string) error {
 		}
 
 		// Check if recipe already exists.
-		if skipExisting {
-			existingRecipe, err := db.GetRecipe(context.Background(), recipe.ID)
-			if err == nil && existingRecipe != nil {
-				if verbose {
-					fmt.Println("Recipe already exists, skipping", "originalID", recipe.OriginalID, "path", filePath)
-				}
-				skipCount++
-				continue
+		existingRecipe, exists := checkExistingRecipe(db, &recipe)
+
+		if exists && skipExisting {
+			if verbose {
+				fmt.Println("Recipe already exists, skipping", "id", recipe.ID, "originalID", recipe.OriginalID, "path", filePath)
 			}
+			skipCount++
+			continue
 		}
 
-		// Set creation and update timestamps.
-		now := time.Now()
-		recipe.CreatedAt = now
-		recipe.UpdatedAt = now
-
-		// Save the recipe to the database.
-		if err := db.CreateRecipe(context.Background(), &recipe); err != nil {
-			slog.Error("Failed to save recipe to database", "path", filePath, "error", err)
+		// Save or update the recipe
+		err = saveRecipeToDatabase(db, &recipe, exists, existingRecipe)
+		if err != nil {
+			slog.Error("Failed to save/update recipe", "path", filePath, "error", err)
 			errorCount++
 			if maxErrors > 0 && errorCount >= maxErrors {
 				return fmt.Errorf("%w: %d", errMaxErrorsReached, maxErrors)
@@ -397,7 +392,11 @@ func runBatch(_ *cobra.Command, args []string) error {
 		}
 
 		if verbose {
-			fmt.Println("Successfully saved recipe", "path", filePath, "id", recipe.ID, "originalID", recipe.OriginalID)
+			if exists {
+				fmt.Println("Successfully updated recipe", "path", filePath, "id", recipe.ID, "originalID", recipe.OriginalID)
+			} else {
+				fmt.Println("Successfully saved new recipe", "path", filePath, "id", recipe.ID, "originalID", recipe.OriginalID)
+			}
 		}
 		successCount++
 	}
