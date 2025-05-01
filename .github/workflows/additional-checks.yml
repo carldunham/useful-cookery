@@ -9,11 +9,48 @@ on:
       - ".prettierignore"
       - "package.json"
       - "Makefile"
+      - "schema/**"
+      - "gqlgen.yml"
       - ".github/workflows/additional-checks.yml"
   pull_request:
   workflow_dispatch: # Allow manual triggering
 
 jobs:
+  check-generated-code:
+    name: Check Generated Code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
+          cache: true
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd ui && npm ci
+
+      - name: Generate code
+        run: make generate
+
+      - name: Check if generated code is up to date
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            echo "::error::Generated code is not up to date. Please run 'make generate' locally and commit the changes."
+            git status
+            git diff
+            exit 1
+          fi
+
   markdown-lint:
     name: Markdown Lint
     runs-on: ubuntu-latest

@@ -53,6 +53,7 @@ All pull requests go through our CI pipeline before they can be merged. The CI p
 
 - Markdown linting
 - Code formatting verification
+- Generated code verification
 - Project-wide linting
 
 ### PR Validation
@@ -81,6 +82,10 @@ make lint-md     # Run Markdown linting
 make format-check     # Check code formatting
 make format-check-ui  # Check UI code formatting
 make format-check-md  # Check Markdown formatting
+make generate    # Generate code from GraphQL schema
+
+# Check if generated code is up to date
+./scripts/check-generated-code.sh
 
 # Formatting code
 make format      # Format all code
@@ -114,6 +119,13 @@ make help
 - Use Prettier for code formatting
 - Write tests for all new components and functionality
 - Follow React best practices
+
+### Generated Code
+
+- Never manually edit generated code files
+- Always run `make generate` after making changes to the GraphQL schema
+- Commit generated code changes along with schema changes
+- Run `./scripts/check-generated-code.sh` before submitting a PR to ensure generated code is up to date
 
 ### Commit Messages
 

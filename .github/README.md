@@ -32,6 +32,7 @@ Runs additional project-wide checks:
 - **Jobs**:
   - **Markdown Lint**: Validates Markdown files
   - **Format Check**: Ensures code formatting standards are met using Prettier
+  - **Check Generated Code**: Verifies that generated code is up to date with the GraphQL schema
 
 ### PR Checks (`pr-checks.yml`)
 
@@ -91,6 +92,7 @@ The CI workflows leverage targets defined in the project's Makefile:
 - `format-check`: Checks all code formatting
 - `format-check-ui`: Checks UI code formatting
 - `format-check-md`: Checks Markdown formatting
+- `generate`: Generates code from GraphQL schema
 
 ### Combined Targets
 

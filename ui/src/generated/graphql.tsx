@@ -474,6 +474,13 @@ export type UserPreferencesInput = {
   skillLevel: InputMaybe<SkillLevel>;
 };
 
+export type GetRecipeQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetRecipeQuery = { __typename?: 'Query', recipe: { __typename?: 'Recipe', id: string, title: string, description: string | null, prepTime: number | null, cookTime: number | null, servings: number | null, difficultyText: string | null, skillLevel: SkillLevel | null, averageRating: number | null, likes: number | null, tags: Array<string> | null, createdAt: string | null, updatedAt: string | null, images: Array<{ __typename?: 'Image', url: string, alt: string | null }> | null, author: { __typename?: 'User', name: string } | null, categories: Array<{ __typename?: 'Category', name: string }> | null, ingredients: Array<{ __typename?: 'DetailedIngredient', name: string, preparation: string | null, isOptional: boolean | null, substitutes: Array<string> | null, units: Array<{ __typename?: 'IngredientUnit', value: number, unit: string, system: string }> | null }> | null, steps: Array<{ __typename?: 'Step', orderIndex: number | null, description: string, timeEstimate: number | null, image: { __typename?: 'Image', url: string, alt: string | null } | null }> | null, nutritionInfo: { __typename?: 'NutritionInfo', calories: number | null, protein: number | null, carbs: number | null, fat: number | null, fiber: number | null, sugar: number | null, sodium: number | null } | null } | null };
+
 export type SearchRecipesQueryVariables = Exact<{
   query: Scalars['String']['input'];
   first: InputMaybe<Scalars['Int']['input']>;
@@ -537,6 +544,97 @@ export const RecipeCardFragmentFragmentDoc = gql`
   }
 }
     `;
+export const GetRecipeDocument = gql`
+    query GetRecipe($id: ID!) {
+  recipe(id: $id) {
+    id
+    title
+    description
+    prepTime
+    cookTime
+    servings
+    difficultyText
+    skillLevel
+    averageRating
+    likes
+    images {
+      url
+      alt
+    }
+    author {
+      name
+    }
+    categories {
+      name
+    }
+    ingredients {
+      name
+      units {
+        value
+        unit
+        system
+      }
+      preparation
+      isOptional
+      substitutes
+    }
+    steps {
+      orderIndex
+      description
+      timeEstimate
+      image {
+        url
+        alt
+      }
+    }
+    nutritionInfo {
+      calories
+      protein
+      carbs
+      fat
+      fiber
+      sugar
+      sodium
+    }
+    tags
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useGetRecipeQuery__
+ *
+ * To run a query within a React component, call `useGetRecipeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRecipeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRecipeQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetRecipeQuery(baseOptions: Apollo.QueryHookOptions<GetRecipeQuery, GetRecipeQueryVariables> & ({ variables: GetRecipeQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetRecipeQuery, GetRecipeQueryVariables>(GetRecipeDocument, options);
+      }
+export function useGetRecipeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRecipeQuery, GetRecipeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetRecipeQuery, GetRecipeQueryVariables>(GetRecipeDocument, options);
+        }
+export function useGetRecipeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetRecipeQuery, GetRecipeQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetRecipeQuery, GetRecipeQueryVariables>(GetRecipeDocument, options);
+        }
+export type GetRecipeQueryHookResult = ReturnType<typeof useGetRecipeQuery>;
+export type GetRecipeLazyQueryHookResult = ReturnType<typeof useGetRecipeLazyQuery>;
+export type GetRecipeSuspenseQueryHookResult = ReturnType<typeof useGetRecipeSuspenseQuery>;
+export type GetRecipeQueryResult = Apollo.QueryResult<GetRecipeQuery, GetRecipeQueryVariables>;
 export const SearchRecipesDocument = gql`
     query SearchRecipes($query: String!, $first: Int, $after: String) {
   searchRecipes(query: $query, first: $first, after: $after) {

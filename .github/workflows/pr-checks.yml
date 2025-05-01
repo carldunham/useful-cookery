@@ -124,8 +124,19 @@ jobs:
           timeoutSeconds: 3600
           intervalSeconds: 10
 
+      - name: Check if additional checks generated-code passed
+        uses: fountainhead/action-wait-for-check@v1.1.0
+        id: additional-checks-generated-code
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: "Check Generated Code"
+          appSlug: "additional-checks"
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          timeoutSeconds: 3600
+          intervalSeconds: 10
+
       - name: Verify all checks passed
-        if: steps.backend-ci-lint.outputs.conclusion != 'success' || steps.backend-ci-test.outputs.conclusion != 'success' || steps.backend-ci-build.outputs.conclusion != 'success' || steps.frontend-ci-lint.outputs.conclusion != 'success' || steps.frontend-ci-test.outputs.conclusion != 'success' || steps.frontend-ci-build.outputs.conclusion != 'success' || steps.additional-checks-markdown-lint.outputs.conclusion != 'success' || steps.additional-checks-format-check.outputs.conclusion != 'success'
+        if: steps.backend-ci-lint.outputs.conclusion != 'success' || steps.backend-ci-test.outputs.conclusion != 'success' || steps.backend-ci-build.outputs.conclusion != 'success' || steps.frontend-ci-lint.outputs.conclusion != 'success' || steps.frontend-ci-test.outputs.conclusion != 'success' || steps.frontend-ci-build.outputs.conclusion != 'success' || steps.additional-checks-markdown-lint.outputs.conclusion != 'success' || steps.additional-checks-format-check.outputs.conclusion != 'success' || steps.additional-checks-generated-code.outputs.conclusion != 'success'
         run: |
           echo "::error::Not all required checks have passed."
           echo "Backend CI Lint: ${{ steps.backend-ci-lint.outputs.conclusion }}"
@@ -136,4 +147,5 @@ jobs:
           echo "Frontend CI Build: ${{ steps.frontend-ci-build.outputs.conclusion }}"
           echo "Additional Checks Markdown Lint: ${{ steps.additional-checks-markdown-lint.outputs.conclusion }}"
           echo "Additional Checks Format Check: ${{ steps.additional-checks-format-check.outputs.conclusion }}"
+          echo "Additional Checks Generated Code: ${{ steps.additional-checks-generated-code.outputs.conclusion }}"
           exit 1

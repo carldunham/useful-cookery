@@ -61,7 +61,7 @@ The project uses GitHub Actions for continuous integration:
 
 - **Backend CI**: Linting, testing, and building Go code
 - **Frontend CI**: Linting, testing, and building React code
-- **Additional Checks**: Markdown linting, formatting checks
+- **Additional Checks**: Markdown linting, formatting checks, generated code verification
 - **PR Checks**: Validating pull requests (Linear issue references, merge conflicts)
 
 All CI workflows are configured in the `.github/workflows` directory. For more details, see [.github/README.md](.github/README.md).
@@ -86,6 +86,10 @@ make lint-md     # Run Markdown linting
 make format-check     # Check code formatting
 make format-check-ui  # Check UI code formatting
 make format-check-md  # Check Markdown formatting
+make generate    # Generate code from GraphQL schema
+
+# Check if generated code is up to date
+./scripts/check-generated-code.sh
 
 # Formatting code
 make format      # Format all code
