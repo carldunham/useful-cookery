@@ -265,7 +265,11 @@ const RecipeSearch = ({ userID }) => {
         </div>
       )}
 
-      {isLoading && <div className="loading" data-testid="loading-indicator">Loading recipes...</div>}
+      {isLoading && (
+        <div className="loading" data-testid="loading-indicator">
+          Loading recipes...
+        </div>
+      )}
 
       {error && <div className="error">Error: {error.message}</div>}
 
