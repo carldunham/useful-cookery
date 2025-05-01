@@ -50,10 +50,7 @@ const RecipeCard = ({ recipe }) => {
           )}
         </div>
         {categoryNames && <p className="recipe-categories">Categories: {categoryNames}</p>}
-        <button
-          className="view-recipe-btn"
-          onClick={() => navigate(`/recipe/${recipe.id}`)}
-        >
+        <button className="view-recipe-btn" onClick={() => navigate(`/recipe/${recipe.id}`)}>
           View Recipe
         </button>
       </div>

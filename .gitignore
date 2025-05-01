@@ -33,6 +33,7 @@ Thumbs.db
 
 # Coverage reports
 coverage/
+coverage.txt
 
 # Dependency lock files
 yarn.lock

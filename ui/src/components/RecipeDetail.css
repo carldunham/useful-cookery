@@ -178,7 +178,9 @@
 }
 
 /* Loading and error states */
-.loading, .error, .not-found {
+.loading,
+.error,
+.not-found {
   text-align: center;
   padding: 50px;
   font-size: 1.2rem;

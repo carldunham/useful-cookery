@@ -2,9 +2,9 @@ import { ApolloClient, InMemoryCache, createHttpLink, from } from "@apollo/clien
 import { onError } from "@apollo/client/link/error";
 
 // Determine the GraphQL API URL based on the environment
-const apiUrl = process.env.NODE_ENV === "production"
-  ? "/api/graphql"  // Production URL (relative to the domain)
-  : "http://localhost:8080/graphql";  // Development URL
+const apiUrl = import.meta.env.PROD
+  ? "/api/graphql" // Production URL (relative to the domain)
+  : "http://localhost:8080/graphql"; // Development URL
 
 console.log(`Using GraphQL API URL: ${apiUrl}`);
 

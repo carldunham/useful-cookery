@@ -29,9 +29,9 @@ To set up your local environment, you need to create a `secrets.yaml` file based
 
 1. Copy the example file:
 
-  ```bash
-  cp secrets-example.yaml secrets.yaml
-  ```
+```bash
+cp secrets-example.yaml secrets.yaml
+```
 
 1. Edit `secrets.yaml` to add your actual secret values.
 

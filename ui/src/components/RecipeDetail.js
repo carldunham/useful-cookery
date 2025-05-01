@@ -116,7 +116,9 @@ const RecipeDetail = () => {
   const totalTime = recipe.prepTime && recipe.cookTime ? recipe.prepTime + recipe.cookTime : null;
 
   // Format categories
-  const categoryNames = recipe.categories ? recipe.categories.map((cat) => cat.name).join(", ") : "";
+  const categoryNames = recipe.categories
+    ? recipe.categories.map((cat) => cat.name).join(", ")
+    : "";
 
   // Default image if none provided
   const mainImage =
@@ -198,9 +200,7 @@ const RecipeDetail = () => {
                 <div className="step-content">
                   <p>{step.description}</p>
                   {step.timeEstimate && (
-                    <span className="step-time">
-                      Approximately {step.timeEstimate} minutes
-                    </span>
+                    <span className="step-time">Approximately {step.timeEstimate} minutes</span>
                   )}
                 </div>
                 {step.image && (

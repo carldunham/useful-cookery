@@ -12,7 +12,7 @@ Please be respectful and considerate of others when contributing to this project
 2. Clone your fork: `git clone https://github.com/your-username/useful-cookery.git`
 3. Add the upstream repository: `git remote add upstream https://github.com/carldunham/useful-cookery.git`
 4. Create a new branch for your changes: `git checkout -b USE-123-feature-name`
-   - Always include the Linear issue ID (USE-*) in your branch name
+   - Always include the Linear issue ID (USE-\*) in your branch name
 
 ## Development Workflow
 
@@ -26,7 +26,7 @@ Please be respectful and considerate of others when contributing to this project
 ## Pull Request Process
 
 1. Create a pull request from your fork to the main repository
-2. Include the Linear issue ID (USE-*) in the PR title or description
+2. Include the Linear issue ID (USE-\*) in the PR title or description
 3. Provide a clear description of the changes and the problem they solve
 4. Ensure all CI checks pass
 5. Request a review from a maintainer
@@ -57,7 +57,7 @@ All pull requests go through our CI pipeline before they can be merged. The CI p
 
 ### PR Validation
 
-- Linear issue reference check (USE-*)
+- Linear issue reference check (USE-\*)
 - Merge conflict detection
 - Required status checks verification
 
@@ -118,7 +118,7 @@ make help
 ### Commit Messages
 
 - Use clear, descriptive commit messages
-- Include the Linear issue ID (USE-*) in the commit message
+- Include the Linear issue ID (USE-\*) in the commit message
 - Use the present tense ("Add feature" not "Added feature")
 - Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
 

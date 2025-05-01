@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { describe, test, expect } from "vitest";
 
 import "@testing-library/jest-dom";
@@ -21,7 +22,11 @@ describe("RecipeCard", () => {
   };
 
   test("renders recipe information correctly", () => {
-    render(<RecipeCard recipe={mockRecipe} />);
+    render(
+      <MemoryRouter>
+        <RecipeCard recipe={mockRecipe} />
+      </MemoryRouter>
+    );
 
     // Check if title is rendered
     expect(screen.getByText("Test Recipe")).toBeInTheDocument();
@@ -59,7 +64,11 @@ describe("RecipeCard", () => {
       description: "This recipe has missing data",
     };
 
-    render(<RecipeCard recipe={incompleteRecipe} />);
+    render(
+      <MemoryRouter>
+        <RecipeCard recipe={incompleteRecipe} />
+      </MemoryRouter>
+    );
 
     // Check if title is rendered
     expect(screen.getByText("Incomplete Recipe")).toBeInTheDocument();

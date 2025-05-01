@@ -39,7 +39,7 @@ Validates pull requests before they can be merged:
 
 - **Trigger**: All pull requests
 - **Jobs**:
-  - **PR Validation**: Checks for Linear issue references (USE-*) and merge conflicts
+  - **PR Validation**: Checks for Linear issue references (USE-\*) and merge conflicts
   - **Required Checks**: Ensures all individual CI jobs have passed
 
 ## Branch Protection Rules
@@ -47,6 +47,7 @@ Validates pull requests before they can be merged:
 To fully implement the CI/CD process, set up the following branch protection rules for the `main` branch:
 
 1. Require status checks to pass before merging
+
    - Required status checks:
      - Backend CI
      - Frontend CI
@@ -54,10 +55,12 @@ To fully implement the CI/CD process, set up the following branch protection rul
      - PR Checks
 
 2. Require pull request reviews before merging
+
    - Require at least 1 approval
    - Dismiss stale pull request approvals when new commits are pushed
 
 3. Require linear history
+
    - Prevent merge commits
    - Prefer squash merging
 

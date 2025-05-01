@@ -2,8 +2,8 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import "./App.css";
-import RecipeSearch from "./components/RecipeSearch";
 import RecipeDetail from "./components/RecipeDetail";
+import RecipeSearch from "./components/RecipeSearch";
 
 function App() {
   return (
