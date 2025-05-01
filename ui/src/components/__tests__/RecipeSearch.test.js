@@ -710,7 +710,7 @@ describe("RecipeSearch", () => {
     });
 
     // Loading state should be displayed
-    expect(screen.getByText("Loading recipes...")).toBeInTheDocument();
+    expect(screen.getByTestId("loading-indicator")).toBeInTheDocument();
 
     // Wait for search results to load
     await waitFor(() => {
