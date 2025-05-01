@@ -111,7 +111,7 @@ This document outlines the specific implementation tasks for the rewrite of the 
 - database Go client
 - JWT authentication
 - Testing with testify
-- Logging with zap
+- Logging with slog
 - Configuration with viper
 
 ### Frontend (React)
