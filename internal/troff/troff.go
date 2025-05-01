@@ -386,11 +386,11 @@ func processTokens(tokens []Token, recipe *model.Recipe) {
 								if i+1 < len(tokens) {
 									fieldName := tokens[i+1].Value
 									switch {
-									case strings.HasPrefix(fieldName, "Difficulty:"):
+									case strings.HasPrefix(fieldName, "Difficulty"):
 										currentField = "Difficulty"
-									case strings.HasPrefix(fieldName, "Time:"):
+									case strings.HasPrefix(fieldName, "Time"):
 										currentField = "Time"
-									case strings.HasPrefix(fieldName, "Precision:"):
+									case strings.HasPrefix(fieldName, "Precision"):
 										currentField = "Precision"
 									}
 									i++ // Skip the field name token
