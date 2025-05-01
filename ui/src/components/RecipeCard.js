@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import "./RecipeCard.css";
 
 const RecipeCard = ({ recipe }) => {
+  const navigate = useNavigate();
   const {
     title,
     description,
@@ -16,7 +19,7 @@ const RecipeCard = ({ recipe }) => {
 
   // Default image if none provided
   const imageUrl =
-    images && images.length > 0
+    images && images.length > 0 && images[0].url
       ? images[0].url
       : "https://via.placeholder.com/300x200?text=No+Image";
   const imageAlt = images && images.length > 0 ? images[0].alt : "Recipe image";
@@ -47,7 +50,12 @@ const RecipeCard = ({ recipe }) => {
           )}
         </div>
         {categoryNames && <p className="recipe-categories">Categories: {categoryNames}</p>}
-        <button className="view-recipe-btn">View Recipe</button>
+        <button
+          className="view-recipe-btn"
+          onClick={() => navigate(`/recipe/${recipe.id}`)}
+        >
+          View Recipe
+        </button>
       </div>
     </div>
   );

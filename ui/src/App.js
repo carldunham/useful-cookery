@@ -1,22 +1,29 @@
 import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import "./App.css";
 import RecipeSearch from "./components/RecipeSearch";
+import RecipeDetail from "./components/RecipeDetail";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Useful Cookery</h1>
-        <p>A modern, AI-enhanced cooking experience</p>
-      </header>
-      <main>
-        <RecipeSearch userID="guest" />
-      </main>
-      <footer>
-        <p>&copy; {new Date().getFullYear()} Useful Cookery</p>
-      </footer>
-    </div>
+    <Router>
+      <div className="App">
+        <header className="App-header">
+          <h1>Useful Cookery</h1>
+          <p>A modern, AI-enhanced cooking experience</p>
+        </header>
+        <main>
+          <Routes>
+            <Route path="/" element={<RecipeSearch userID="guest" />} />
+            <Route path="/recipe/:id" element={<RecipeDetail />} />
+          </Routes>
+        </main>
+        <footer>
+          <p>&copy; {new Date().getFullYear()} Useful Cookery</p>
+        </footer>
+      </div>
+    </Router>
   );
 }
 
