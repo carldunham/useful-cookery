@@ -665,7 +665,7 @@ describe("RecipeSearch", () => {
             },
           },
         },
-        delay: 100, // Add a delay to ensure loading state is visible
+        delay: 500, // Add a longer delay to ensure loading state is visible in CI
       },
       // Add the empty query mock to avoid warnings
       {
@@ -709,8 +709,10 @@ describe("RecipeSearch", () => {
       await userEvent.type(searchInput, "pasta");
     });
 
-    // Loading state should be displayed
-    expect(screen.getByTestId("loading-indicator")).toBeInTheDocument();
+    // Wait for loading state to be displayed
+    await waitFor(() => {
+      expect(screen.getByTestId("loading-indicator")).toBeInTheDocument();
+    });
 
     // Wait for search results to load
     await waitFor(() => {
