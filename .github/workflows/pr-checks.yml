@@ -1,0 +1,151 @@
+name: PR Checks
+
+on:
+  pull_request:
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  pr-validation:
+    name: PR Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for Linear issue reference
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          PR_BODY="${{ github.event.pull_request.body }}"
+
+          if [[ ! "$PR_TITLE" =~ USE-[0-9]+ ]] && [[ ! "$PR_BODY" =~ USE-[0-9]+ ]]; then
+            echo "::error::Pull request must reference a Linear issue in the format 'USE-*' in either the title or description."
+            exit 1
+          fi
+
+      - name: Check for merge conflicts
+        run: |
+          if git diff --name-only --diff-filter=U | grep -q .; then
+            echo "::error::Merge conflicts detected. Please resolve them before merging."
+            exit 1
+          fi
+
+  required-checks:
+    name: Required Checks
+    runs-on: ubuntu-latest
+    needs:
+      - pr-validation
+    steps:
+      - name: Check if backend CI lint passed
+        uses: fountainhead/action-wait-for-check@v1.1.0
+        id: backend-ci-lint
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: "Lint"
+          appSlug: "backend-ci"
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          timeoutSeconds: 3600
+          intervalSeconds: 10
+
+      - name: Check if backend CI test passed
+        uses: fountainhead/action-wait-for-check@v1.1.0
+        id: backend-ci-test
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: "Test"
+          appSlug: "backend-ci"
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          timeoutSeconds: 3600
+          intervalSeconds: 10
+
+      - name: Check if backend CI build passed
+        uses: fountainhead/action-wait-for-check@v1.1.0
+        id: backend-ci-build
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: "Build"
+          appSlug: "backend-ci"
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          timeoutSeconds: 3600
+          intervalSeconds: 10
+
+      - name: Check if frontend CI lint passed
+        uses: fountainhead/action-wait-for-check@v1.1.0
+        id: frontend-ci-lint
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: "Lint"
+          appSlug: "frontend-ci"
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          timeoutSeconds: 3600
+          intervalSeconds: 10
+
+      - name: Check if frontend CI test passed
+        uses: fountainhead/action-wait-for-check@v1.1.0
+        id: frontend-ci-test
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: "Test"
+          appSlug: "frontend-ci"
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          timeoutSeconds: 3600
+          intervalSeconds: 10
+
+      - name: Check if frontend CI build passed
+        uses: fountainhead/action-wait-for-check@v1.1.0
+        id: frontend-ci-build
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: "Build"
+          appSlug: "frontend-ci"
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          timeoutSeconds: 3600
+          intervalSeconds: 10
+
+      - name: Check if additional checks markdown-lint passed
+        uses: fountainhead/action-wait-for-check@v1.1.0
+        id: additional-checks-markdown-lint
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: "Markdown Lint"
+          appSlug: "additional-checks"
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          timeoutSeconds: 3600
+          intervalSeconds: 10
+
+      - name: Check if additional checks format-check passed
+        uses: fountainhead/action-wait-for-check@v1.1.0
+        id: additional-checks-format-check
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: "Format Check"
+          appSlug: "additional-checks"
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          timeoutSeconds: 3600
+          intervalSeconds: 10
+
+      - name: Check if additional checks generated-code passed
+        uses: fountainhead/action-wait-for-check@v1.1.0
+        id: additional-checks-generated-code
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: "Check Generated Code"
+          appSlug: "additional-checks"
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          timeoutSeconds: 3600
+          intervalSeconds: 10
+
+      - name: Verify all checks passed
+        if: steps.backend-ci-lint.outputs.conclusion != 'success' || steps.backend-ci-test.outputs.conclusion != 'success' || steps.backend-ci-build.outputs.conclusion != 'success' || steps.frontend-ci-lint.outputs.conclusion != 'success' || steps.frontend-ci-test.outputs.conclusion != 'success' || steps.frontend-ci-build.outputs.conclusion != 'success' || steps.additional-checks-markdown-lint.outputs.conclusion != 'success' || steps.additional-checks-format-check.outputs.conclusion != 'success' || steps.additional-checks-generated-code.outputs.conclusion != 'success'
+        run: |
+          echo "::error::Not all required checks have passed."
+          echo "Backend CI Lint: ${{ steps.backend-ci-lint.outputs.conclusion }}"
+          echo "Backend CI Test: ${{ steps.backend-ci-test.outputs.conclusion }}"
+          echo "Backend CI Build: ${{ steps.backend-ci-build.outputs.conclusion }}"
+          echo "Frontend CI Lint: ${{ steps.frontend-ci-lint.outputs.conclusion }}"
+          echo "Frontend CI Test: ${{ steps.frontend-ci-test.outputs.conclusion }}"
+          echo "Frontend CI Build: ${{ steps.frontend-ci-build.outputs.conclusion }}"
+          echo "Additional Checks Markdown Lint: ${{ steps.additional-checks-markdown-lint.outputs.conclusion }}"
+          echo "Additional Checks Format Check: ${{ steps.additional-checks-format-check.outputs.conclusion }}"
+          echo "Additional Checks Generated Code: ${{ steps.additional-checks-generated-code.outputs.conclusion }}"
+          exit 1

@@ -1,0 +1,26 @@
+{
+  "name": "useful-cookery",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx,.json .",
+    "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx,.json . --fix",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md,yml,yaml}\"",
+    "lint:md": "markdownlint \"**/*.md\" --ignore node_modules --ignore ui/node_modules",
+    "lint:md:fix": "markdownlint \"**/*.md\" --ignore node_modules --ignore ui/node_modules --fix",
+    "lint:ui": "cd ui && npm run lint",
+    "lint:ui:fix": "cd ui && npm run lint:fix",
+    "format:ui": "cd ui && npm run format",
+    "lint:all": "npm run lint && npm run lint:ui && npm run lint:md",
+    "lint:all:fix": "npm run lint:fix && npm run lint:ui:fix && npm run lint:md:fix",
+    "format:all": "npm run format && npm run format:ui"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.25.1",
+    "eslint": "^9.25.1",
+    "eslint-plugin-json": "^4.0.1",
+    "markdownlint-cli": "^0.44.0",
+    "prettier": "^3.5.3"
+  },
+  "type": "module"
+}

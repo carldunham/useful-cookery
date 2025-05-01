@@ -1,0 +1,23 @@
+# Build outputs
+out/
+bin/
+build/
+dist/
+
+# Dependencies
+node_modules/
+
+# Generated files
+internal/generated/
+
+# Data directory
+data/
+
+# UI directory (has its own formatting)
+ui/
+
+# Coverage reports
+coverage/
+
+# Other ignored files
+**/*.d.ts

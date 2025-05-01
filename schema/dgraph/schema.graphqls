@@ -1,0 +1,131 @@
+type User @auth(query: { rule: "{$ROLE: { eq: \"ADMIN\" } } or { id: { eq: $USER_ID } }" }) {
+  id: ID!
+  name: String! @search(by: [term])
+  email: String! @search(by: [exact]) @id
+  password: String! @secret
+  role: Role! @search
+  preferences: UserPreferences
+  savedRecipes: [Recipe] @hasInverse(field: savedBy)
+  createdRecipes: [Recipe] @hasInverse(field: author)
+  reviews: [Review] @hasInverse(field: author)
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type UserPreferences {
+  dietaryRestrictions: [String]
+  favoriteIngredients: [String]
+  dislikedIngredients: [String]
+  skillLevel: SkillLevel
+  cuisinePreferences: [String]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+type Category {
+  id: ID!
+  name: String! @search(by: [term, exact]) @id
+  description: String
+  recipes: [Recipe] @hasInverse(field: categories)
+}
+
+type Recipe {
+  id: ID!
+  originalId: String @search(by: [exact])
+  title: String! @search(by: [term, fulltext])
+  description: String @search(by: [fulltext])
+  author: User @hasInverse(field: createdRecipes)
+  categories: [Category] @hasInverse(field: recipes)
+  cuisine: String @search(by: [term])
+  prepTime: Int
+  cookTime: Int
+  servings: Int
+  difficulty: SkillLevel
+  ingredients: [DetailedIngredient]
+  steps: [Step]
+  nutritionInfo: NutritionInfo
+  images: [Image]
+  tags: [String] @search(by: [term])
+  likes: Int
+  reviews: [Review] @hasInverse(field: recipe)
+  averageRating: Float
+  savedBy: [User] @hasInverse(field: savedRecipes)
+  embeddings: [Float] @search(by: [vector])
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type DetailedIngredient {
+  id: ID!
+  name: String! @search(by: [term, exact])
+  quantity: Float
+  unit: String
+  preparation: String
+  substitutes: [String]
+  isOptional: Boolean
+}
+
+type Step {
+  id: ID!
+  orderIndex: Int
+  description: String!
+  image: Image
+  timeEstimate: Int
+}
+
+type NutritionInfo {
+  calories: Int
+  protein: Float
+  carbs: Float
+  fat: Float
+  fiber: Float
+  sugar: Float
+  sodium: Int
+}
+
+type Image {
+  id: ID!
+  url: String!
+  alt: String
+  width: Int
+  height: Int
+}
+
+type Review {
+  id: ID!
+  recipe: Recipe!
+  author: User!
+  rating: Int!
+  comment: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+# AI-related types for vector search and recommendations
+type SearchQuery {
+  id: ID!
+  query: String!
+  embeddings: [Float] @search(by: [vector])
+  user: User
+  createdAt: DateTime
+}
+
+type Directive @search(by: [term, exact, fulltext, vector]) {
+  id: ID!
+}
+
+# GraphQL directives and types to support AI features
+directive @vector on FIELD_DEFINITION
+directive @secret on FIELD_DEFINITION
+
+# Custom DateTime scalar
+scalar DateTime
