@@ -35,7 +35,6 @@ Thumbs.db
 coverage/
 
 # Dependency lock files
-package-lock.json
 yarn.lock
 
 # Project specific
