@@ -14,6 +14,8 @@ jobs:
           fetch-depth: 0
 
       - name: Check for Linear issue reference
+        # Dependabot PRs are excluded from the Linear issue check because they are automated
+        if: ${{ github.actor != 'dependabot[bot]' }}
         run: |
           PR_TITLE="${{ github.event.pull_request.title }}"
           PR_BODY="${{ github.event.pull_request.body }}"
