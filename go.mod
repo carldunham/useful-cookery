@@ -5,7 +5,7 @@ go 1.24.1
 require (
 	github.com/99designs/gqlgen v0.17.70
 	github.com/DATA-DOG/go-sqlmock v1.5.2
-	github.com/go-chi/chi/v5 v5.2.1
+	github.com/go-chi/chi/v5 v5.2.2
 	github.com/go-chi/cors v1.2.1
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/golang-jwt/jwt/v4 v4.5.2
