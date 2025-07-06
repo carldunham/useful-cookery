@@ -1,0 +1,10 @@
+config:
+  aws:region: us-west-2
+  useful-cookery:environment: production
+  useful-cookery:dbPassword:
+    secure: AAABABCvKxRDYtLCZlXsQqOXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  useful-cookery:acmCertificateARN: arn:aws:acm:us-east-1:123456789012:certificate/abcdef-1234-5678-abcd-123456789012-prod
+  useful-cookery:highAvailability: true
+  useful-cookery:rdsInstanceClass: db.t3.medium
+  useful-cookery:eksNodeCount: 3
+  useful-cookery:eksNodeType: t3.medium

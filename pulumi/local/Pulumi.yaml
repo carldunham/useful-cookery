@@ -1,0 +1,3 @@
+name: useful-cookery-local
+runtime: go
+description: Local Kubernetes deployment for Useful Cookery application

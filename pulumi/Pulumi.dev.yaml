@@ -1,0 +1,6 @@
+config:
+  aws:region: us-west-2
+  useful-cookery:environment: dev
+  useful-cookery:dbPassword:
+    secure: AAABABCvKxRDYtLCZlXsQqOXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  useful-cookery:acmCertificateARN: arn:aws:acm:us-east-1:123456789012:certificate/abcdef-1234-5678-abcd-123456789012-dev

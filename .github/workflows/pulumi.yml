@@ -1,0 +1,113 @@
+name: Pulumi
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "pulumi/**"
+      - ".github/workflows/pulumi.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "pulumi/**"
+      - ".github/workflows/pulumi.yml"
+  workflow_dispatch:
+
+jobs:
+  preview:
+    name: Preview
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.24"
+
+      - name: Setup Pulumi
+        uses: pulumi/actions@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Run Tests
+        run: |
+          cd pulumi
+          go mod tidy
+          go test -v ./...
+          cd local
+          go mod tidy
+          go test -v ./...
+
+      - name: Pulumi Preview
+        run: |
+          cd pulumi
+          pulumi stack select dev
+          pulumi preview
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+  update:
+    name: Update
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.24"
+
+      - name: Setup Pulumi
+        uses: pulumi/actions@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+
+      - name: Build Docker Images
+        run: |
+          docker build -t useful-cookery-api:latest -f Dockerfile.api .
+          docker build -t useful-cookery-ui:latest -f Dockerfile.ui .
+          docker build -t useful-cookery-migrations:latest -f Dockerfile.migrations .
+
+      - name: Push Docker Images to ECR
+        run: |
+          aws ecr get-login-password | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-west-2.amazonaws.com
+          docker tag useful-cookery-api:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-west-2.amazonaws.com/useful-cookery-api:latest
+          docker tag useful-cookery-ui:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-west-2.amazonaws.com/useful-cookery-ui:latest
+          docker tag useful-cookery-migrations:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-west-2.amazonaws.com/useful-cookery-migrations:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-west-2.amazonaws.com/useful-cookery-api:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-west-2.amazonaws.com/useful-cookery-ui:latest
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-west-2.amazonaws.com/useful-cookery-migrations:latest
+
+      - name: Run Tests
+        run: |
+          cd pulumi
+          go mod tidy
+          go test -v ./...
+          cd local
+          go mod tidy
+          go test -v ./...
+
+      - name: Pulumi Update
+        run: |
+          cd pulumi
+          pulumi stack select dev
+          pulumi up --yes
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}

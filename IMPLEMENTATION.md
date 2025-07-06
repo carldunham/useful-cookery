@@ -106,7 +106,7 @@ This document outlines the specific implementation tasks for the rewrite of the 
 
 ### Backend (Go)
 
-- Go 1.20+ with modules
+- Go 1.24+ with modules
 - gqlgen for GraphQL
 - database Go client
 - JWT authentication

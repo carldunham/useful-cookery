@@ -23,16 +23,16 @@ UI_IMAGE=useful-cookery-ui
 MIGRATIONS_IMAGE=useful-cookery-migrations
 IMAGE_TAG=local
 K3D_CLUSTER=useful-cookery
-K8S_NAMESPACE=useful-cookery-local
-API_DEPLOYMENT=useful-cookery-api
-UI_DEPLOYMENT=useful-cookery-ui
-MIGRATIONS_JOB=useful-cookery-migrations
+
+# Pulumi parameters
+PULUMI_DIR=./pulumi
+PULUMI_LOCAL_DIR=./pulumi/local
 
 # Tools
 GQLGEN=github.com/99designs/gqlgen
 GOLANGCI_LINT=github.com/golangci/golangci-lint/cmd/golangci-lint
 
-.PHONY: all build build-go build-ui clean test test-go test-ui lint lint-go lint-ui lint-md format format-ui format-md format-check format-check-ui format-check-md fix generate tidy help deploy-api-local deploy-ui-local deploy-migrations-local deploy-local migrate-create migrate-up migrate-down migrate-status
+.PHONY: all build build-go build-ui clean test test-go test-ui test-pulumi lint lint-go lint-ui lint-md format format-ui format-md format-check format-check-ui format-check-md fix generate tidy help setup-local deploy-local cleanup-local deploy-cloud cleanup-cloud migrate-create migrate-up migrate-down migrate-status
 
 all: generate lint test build
 
@@ -58,7 +58,7 @@ clean:
 	rm -rf $(GENERATED_DIR)
 
 # Run tests
-test: test-go test-ui
+test: test-go test-ui test-pulumi
 	@echo "Running all tests..."
 
 # Run UI tests
@@ -69,7 +69,13 @@ test-ui:
 # Run Go tests
 test-go:
 	@echo "Running Go tests..."
-	$(GOTEST) -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+	$(GOTEST) -race -coverprofile=coverage.txt -covermode=atomic ./... $(PULUMI_DIR)/... $(PULUMI_LOCAL_DIR)/...
+
+# Run Pulumi tests
+test-pulumi:
+	@echo "Running Pulumi tests..."
+	cd $(PULUMI_DIR) && $(GOTEST) ./...
+	cd $(PULUMI_LOCAL_DIR) && $(GOTEST) ./...
 
 # Run linting
 lint: lint-go lint-ui lint-md
@@ -88,7 +94,7 @@ lint-ui:
 
 # Run Markdown linting
 lint-md:
-	@echo "Running Markdown linter..."
+	@echo "Running Markdown linting..."
 	npm run lint:md
 
 # Fix linting issues
@@ -143,6 +149,8 @@ generate:
 tidy:
 	@echo "Tidying dependencies..."
 	$(GOMOD) tidy
+	cd $(PULUMI_DIR) && $(GOMOD) tidy
+	cd $(PULUMI_LOCAL_DIR) && $(GOMOD) tidy
 
 # Run the application
 run:
@@ -166,6 +174,7 @@ help:
 	@echo "  make test         Run all tests"
 	@echo "  make test-go      Run Go tests"
 	@echo "  make test-ui      Run UI tests"
+	@echo "  make test-pulumi  Run Pulumi tests"
 	@echo ""
 	@echo "Lint targets:"
 	@echo "  make lint         Run all linters"
@@ -191,58 +200,27 @@ help:
 	@echo "  make run          Run the application"
 	@echo ""
 	@echo "Deployment targets:"
-	@echo "  make deploy-api-local        Build and deploy API locally"
-	@echo "  make deploy-ui-local         Build and deploy UI locally"
-	@echo "  make deploy-migrations-local Build and deploy migrations locally"
-	@echo "  make deploy-local            Build and deploy all components locally"
+	@echo "  make setup-local      Set up local k3d environment with Pulumi"
+	@echo "  make deploy-local     Deploy to local k3d environment with Pulumi"
+	@echo "  make cleanup-local    Clean up local k3d environment with Pulumi"
+	@echo "  make deploy-cloud     Deploy to cloud with Pulumi"
+	@echo "  make cleanup-cloud    Clean up cloud resources with Pulumi"
 	@echo ""
 	@echo "Migration targets:"
-	@echo "  make migrate-create          Create a new database migration"
-	@echo "  make migrate-up              Apply database migrations"
-	@echo "  make migrate-down            Revert database migrations"
-	@echo "  make migrate-status          Show current migration status"
+	@echo "  make migrate-create   Create a new database migration"
+	@echo "  make migrate-up       Apply database migrations"
+	@echo "  make migrate-down     Revert database migrations"
+	@echo "  make migrate-status   Show current migration status"
 	@echo ""
 	@echo "Help:"
 	@echo "  make help         Show this help message"
 
-# Build and deploy API locally
-deploy-api-local:
-	@echo "Building API Docker image..."
-	docker build -t $(API_IMAGE):$(IMAGE_TAG) -f Dockerfile.api .
-	@echo "Importing API image to k3d..."
-	k3d image import $(API_IMAGE):$(IMAGE_TAG) -c $(K3D_CLUSTER)
-	@echo "Deploying API to local Kubernetes..."
-	kubectl delete job $(MIGRATIONS_JOB) -n $(K8S_NAMESPACE) --ignore-not-found
-	kubectl apply -k deploy/kubernetes/overlays/local
-	@echo "Restarting API deployment..."
-	kubectl rollout restart deployment $(API_DEPLOYMENT) -n $(K8S_NAMESPACE)
+# Set up local k3d environment with Pulumi
+setup-local:
+	@echo "Setting up local k3d environment with Pulumi..."
+	cd $(PULUMI_LOCAL_DIR) && ./setup.sh
 
-# Build and deploy UI locally
-deploy-ui-local:
-	@echo "Building UI Docker image..."
-	docker build -t $(UI_IMAGE):$(IMAGE_TAG) -f Dockerfile.ui .
-	@echo "Importing UI image to k3d..."
-	k3d image import $(UI_IMAGE):$(IMAGE_TAG) -c $(K3D_CLUSTER)
-	@echo "Deploying UI to local Kubernetes..."
-	kubectl delete job $(MIGRATIONS_JOB) -n $(K8S_NAMESPACE) --ignore-not-found
-	kubectl apply -k deploy/kubernetes/overlays/local
-	@echo "Restarting UI deployment..."
-	kubectl rollout restart deployment $(UI_DEPLOYMENT) -n $(K8S_NAMESPACE)
-
-# Build and deploy migrations locally
-deploy-migrations-local:
-	@echo "Building migrations Docker image..."
-	docker build -t $(MIGRATIONS_IMAGE):$(IMAGE_TAG) -f Dockerfile.migrations .
-	@echo "Importing migrations image to k3d..."
-	k3d image import $(MIGRATIONS_IMAGE):$(IMAGE_TAG) -c $(K3D_CLUSTER)
-	@echo "Deploying migrations to local Kubernetes..."
-	@echo "Running migrations job..."
-	kubectl delete job $(MIGRATIONS_JOB) -n $(K8S_NAMESPACE) --ignore-not-found
-	kubectl apply -k deploy/kubernetes/overlays/local
-	@echo "Waiting for migrations to complete..."
-	kubectl wait --for=condition=complete job/$(MIGRATIONS_JOB) -n $(K8S_NAMESPACE) --timeout=60s || true
-
-# Build and deploy all components locally
+# Deploy to local k3d environment with Pulumi
 deploy-local:
 	@echo "Building all Docker images..."
 	docker build -t $(API_IMAGE):$(IMAGE_TAG) -f Dockerfile.api .
@@ -250,14 +228,23 @@ deploy-local:
 	docker build -t $(MIGRATIONS_IMAGE):$(IMAGE_TAG) -f Dockerfile.migrations .
 	@echo "Importing images to k3d..."
 	k3d image import $(API_IMAGE):$(IMAGE_TAG) $(UI_IMAGE):$(IMAGE_TAG) $(MIGRATIONS_IMAGE):$(IMAGE_TAG) -c $(K3D_CLUSTER)
-	@echo "Deploying to local Kubernetes..."
-	@echo "Running migrations job..."
-	kubectl delete job $(MIGRATIONS_JOB) -n $(K8S_NAMESPACE) --ignore-not-found
-	kubectl apply -k deploy/kubernetes/overlays/local
-	@echo "Waiting for migrations to complete..."
-	kubectl wait --for=condition=complete job/$(MIGRATIONS_JOB) -n $(K8S_NAMESPACE) --timeout=60s || true
-	@echo "Restarting deployments..."
-	kubectl rollout restart deployment $(API_DEPLOYMENT) $(UI_DEPLOYMENT) -n $(K8S_NAMESPACE)
+	@echo "Deploying to local Kubernetes with Pulumi..."
+	cd $(PULUMI_LOCAL_DIR) && pulumi up --yes
+
+# Clean up local k3d environment with Pulumi
+cleanup-local:
+	@echo "Cleaning up local k3d environment with Pulumi..."
+	cd $(PULUMI_LOCAL_DIR) && ./cleanup.sh
+
+# Deploy to cloud with Pulumi
+deploy-cloud:
+	@echo "Deploying to cloud with Pulumi..."
+	cd $(PULUMI_DIR) && pulumi up --yes
+
+# Clean up cloud resources with Pulumi
+cleanup-cloud:
+	@echo "Cleaning up cloud resources with Pulumi..."
+	cd $(PULUMI_DIR) && pulumi destroy --yes
 
 # Database migration commands
 migrate-create:
